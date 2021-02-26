@@ -6,10 +6,12 @@ namespace ClassRoomVR {
     public class MySceneManager : MonoBehaviour {
         // Publics
         //public GameManager _gm;
+        public GameObject sceneObjects;
 
         // Privates
         private GameObject teacher;
         private Transform studentsPositions;
+        
 
         //-------------
         // Cosas del gm
@@ -18,16 +20,18 @@ namespace ClassRoomVR {
         [Tooltip("Esto lo coge del gm")]
         public ClassInfo classInfo; // En realidad es private
         
-        public Canvas canvas; // En realidad lo coge del gm, no existe aqui
+        //public Canvas canvas; // En realidad lo coge del gm, no existe aqui
 
         // Start is called before the first frame update
         void Start() {
             // Generacion de la clase
-            Instantiate(classInfo.clase, transform);
+            Instantiate(classInfo.clase, sceneObjects.transform);
             // Temporales, deberiamos poner un punto de aparicion para el teacher en el prefab de la clase
-            teacher = Instantiate(classInfo.teacher, transform);
-            teacher.transform.position = classInfo.clase.GetComponentInChildren<Transform>().Find("TeacherDesk").position + new Vector3(0, 1.5f, 1);
+            teacher = Instantiate(classInfo.teacher,sceneObjects.transform);
+           // teacher = sceneObjects.transform.Find("PlayerVR").gameObject;
+            teacher.transform.position = classInfo.clase.GetComponentInChildren<Transform>().Find("TeacherDesk").position + new Vector3(0, 1.7f, 1);
             teacher.transform.Rotate(new Vector3(0, 180, 0));
+            Destroy(sceneObjects.transform.Find("PlayerVR").gameObject);
 
             // Generamos los chavales
             studentsPositions = classInfo.clase.GetComponentInChildren<Transform>().Find("Desks").GetComponentInChildren<Transform>().Find("DeskPositions");
@@ -62,12 +66,12 @@ namespace ClassRoomVR {
                 GameObject pickedStudent;
                 int sex = UnityEngine.Random.Range(0, 2);
                 if (sex == 0) {
-                    pickedStudent = Instantiate(classInfo.girlsPrefabs[UnityEngine.Random.Range(0, classInfo.girlsPrefabs.Length)], transform);
+                    pickedStudent = Instantiate(classInfo.girlsPrefabs[UnityEngine.Random.Range(0, classInfo.girlsPrefabs.Length)], sceneObjects.transform);
                     pickedStudent.name = classInfo.girlsNames[UnityEngine.Random.Range(0, classInfo.girlsNames.Length)];
                 }
                 else
                 {
-                    pickedStudent = Instantiate(classInfo.boysPrefabs[UnityEngine.Random.Range(0, classInfo.boysPrefabs.Length)], transform);
+                    pickedStudent = Instantiate(classInfo.boysPrefabs[UnityEngine.Random.Range(0, classInfo.boysPrefabs.Length)], sceneObjects.transform);
                     pickedStudent.name = classInfo.boysNames[UnityEngine.Random.Range(0, classInfo.boysNames.Length)];
                 }
 
