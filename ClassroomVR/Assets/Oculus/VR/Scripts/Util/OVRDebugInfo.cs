@@ -102,29 +102,32 @@ public class OVRDebugInfo : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (initUIComponent && !isInited)
+        if (debugUIManager != null)
         {
-            InitUIComponents();
-        }
+            if (initUIComponent && !isInited)
+            {
+                InitUIComponents();
+            }
 
-        if (Input.GetKeyDown(KeyCode.Space) && riftPresentTimeout < 0.0f)
-        {
-            initUIComponent = true;
-            showVRVars ^= true;
-        }
+            if (Input.GetKeyDown(KeyCode.Space) && riftPresentTimeout < 0.0f)
+            {
+                initUIComponent = true;
+                showVRVars ^= true;
+            }
 
-        UpdateDeviceDetection();
+            UpdateDeviceDetection();
 
-        // Presenting VR variables
-        if (showVRVars)
-        {
-            debugUIManager.SetActive(true);
-            UpdateVariable();
-            UpdateStrings();
-        }
-        else
-        {
-            debugUIManager.SetActive(false);
+            // Presenting VR variables
+            if (showVRVars)
+            {
+                debugUIManager.SetActive(true);
+                UpdateVariable();
+                UpdateStrings();
+            }
+            else
+            {
+                debugUIManager.SetActive(false);
+            }
         }
     }
 

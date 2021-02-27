@@ -23,15 +23,20 @@ namespace ClassRoomVR {
 
         //------
         [Header("Recursos especificos de la situacion")]
+        
+        [Tooltip("Mensaje con la informacion inicial de la situacion")]
+        public string iniMessage;
 
         [Tooltip("Animaciones para la 'situacion critica', colocar en orden de ejecucion")]
         public AnimationClip[] problematicsAnimations;
 
-        [Tooltip("Audios necesarios para la escena, colocar en orden de ejecucion")]
-        public AudioClip[] audioSituation;
+        [Tooltip("Audios necesarios para la 'situacion critica', colocar en orden de ejecucion")]
+        public AudioClip[] audiosSituationMasculino;
+        [Tooltip("Audios necesarios para la 'situacion critica', colocar en orden de ejecucion")]
+        public AudioClip[] audiosSituationFemenino;
 
-        [Tooltip("Mensaje con la informacion inicial de la situacion")]
-        public string iniMessage;
+        [Tooltip("Audio de reaccion de la clase a la situacion critica")]
+        public AudioClip audioReaccionClase;
 
         //-----
         [Header("Propiedades para la respuesta del profesor")]

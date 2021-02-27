@@ -18,6 +18,9 @@ namespace ClassRoomVR {
         [Tooltip("Prefabs de alumnos femeninos")]
         public GameObject[] girlsPrefabs;
 
+        [Tooltip("Animator controller de los estudiantes")]
+        public RuntimeAnimatorController studentAnimator;
+
         [Tooltip("Prefab del profesor")]
         public GameObject teacher;
     }
