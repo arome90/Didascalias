@@ -76,7 +76,7 @@ public class Escenario1 : MonoBehaviour, Escenario {
     // Update is called once per frame
     void Update()
     {
-        /*
+        
         timeSinceSceneStarted += Time.deltaTime;
         // Temporizador para reproducir el audio inapropiado
         if (timeSinceSceneStarted > Constants.TIME_FOR_AUDIO && !startedPlaying)
@@ -147,7 +147,7 @@ public class Escenario1 : MonoBehaviour, Escenario {
             Cursor.lockState = CursorLockMode.None;
             decidedPathEvent.Invoke();
         }
-        */
+        
     }
 
     private void OnTriggerEnter(Collider other)

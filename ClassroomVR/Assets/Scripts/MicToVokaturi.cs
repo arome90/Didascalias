@@ -38,8 +38,8 @@ public class MicToVokaturi : MonoBehaviour
         setSearchPaths();
 
 
-        dynamic py = pyEngine.ExecuteFile(Application.dataPath + "/Vokaturi_Python/Python/VokaWrapper.py");
-        vokaWrapper =  py.vokaNetWrapper(Application.dataPath+ "/DLL/OpenVokaturi-3-0-win64.dll");
+        dynamic py = pyEngine.ExecuteFile(Application.dataPath + "/Libs/Vokaturi_Python/Python/VokaWrapper.py");
+        vokaWrapper =  py.vokaNetWrapper(Application.dataPath+ "/Libs/DLL/OpenVokaturi-3-0-win64.dll");
 
         window = ClipLength * MicrophoneManager.SAMPLERATE;
     }
@@ -145,8 +145,8 @@ public class MicToVokaturi : MonoBehaviour
     private void setSearchPaths()
     {
         ICollection<string> searchPaths = pyEngine.GetSearchPaths();
-        searchPaths.Add(Application.dataPath + "/Vokaturi_Python/Python");
-        searchPaths.Add(Application.dataPath + "/Vokaturi_Python/Python/Lib");
+        searchPaths.Add(Application.dataPath + "/Libs/Vokaturi_Python/Python");
+        searchPaths.Add(Application.dataPath + "/Libs/Vokaturi_Python/Python/Lib");
         pyEngine.SetSearchPaths(searchPaths);
     }
 

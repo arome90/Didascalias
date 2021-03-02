@@ -162,11 +162,12 @@ public class SoundLoudness : MonoBehaviour
             actTime = timeSinceSceneStarted;
         }
     }
-    public void StopRecordingAndCalculate()
+    public bool StopRecordingAndCalculate()
     {
         if (!playerHasSpoken)
         {
             collect = false;
+            /*
             if (firstScenario)
             {
                 CalculateResponseStrengthWithAverage();
@@ -175,10 +176,14 @@ public class SoundLoudness : MonoBehaviour
             {
                 CalculateResponseStrengthWithoutAverage();
             }
+            */
+            //return CalculateResponseStrengthWithoutAverage();
+            return CalculateResponseStrengthWithAverage();
         }
+        return false;
     }
 
-    private void CalculateResponseStrengthWithAverage()
+    private bool CalculateResponseStrengthWithAverage()
     {
         // Media de la intensidad del sonido antes del comentario
         float[] soundBeforeComment = this.soundBeforeComment.ToArray();
@@ -208,11 +213,13 @@ public class SoundLoudness : MonoBehaviour
         if (mediaDespues > mediaAntes * increase)
         {
             Debug.Log("Respuesta firme detectada");
-            strongResponseEvent.Invoke();
+            return true;
+            //strongResponseEvent.Invoke();
         }
+        return false;
     }
 
-    private void CalculateResponseStrengthWithoutAverage()
+    private bool CalculateResponseStrengthWithoutAverage()
     {
         // Media de la intensidad del sonido después del comentario
         float[] soundAfterComment = this.soundAfterComment.ToArray();
@@ -230,7 +237,9 @@ public class SoundLoudness : MonoBehaviour
         if (mediaDespues > noAverageThreshold)
         {
             Debug.Log("Respuesta firme detectada");
-            strongResponseEvent.Invoke();
+            //strongResponseEvent.Invoke();
+            return true;
         }
+        return false;
     }
 }

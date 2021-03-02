@@ -1,77 +1,102 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Windows.Speech;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 
-public class KeyWordRecognizer : MonoBehaviour
+namespace ClassRoomVR
 {
-    KeywordRecognizer keywordRecognizer;
-    Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
-
-    public UnityEvent assertiveWordEvent;
-    public UnityEvent authoritativeWordEvent;
-
-    public UnityEvent thirdScenarioSittingEvent;
-    public UnityEvent thirdScenarioBackEvent;
-
-    void Start()
+    public class KeyWordRecognizer : MonoBehaviour
     {
-        foreach (string word in Constants.ASSERTIVE_WORDS)
+        KeywordRecognizer keywordRecognizer;
+        Dictionary<string, UnityAction> keywords = new Dictionary<string, UnityAction>();
+
+        public UnityEvent assertiveWordEvent;
+        public UnityEvent authoritativeWordEvent;
+
+        public UnityEvent thirdScenarioSittingEvent;
+        public UnityEvent thirdScenarioBackEvent;
+
+        void Start()
         {
-            keywords.Add(word, () =>
+            /*
+            foreach (string word in Constants.ASSERTIVE_WORDS)
             {
-                assertiveWordEvent.Invoke();
-            });
-        }
-        foreach (string word in Constants.AUTHORITATIVE_WORDS)
-        {
-            keywords.Add(word, () =>
+                keywords.Add(word, () =>
+                {
+                    assertiveWordEvent.Invoke();
+                });
+            }
+            foreach (string word in Constants.AUTHORITATIVE_WORDS)
             {
-                authoritativeWordEvent.Invoke();
-            });
-        }
-        foreach (string word in Constants.SITTING_WORDS)
-        {
-            keywords.Add(word, () =>
+                keywords.Add(word, () =>
+                {
+                    authoritativeWordEvent.Invoke();
+                });
+            }
+            foreach (string word in Constants.SITTING_WORDS)
             {
-                thirdScenarioSittingEvent.Invoke();
-            });
-        }
-        foreach (string word in Constants.END_WORDS)
-        {
-            keywords.Add(word, () =>
+                keywords.Add(word, () =>
+                {
+                    thirdScenarioSittingEvent.Invoke();
+                });
+            }
+            foreach (string word in Constants.END_WORDS)
             {
-                thirdScenarioBackEvent.Invoke();
-            });
+                keywords.Add(word, () =>
+                {
+                    thirdScenarioBackEvent.Invoke();
+                });
+            }
+            */
+
+            // Hay que reinicializarlo para cuando se le da a reintentar un escenario,
+            // ya que añadiría más diccionarios con palabras ya contenidas y saltaría una excepción
+            /*
+            if (keywordRecognizer != null)
+            {
+                keywordRecognizer.Stop();
+                keywordRecognizer.Dispose();
+            }
+
+            keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
+            keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
+            keywordRecognizer.Start();
+            */
         }
 
-        // Hay que reinicializarlo para cuando se le da a reintentar un escenario,
-        // ya que añadiría más diccionarios con palabras ya contenidas y saltaría una excepción
-        if (keywordRecognizer != null)
+        public void init()
         {
-            keywordRecognizer.Stop();
-            keywordRecognizer.Dispose();
+            if (keywordRecognizer != null)
+            {
+                keywordRecognizer.Stop();
+                keywordRecognizer.Dispose();
+            }
+
+            keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
+            keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
+            keywordRecognizer.Start();
         }
 
-        keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
-        keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
-        keywordRecognizer.Start();
-    }
-    
-    void Update()
-    {
-        
-    }
-
-    private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
-    {
-        System.Action keywordAction;
-        if (keywords.TryGetValue(args.text, out keywordAction))
+        public void addWordsToKeyWord(string[] words, UnityAction eventToWord)
         {
-            Debug.Log("Se ha reconocido: " + args.text);
-            keywordAction.Invoke();
+            foreach (string w in words)
+            {
+                keywords.Add(w, () =>
+                {
+                    eventToWord();
+                });
+            }
+        }
+
+        private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
+        {
+            UnityAction keywordAction;
+            if (keywords.TryGetValue(args.text, out keywordAction))
+            {
+                Debug.Log("Se ha reconocido: " + args.text);
+                keywordAction();
+            }
         }
     }
 }

@@ -10,21 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e48eeec8166c89146a36d640b4214c1c, type: 3}
-  m_Name: GritoInsultando
+  m_Name: Comentario Inapropiado De Estudiante
   m_EditorClassIdentifier: 
-  nStudents: 10
+  nStudents: 8
   problematicStudents: 1
   nGroups: 0
-  problematicsAnimations:
-  - {fileID: 7400000, guid: 216d5ac76369db84bab1dd907029e944, type: 2}
-  audioSituation: []
   iniMessage: Esta pasando esto...
+  problematicsAnimations:
+  - {fileID: 7400000, guid: efcc70f72efc3444b82bce49d1482a20, type: 2}
+  audiosSituationMasculino:
+  - {fileID: 8300000, guid: cbc7c0647fbe4584a828d27316ba8054, type: 3}
+  audiosSituationFemenino:
+  - {fileID: 8300000, guid: 0ead724f6ff6b0549af532103bd49953, type: 3}
+  audioReaccionClase: {fileID: 8300000, guid: ea8b7396e675d0e44bb4173ed35c3c54, type: 3}
   posibolElections:
   - Puedes pegarle
   - Puedes gritarle
   - Puedes ignorarle
   timeToWait: 5
-  keyWords1: []
+  keyWords1:
+  - Hola
+  - Adios
+  - Caca
+  - Alberto
+  - Salto
   pos1: 1
   audio1: {fileID: 0}
   feedbackPath1: Lo has hecho muy bien tras pegarle

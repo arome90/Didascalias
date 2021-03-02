@@ -147,7 +147,7 @@ public class Escenario3 : MonoBehaviour, Escenario
     public void ResumeGame()
     {
         this.GetComponentInChildren<MouseLook>().enabled = true;
-        this.GetComponent<KeyWordRecognizer>().enabled = true;
+        //this.GetComponent<KeyWordRecognizer>().enabled = true;
         Time.timeScale = 1;
 
         PlayAnimationsAtDifferentTimeSitting();
