@@ -263,8 +263,8 @@ namespace ClassRoomVR {
 
         private void generateTeacher()
         {
-            teacher = Instantiate(classInfo.teacher, sceneObjects.transform);
-            //teacher = sceneObjects.GetComponent<Transform>().Find("PlayerVR").gameObject;
+            //teacher = Instantiate(classInfo.teacher, sceneObjects.transform);
+            teacher = sceneObjects.GetComponent<Transform>().Find("PlayerVR").gameObject;
             Transform teacherIniPos = classInfo.clase.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni");
             //Debug.Log("POS->" + teacherIniPos.position);
             teacher.transform.position = teacherIniPos.position;
