@@ -8,6 +8,8 @@ namespace ClassRoomVR {
         // Enum para las fases de la escena
         public enum State { AnimSituation, AnimReactSituation, GeneratePathSettings, ChoosingPath, ReactToPath };
 
+        public bool PlayScene;
+
         // GameObject vacio para colocar los objetos de la escena
         public GameObject sceneObjects;
 
@@ -69,7 +71,7 @@ namespace ClassRoomVR {
             iniText.text = sceneInfo.iniMessage;
 
             // Esto se hace al pulsar el boton "inicio"
-            _playing = true;
+            _playing = PlayScene;
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
         }
 
@@ -261,9 +263,10 @@ namespace ClassRoomVR {
 
         private void generateTeacher()
         {
-            //teacher = Instantiate(classInfo.teacher, sceneObjects.transform);
-            teacher = sceneObjects.GetComponent<Transform>().Find("PlayerVR").gameObject;
+            teacher = Instantiate(classInfo.teacher, sceneObjects.transform);
+            //teacher = sceneObjects.GetComponent<Transform>().Find("PlayerVR").gameObject;
             Transform teacherIniPos = classInfo.clase.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni");
+            //Debug.Log("POS->" + teacherIniPos.position);
             teacher.transform.position = teacherIniPos.position;
             teacher.transform.Rotate(new Vector3(0, 180, 0));
             //Destroy(sceneObjects.transform.Find("PlayerVR").gameObject);

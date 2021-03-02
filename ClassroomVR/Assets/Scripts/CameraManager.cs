@@ -2,8 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MouseLoook : MonoBehaviour {
+public class CameraManager : MonoBehaviour {
 
+    public float sensitivity = 1;
+
+    public OVRHeadsetEmulator headset;
+    public OVRManager manager;
+    public OVRCameraRig cameraRig;
+
+    /*
     [SerializeField]
     private Transform playerRoot, lookRoot;
 
@@ -41,17 +48,36 @@ public class MouseLoook : MonoBehaviour {
     private int last_Look_Frame;
 
     private bool start = true;
+    */
 
-    void Start () {
+    private void Start () {
+        if (!OVRManager.isHmdPresent) {
+            headset.enabled = false;
+            manager.enabled = false;
+            cameraRig.enabled = false;
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	void Update () {
+        /*
         LockAndUnlockCursor();
         if(Cursor.lockState == CursorLockMode.Locked) {
             LookAround();
         }
+        */
 	}
+
+    void FixedUpdate()
+    {
+        float rotateHorizontal = Input.GetAxis("Mouse X");
+        float rotateVertical = Input.GetAxis("Mouse Y");
+        //transform.RotateAround(transform.position, -Vector3.up, rotateHorizontal * sensitivity); //use 
+        transform.Rotate(-transform.up * rotateHorizontal * sensitivity); //instead if you dont want the camera to rotate around the player
+        //transform.RotateAround(Vector3.zero, transform.right, rotateVertical * sensitivity); // again, use 
+        transform.Rotate(transform.right * rotateVertical * sensitivity); //if you don't want the camera to rotate around the player
+    }
 
     void LockAndUnlockCursor() {
         if(Input.GetKeyDown(KeyCode.Escape)) {
@@ -66,6 +92,7 @@ public class MouseLoook : MonoBehaviour {
         }
     }
 
+    /*
     void LookAround() {
         if (start)
         {
@@ -87,7 +114,7 @@ public class MouseLoook : MonoBehaviour {
         playerRoot.localRotation = Quaternion.Euler(0f, look_Angles.y, 0f);
     }
 
-
+    */
 }
 
 
