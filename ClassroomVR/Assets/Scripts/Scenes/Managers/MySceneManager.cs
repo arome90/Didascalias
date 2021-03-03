@@ -9,6 +9,11 @@ namespace ClassRoomVR {
         public enum State { AnimSituation, AnimReactSituation, GeneratePathSettings, ChoosingPath, ReactToPath };
 
         public bool PlayScene;
+        //pruebasUI
+        public Text textContexto;
+        public GameObject textOpciones;
+        public Canvas c;
+
 
         // GameObject vacio para colocar los objetos de la escena
         public GameObject sceneObjects;
@@ -22,7 +27,7 @@ namespace ClassRoomVR {
         private GameObject[] students;
         private int[] studentsSex;
         private int[] problematicStudents;
-
+     
         // Otras cosis
         // Bool pause
         private bool _playing = false;
@@ -67,14 +72,14 @@ namespace ClassRoomVR {
             // Mostramos el texto descriptivo de la escena (ademas del boton obvio :P)
             // Obviamente esto no es asi :), 
             // Tendriamos una referencia al canvas y de ahi cogemos el texto que sea el bueno 
-            Text iniText = gameObject.AddComponent<Text>(); 
-            iniText.text = sceneInfo.iniMessage;
 
-            // Esto se hace al pulsar el boton "inicio"
-            _playing = PlayScene;
-            _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
+
+      
+            string contexto = students[problematicStudents[0]].name + sceneInfo.iniMessage;
+            textContexto.text = contexto; 
         }
 
+      
         // Update is called once per frame
         void Update() {
             if (_playing) {
@@ -84,6 +89,15 @@ namespace ClassRoomVR {
                 playReactionToPath();
             }
         }
+
+        //-------------------PUBLICS-------------------------
+        public void starplaying()
+        {
+            //Metodo para cuando se pulsa el boton tras la explicacion de la escena
+            _playing = PlayScene;
+            _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
+        }
+
 
         //-------------------PRIVATES-------------------------
         // Metodo que gestiona la presentacion inicial de la situacion
@@ -130,7 +144,16 @@ namespace ClassRoomVR {
             // Parametros especificos de los caminos
             if(_sceneState == State.GeneratePathSettings)
             {
-                Debug.Log("AÑADIR PALABRAS");
+                //mostarr los posibles caminos a tomar
+                textOpciones.SetActive(true);
+                Text[] opciones = textOpciones.GetComponentsInChildren<Text>();
+                for (int i = 0; i < opciones.Length; i++)
+                {
+                    opciones[i].text = sceneInfo.posibolElections[i];
+                }
+                
+
+
                 // Añadimos las palabras al reconocimiento de voz
                 wordRecognizer.addWordsToKeyWord(sceneInfo.keyWords1, path1Reaction);
                 wordRecognizer.addWordsToKeyWord(sceneInfo.keyWords2, path2Reaction);
