@@ -27,15 +27,17 @@ public class HandedInputSelector : MonoBehaviour
 
     void Update()
     {
-        if(OVRInput.GetActiveController() == OVRInput.Controller.LTouch)
+        if (m_CameraRig != null || m_InputModule != null)
         {
-            SetActiveController(OVRInput.Controller.LTouch);
+            if (OVRInput.GetActiveController() == OVRInput.Controller.LTouch)
+            {
+                SetActiveController(OVRInput.Controller.LTouch);
+            }
+            else
+            {
+                SetActiveController(OVRInput.Controller.RTouch);
+            }
         }
-        else
-        {
-            SetActiveController(OVRInput.Controller.RTouch);
-        }
-
     }
 
     void SetActiveController(OVRInput.Controller c)

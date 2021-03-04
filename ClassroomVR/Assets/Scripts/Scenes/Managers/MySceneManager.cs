@@ -8,11 +8,17 @@ namespace ClassRoomVR {
         // Enum para las fases de la escena
         public enum State { AnimSituation, AnimReactSituation, GeneratePathSettings, ChoosingPath, ReactToPath };
 
+        [Tooltip("Booleano para la ejecucion de la situacion")]
         public bool PlayScene;
+
+        [Tooltip("Booleano VR vs TecladoYraton")]
+        public bool VRHardware;
+
+        // Haz un UI MANAGER
         //pruebasUI
         public Text textContexto;
         public GameObject textOpciones;
-        public Canvas c;
+        public GameObject UIHelpers;
 
 
         // GameObject vacio para colocar los objetos de la escena
@@ -23,16 +29,17 @@ namespace ClassRoomVR {
         private KeyWordRecognizer wordRecognizer;
 
         // Objetos de la escena
-        private GameObject teacher;
-        private GameObject[] students;
-        private int[] studentsSex;
-        private int[] problematicStudents;
+        private GameObject _schoolClass;
+        private GameObject _teacher;
+        private GameObject[] _students;
+        private int[] _studentsSex;
+        private int[] _problematicStudents;
      
         // Otras cosis
         // Bool pause
         private bool _playing = false;
         // Bool para los camino
-        private bool pathChosen = false;
+        private bool _pathChosen = false;
         // Estado de la escena
         private State _sceneState;
 
@@ -63,23 +70,28 @@ namespace ClassRoomVR {
             wordRecognizer = new KeyWordRecognizer();
 
             // Generacion de la clase
-            Instantiate(classInfo.clase, sceneObjects.transform);
+            _schoolClass = sceneObjects.GetComponent<Transform>().Find("ClassRoom").gameObject;
             // Generacion del profesor
             generateTeacher();
             // Generamos los estudiantes
             generateChilds();
 
-            // Mostramos el texto descriptivo de la escena (ademas del boton obvio :P)
-            // Obviamente esto no es asi :), 
-            // Tendriamos una referencia al canvas y de ahi cogemos el texto que sea el bueno 
+            // Mostramos el texto descriptivo de la escena, puma putO
+            string contexto = "";
+            for(int i = 0; i < _problematicStudents.Length; i++) {
+                if (i > 0 && i != _problematicStudents.Length-1) contexto += ", ";
+                else if(i > 0 && i == _problematicStudents.Length-1) contexto += " y ";
+                contexto += _students[_problematicStudents[i]].name;
+                if (i > 1 && i == _problematicStudents.Length-1) contexto += ";"; 
+            }
+            contexto += " " + sceneInfo.iniMessage;
+            textContexto.text = contexto;
 
-
-      
-            string contexto = students[problematicStudents[0]].name + sceneInfo.iniMessage;
-            textContexto.text = contexto; 
+            // Ahora mismo no hay botones para el modo normal
+            if (!VRHardware && PlayScene) _playing = true;
         }
 
-      
+
         // Update is called once per frame
         void Update() {
             if (_playing) {
@@ -91,9 +103,9 @@ namespace ClassRoomVR {
         }
 
         //-------------------PUBLICS-------------------------
+        //Metodo para cuando se pulsa el boton tras la explicacion de la escena
         public void starplaying()
         {
-            //Metodo para cuando se pulsa el boton tras la explicacion de la escena
             _playing = PlayScene;
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
         }
@@ -103,33 +115,34 @@ namespace ClassRoomVR {
         // Metodo que gestiona la presentacion inicial de la situacion
         private void playSituation()
         {
-            // Hacemos k los alumnos rebeldes ejecuten su animacion y sonido
+            // Si pasa el tiempo inicial de espera
             if (deltaTime > timeToStart)
             {
+                // Hacemos k los alumnos rebeldes ejecuten su animacion y sonido
                 if (_sceneState == State.AnimSituation)
                 {
                     for (int i = 0; i < sceneInfo.problematicStudents; i++)
                     {
-                        students[problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimations[i].name);
-                        if (studentsSex[problematicStudents[i]] == 0)
+                        _students[_problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimations[i].name);
+                        if (_studentsSex[_problematicStudents[i]] == 0)
                         {
-                            if (sceneInfo.audiosSituationFemenino.Length > i) teacher.GetComponent<AudioSource>().clip = sceneInfo.audiosSituationFemenino[i];
+                            if (sceneInfo.audiosSituationFemenino.Length > i) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audiosSituationFemenino[i];
                         }
                         else
                         {
-                            if (sceneInfo.audiosSituationMasculino.Length > i) teacher.GetComponent<AudioSource>().clip = sceneInfo.audiosSituationMasculino[i];
+                            if (sceneInfo.audiosSituationMasculino.Length > i) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audiosSituationMasculino[i];
                         }
-                        teacher.GetComponent<AudioSource>().Play();
+                        _teacher.GetComponent<AudioSource>().Play();
                     }
                     _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
                 }
                 // Reaccion de la clase
-                else if (_sceneState == State.AnimReactSituation && !teacher.GetComponent<AudioSource>().isPlaying)
+                else if (_sceneState == State.AnimReactSituation && !_teacher.GetComponent<AudioSource>().isPlaying)
                 {
                     if (sceneInfo.audioReaccionClase != null)
                     {
-                        teacher.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
-                        teacher.GetComponent<AudioSource>().Play();
+                        _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                        _teacher.GetComponent<AudioSource>().Play();
                     }
                     _sceneState = State.GeneratePathSettings;   //SIGUIENTE ESTADO
                     soundController.setCommentFinished();
@@ -168,7 +181,7 @@ namespace ClassRoomVR {
                 collisionReaction();
 
                 // Si se toma un camino
-                if(pathChosen) _sceneState = State.ReactToPath; //SIGUIENTE ESTADO
+                if(_pathChosen) _sceneState = State.ReactToPath; //SIGUIENTE ESTADO
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
                     soundController.StopRecordingAndCalculate();
@@ -210,7 +223,7 @@ namespace ClassRoomVR {
             Debug.Log("CAMINO1");
             pathFeedback = sceneInfo.feedbackPath1;
             pathClip = sceneInfo.audio1;
-            pathChosen = true;
+            _pathChosen = true;
         }
 
         private void path2Reaction()
@@ -218,7 +231,7 @@ namespace ClassRoomVR {
             Debug.Log("CAMINO2");
             pathFeedback = sceneInfo.feedbackPath2;
             pathClip = sceneInfo.audio2;
-            pathChosen = true;
+            _pathChosen = true;
         }
 
         private void path3Reaction()
@@ -226,12 +239,21 @@ namespace ClassRoomVR {
             Debug.Log("CAMINO3");
             pathFeedback = sceneInfo.feedbackPath3;
             pathClip = sceneInfo.audio3;
-            pathChosen = true;
+            _pathChosen = true;
         }
 
         // -------------Metodos de generacion inicial------------------
         private void generateChilds() {
-            Transform studentsPositions = classInfo.clase.GetComponentInChildren<Transform>().Find("Desks").GetComponentInChildren<Transform>().Find("DeskPositions");
+            Transform studentsPositions = null;
+            try
+            {
+                studentsPositions = _schoolClass.GetComponentInChildren<Transform>().Find("Desks").GetComponentInChildren<Transform>().Find("DeskPositions");
+            }
+            catch(Exception e)
+            {
+                Debug.LogError("FATAL ERROR");
+                Debug.LogError("No estan declaradas las posiciones de los alumnos en el prefab de la clase.");
+            }
 
             if (sceneInfo.nGroups > 1)
             {
@@ -242,8 +264,8 @@ namespace ClassRoomVR {
 
             if (sceneInfo.nStudents > 30) sceneInfo.nStudents = 30;
 
-            students = new GameObject[sceneInfo.nStudents];
-            studentsSex = new int[sceneInfo.nStudents];
+            _students = new GameObject[sceneInfo.nStudents];
+            _studentsSex = new int[sceneInfo.nStudents];
 
             // Instanciamos los alumnos en sus posiciones de manera aleatoria.
             for (int i = 0; i < sceneInfo.nStudents; i++) {
@@ -262,7 +284,15 @@ namespace ClassRoomVR {
                 }
 
                 // Le ponemos el nombre
-                pickedStudent.GetComponentInChildren<Transform>().Find("Name").GetComponent<TextMesh>().text = pickedStudent.name;
+                try
+                {
+                    pickedStudent.GetComponentInChildren<Transform>().Find("Name").GetComponent<TextMesh>().text = pickedStudent.name;
+                    pickedStudent.GetComponentInChildren<Transform>().Find("Collider").name = pickedStudent.name;
+                } 
+                catch(Exception e)
+                {
+                    Debug.Log("Al alumno " + pickedStudent.name + " le faltan componentes");
+                }
 
                 // TODO: falta el ordenamiento por grupos ;)
                 // Lo colocamos en su pupitre
@@ -270,30 +300,32 @@ namespace ClassRoomVR {
                 pickedStudent.transform.SetPositionAndRotation(pos.position + new Vector3(0, -0.4f, 0), pos.rotation);
 
                 // Lo añadimos al array de estudiantes
-                students[i] = pickedStudent;
-                studentsSex[i] = sex;
+                _students[i] = pickedStudent;
+                _studentsSex[i] = sex;
             }
 
             // Estudiantes problematicos
-            problematicStudents = new int[sceneInfo.problematicStudents];
+            _problematicStudents = new int[sceneInfo.problematicStudents];
 
             for(int i = 0; i < sceneInfo.problematicStudents; i++) {
                 int problematic = UnityEngine.Random.Range(0, sceneInfo.nStudents);
-                problematicStudents[i] = problematic;
-                students[problematic].GetComponentInChildren<Transform>().Find("Name").GetComponent<TextMesh>().color = Color.red;
+                _problematicStudents[i] = problematic;
+                _students[problematic].GetComponentInChildren<Transform>().Find("Name").GetComponent<TextMesh>().color = Color.red;
             }
         }
 
         private void generateTeacher()
         {
-            //teacher = Instantiate(classInfo.teacher, sceneObjects.transform);
-            teacher = sceneObjects.GetComponent<Transform>().Find("PlayerVR").gameObject;
-            Transform teacherIniPos = classInfo.clase.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni");
-            //Debug.Log("POS->" + teacherIniPos.position);
-            teacher.transform.position = teacherIniPos.position;
-            teacher.transform.Rotate(new Vector3(0, 180, 0));
-            //Destroy(sceneObjects.transform.Find("PlayerVR").gameObject);
-        }
+            if (VRHardware)
+            {
+                _teacher = sceneObjects.GetComponent<Transform>().Find("PlayerVR").gameObject;
+                UIHelpers.SetActive(true);
+            }
+            else _teacher = sceneObjects.GetComponent<Transform>().Find("Player").gameObject;
 
+            Transform teacherIniPos = _schoolClass.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni");
+            _teacher.SetActive(true);
+            //_teacher.transform.position = teacherIniPos.position;
+        }
     }
 }

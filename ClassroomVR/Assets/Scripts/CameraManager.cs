@@ -6,11 +6,7 @@ public class CameraManager : MonoBehaviour {
 
     public float sensitivity = 1;
 
-    public OVRHeadsetEmulator headset;
-    public OVRManager manager;
-    public OVRCameraRig cameraRig;
-
-    /*
+    
     [SerializeField]
     private Transform playerRoot, lookRoot;
 
@@ -48,36 +44,20 @@ public class CameraManager : MonoBehaviour {
     private int last_Look_Frame;
 
     private bool start = true;
-    */
+    
 
     private void Start () {
-        if (!OVRManager.isHmdPresent) {
-            headset.enabled = false;
-            manager.enabled = false;
-            cameraRig.enabled = false;
-        }
-
         Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	void Update () {
-        /*
+        
         LockAndUnlockCursor();
         if(Cursor.lockState == CursorLockMode.Locked) {
             LookAround();
         }
-        */
+        
 	}
-
-    void FixedUpdate()
-    {
-        float rotateHorizontal = Input.GetAxis("Mouse X");
-        float rotateVertical = Input.GetAxis("Mouse Y");
-        //transform.RotateAround(transform.position, -Vector3.up, rotateHorizontal * sensitivity); //use 
-        transform.Rotate(-transform.up * rotateHorizontal * sensitivity); //instead if you dont want the camera to rotate around the player
-        //transform.RotateAround(Vector3.zero, transform.right, rotateVertical * sensitivity); // again, use 
-        transform.Rotate(transform.right * rotateVertical * sensitivity); //if you don't want the camera to rotate around the player
-    }
 
     void LockAndUnlockCursor() {
         if(Input.GetKeyDown(KeyCode.Escape)) {
@@ -91,11 +71,9 @@ public class CameraManager : MonoBehaviour {
             }
         }
     }
-
-    /*
+    
     void LookAround() {
-        if (start)
-        {
+        if (start) {
             start = false;
             current_Mouse_Look = new Vector2(0f, 180f);
         }
@@ -114,51 +92,17 @@ public class CameraManager : MonoBehaviour {
         playerRoot.localRotation = Quaternion.Euler(0f, look_Angles.y, 0f);
     }
 
-    */
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Me he acercado al alumno " + other.GetComponentInParent<Transform>().gameObject.name);
+        /*
+        if (other.name == Constants.INAPPROPRIATE_STUDENT_NAME)
+        {
+             * if (timeSinceSceneStarted > Constants.TIME_FOR_AUDIO + audioLength && timeSinceSceneStarted < Constants.TIME_FOR_AUDIO + audioLength + Constants.TIME_FOR_REACTION_E1)
+            {
+                this.SecondPath();
+            }
+        }
+        */
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
