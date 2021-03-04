@@ -66,6 +66,7 @@ namespace ClassRoomVR {
 
         // Start is called before the first frame update
         void Start() {
+            sceneInfo = GameManager.Instance.getPack();
             soundController = GetComponent<SoundLoudness>();
             wordRecognizer = new KeyWordRecognizer();
 
@@ -84,7 +85,7 @@ namespace ClassRoomVR {
                 contexto += _students[_problematicStudents[i]].name;
                 if (i > 1 && i == _problematicStudents.Length-1) contexto += ";"; 
             }
-            sceneInfo = GameManager.Instance.getPack();
+           
             contexto += " " + sceneInfo.iniMessage;
             textContexto.text = contexto;
 
