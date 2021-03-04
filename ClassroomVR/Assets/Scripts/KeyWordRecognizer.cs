@@ -8,6 +8,8 @@ namespace ClassRoomVR
 {
     public class KeyWordRecognizer : MonoBehaviour
     {
+        public delegate void DelegateMethod(int i);
+
         KeywordRecognizer keywordRecognizer;
         Dictionary<string, UnityAction> keywords = new Dictionary<string, UnityAction>();
 
@@ -78,13 +80,13 @@ namespace ClassRoomVR
             keywordRecognizer.Start();
         }
 
-        public void addWordsToKeyWord(string[] words, UnityAction eventToWord)
+        public void addWordsToKeyWord(string[] words, int i, DelegateMethod eventToWord)
         {
             foreach (string w in words)
             {
                 keywords.Add(w, () =>
                 {
-                    eventToWord();
+                    eventToWord(i);
                 });
             }
         }

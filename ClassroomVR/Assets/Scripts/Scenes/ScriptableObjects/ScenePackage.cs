@@ -39,14 +39,18 @@ namespace ClassRoomVR {
         public AudioClip audioReaccionClase;
 
         //-----
-        [Header("Propiedades para la respuesta del profesor")]
+        [Header("Posibles paths a tomar por el profesor")]
+        public PathPackage[] paths;
+
+        /*[Header("Propiedades para la respuesta del profesor")]
         [Tooltip("Posibles elecciones a tomar por el profesor")]
         public string[] posibolElections = new string[3];
-
+        */
         [Tooltip("Tiempo de espera para dar la respuesta como 'ignorada'")]
         public float timeToWait;
 
         //-----
+        /*
         [Header("Camino 1")]
         [Tooltip("Palabras clave")]
         public string[] keyWords1;
@@ -54,6 +58,8 @@ namespace ClassRoomVR {
         public bool pos1;
         [Tooltip("Audio final")]
         public AudioClip audio1;
+        [Tooltip("Animacion de reaccion a la respuesta del profe")]
+        public AnimationClip path1Animation;
         [Tooltip("Feedback final")]
         public string feedbackPath1;
 
@@ -65,6 +71,8 @@ namespace ClassRoomVR {
         public bool pos2;
         [Tooltip("Audio final")]
         public AudioClip audio2;
+        [Tooltip("Animacion de reaccion a la respuesta del profe")]
+        public AnimationClip path2Animation;
         [Tooltip("Feedback final")]
         public string feedbackPath2;
 
@@ -76,7 +84,10 @@ namespace ClassRoomVR {
         public bool pos3;
         [Tooltip("Audio final")]
         public AudioClip audio3;
+        [Tooltip("Animacion de reaccion a la respuesta del profe")]
+        public AnimationClip path3Animation;
         [Tooltip("Feedback final")]
         public string feedbackPath3;
+        */
     }
 }

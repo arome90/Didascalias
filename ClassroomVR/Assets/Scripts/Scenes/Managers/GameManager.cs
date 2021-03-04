@@ -13,11 +13,13 @@ namespace ClassRoomVR
             if (Instance == null)
             {
                 Instance = this;
+                Instance._sceneManeger = _sceneManeger;
+                if (_sceneManeger != null) if (chosenPack == null) chosenPack = _packeges[0];
                 DontDestroyOnLoad(gameObject);
             }
             else
             {
-                Destroy(gameObject);
+                DestroyImmediate(gameObject);
             }
         }
 
@@ -25,21 +27,20 @@ namespace ClassRoomVR
         {
             return chosenPack;
         }
+
+        public ClassInfo getClass()
+        {
+            return _classInfo;
+        }
+
+        public bool getVR()
+        {
+            return VRHardware;
+        }
+
         public void makeChoice(int i)
         {
-            switch (i)
-            {
-                case 1:
-                    chosenPack = pack1;
-                    break;
-                case 2:
-                    chosenPack = pack2;
-                    break;
-                case 3:
-                    chosenPack = pack3;
-                    break;
-                default: break;
-            }
+            chosenPack = _packeges[i];
             LoadTestScene();
         }
 
@@ -58,9 +59,10 @@ namespace ClassRoomVR
         /// ATRIBUTOS NO ESTATICOS ///
 
 
-        public ScenePackage pack1;
-        public ScenePackage pack2;
-        public ScenePackage pack3;
+        public MySceneManager _sceneManeger;
+        public ScenePackage[] _packeges;
+        public ClassInfo _classInfo;
+        public bool VRHardware;
 
 
         private ScenePackage chosenPack;

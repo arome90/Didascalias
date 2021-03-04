@@ -6,20 +6,16 @@ namespace ClassRoomVR {
     public class MySceneManager : MonoBehaviour {
         // -----Publics-----
         // Enum para las fases de la escena
-        public enum State { AnimSituation, AnimReactSituation, GeneratePathSettings, ChoosingPath, ReactToPath };
+        public enum State { AnimSituation, AnimReactSituation, GeneratePathSettings, ChoosingPath, ReactToPath, ShowFeedBack };
 
         [Tooltip("Booleano para la ejecucion de la situacion")]
         public bool PlayScene;
-
-        [Tooltip("Booleano VR vs TecladoYraton")]
-        public bool VRHardware;
 
         // Haz un UI MANAGER
         //pruebasUI
         public Text textContexto;
         public GameObject textOpciones;
         public GameObject UIHelpers;
-
 
         // GameObject vacio para colocar los objetos de la escena
         public GameObject sceneObjects;
@@ -40,12 +36,18 @@ namespace ClassRoomVR {
         private bool _playing = false;
         // Bool para los camino
         private bool _pathChosen = false;
+        // Bool para fin de escena
+        private bool _sceneFinished = false;
         // Estado de la escena
         private State _sceneState;
+
+        //Booleano VR vs TecladoYraton
+        private bool VRHardware;
 
         //--Path parameters--
         private string pathFeedback;
         private AudioClip pathClip;
+        private AnimationClip pathAnim;
 
         //--Tiempos--
         // DeltaTime
@@ -54,19 +56,22 @@ namespace ClassRoomVR {
         private float timeToStart = 2.0f;
         // Tiempo que tiene el profe para reaccionar a la situacion
         private float timeToReact = 10.0f;
+        // Tiempo de espera tras la eleccion del camino del profesor
+        private float timeToWait = 2.0f;
 
-        //-------------
         // Cosas del gm
         [Tooltip("Esto se lo pasa el gm en funcion del nivel elegido")]
         private ScenePackage sceneInfo; // En realidad es private
         [Tooltip("Esto lo coge del gm")]
-        public ClassInfo classInfo; // En realidad es private
-        
-        //public Canvas canvas; // En realidad lo coge del gm, no existe aqui
+        private ClassInfo classInfo; // En realidad es private
+        //-------------
 
         // Start is called before the first frame update
         void Start() {
             sceneInfo = GameManager.Instance.getPack();
+            classInfo = GameManager.Instance.getClass();
+            VRHardware = GameManager.Instance.getVR();
+
             soundController = GetComponent<SoundLoudness>();
             wordRecognizer = new KeyWordRecognizer();
 
@@ -97,7 +102,7 @@ namespace ClassRoomVR {
         // Update is called once per frame
         void Update() {
             if (_playing) {
-                deltaTime += UnityEngine.Time.deltaTime;
+                deltaTime += Time.deltaTime;
                 playSituation();
                 playPathChoosing();
                 playReactionToPath();
@@ -114,6 +119,8 @@ namespace ClassRoomVR {
 
 
         //-------------------PRIVATES-------------------------
+        // METODOS DE CONTROL DE LOGICA DE LA ESCENA
+
         // Metodo que gestiona la presentacion inicial de la situacion
         private void playSituation()
         {
@@ -159,20 +166,17 @@ namespace ClassRoomVR {
             // Parametros especificos de los caminos
             if(_sceneState == State.GeneratePathSettings)
             {
-                //mostarr los posibles caminos a tomar
+                // Mostrar los posibles caminos a tomar
                 textOpciones.SetActive(true);
                 Text[] opciones = textOpciones.GetComponentsInChildren<Text>();
-                for (int i = 0; i < opciones.Length; i++)
+                for (int i = 0; i < sceneInfo.paths.Length; i++)
                 {
-                    opciones[i].text = sceneInfo.posibolElections[i];
+                    // Mostramos los caminos a tomar
+                    opciones[i].text = sceneInfo.paths[i].pathInfo;
+                    // Añadimos las palabras al reconocimiento de voz
+                    wordRecognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
                 }
                 
-
-
-                // Añadimos las palabras al reconocimiento de voz
-                wordRecognizer.addWordsToKeyWord(sceneInfo.keyWords1, path1Reaction);
-                wordRecognizer.addWordsToKeyWord(sceneInfo.keyWords2, path2Reaction);
-                wordRecognizer.addWordsToKeyWord(sceneInfo.keyWords3, path3Reaction);
                 wordRecognizer.init();
                 _sceneState = State.ChoosingPath;   //SIGUIENTE ESTADO
             }
@@ -189,6 +193,7 @@ namespace ClassRoomVR {
                     soundController.StopRecordingAndCalculate();
                     _sceneState = State.ReactToPath;   //SIGUIENTE ESTADO
                 }
+                
             }
         }
 
@@ -198,67 +203,80 @@ namespace ClassRoomVR {
             // Reaccion al camino tomado
             if(_sceneState == State.ReactToPath)
             {
-
+                // Audio de respuesta de los estudiantes
+                if (pathClip != null) {
+                    _teacher.GetComponent<AudioSource>().clip = pathClip;
+                    _teacher.GetComponent<AudioSource>().Play();
+                }
+                // Animaciones de respuesta de los estudiantes
+                if (pathAnim != null)
+                {
+                    PlayAnimationsAtDifferentTime(pathAnim.name);
+                }
+                _sceneState = State.ShowFeedBack;   //SIGUIENTE ESTADO
+            }
+            else if (_sceneState == State.ShowFeedBack)
+            {
+                // Si no esta el audio ejecutandose se muestra el feedback
+                if (!_teacher.GetComponent<AudioSource>().isPlaying)
+                {
+                    //textContexto
+                    textContexto.text = pathFeedback;
+                    _sceneFinished = true;
+                    _playing = false;
+                }
             }
         }
-
-
+        //----------------------------------------------------------------------------------
         //--------------Metodos para la generalizacion del camino elegido-------------------
+
+        // Metodo para detectar colisiones del teacher con los alumnos
         private void collisionReaction()
         {
-            if (sceneInfo.pos1)
+            for (int i = 0; i < sceneInfo.paths.Length; i++)
             {
-
-            }
-            if (sceneInfo.pos2)
-            {
-
-            }
-            if (sceneInfo.pos3)
-            {
+                if (sceneInfo.paths[i].getClose)
+                {
+                    // Si has chocado con el alumno liante indicarlo de alguna forma
+                }
 
             }
         }
 
-        private void path1Reaction()
+        // Metodo que se llama al detectarse una palabra
+        private void pathReaction(int i)
         {
-            Debug.Log("CAMINO1");
-            pathFeedback = sceneInfo.feedbackPath1;
-            pathClip = sceneInfo.audio1;
+            Debug.Log("CAMINO " + i);
+            pathFeedback = sceneInfo.paths[i].feedbackPath;
+            pathClip = sceneInfo.paths[i].audio;
+            pathAnim = sceneInfo.paths[i].pathAnimation;
             _pathChosen = true;
         }
 
-        private void path2Reaction()
+        // Metodo para ejecutar animaciones en diferente timing
+        private void PlayAnimationsAtDifferentTime(string animName)
         {
-            Debug.Log("CAMINO2");
-            pathFeedback = sceneInfo.feedbackPath2;
-            pathClip = sceneInfo.audio2;
-            _pathChosen = true;
-        }
-
-        private void path3Reaction()
-        {
-            Debug.Log("CAMINO3");
-            pathFeedback = sceneInfo.feedbackPath3;
-            pathClip = sceneInfo.audio3;
-            _pathChosen = true;
+            // Play animations at different time
+            float time = 0.0f;
+            foreach (GameObject student in _students)
+            {
+                time = time + 1f / 8;
+                student.GetComponent<Animator>().Play(animName, 0, time);
+            }
         }
 
         // -------------Metodos de generacion inicial------------------
         private void generateChilds() {
             Transform studentsPositions = null;
-            try
-            {
+            try {
                 studentsPositions = _schoolClass.GetComponentInChildren<Transform>().Find("Desks").GetComponentInChildren<Transform>().Find("DeskPositions");
             }
-            catch(Exception e)
-            {
+            catch(Exception e) {
                 Debug.LogError("FATAL ERROR");
                 Debug.LogError("No estan declaradas las posiciones de los alumnos en el prefab de la clase.");
             }
 
-            if (sceneInfo.nGroups > 1)
-            {
+            if (sceneInfo.nGroups > 1) {
                 // Colocar a los chavales en grupos
                 int alumnosPorGrupo = sceneInfo.nStudents / sceneInfo.nGroups;
                 int nPupitres = studentsPositions.childCount;
@@ -314,6 +332,7 @@ namespace ClassRoomVR {
                 _problematicStudents[i] = problematic;
                 _students[problematic].GetComponentInChildren<Transform>().Find("Name").GetComponent<TextMesh>().color = Color.red;
             }
+            PlayAnimationsAtDifferentTime(classInfo.idleAnim.name);
         }
 
         private void generateTeacher()
@@ -325,8 +344,8 @@ namespace ClassRoomVR {
             }
             else _teacher = sceneObjects.GetComponent<Transform>().Find("Player").gameObject;
 
-            Transform teacherIniPos = _schoolClass.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni");
             _teacher.SetActive(true);
+            //Transform teacherIniPos = _schoolClass.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni");
             //_teacher.transform.position = teacherIniPos.position;
         }
     }
