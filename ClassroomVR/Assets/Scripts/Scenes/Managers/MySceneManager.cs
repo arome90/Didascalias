@@ -58,7 +58,7 @@ namespace ClassRoomVR {
         //-------------
         // Cosas del gm
         [Tooltip("Esto se lo pasa el gm en funcion del nivel elegido")]
-        public ScenePackage sceneInfo; // En realidad es private
+        private ScenePackage sceneInfo; // En realidad es private
         [Tooltip("Esto lo coge del gm")]
         public ClassInfo classInfo; // En realidad es private
         
@@ -84,6 +84,7 @@ namespace ClassRoomVR {
                 contexto += _students[_problematicStudents[i]].name;
                 if (i > 1 && i == _problematicStudents.Length-1) contexto += ";"; 
             }
+            sceneInfo = GameManager.Instance.getPack();
             contexto += " " + sceneInfo.iniMessage;
             textContexto.text = contexto;
 
