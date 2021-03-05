@@ -142,6 +142,10 @@ namespace ClassRoomVR {
             }
             return ps;
         }
+        public GameObject getTeacher()
+        {
+            return _teacher;
+        }
         public GameObject getClass()
         {
             return _schoolClass;

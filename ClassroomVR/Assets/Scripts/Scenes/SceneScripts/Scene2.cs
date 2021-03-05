@@ -3,6 +3,7 @@
 namespace ClassRoomVR {
     public class Scene2 : MonoBehaviour
     {
+        // Metodo de la situacion
         public void separateProblematics()
         {
             MySceneManager sm = GameManager.Instance._sceneManager;
