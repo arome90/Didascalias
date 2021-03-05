@@ -126,9 +126,22 @@ namespace ClassRoomVR {
         }
 
         // Getters
-        public MySceneManager getSceneManager()
+        public GameObject[] getStudents()
         {
-            return this;
+            return _students;
+        }
+        public GameObject[] getProblematics()
+        {
+            GameObject[] ps = new GameObject[sceneInfo.problematicStudents];
+            for(int i = 0; i < _problematicStudents.Length; i++)
+            {
+                ps[i] = _students[_problematicStudents[i]];
+            }
+            return ps;
+        }
+        public GameObject getClass()
+        {
+            return _schoolClass;
         }
 
         //-------------------PRIVATES-------------------------

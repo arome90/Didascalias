@@ -13,8 +13,8 @@ namespace ClassRoomVR
             if (Instance == null)
             {
                 Instance = this;
-                Instance._sceneManeger = _sceneManeger;
-                if (_sceneManeger != null) if (chosenPack == null) chosenPack = _packeges[0];
+                Instance._sceneManager = _sceneManager;
+                if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
                 DontDestroyOnLoad(gameObject);
             }
             else
@@ -57,16 +57,12 @@ namespace ClassRoomVR
         public static GameManager Instance { get; private set; }
 
         /// ATRIBUTOS NO ESTATICOS ///
-
-
-        public MySceneManager _sceneManeger;
+        public MySceneManager _sceneManager;
         public ScenePackage[] _packeges;
         public ClassInfo _classInfo;
         public bool VRHardware;
 
 
         private ScenePackage chosenPack;
-
-
     }
 }
