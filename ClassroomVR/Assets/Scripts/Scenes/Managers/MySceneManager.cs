@@ -44,6 +44,10 @@ namespace ClassRoomVR {
         // Estado de la escena
         private State _sceneState;
 
+        // Bools para los comportamientos especificos de cada escena
+        private bool specialSituatiuon = false;
+        private bool specialPath = false;
+
         //Booleano VR vs TecladoYraton
         private bool VRHardware;
 
@@ -52,7 +56,7 @@ namespace ClassRoomVR {
         private AudioClip pathClip;
         private AnimationClip pathAnimClass;
         private AnimationClip pathAnimProb;
-        private UnityEvent pathEvent;
+        private UnityEvent pathEvent = null;
 
         //--Tiempos--
         // DeltaTime
@@ -113,7 +117,6 @@ namespace ClassRoomVR {
                 playSituation();
                 playPathChoosing();
                 playReactionToPath();
-                //if()
             }
         }
 
@@ -143,6 +146,20 @@ namespace ClassRoomVR {
         {
             return _schoolClass;
         }
+        public bool[] getFreeDesks()
+        {
+            return _asientosOcupados;
+        }
+
+        // Setters (para situaciones especiales)
+        public void setSpecialSituation(bool b)
+        {
+            specialSituatiuon = b;
+        }
+        public void setSpecialPath(bool b)
+        {
+            specialPath = b;
+        }
 
         //-------------------PRIVATES-------------------------
         // METODOS DE CONTROL DE LOGICA DE LA ESCENA
@@ -151,25 +168,34 @@ namespace ClassRoomVR {
         private void playSituation()
         {
             // Si pasa el tiempo inicial de espera
-            if (deltaTime > timeToStart)
-            {
+            if (deltaTime > timeToStart) {
                 // Hacemos k los alumnos rebeldes ejecuten su animacion y sonido
                 if (_sceneState == State.AnimSituation)
                 {
                     for (int i = 0; i < sceneInfo.problematicStudents; i++)
                     {
-                        _students[_problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimations[i].name);
+                        if (sceneInfo.problematicsAnimation != null) _students[_problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimation.name);
                         if (_studentsSex[_problematicStudents[i]] == 0)
                         {
-                            if (sceneInfo.audiosSituationFemenino.Length > i) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audiosSituationFemenino[i];
+                            if (sceneInfo.audioSituationFemenino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationFemenino;
                         }
                         else
                         {
-                            if (sceneInfo.audiosSituationMasculino.Length > i) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audiosSituationMasculino[i];
+                            if (sceneInfo.audioSituationMasculino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationMasculino;
                         }
                         _teacher.GetComponent<AudioSource>().Play();
+
                     }
-                    _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
+                    // Comportamiento especial
+                    if (sceneInfo.especificBehaviour.GetPersistentEventCount() > 0)
+                    {
+                        sceneInfo.especificBehaviour.Invoke();
+                        if(specialSituatiuon) _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
+                    }
+                    else
+                    {
+                        _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
+                    }
                 }
                 // Reaccion de la clase
                 else if (_sceneState == State.AnimReactSituation && !_teacher.GetComponent<AudioSource>().isPlaying)
@@ -192,6 +218,7 @@ namespace ClassRoomVR {
             // Parametros especificos de los caminos
             if(_sceneState == State.GeneratePathSettings)
             {
+                //Debug.Log("State GeneratePathSettings");
                 // Mostrar los posibles caminos a tomar
                 textOpciones.SetActive(true);
                 Text[] opciones = textOpciones.GetComponentsInChildren<Text>();
@@ -216,6 +243,7 @@ namespace ClassRoomVR {
                 if(_pathChosen) _sceneState = State.ReactToPath; //SIGUIENTE ESTADO
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
+                    Debug.Log("Se acabo el tiempo de reaccion");
                     // Si alguno de los caminos era ignorar
                     for(int i = 0; i < sceneInfo.paths.Length; i++) if (sceneInfo.paths[i].ignore) pathReaction(i);
 
@@ -241,9 +269,17 @@ namespace ClassRoomVR {
                 // Animaciones de respuesta de los estudiantes
                 if (pathAnimClass != null) PlayAnimationsAtDifferentTimeClass(pathAnimClass.name);
                 if (pathAnimProb != null) PlayAnimationsAtDifferentTimeProblematic(pathAnimProb.name);
-                if (pathEvent != null) pathEvent.Invoke();
 
-                _sceneState = State.ShowFeedBack;   //SIGUIENTE ESTADO
+                // Comportamiento especial del camino
+                if (pathEvent != null)
+                {
+                    pathEvent.Invoke();
+                    if(specialPath) _sceneState = State.ShowFeedBack;   //SIGUIENTE ESTADO
+                }
+                else
+                {
+                    _sceneState = State.ShowFeedBack;   //SIGUIENTE ESTADO
+                }
             }
             else if (_sceneState == State.ShowFeedBack)
             {

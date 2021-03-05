@@ -32,12 +32,12 @@ namespace ClassRoomVR {
         public float timeToStart = 0;
 
         [Tooltip("Animaciones para la 'situacion critica', colocar en orden de ejecucion")]
-        public AnimationClip[] problematicsAnimations;
+        public AnimationClip problematicsAnimation;
 
         [Tooltip("Audios necesarios para la 'situacion critica', colocar en orden de ejecucion")]
-        public AudioClip[] audiosSituationMasculino;
+        public AudioClip audioSituationMasculino;
         [Tooltip("Audios necesarios para la 'situacion critica', colocar en orden de ejecucion")]
-        public AudioClip[] audiosSituationFemenino;
+        public AudioClip audioSituationFemenino;
 
         [Tooltip("Audio de reaccion de la clase a la situacion critica")]
         public AudioClip audioReaccionClase;

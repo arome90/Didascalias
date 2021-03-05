@@ -84,10 +84,13 @@ namespace ClassRoomVR
         {
             foreach (string w in words)
             {
-                keywords.Add(w, () =>
+                if (!keywords.ContainsKey(w))
                 {
-                    eventToWord(i);
-                });
+                    keywords.Add(w, () =>
+                    {
+                        eventToWord(i);
+                    });
+                }
             }
         }
 
