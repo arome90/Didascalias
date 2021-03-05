@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace ClassRoomVR {
@@ -30,6 +32,7 @@ namespace ClassRoomVR {
         private GameObject[] _students;
         private int[] _studentsSex;
         private int[] _problematicStudents;
+        private bool[] _asientosOcupados;
      
         // Otras cosis
         // Bool pause
@@ -47,23 +50,25 @@ namespace ClassRoomVR {
         //--Path parameters--
         private string pathFeedback;
         private AudioClip pathClip;
-        private AnimationClip pathAnim;
+        private AnimationClip pathAnimClass;
+        private AnimationClip pathAnimProb;
+        private UnityEvent pathEvent;
 
         //--Tiempos--
         // DeltaTime
         private float deltaTime = 0f;
         // Tiempo para empezar a ejecutar la situacion
-        private float timeToStart = 2.0f;
+        private float timeToStart = 3.0f;
         // Tiempo que tiene el profe para reaccionar a la situacion
         private float timeToReact = 10.0f;
-        // Tiempo de espera tras la eleccion del camino del profesor
-        private float timeToWait = 2.0f;
+        // Tiempo de espera para el feedbackFinal
+        private float timeToWait = 5.0f;
 
         // Cosas del gm
-        [Tooltip("Esto se lo pasa el gm en funcion del nivel elegido")]
-        private ScenePackage sceneInfo; // En realidad es private
-        [Tooltip("Esto lo coge del gm")]
-        private ClassInfo classInfo; // En realidad es private
+        // Especificaciones de la escena a jugar
+        private ScenePackage sceneInfo;
+        // Especificaciones de la clase a generar
+        private ClassInfo classInfo;
         //-------------
 
         // Start is called before the first frame update
@@ -75,6 +80,8 @@ namespace ClassRoomVR {
             soundController = GetComponent<SoundLoudness>();
             wordRecognizer = new KeyWordRecognizer();
 
+            timeToStart = sceneInfo.timeToStart;
+
             // Generacion de la clase
             _schoolClass = sceneObjects.GetComponent<Transform>().Find("ClassRoom").gameObject;
             // Generacion del profesor
@@ -82,7 +89,7 @@ namespace ClassRoomVR {
             // Generamos los estudiantes
             generateChilds();
 
-            // Mostramos el texto descriptivo de la escena, puma putO
+            // Mostramos el texto descriptivo de la escena
             string contexto = "";
             for(int i = 0; i < _problematicStudents.Length; i++) {
                 if (i > 0 && i != _problematicStudents.Length-1) contexto += ", ";
@@ -106,6 +113,7 @@ namespace ClassRoomVR {
                 playSituation();
                 playPathChoosing();
                 playReactionToPath();
+                //if()
             }
         }
 
@@ -117,6 +125,11 @@ namespace ClassRoomVR {
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
         }
 
+        // Getters
+        public MySceneManager getSceneManager()
+        {
+            return this;
+        }
 
         //-------------------PRIVATES-------------------------
         // METODOS DE CONTROL DE LOGICA DE LA ESCENA
@@ -190,7 +203,11 @@ namespace ClassRoomVR {
                 if(_pathChosen) _sceneState = State.ReactToPath; //SIGUIENTE ESTADO
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
+                    // Si alguno de los caminos era ignorar
+                    for(int i = 0; i < sceneInfo.paths.Length; i++) if (sceneInfo.paths[i].ignore) pathReaction(i);
+
                     soundController.StopRecordingAndCalculate();
+                    deltaTime = 0;
                     _sceneState = State.ReactToPath;   //SIGUIENTE ESTADO
                 }
                 
@@ -209,17 +226,16 @@ namespace ClassRoomVR {
                     _teacher.GetComponent<AudioSource>().Play();
                 }
                 // Animaciones de respuesta de los estudiantes
-                if (pathAnim != null)
-                {
-                    PlayAnimationsAtDifferentTime(pathAnim.name);
-                }
+                if (pathAnimClass != null) PlayAnimationsAtDifferentTimeClass(pathAnimClass.name);
+                if (pathAnimProb != null) PlayAnimationsAtDifferentTimeProblematic(pathAnimProb.name);
+                if (pathEvent != null) pathEvent.Invoke();
+
                 _sceneState = State.ShowFeedBack;   //SIGUIENTE ESTADO
             }
             else if (_sceneState == State.ShowFeedBack)
             {
                 // Si no esta el audio ejecutandose se muestra el feedback
-                if (!_teacher.GetComponent<AudioSource>().isPlaying)
-                {
+                if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
                     //textContexto
                     textContexto.text = pathFeedback;
                     _sceneFinished = true;
@@ -249,19 +265,33 @@ namespace ClassRoomVR {
             Debug.Log("CAMINO " + i);
             pathFeedback = sceneInfo.paths[i].feedbackPath;
             pathClip = sceneInfo.paths[i].audio;
-            pathAnim = sceneInfo.paths[i].pathAnimation;
+            pathAnimClass = sceneInfo.paths[i].pathClassAnimation;
+            pathAnimProb = sceneInfo.paths[i].pathProbAnimation;
+            pathEvent = sceneInfo.paths[i].especificBehaviour;
             _pathChosen = true;
         }
 
         // Metodo para ejecutar animaciones en diferente timing
-        private void PlayAnimationsAtDifferentTime(string animName)
+        private void PlayAnimationsAtDifferentTimeProblematic(string animName)
         {
             // Play animations at different time
             float time = 0.0f;
-            foreach (GameObject student in _students)
+            foreach (int prob in _problematicStudents)
             {
                 time = time + 1f / 8;
-                student.GetComponent<Animator>().Play(animName, 0, time);
+                _students[prob].GetComponent<Animator>().Play(animName, 0, time);
+            }
+        }
+
+        // Metodo para ejecutar animaciones en diferente timing
+        private void PlayAnimationsAtDifferentTimeClass(string animName)
+        {
+            // Play animations at different time
+            float time = 0.0f;
+            foreach (GameObject s in _students)
+            {
+                time = time + 1f / 8;
+                s.GetComponent<Animator>().Play(animName, 0, time);
             }
         }
 
@@ -283,11 +313,12 @@ namespace ClassRoomVR {
             }
 
             if (sceneInfo.nStudents > 30) sceneInfo.nStudents = 30;
+            _asientosOcupados = new bool[studentsPositions.childCount];
 
             _students = new GameObject[sceneInfo.nStudents];
             _studentsSex = new int[sceneInfo.nStudents];
 
-            // Instanciamos los alumnos en sus posiciones de manera aleatoria.
+            // Instanciamos los alumnos en sus posiciones de manera aleatoria(el prefab).
             for (int i = 0; i < sceneInfo.nStudents; i++) {
 
                 // Elegimos el sexo del estudiante
@@ -321,18 +352,60 @@ namespace ClassRoomVR {
 
                 // Lo añadimos al array de estudiantes
                 _students[i] = pickedStudent;
+                _asientosOcupados[i] = true;
                 _studentsSex[i] = sex;
             }
 
             // Estudiantes problematicos
             _problematicStudents = new int[sceneInfo.problematicStudents];
-
+            int problematic = -1;
             for(int i = 0; i < sceneInfo.problematicStudents; i++) {
-                int problematic = UnityEngine.Random.Range(0, sceneInfo.nStudents);
+                // En caso de que se tengan que sentar juntos
+                if (sceneInfo.problematicTogether) {
+                    // Condicion inicial para el primero
+                    if (problematic == -1)
+                    {
+                        problematic = UnityEngine.Random.Range(0, sceneInfo.nStudents);
+                    }
+                    // Colocacion de los demas alrededor del anterior problematico
+                    else
+                    {
+                        int a = -1;
+                        do
+                        {
+                            a = UnityEngine.Random.Range(0, 4);
+                            switch (a)
+                            {
+                                case 0:
+                                    a = 1;
+                                    break;
+                                case 1:
+                                    a = -1;
+                                    break;
+                                case 2:
+                                    a = 5;
+                                    break;
+                                case 3:
+                                    a = -5;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } while (problematic + a > sceneInfo.nStudents - 1 || problematic + a < 0);
+
+                        problematic += a;
+                    }
+                }
+                else
+                {
+                    problematic = UnityEngine.Random.Range(0, sceneInfo.nStudents);
+                }
                 _problematicStudents[i] = problematic;
                 _students[problematic].GetComponentInChildren<Transform>().Find("Name").GetComponent<TextMesh>().color = Color.red;
             }
-            PlayAnimationsAtDifferentTime(classInfo.idleAnim.name);
+
+            // Ejecutamos animaciones con distinto timing
+            PlayAnimationsAtDifferentTimeClass(classInfo.idleAnim.name);
         }
 
         private void generateTeacher()

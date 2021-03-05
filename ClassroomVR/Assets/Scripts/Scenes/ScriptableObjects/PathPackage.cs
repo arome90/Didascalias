@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace ClassRoomVR
 {
@@ -26,8 +25,14 @@ namespace ClassRoomVR
         [Tooltip("Audio de reaccion de la clase final")]
         public AudioClip audio;
 
-        [Tooltip("Animacion de reaccion a la respuesta del profe")]
-        public AnimationClip pathAnimation;
+        [Tooltip("Animacion de reaccion de la clase a la respuesta del profe")]
+        public AnimationClip pathClassAnimation;
+        [Tooltip("Animacion de reaccion de los problematicos a la respuesta del profe")]
+        public AnimationClip pathProbAnimation;
+
+        // Se debe crear un prefab, ubicados en "Resources/prefabs/ScenesBeheviours" al cual se le añade un script con los metodos que se quieran implementar
+        [Tooltip("Comportamiento especial de la escena tras la eleccion del camino")]
+        public UnityEvent especificBehaviour;
 
         [Tooltip("Feedback final")]
         public string feedbackPath;

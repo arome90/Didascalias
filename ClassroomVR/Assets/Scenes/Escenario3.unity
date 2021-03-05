@@ -2778,8 +2778,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 22100000, guid: 2365adc8d4fb72a4cb77660dc2ecb83c,
-        type: 2}
+      objectReference: {fileID: 9100000, guid: ce6f100629210ac47a26412b68836821, type: 2}
     - target: {fileID: -4216859302048453862, guid: f88c871280146dc4f8b0f9c0b35c7bbd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7455,13 +7454,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87fde067339c66f47a8359196fde52d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axes: 0
-  sensitivityX: 15
-  sensitivityY: 15
-  minimumX: -360
-  maximumX: 360
-  minimumY: -60
-  maximumY: 60
+  sensitivity: 1
+  playerRoot: {fileID: 0}
+  lookRoot: {fileID: 0}
+  invert: 0
+  can_Unlock: 1
+  sensivity: 5
+  smooth_Steps: 10
+  smooth_Weight: 0.4
+  roll_Angle: 10
+  roll_Speed: 3
+  default_Look_Limits: {x: -70, y: 80}
 --- !u!1 &1938098844
 GameObject:
   m_ObjectHideFlags: 0

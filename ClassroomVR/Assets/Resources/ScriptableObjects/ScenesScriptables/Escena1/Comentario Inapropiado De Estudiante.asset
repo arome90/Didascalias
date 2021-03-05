@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nStudents: 8
   problematicStudents: 1
+  problematicTogether: 0
   nGroups: 2
   iniMessage: Esta pasando esto...
+  timeToStart: 3
   problematicsAnimations:
   - {fileID: 7400000, guid: efcc70f72efc3444b82bce49d1482a20, type: 2}
   audiosSituationMasculino:
@@ -23,8 +25,22 @@ MonoBehaviour:
   audiosSituationFemenino:
   - {fileID: 8300000, guid: 0ead724f6ff6b0549af532103bd49953, type: 3}
   audioReaccionClase: {fileID: 8300000, guid: ea8b7396e675d0e44bb4173ed35c3c54, type: 3}
+  especificBehaviour:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
+          type: 3}
+        m_MethodName: 
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   paths:
   - {fileID: 11400000, guid: 3e8bb2b2c4b55064fbdaabf4e7dbd7bb, type: 2}
   - {fileID: 11400000, guid: a63c492aad0bcc44d93712863c436e2a, type: 2}
   - {fileID: 11400000, guid: ed870482d57941848afecb8a6f34e9e8, type: 2}
-  timeToWait: 5
