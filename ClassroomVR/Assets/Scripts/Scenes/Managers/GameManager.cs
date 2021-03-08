@@ -13,12 +13,13 @@ namespace ClassRoomVR
             if (Instance == null)
             {
                 Instance = this;
-                Instance._sceneManager = _sceneManager;
+                //Instance._sceneManager = _sceneManager;
                 if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
                 DontDestroyOnLoad(gameObject);
             }
             else
             {
+                Instance._sceneManager = _sceneManager;
                 DestroyImmediate(gameObject);
             }
         }
