@@ -37,8 +37,9 @@ namespace ClassRoomVR {
         // Otras cosis
         // Bool pause
         private bool _playing = false;
-        // Bool para los camino
+        // Bool para los caminos
         private bool _pathChosen = false;
+        private bool doPathOptionOnce = false;
         // Bool para fin de escena
         private bool _sceneFinished = false;
         // Estado de la escena
@@ -265,14 +266,18 @@ namespace ClassRoomVR {
             // Reaccion al camino tomado
             if(_sceneState == State.ReactToPath)
             {
-                // Audio de respuesta de los estudiantes
-                if (pathClip != null) {
-                    _teacher.GetComponent<AudioSource>().clip = pathClip;
-                    _teacher.GetComponent<AudioSource>().Play();
+                if (!doPathOptionOnce)
+                {
+                    // Audio de respuesta de los estudiantes
+                    if (pathClip != null) {
+                        _teacher.GetComponent<AudioSource>().clip = pathClip;
+                        _teacher.GetComponent<AudioSource>().Play();
+                    }
+                    // Animaciones de respuesta de los estudiantes
+                    if (pathAnimClass != null) PlayAnimationsAtDifferentTimeClass(pathAnimClass.name);
+                    if (pathAnimProb != null) PlayAnimationsAtDifferentTimeProblematic(pathAnimProb.name);
+                    doPathOptionOnce = true;
                 }
-                // Animaciones de respuesta de los estudiantes
-                if (pathAnimClass != null) PlayAnimationsAtDifferentTimeClass(pathAnimClass.name);
-                if (pathAnimProb != null) PlayAnimationsAtDifferentTimeProblematic(pathAnimProb.name);
 
                 // Comportamiento especial del camino
                 if (pathEvent != null)
