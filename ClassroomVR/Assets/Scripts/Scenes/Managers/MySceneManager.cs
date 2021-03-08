@@ -37,6 +37,8 @@ namespace ClassRoomVR {
         // Otras cosis
         // Bool pause
         private bool _playing = false;
+        // Bool para la escena
+        private bool doSceneBehaviourOnce = false;
         // Bool para los caminos
         private bool _pathChosen = false;
         private bool doPathOptionOnce = false;
@@ -93,6 +95,8 @@ namespace ClassRoomVR {
             generateTeacher();
             // Generamos los estudiantes
             generateChilds();
+
+            sceneObjects.GetComponent<Transform>().Find("NavMesh").gameObject.SetActive(true);
 
             // Mostramos el texto descriptivo de la escena
             string contexto = "";
@@ -177,19 +181,23 @@ namespace ClassRoomVR {
                 // Hacemos k los alumnos rebeldes ejecuten su animacion y sonido
                 if (_sceneState == State.AnimSituation)
                 {
-                    for (int i = 0; i < sceneInfo.problematicStudents; i++)
+                    if (!doSceneBehaviourOnce)
                     {
-                        if (sceneInfo.problematicsAnimation != null) _students[_problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimation.name);
-                        if (_studentsSex[_problematicStudents[i]] == 0)
+                        for (int i = 0; i < sceneInfo.problematicStudents; i++)
                         {
-                            if (sceneInfo.audioSituationFemenino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationFemenino;
-                        }
-                        else
-                        {
-                            if (sceneInfo.audioSituationMasculino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationMasculino;
-                        }
-                        _teacher.GetComponent<AudioSource>().Play();
+                            if (sceneInfo.problematicsAnimation != null) _students[_problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimation.name);
+                            if (_studentsSex[_problematicStudents[i]] == 0)
+                            {
+                                if (sceneInfo.audioSituationFemenino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationFemenino;
+                            }
+                            else
+                            {
+                                if (sceneInfo.audioSituationMasculino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationMasculino;
+                            }
+                            _teacher.GetComponent<AudioSource>().Play();
 
+                        }
+                        doSceneBehaviourOnce = true;
                     }
                     // Comportamiento especial
                     if (sceneInfo.especificBehaviour.GetPersistentEventCount() > 0)
@@ -320,7 +328,7 @@ namespace ClassRoomVR {
         // Metodo que se llama al detectarse una palabra
         private void pathReaction(int i)
         {
-            Debug.Log("CAMINO " + i);
+            Debug.Log("CAMINO " + (i+1));
             pathFeedback = sceneInfo.paths[i].feedbackPath;
             pathClip = sceneInfo.paths[i].audio;
             pathAnimClass = sceneInfo.paths[i].pathClassAnimation;
@@ -407,6 +415,7 @@ namespace ClassRoomVR {
                 // Lo colocamos en su pupitre
                 Transform pos = studentsPositions.GetComponent<Transform>().GetChild(i);
                 pickedStudent.transform.SetPositionAndRotation(pos.position + new Vector3(0, -0.4f, 0), pos.rotation);
+                //Debug.Log("POS: " + pos.position);
 
                 // Lo añadimos al array de estudiantes
                 _students[i] = pickedStudent;
@@ -476,8 +485,6 @@ namespace ClassRoomVR {
             else _teacher = sceneObjects.GetComponent<Transform>().Find("Player").gameObject;
 
             _teacher.SetActive(true);
-            //Transform teacherIniPos = _schoolClass.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni");
-            //_teacher.transform.position = teacherIniPos.position;
         }
     }
 }

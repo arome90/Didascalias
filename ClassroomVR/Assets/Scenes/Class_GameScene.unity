@@ -106,15 +106,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.5
-    agentHeight: 2
+    agentRadius: 0.1
+    agentHeight: 1
     agentSlope: 45
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.033333335
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -742,7 +742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1279263948
 Transform:
   m_ObjectHideFlags: 0
@@ -751,7 +751,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1279263947}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 3.03, y: 0, z: -2.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2069931793}
@@ -783,9 +783,9 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 1
-  m_VoxelSize: 0.05
+  m_VoxelSize: 0.15
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 98cd03e3f3cb4dc419367f1f87055203, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 008a3fa9a62ea4946a03866fb9b7ca21, type: 2}
 --- !u!1001 &1466404655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -963,6 +963,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ClassRoom
       objectReference: {fileID: 0}
+    - target: {fileID: 1000012154028982, guid: 30026254a41da3f4eb202264ab31261c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012417535656, guid: 30026254a41da3f4eb202264ab31261c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000013399776646, guid: 30026254a41da3f4eb202264ab31261c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4000011596351240, guid: 30026254a41da3f4eb202264ab31261c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -1111,7 +1123,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _packeges.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 8831e49bd3d175d47bdd1e2fedcc71aa,
+      objectReference: {fileID: 11400000, guid: d2850e8af4e0c0547b44b20f38f9f730,
         type: 2}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}

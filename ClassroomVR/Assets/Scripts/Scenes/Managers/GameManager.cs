@@ -42,16 +42,16 @@ namespace ClassRoomVR
         public void makeChoice(int i)
         {
             chosenPack = _packeges[i];
-            LoadTestScene();
+            LoadMainScene();
         }
 
         public void LoadChoosingScene()
         {
             SceneManager.LoadScene("ChoosePackScene");
         }
-        public void LoadTestScene()
+        public void LoadMainScene()
         {
-            SceneManager.LoadScene("EscenaDePruebas");
+            SceneManager.LoadScene("Class_GameScene");
         }
 
         /// ATRIBUTOS ESTATICOS ///

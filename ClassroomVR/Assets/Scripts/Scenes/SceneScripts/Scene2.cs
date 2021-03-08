@@ -18,24 +18,30 @@ namespace ClassRoomVR {
             GameObject agent = problematics[0];
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
             Vector3 dest = new Vector3(0, 0, 0);
-            //Transform dest = schoolClass.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPosition").Find("FrontSide");
+            //Transform dest = schoolClass.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("FrontSide");
 
             for(int i = 0; i < asientosOcupados.Length; i++)
             {
-                if (!asientosOcupados[i]) dest = schoolClass.GetComponentInChildren<Transform>().Find("Desks").Find("DeskPositions").GetChild(i).position;
+                if (!asientosOcupados[i])
+                {
+                    dest = schoolClass.GetComponentInChildren<Transform>().Find("Desks").Find("DeskPositions").GetChild(i).position;
+                    break;
+                }
             }
 
+            //if(agent.GetComponent<Animator>().)
 
             if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0) { 
                 navMeshAgent.SetDestination(dest);
                 agent.GetComponent<Animator>().Play("Walking");
             }
+
             float x = Mathf.Abs(agent.transform.position.x - dest.x);
             float y = Mathf.Abs(agent.transform.position.y - dest.y);
             float z = Mathf.Abs(agent.transform.position.z - dest.z);
 
             if (x < 0.5 && y < 0.5 && z < 0.5) {
-                agent.GetComponent<Animator>().Play("Standing");
+                agent.GetComponent<Animator>().Play("Sitting");
                 done = true;
             }
 
