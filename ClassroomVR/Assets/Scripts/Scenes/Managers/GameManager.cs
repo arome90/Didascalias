@@ -54,6 +54,8 @@ namespace ClassRoomVR
             SceneManager.LoadScene("Class_GameScene");
         }
 
+        public int getNPacks() { return _packeges.Length; }
+
         /// ATRIBUTOS ESTATICOS ///
         public static GameManager Instance { get; private set; }
 
