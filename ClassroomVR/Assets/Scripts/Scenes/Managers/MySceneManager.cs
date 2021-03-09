@@ -14,6 +14,10 @@ namespace ClassRoomVR {
         public bool PlayScene;
 
         // Haz un UI MANAGER
+        public UIManager uiManager;
+
+
+
         //pruebasUI
         public Text textContexto;
         public GameObject textOpciones;
@@ -111,7 +115,7 @@ namespace ClassRoomVR {
             textContexto.text = contexto;
 
             // Ahora mismo no hay botones para el modo normal
-            if (!VRHardware && PlayScene) _playing = true;
+            //if (!VRHardware && PlayScene) _playing = true;
         }
 
 

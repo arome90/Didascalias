@@ -7,14 +7,21 @@ namespace ClassRoomVR
 {
     public class MenuManager : MonoBehaviour
     {
-        public GameObject PlayAndQuit_Obj; //Objeto "MenuPrincipal"
+        //public GameObject PlayAndQuit_Obj; //Objeto "MenuPrincipal"
         public GameObject PackTriade_Obj;  //Objeto "PackMenu"
         public GameObject packB; //Objetos PackI
+        public GameObject PackTriade_ObjVR;
+        public GameObject cameraRig;
 
 
+        private void Start()
+        {
+            if (GameManager.Instance.getVR()) cameraRig.SetActive(true);
+            else cameraRig.SetActive(false);
+        }
         public void PlayButton() { 
-            PlayAndQuit_Obj.SetActive(false);
-            PackTriade_Obj.SetActive(true);
+            //PlayAndQuit_Obj.SetActive(false);
+            //PackTriade_Obj.SetActive(true);
 
             for (int i = 0; i < GameManager.Instance.getNPacks(); i++) {
                 createPackButton(i);
@@ -27,6 +34,8 @@ namespace ClassRoomVR
             GameManager.Instance.makeChoice(i);
         }
 
+        //El unico problema es que los 3 botones de pack se crean con scala 10000
+        //Y en la z -99999 , por lo demas va perfect
         private void createPackButton(int i) {
             GameObject a = Instantiate(packB);
             a.name = i.ToString();
@@ -34,7 +43,10 @@ namespace ClassRoomVR
             TextMeshProUGUI text = a.GetComponentInChildren<TextMeshProUGUI>();
             string index = (i+1).ToString();
             text.text = "Pack" + index;
-            a.transform.parent = PackTriade_Obj.transform;
+            a.transform.localScale = new Vector3(1, 1, 1);//no va
+            a.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            if(!GameManager.Instance.getVR())a.transform.parent = PackTriade_Obj.transform;
+            else a.transform.parent = PackTriade_ObjVR.transform;
         }
     }
 }
