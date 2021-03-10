@@ -16,13 +16,6 @@ namespace ClassRoomVR {
         // Haz un UI MANAGER
         public UIManager uiManager;
 
-
-
-        //pruebasUI
-        public Text textContexto;
-        public GameObject textOpciones;
-        public GameObject UIHelpers;
-
         // GameObject vacio para colocar los objetos de la escena
         public GameObject sceneObjects;
 
@@ -112,10 +105,8 @@ namespace ClassRoomVR {
             }
            
             contexto += " " + sceneInfo.iniMessage;
-            textContexto.text = contexto;
-
-            // Ahora mismo no hay botones para el modo normal
-            //if (!VRHardware && PlayScene) _playing = true;
+            uiManager.panelContexto(contexto);
+            
         }
 
 
@@ -234,15 +225,11 @@ namespace ClassRoomVR {
         {
             // Parametros especificos de los caminos
             if(_sceneState == State.GeneratePathSettings)
-            {
-                //Debug.Log("State GeneratePathSettings");
-                // Mostrar los posibles caminos a tomar
-                textOpciones.SetActive(true);
-                Text[] opciones = textOpciones.GetComponentsInChildren<Text>();
+            {                
                 for (int i = 0; i < sceneInfo.paths.Length; i++)
                 {
                     // Mostramos los caminos a tomar
-                    opciones[i].text = sceneInfo.paths[i].pathInfo;
+                    uiManager.panelOpciones(sceneInfo.paths[i].pathInfo);
                     // Añadimos las palabras al reconocimiento de voz
                     wordRecognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
                 }
@@ -307,7 +294,9 @@ namespace ClassRoomVR {
                 // Si no esta el audio ejecutandose se muestra el feedback
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
                     //textContexto
-                    textContexto.text = pathFeedback;
+                    //textContexto.text = pathFeedback;
+                    uiManager.swapPanels(true);
+                    uiManager.panelContexto(pathFeedback);
                     _sceneFinished = true;
                     _playing = false;
                 }
@@ -484,7 +473,7 @@ namespace ClassRoomVR {
             if (VRHardware)
             {
                 _teacher = sceneObjects.GetComponent<Transform>().Find("PlayerVR").gameObject;
-                UIHelpers.SetActive(true);
+                
             }
             else _teacher = sceneObjects.GetComponent<Transform>().Find("Player").gameObject;
 
