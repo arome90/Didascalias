@@ -10,17 +10,20 @@ namespace ClassRoomVR
     {
         //-----Publics-------
         //Canvas normal y CanvasVR
-
-        public GameObject canvasVR;
+        [Header("Objectos Normales")]
         public GameObject canvasNormal;
         public GameObject eventSystem;
         public Text textContexto;
         public GameObject textOpciones;
+        public GameObject panelFinal;
         //vr    
+        [Header("Objectos Vr")]
+        public GameObject canvasVR;
         public GameObject UIHelpers;
         public Text textContextoVR;
         public GameObject textOpcionesVR;
-     
+        public GameObject panelFinalVR;
+
         //-----privates-----
         private bool Vr;
 
@@ -47,7 +50,6 @@ namespace ClassRoomVR
         public void panelContexto(string s ) {
             if (GameManager.Instance.getVR())
             {
-
                 textContextoVR.text = s;
             }
             else
@@ -61,7 +63,6 @@ namespace ClassRoomVR
             if (GameManager.Instance.getVR())
             {
                 textContextoVR.transform.parent.gameObject.SetActive(b);
-
                 textOpcionesVR.SetActive(!b);
             }
             else {
@@ -69,6 +70,20 @@ namespace ClassRoomVR
                 textOpciones.SetActive(!b);
             }
         }
+
+        public void endPanel()
+        {
+            if (GameManager.Instance.getVR())
+            {
+                textOpcionesVR.SetActive(false);
+            }
+            else
+            {
+                textOpciones.SetActive(false);
+                panelFinal.SetActive(true);
+            }
+        }
+
 
         public void panelOpciones(string s)
         {

@@ -165,6 +165,17 @@ namespace ClassRoomVR {
             specialPath = b;
         }
 
+        public void loadMenu()
+        {
+            GameManager.Instance.LoadMainMenu();
+        }
+        public void resetScene(int i)
+        {
+            GameManager.Instance.makeChoice(i);
+        }
+
+
+
         //-------------------PRIVATES-------------------------
         // METODOS DE CONTROL DE LOGICA DE LA ESCENA
 
@@ -295,7 +306,7 @@ namespace ClassRoomVR {
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
                     //textContexto
                     //textContexto.text = pathFeedback;
-                    uiManager.swapPanels(true);
+                    uiManager.endPanel();
                     uiManager.panelContexto(pathFeedback);
                     _sceneFinished = true;
                     _playing = false;

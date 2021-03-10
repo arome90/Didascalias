@@ -44,9 +44,9 @@ namespace ClassRoomVR
             LoadMainScene();
         }
 
-        public void LoadChoosingScene()
+        public void LoadMainMenu()
         {
-            SceneManager.LoadScene("ChoosePackScene");
+            SceneManager.LoadScene("Menu");
         }
         public void LoadMainScene()
         {
