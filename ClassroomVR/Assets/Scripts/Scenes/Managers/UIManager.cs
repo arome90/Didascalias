@@ -57,17 +57,29 @@ namespace ClassRoomVR
                 textContexto.text = s;
             }
         }
-        //Cuando se activa uno se desactiva el otro//true contesto false opciones
-        public void swapPanels(bool b)
-        {     
+
+        // Activar/desactivar contexto
+        public void setContext(bool b)
+        {
             if (GameManager.Instance.getVR())
             {
                 textContextoVR.transform.parent.gameObject.SetActive(b);
-                textOpcionesVR.SetActive(!b);
+            }
+            else
+            {
+                textContexto.transform.parent.gameObject.SetActive(b);
+            }
+        }
+
+        // Activar/desactivar opciones
+        public void setOptions(bool b)
+        {     
+            if (GameManager.Instance.getVR())
+            {
+                textOpcionesVR.SetActive(b);
             }
             else {
-                textContexto.transform.parent.gameObject.SetActive(b);
-                textOpciones.SetActive(!b);
+                textOpciones.SetActive(b);
             }
         }
 
@@ -76,6 +88,7 @@ namespace ClassRoomVR
             if (GameManager.Instance.getVR())
             {
                 textOpcionesVR.SetActive(false);
+                // TODO
             }
             else
             {

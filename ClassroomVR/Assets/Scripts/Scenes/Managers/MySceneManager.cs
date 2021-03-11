@@ -30,8 +30,10 @@ namespace ClassRoomVR {
         private int[] _studentsSex;
         private int[] _problematicStudents;
         private bool[] _asientosOcupados;
-     
-        // Otras cosis
+
+        // Control de estados
+        // Bool error
+        private bool _error = false;
         // Bool pause
         private bool _playing = false;
         // Bool para la escena
@@ -57,6 +59,7 @@ namespace ClassRoomVR {
         private AnimationClip pathAnimClass;
         private AnimationClip pathAnimProb;
         private UnityEvent pathEvent = null;
+        private string teacherCollision = "";
 
         //--Tiempos--
         // DeltaTime
@@ -87,13 +90,29 @@ namespace ClassRoomVR {
             timeToStart = sceneInfo.timeToStart;
 
             // Generacion de la clase
-            _schoolClass = sceneObjects.GetComponent<Transform>().Find("ClassRoom").gameObject;
+            try
+            {
+                _schoolClass = sceneObjects.GetComponent<Transform>().Find("ClassRoom").gameObject;
+            }
+            catch(Exception e)
+            {
+                Debug.Log("Fatal Error!: No hay un objeto classroom en los objetos de la escena");
+                _error = true;
+            }
             // Generacion del profesor
             generateTeacher();
             // Generamos los estudiantes
             generateChilds();
 
-            sceneObjects.GetComponent<Transform>().Find("NavMesh").gameObject.SetActive(true);
+            try
+            {
+                sceneObjects.GetComponent<Transform>().Find("NavMesh").gameObject.SetActive(true);
+            }
+            catch(Exception e)
+            {
+                Debug.Log("Fatal Error!: No hay un navMesh en los objetos de la escena");
+                _error = true;
+            }
 
             // Mostramos el texto descriptivo de la escena
             string contexto = "";
@@ -106,7 +125,9 @@ namespace ClassRoomVR {
            
             contexto += " " + sceneInfo.iniMessage;
             uiManager.panelContexto(contexto);
-            
+
+            // Comprobacion de errores para volver al menu
+            if (_error) loadMenu();
         }
 
 
@@ -165,6 +186,12 @@ namespace ClassRoomVR {
             specialPath = b;
         }
 
+        public void setCollision(string s)
+        {
+            teacherCollision = s;
+        }
+
+        // Otros publics
         public void loadMenu()
         {
             GameManager.Instance.LoadMainMenu();
@@ -246,6 +273,7 @@ namespace ClassRoomVR {
                 }
                 
                 wordRecognizer.init();
+                setCollision("");
                 _sceneState = State.ChoosingPath;   //SIGUIENTE ESTADO
             }
             // Durante la eleccion del camino
@@ -290,7 +318,7 @@ namespace ClassRoomVR {
                 }
 
                 // Comportamiento especial del camino
-                if (pathEvent != null)
+                if (pathEvent.GetPersistentEventCount() > 0)
                 {
                     pathEvent.Invoke();
                     if(specialPath) _sceneState = State.ShowFeedBack;   //SIGUIENTE ESTADO
@@ -302,6 +330,7 @@ namespace ClassRoomVR {
             }
             else if (_sceneState == State.ShowFeedBack)
             {
+                //Debug.Log("FEEDBACK");
                 // Si no esta el audio ejecutandose se muestra el feedback
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
                     //textContexto
@@ -321,11 +350,8 @@ namespace ClassRoomVR {
         {
             for (int i = 0; i < sceneInfo.paths.Length; i++)
             {
-                if (sceneInfo.paths[i].getClose)
-                {
-                    // Si has chocado con el alumno liante indicarlo de alguna forma
-                }
-
+                // Si has chocado con el alumno liante indicarlo de alguna forma
+                if (sceneInfo.paths[i].getClose && teacherCollision == _students[_problematicStudents[0]].name) pathReaction(i);
             }
         }
 
@@ -339,6 +365,7 @@ namespace ClassRoomVR {
             pathAnimProb = sceneInfo.paths[i].pathProbAnimation;
             pathEvent = sceneInfo.paths[i].especificBehaviour;
             _pathChosen = true;
+            uiManager.setOptions(false);
         }
 
         // Metodo para ejecutar animaciones en diferente timing
@@ -374,6 +401,7 @@ namespace ClassRoomVR {
             catch(Exception e) {
                 Debug.LogError("FATAL ERROR");
                 Debug.LogError("No estan declaradas las posiciones de los alumnos en el prefab de la clase.");
+                _error = true;
             }
 
             if (sceneInfo.nGroups > 1) {
@@ -413,6 +441,7 @@ namespace ClassRoomVR {
                 catch(Exception e)
                 {
                     Debug.Log("Al alumno " + pickedStudent.name + " le faltan componentes");
+                    _error = true;
                 }
 
                 // TODO: falta el ordenamiento por grupos ;)

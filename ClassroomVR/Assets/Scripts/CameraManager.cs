@@ -107,7 +107,8 @@ namespace ClassRoomVR
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Me he acercado al alumno " + other.GetComponentInParent<Transform>().gameObject.name);
+            //Debug.Log("Me he acercado al alumno " + other.GetComponentInParent<Transform>().gameObject.name);
+            GameManager.Instance._sceneManager.setCollision(other.GetComponentInParent<Transform>().gameObject.name);
             /*
             if (other.name == Constants.INAPPROPRIATE_STUDENT_NAME)
             {
