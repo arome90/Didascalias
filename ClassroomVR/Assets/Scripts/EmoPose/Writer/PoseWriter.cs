@@ -5,8 +5,8 @@ using System.IO;
 
 /** It writes and reads Pose and PoseBase persistently in files */
 public class PoseWriter{
-	public static string pathPosesInUnityEditor = "Resources/LearnedPosesTxt";
-	public static string defaultPathPoseAssets = "DefaultPosesTxt/";
+	public static string pathPosesInUnityEditor = "Resources/EmoPose/LearnedPosesTxt";
+	public static string defaultPathPoseAssets = "EmoPose/DefaultPosesTxt/";
 
 	// Constructor of the class
 	public PoseWriter(){
