@@ -201,6 +201,10 @@ namespace ClassRoomVR {
             GameManager.Instance.makeChoice(i);
         }
 
+        public void enablecameraPlayer(bool t)
+        {
+            _teacher.GetComponent<CameraManager>().enabled = t;
+        }
 
 
         //-------------------PRIVATES-------------------------
@@ -337,6 +341,7 @@ namespace ClassRoomVR {
                     //textContexto.text = pathFeedback;
                     uiManager.endPanel();
                     uiManager.panelContexto(pathFeedback);
+                    enablecameraPlayer(false);
                     _sceneFinished = true;
                     _playing = false;
                 }
