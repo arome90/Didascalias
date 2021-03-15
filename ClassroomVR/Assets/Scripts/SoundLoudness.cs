@@ -108,14 +108,16 @@ public class SoundLoudness : MonoBehaviour
 
         if (!collect) return;
 
-        if (firstScenario)
+        /*if (firstScenario)
         {
             CalculateWithAverage();
         }
         else if (secondScenario)
         {
             CalculateWithoutAverage();
-        }
+        }*/
+        CalculateWithAverage();
+        CalculateWithoutAverage();
     }
 
     private void CalculateWithAverage()
@@ -178,9 +180,10 @@ public class SoundLoudness : MonoBehaviour
             }
             */
             //return CalculateResponseStrengthWithoutAverage();
+
             return CalculateResponseStrengthWithAverage();
         }
-        return false;
+        return CalculateResponseStrengthWithAverage();
     }
 
     private bool CalculateResponseStrengthWithAverage()

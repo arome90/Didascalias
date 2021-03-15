@@ -279,6 +279,7 @@ namespace ClassRoomVR {
                 wordRecognizer.init();
                 setCollision("");
                 _sceneState = State.ChoosingPath;   //SIGUIENTE ESTADO
+                soundController.startCollecting();
             }
             // Durante la eleccion del camino
             else if(_sceneState == State.ChoosingPath)
@@ -287,7 +288,10 @@ namespace ClassRoomVR {
                 collisionReaction();
 
                 // Si se toma un camino
-                if(_pathChosen) _sceneState = State.ReactToPath; //SIGUIENTE ESTADO
+                if (_pathChosen) {
+                    _sceneState = State.ReactToPath;
+                    soundController.StopRecordingAndCalculate();
+                }//SIGUIENTE ESTADO
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
                     Debug.Log("Se acabo el tiempo de reaccion");
