@@ -455,12 +455,12 @@ PrefabInstance:
     - target: {fileID: 8216322760901846743, guid: e3c59466ba16d3347a8b963e6dfb165a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.709
+      value: 1.845
       objectReference: {fileID: 0}
     - target: {fileID: 8216322760901846743, guid: e3c59466ba16d3347a8b963e6dfb165a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.551
+      value: -0.818
       objectReference: {fileID: 0}
     - target: {fileID: 8216322760901846743, guid: e3c59466ba16d3347a8b963e6dfb165a,
         type: 3}
@@ -505,12 +505,12 @@ PrefabInstance:
     - target: {fileID: 8216322760901846743, guid: e3c59466ba16d3347a8b963e6dfb165a,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8216322760901846743, guid: e3c59466ba16d3347a8b963e6dfb165a,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8216322760901846745, guid: e3c59466ba16d3347a8b963e6dfb165a,
         type: 3}
@@ -955,8 +955,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fca9481a7280fb409a477470476e062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClipLength: 5
-  radarPolygon: {fileID: 0}
 --- !u!4 &1494066369
 Transform:
   m_ObjectHideFlags: 0
@@ -983,7 +981,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3128e54a4a700498d5dd5fffd13f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayScene: 1
+  PlayScene: 0
   uiManager: {fileID: 324224021}
   sceneObjects: {fileID: 2069931792}
 --- !u!114 &1494066371
@@ -998,19 +996,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becfa3f621cb5b54b94be150c9eb6b66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strongResponseEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  increase: 1.5
-  minNoiseTreshold: 0.02
-  noAverageThreshold: 0.1
-  firstScenario: 0
-  secondScenario: 0
 --- !u!224 &1548122768 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5581032517494173820, guid: 471dd5739fe98f8408cfe062aafa18ba,
     type: 3}
   m_PrefabInstance: {fileID: 1637162366}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1606086382 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8216322760901846740, guid: e3c59466ba16d3347a8b963e6dfb165a,
+    type: 3}
+  m_PrefabInstance: {fileID: 839463478}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1613999403
 PrefabInstance:
@@ -1233,6 +1229,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5581032517048905328, guid: 471dd5739fe98f8408cfe062aafa18ba,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 5581032517048905328, guid: 471dd5739fe98f8408cfe062aafa18ba,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5581032517048905328, guid: 471dd5739fe98f8408cfe062aafa18ba,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Target
+      value: 
+      objectReference: {fileID: 1606086382}
+    - target: {fileID: 5581032517048905328, guid: 471dd5739fe98f8408cfe062aafa18ba,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5581032517048905329, guid: 471dd5739fe98f8408cfe062aafa18ba,
         type: 3}
@@ -1641,7 +1657,7 @@ PrefabInstance:
     - target: {fileID: 6910466297940059789, guid: d521b5e698c6bb8448997e28dd47a17b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -10.81
+      value: -10.810059
       objectReference: {fileID: 0}
     - target: {fileID: 6910466297940059789, guid: d521b5e698c6bb8448997e28dd47a17b,
         type: 3}
@@ -2187,7 +2203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5381a0003c5984ba76427b4ec16dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deviceNumber: 0
 --- !u!4 &2011244317
 Transform:
   m_ObjectHideFlags: 0
