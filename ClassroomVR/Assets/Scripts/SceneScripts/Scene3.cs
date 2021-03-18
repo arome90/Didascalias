@@ -27,6 +27,7 @@ namespace ClassRoomVR {
 
             // Hacer que el alumno se vaya a la parte delantera de la clase
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
+            navMeshAgent.enabled = true;
             Vector3 dest = sm.getClass().GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("FrontSide").position;
 
             if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0)
@@ -46,7 +47,12 @@ namespace ClassRoomVR {
                 done = true;
             }
 
-            if (done) sm.setSpecialSituation(done);
+            if (done)
+            {
+                navMeshAgent.enabled = false;
+                agent.transform.position = dest;
+                sm.setSpecialSituation(done);
+            }
         }
 
         // Metodo path1
@@ -55,6 +61,7 @@ namespace ClassRoomVR {
 
             // Hacer que el alumno vuelva a su sitio
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
+            navMeshAgent.enabled = true;
             Vector3 dest = iniPos;
 
             if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0)
@@ -74,7 +81,12 @@ namespace ClassRoomVR {
                 done = true;
             }
 
-            if (done) sm.setSpecialPath(done);
+            if (done)
+            {
+                navMeshAgent.enabled = false;
+                agent.transform.position = dest;
+                sm.setSpecialPath(done);
+            }
         }
 
         // Metodo path2
@@ -83,6 +95,7 @@ namespace ClassRoomVR {
 
             // Hacer que el alumno vaya al final de la clase
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
+            navMeshAgent.enabled = true;
             Vector3 dest = sm.getClass().GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("BackCorner").position;
 
             if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0)
@@ -98,12 +111,16 @@ namespace ClassRoomVR {
             if (x < 0.5 && y < 0.5 && z < 0.5)
             {
                 agent.GetComponent<Animator>().Play("Standing");
-                //agent.transform.rotation.SetLookRotation(sm.getTeacher().transform.position);
                 done = true;
             }
 
 
-            if (done) sm.setSpecialPath(done);
+            if (done)
+            {
+                navMeshAgent.enabled = false;
+                agent.transform.position = dest;
+                sm.setSpecialPath(done);
+            }
         }
     }
 }

@@ -88,6 +88,8 @@ namespace ClassRoomVR {
             soundController = GetComponent<SoundLoudness>();
             wordRecognizer = new KeyWordRecognizer();
 
+            emoPose = new MotionCaptureManager();
+
             timeToStart = sceneInfo.timeToStart;
 
             // Generacion de la clase

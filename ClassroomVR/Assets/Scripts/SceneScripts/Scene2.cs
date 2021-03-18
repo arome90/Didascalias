@@ -4,6 +4,9 @@ using UnityEngine.AI;
 namespace ClassRoomVR {
     public class Scene2 : MonoBehaviour
     {
+
+        private Vector3 dest = new Vector3(0, 0, 0);
+
         // Metodo de la situacion, path 3
         public void separateProblematics()
         {
@@ -17,19 +20,19 @@ namespace ClassRoomVR {
             // Hacer que uno de los alumnos se separe
             GameObject agent = problematics[0];
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
-            Vector3 dest = new Vector3(0, 0, 0);
-            //Transform dest = schoolClass.GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("FrontSide");
+            navMeshAgent.enabled = true;
 
-            for(int i = 0; i < asientosOcupados.Length; i++)
+            if (dest.x == 0 && dest.y == 0 && dest.z == 0)
             {
-                if (!asientosOcupados[i])
+                for (int i = 0; i < asientosOcupados.Length; i++)
                 {
-                    dest = schoolClass.GetComponentInChildren<Transform>().Find("Desks").Find("DeskPositions").GetChild(i).position;
-                    break;
+                    if (!asientosOcupados[i])
+                    {
+                        dest = schoolClass.GetComponentInChildren<Transform>().Find("Desks").Find("DeskPositions").GetChild(i).position;
+                        break;
+                    }
                 }
             }
-
-            //if(agent.GetComponent<Animator>().)
 
             if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0) { 
                 navMeshAgent.SetDestination(dest);
@@ -45,7 +48,12 @@ namespace ClassRoomVR {
                 done = true;
             }
 
-            if (done) sm.setSpecialPath(done);
+            if (done)
+            {
+                navMeshAgent.enabled = false;
+                agent.transform.position = dest;
+                sm.setSpecialPath(done);
+            }
         }
     }
 }
