@@ -14,17 +14,17 @@ namespace ClassRoomVR {
         // UI MANAGER
         public UIManager uiManager;
 
+        // EmoPose (emocion - pose) manager
+        public MotionCaptureManager emoPose;
+
         // GameObject vacio para colocar los objetos de la escena
         public GameObject sceneObjects;
-
         //------------------------------------------------------------------------
         // -----Privates-----
         // Managers
         // Audio
         private SoundLoudness soundController;
         private KeyWordRecognizer wordRecognizer;
-        // EmoPose (emocion - pose)
-        private MotionCaptureManager emoPose;
 
 
         // Objetos de la escena
@@ -141,7 +141,7 @@ namespace ClassRoomVR {
                 playSituation();
                 playPathChoosing();
                 playReactionToPath();
-                if (!_pathChosen) emoPose.update(deltaTime);
+                if (!_pathChosen) emoPose.update(Time.deltaTime);
             }
         }
 

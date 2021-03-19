@@ -16,10 +16,17 @@ El manager de esta escena es "MySceneManager"
 
 ---
 
+# WIP
+- Quitar el componente de PoseBuilder al player normal, ya que solo al vr se le detectara la posicion
+- Arreglar/modificar el poseBuilder para la deteccion de la apertura de las manos.
+
+---
+
 # Classroom VR (English)
 End of Degree Project for Computer Engineering at Universidad Complutense de Madrid made by Antonio Luis Suarez, Daniel Lopez, Sandra Alonso y Andrés Puente.
 
 ## VR
 We have performed the Oculus integraton by following the official Oculus Documentation at https://developer.oculus.com/documentation/unity/unity-gs-overview/.
+
 
 
