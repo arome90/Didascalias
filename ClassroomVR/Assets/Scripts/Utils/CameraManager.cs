@@ -47,31 +47,38 @@ namespace ClassRoomVR
 
         private bool start = true;
 
+        private bool funtion;
 
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
+            funtion = true;
         }
 
         void Update()
         {
-            if(GameManager.Instance.getVR()) LockAndUnlockCursor();
+            //if(GameManager.Instance.getVR()) 
+             //LockAndUnlockCursor();
 
-
+            //Cursor.lockState = CursorLockMode.Confined;
             if (Cursor.lockState == CursorLockMode.Locked)
             {
                 LookAround();
             }
 
         }
+        public void unlockCursor()
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+        }
 
         void LockAndUnlockCursor()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
-            {
+            {       
                 if (Cursor.lockState == CursorLockMode.Locked)
                 {
-                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.lockState = CursorLockMode.Confined;
                     Time.timeScale = 0;
                 }
                 else

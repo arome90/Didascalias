@@ -13,6 +13,8 @@ namespace ClassRoomVR {
 
         // UI MANAGER
         public UIManager uiManager;
+        //CameraManager 
+        public CameraManager camManager;
 
         // EmoPose (emocion - pose) manager
         public MotionCaptureManager emoPose;
@@ -358,6 +360,7 @@ namespace ClassRoomVR {
                     //textContexto.text = pathFeedback;
                     uiManager.endPanel();
                     uiManager.panelContexto(selectedPath.feedbackPath);
+                    camManager.unlockCursor();
                     enablecameraPlayer(false);
                     _sceneFinished = true;
                     _playing = false;

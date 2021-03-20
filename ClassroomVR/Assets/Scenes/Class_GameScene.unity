@@ -569,6 +569,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c572816f880a4e80993435e2d16a8c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &839463480 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8216322760901846742, guid: e3c59466ba16d3347a8b963e6dfb165a,
+    type: 3}
+  m_PrefabInstance: {fileID: 839463478}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606086382}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa6a8daa2bcaa240837180559ef8318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &853152818 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 2015248, guid: ce816f2e6abb0504092c23ed9b970dfd,
@@ -1038,6 +1050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayScene: 1
   uiManager: {fileID: 324224021}
+  camManager: {fileID: 839463480}
   emoPose: {fileID: 1494066373}
   sceneObjects: {fileID: 2069931792}
 --- !u!114 &1494066371
@@ -1080,6 +1093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poseBuilder: {fileID: 839463479}
+  delay: 2
 --- !u!224 &1548122768 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5581032517494173820, guid: 471dd5739fe98f8408cfe062aafa18ba,
@@ -1522,12 +1536,12 @@ PrefabInstance:
     - target: {fileID: 5581032518087225718, guid: 471dd5739fe98f8408cfe062aafa18ba,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 40
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 5581032518087225718, guid: 471dd5739fe98f8408cfe062aafa18ba,
         type: 3}
       propertyPath: m_FontData.m_MinSize
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7311341980179170248, guid: 471dd5739fe98f8408cfe062aafa18ba,
         type: 3}
@@ -1577,14 +1591,14 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 200
+    m_Top: 96
     m_Bottom: 0
-  m_ChildAlignment: 2
-  m_StartCorner: 1
+  m_ChildAlignment: 0
+  m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 600, y: 20}
-  m_Spacing: {x: 0, y: 100}
-  m_Constraint: 0
+  m_CellSize: {x: 560, y: 100}
+  m_Spacing: {x: 0, y: 66.3}
+  m_Constraint: 1
   m_ConstraintCount: 1
 --- !u!1001 &1892479214
 PrefabInstance:
@@ -2611,12 +2625,12 @@ PrefabInstance:
     - target: {fileID: 4010514817879859199, guid: 227c446ae9435c84a8158ab54154e764,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 53.47
+      value: 106.39
       objectReference: {fileID: 0}
     - target: {fileID: 4010514817879859199, guid: 227c446ae9435c84a8158ab54154e764,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 318.61212
+      value: 212.77606
       objectReference: {fileID: 0}
     - target: {fileID: 4010514817879859199, guid: 227c446ae9435c84a8158ab54154e764,
         type: 3}

@@ -67,7 +67,6 @@ namespace ClassRoomVR
             else
             {
                 textContexto.transform.parent.gameObject.SetActive(b);
-               
             }
         }
 
@@ -116,6 +115,7 @@ namespace ClassRoomVR
             t.text = s;
             t.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
             t.color = Color.black;
+            t.fontSize = 20;
         }
 
 
