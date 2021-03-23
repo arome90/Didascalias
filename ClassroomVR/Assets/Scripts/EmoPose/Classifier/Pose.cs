@@ -78,6 +78,8 @@ public class Pose{
 	// considering the symmetric pose. It returns a a normalized percentage
 	public float Distance(Pose pose)
 	{
+        //Debug.Log("Cargando: " + pose.ToString());
+        //Debug.Log("La cogida: " + ToString());
 		float distHands = ((pose.leftHandPos - leftHandPos).magnitude +
 		                  (pose.rightHandPos - rightHandPos).magnitude) / (2 * handsMaxDist);
 		float distFeet = ((pose.leftFootPos - leftFootPos).magnitude +

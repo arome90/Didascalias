@@ -37,8 +37,8 @@ public class GameControllerClassifier : MonoBehaviour {
 		// Only for configuring the default pose cases:
 		if(manuallyTraining)
 			SavePoseCaseFromCharacter();
-	
 	}
+
 	/** Method for conforming the default pose cases */
 	public void SavePoseCaseFromCharacter(){
 		Pose pose = poseBuilder.CreatePoseFromCharacter ();

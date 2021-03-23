@@ -75,7 +75,7 @@ public class CameraPose : MonoBehaviour {
 	void Update () {
 		if (TowardsAimedAngle () | TowardsAimedTarget () | TowardsAimedZoom ()) {
 			RefreshCamera ();
-			MoveDraggingImages ();
+			//MoveDraggingImages ();
 		}
 	}
 	// It determines whether the rotation is natural or the opposite
@@ -124,9 +124,9 @@ public class CameraPose : MonoBehaviour {
 		SetTargetHand (Hand.None);
 		aimedZoom = farZoom;
 		openingHandsHandler.SetSelectedHand (Hand.None);
-		EnableDragBodyParts (true);
-		EnableDragList (leftBodyParts,true);
-		EnableDragList (rightBodyParts, true);
+		//EnableDragBodyParts (true);
+		//EnableDragList (leftBodyParts,true);
+		//EnableDragList (rightBodyParts, true);
 	}
 
 	/* It moves the comera to the see the left side of the avatar with a smooth transition*/

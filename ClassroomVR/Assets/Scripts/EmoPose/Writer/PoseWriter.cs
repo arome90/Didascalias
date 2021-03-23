@@ -38,11 +38,13 @@ public class PoseWriter{
 			filename = emotion + ".txt";
 			content = ReadFromFile (filename);
 		}
+        // After this content is containing all the info from an emotion (well loaded)
+
 		// Create a pose case for each non-empty line of the content
 		List<PoseCase> poseCases = new List<PoseCase>();
 		string[] strArray = content.Split ('\n');
 		for (int i = 0; i < strArray.Length; i++) {
-			if(!strArray[i].Equals("")){
+			if(!strArray[i].Equals("")) {
 				Pose pose = StringToPose (strArray[i]);
 				PoseCase poseCase = new PoseCase (pose, emotion);
 				poseCases.Add(poseCase);
@@ -86,6 +88,10 @@ public class PoseWriter{
 	private Vector3 StringToVector3(string str){
 		string strAux = str.Substring (1, str.Length - 2);
 				string[] strArray = strAux.Split(',');
+        for(int i = 0; i < strArray.Length; i++)
+        {
+            strArray[i] = strArray[i].Replace(".",",");
+        }
 		float x = float.Parse (strArray [0]);
 		float y = float.Parse (strArray [1]);
 		float z = float.Parse (strArray [2]);

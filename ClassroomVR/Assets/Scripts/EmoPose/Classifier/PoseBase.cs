@@ -67,7 +67,9 @@ public class PoseBase{
 		foreach(Emotion emotion in Enum.GetValues(typeof(Emotion))){
 			if (emotion != Emotion.None) {
 				List<PoseCase> poseCases = writer.ReadPoseCases(emotion);
+                //Debug.Log(emotion + "--------------------------------");
 				foreach (PoseCase poseCase in poseCases) {
+                    //Debug.Log(poseCase.pose.ToString());
 					listCases.Add (poseCase);
 				}
 			}
