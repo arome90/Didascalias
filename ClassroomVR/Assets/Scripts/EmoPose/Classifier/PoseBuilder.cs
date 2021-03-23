@@ -28,5 +28,17 @@ public class PoseBuilder : MonoBehaviour {
 		return pose;
 	}
 
-
+    public Pose CreatePoseFromCharacterWithoutMove(Vector3 genPos)
+    {
+        Pose pose = new Pose();
+        pose.leftHandPos = leftHand.position - genPos;
+        pose.rightHandPos = rightHand.position - genPos;
+        pose.leftFootPos = leftFoot.position - genPos;
+        pose.rightFootPos = rightFoot.position - genPos;
+        pose.headPos = head.position - genPos;
+        Vector3 lookDirection = lookPos.position - head.position - genPos;
+        pose.headLookDirection = lookDirection.normalized;
+        pose.openingHandsNormalized = openingHandsHandler.GetOpeningHandsNormalized();
+        return pose;
+    }
 }

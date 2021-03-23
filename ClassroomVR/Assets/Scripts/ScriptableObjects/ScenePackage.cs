@@ -31,6 +31,9 @@ namespace ClassRoomVR {
         [Tooltip("Tiempo para dar clase antes de que se ejecute la situacion")]
         public float timeToStart = 0;
 
+        [Tooltip("Tiempo para reaccionar a la situacion, si es 0 sera maxFloat")]
+        public float timeToReact = 10.0f;
+
         [Tooltip("Animaciones para la 'situacion critica', colocar en orden de ejecucion")]
         public AnimationClip problematicsAnimation;
 

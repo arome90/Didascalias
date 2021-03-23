@@ -6,6 +6,7 @@ namespace ClassRoomVR
 {
     public class MotionCaptureManager : MonoBehaviour
 	{
+        public Transform playerTransform;
 
 		// For builidng poses from the UI
 		public PoseBuilder poseBuilder;
@@ -48,11 +49,11 @@ namespace ClassRoomVR
 
 		private void ClassifyPoseFromCharacter()
 		{
-			Pose pose = poseBuilder.CreatePoseFromCharacter();
+			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
+            Debug.Log(pose.ToString());
 			Emotion emo = poseBase.Classify(pose);
 			string textClassifierResult = emo.ToString();
-			Debug.Log(textClassifierResult);
-			string distResultText = "Distance " + poseBase.lastDistance.ToString("0.0") + "%";
+			string distResultText = textClassifierResult + " distance " + poseBase.lastDistance.ToString("0.0") + "%";
 			Debug.Log(distResultText);
 		}
 
