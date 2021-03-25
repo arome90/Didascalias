@@ -14,6 +14,8 @@ public class GameControllerClassifier : MonoBehaviour {
 	private PoseBase poseBase; 
 	// Determines whether the application is being used for manually training
 	private bool manuallyTraining = true;
+    //If this != null means there's a emotion avaliable for saving
+    public Emotion _avaliableEmotion = Emotion.None;
 
 	// Initialize the element
 	void Start(){
@@ -34,16 +36,26 @@ public class GameControllerClassifier : MonoBehaviour {
 		Emotion emo = poseBase.Classify (pose);
 		textClassifierResult.text = emo.ToString ();
 		distResultText.text = "Distance "+poseBase.lastDistance.ToString("0.0")+"%";
-		// Only for configuring the default pose cases:
-		if(manuallyTraining)
-			SavePoseCaseFromCharacter();
+        // Only for configuring the default pose cases:
+        if (manuallyTraining)
+        {
+           /// _avaliableEmotion = emo;
+           // SavePoseCaseFromCharacter();
+        }
 	}
 
 	/** Method for conforming the default pose cases */
 	public void SavePoseCaseFromCharacter(){
 		Pose pose = poseBuilder.CreatePoseFromCharacter ();
 		PoseWriter writer = new PoseWriter ();
-		PoseCase poseCase = new PoseCase (pose, Emotion.None);
+        PoseCase poseCase;
+        if (_avaliableEmotion != Emotion.None)
+        {
+            poseCase = new PoseCase(pose, _avaliableEmotion);
+            _avaliableEmotion = Emotion.None;
+        }
+        else
+            poseCase = new PoseCase(pose, Emotion.None);
 		writer.WritePoseCase (poseCase);
 	}
 
