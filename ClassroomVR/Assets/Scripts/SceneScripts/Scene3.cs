@@ -1,14 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace ClassRoomVR {
     public class Scene3 : MonoBehaviour {
 
-        private Vector3 iniPos = new Vector3(0, 0, 0);
         private GameObject agent;
         private MySceneManager sm;
 
         // Metodo de la situacion
+        [Obsolete]
         public void walkAwayFromGroup()
         {
             bool done = false;
@@ -20,15 +21,17 @@ namespace ClassRoomVR {
                 agent = problematics[0];
             }
 
-            if (iniPos.x == 0 && iniPos.y == 0 && iniPos.z == 0)
-            {
-                iniPos = agent.transform.position;
-            }
-
             // Hacer que el alumno se vaya a la parte delantera de la clase
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
             navMeshAgent.enabled = true;
-            Vector3 dest = sm.getClass().GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("FrontSide").position;
+            Vector3 dest = new Vector3(0, 0, 0);
+
+            try {
+                dest = sm.getClass().GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("FrontSide").position;
+            }
+            catch(Exception e) {
+                Debug.Log("No se encontraron las posiciones de la clase en el prefab");
+            }
 
             if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0)
             {
@@ -40,10 +43,9 @@ namespace ClassRoomVR {
             float y = Mathf.Abs(agent.transform.position.y - dest.y);
             float z = Mathf.Abs(agent.transform.position.z - dest.z);
 
-            if (x < 0.5 && y < 0.5 && z < 0.5)
-            {
+            if (x < 0.5 && y < 0.5 && z < 0.5) {
                 agent.GetComponent<Animator>().Play("Standing");
-                //agent.transform.rotation.SetLookRotation(sm.getTeacher().transform.position);
+                agent.transform.Rotate(new Vector3(0, 180, 0));
                 done = true;
             }
 
@@ -62,13 +64,10 @@ namespace ClassRoomVR {
             // Hacer que el alumno vuelva a su sitio
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
             navMeshAgent.enabled = true;
-            Vector3 dest = iniPos;
+            Vector3 dest = sm.getProblematicIniPos();
 
-            if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0)
-            {
-                navMeshAgent.SetDestination(dest);
-                agent.GetComponent<Animator>().Play("Walking");
-            }
+            navMeshAgent.SetDestination(dest);
+            agent.GetComponent<Animator>().Play("Walking");
 
             float x = Mathf.Abs(agent.transform.position.x - dest.x);
             float y = Mathf.Abs(agent.transform.position.y - dest.y);
@@ -77,7 +76,6 @@ namespace ClassRoomVR {
             if (x < 0.5 && y < 0.5 && z < 0.5)
             {
                 agent.GetComponent<Animator>().Play("Sitting");
-                //agent.transform.rotation.SetLookRotation(sm.getTeacher().transform.position);
                 done = true;
             }
 
@@ -85,6 +83,7 @@ namespace ClassRoomVR {
             {
                 navMeshAgent.enabled = false;
                 agent.transform.position = dest;
+                agent.transform.LookAt(sm.getClass().GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni").position);
                 sm.setSpecialPath(done);
             }
         }

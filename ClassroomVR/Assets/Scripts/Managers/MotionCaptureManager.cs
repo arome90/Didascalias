@@ -50,7 +50,7 @@ namespace ClassRoomVR
 		private void ClassifyPoseFromCharacter()
 		{
 			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
-            Debug.Log(pose.ToString());
+            //Debug.Log(pose.ToString());
 			Emotion emo = poseBase.Classify(pose);
 			string textClassifierResult = emo.ToString();
 			string distResultText = textClassifierResult + " distance " + poseBase.lastDistance.ToString("0.0") + "%";

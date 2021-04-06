@@ -28,7 +28,6 @@ namespace ClassRoomVR {
         private SoundLoudness soundController;
         private KeyWordRecognizer wordRecognizer;
 
-
         // Objetos de la escena
         private GameObject _schoolClass;
         private GameObject _teacher;
@@ -61,6 +60,7 @@ namespace ClassRoomVR {
         // Bools para los comportamientos especificos de cada escena
         private bool specialSituatiuon = false;
         private bool specialPath = false;
+        private Vector3 probIniPos;
 
         //--Tiempos--
         // DeltaTime
@@ -183,6 +183,11 @@ namespace ClassRoomVR {
         public bool[] getFreeDesks()
         {
             return _asientosOcupados;
+        }
+
+        public Vector3 getProblematicIniPos()
+        {
+            return probIniPos;
         }
 
         // Setters (para situaciones especiales)
@@ -428,21 +433,16 @@ namespace ClassRoomVR {
                 _error = true;
             }
 
-            if (sceneInfo.nGroups > 1) {
-                // Colocar a los chavales en grupos
-                int alumnosPorGrupo = sceneInfo.nStudents / sceneInfo.nGroups;
-                int nPupitres = studentsPositions.childCount;
-            }
-
             if (sceneInfo.nStudents > 30) sceneInfo.nStudents = 30;
             _asientosOcupados = new bool[studentsPositions.childCount];
 
             _students = new GameObject[sceneInfo.nStudents];
             _studentsSex = new int[sceneInfo.nStudents];
 
-            // Instanciamos los alumnos en sus posiciones de manera aleatoria(el prefab).
-            for (int i = 0; i < sceneInfo.nStudents; i++) {
+            int deskPos = 0;
 
+            // Instanciamos los alumnos en sus posiciones de manera aleatoria(el prefab).
+            for (int i = 0; i < sceneInfo.nStudents && deskPos < 30; i++) {
                 // Elegimos el sexo del estudiante
                 GameObject pickedStudent;
                 int sex = UnityEngine.Random.Range(0, 2); // 0 mujer, 1 hombre
@@ -468,15 +468,24 @@ namespace ClassRoomVR {
                     _error = true;
                 }
 
-                // TODO: falta el ordenamiento por grupos ;)
+                // Ordenamiento por grupos
+                if (sceneInfo.nGroups > 1)
+                {
+                    if (deskPos == 2 || deskPos == 7 || deskPos == 12 || deskPos == 17 || deskPos == 22 || deskPos == 27) 
+                        deskPos++;
+                    if (deskPos == 10 || deskPos == 11 || deskPos == 12 || deskPos == 13 || deskPos == 14) 
+                        deskPos = 15;
+                }
+
                 // Lo colocamos en su pupitre
-                Transform pos = studentsPositions.GetComponent<Transform>().GetChild(i);
+                Transform pos = studentsPositions.GetComponent<Transform>().GetChild(deskPos);
                 pickedStudent.transform.SetPositionAndRotation(pos.position + new Vector3(0, -0.4f, 0), pos.rotation);
+                deskPos++;
                 //Debug.Log("POS: " + pos.position);
 
                 // Lo añadimos al array de estudiantes
                 _students[i] = pickedStudent;
-                _asientosOcupados[i] = true;
+                _asientosOcupados[deskPos] = true;
                 _studentsSex[i] = sex;
             }
 
@@ -526,7 +535,9 @@ namespace ClassRoomVR {
                 }
                 _problematicStudents[i] = problematic;
                 _students[problematic].GetComponentInChildren<Transform>().Find("Name").GetComponent<TextMesh>().color = Color.red;
-            }
+            }   // end estudiantes problematicos
+
+            probIniPos = _students[_problematicStudents[0]].gameObject.transform.position;
 
             // Ejecutamos animaciones con distinto timing
             PlayAnimationsAtDifferentTimeClass(classInfo.idleAnim.name);
