@@ -6,55 +6,61 @@ namespace ClassRoomVR
 {
     public class MotionCaptureManager : MonoBehaviour
 	{
+		// Para los calculos de la emocion mas utilizada
+		struct motionAverage
+        {
+			public int nTimes;
+			public float sumatory;
+        }
+
         public Transform playerTransform;
 
 		// For builidng poses from the UI
 		public PoseBuilder poseBuilder;
 		// A pose base for classifying the pose of the UI
 		private PoseBase poseBase;
-		// A reference to the text classifier result in the UI
-		//public Text textClassifierResult;
-		// A reference to the text distance in the result UI
-		//public Text distResultText;
 
 		// Url of the "InsertGenericData.php" file for this EmoPose application
 		private string url = "http://webdiis.unizar.es/~ivangmg/emopose/InsertGenericData.php";
-		// Reference to the generic DB manager
-		private GenericDBManager dbManager;
-		// A pose writer to perform the writing
-		private PoseWriter poseWriter;
-		// The last result datetime. It will be associated with the following related actions.
-		// It uses the URL string format
-		private string lastResultDatetime;
-		///// References for obtaing data from different places
-		//public GameControllerClassifier gameControllerClassifier;
-		//public PoseStopwatch poseStopWatch;
-		//public ToggleGroup selectedEmoToggleGroup; // In the code any toggle button of the SelectedEmoCanvas (AngryToggle Group)
-		//public SelectEmoController selectedEmoController;
 
-		public float delay = 2.0f;
+		// Delay entre calculo de emocion asociada a la pose
+		public float delay = 1.0f;
 		private float delta = 0.0f;
 
-		// Use this for initialization
-		public void init()
-		{ 
-			//poseWriter = new PoseWriter();
+		// Diccionario para el calculo de las emociones detectadas
+		private Dictionary<string, motionAverage> dicEmotions;
 
+		// Use this for initialization
+		public void init() {
 			poseBase = new PoseBase();
 			poseBase.AddDefaultCases();
 
-			//dbManager.SetUrl(url);
-			//dbManager.SaveDeviceInfo("EmoPose");
+			dicEmotions = new Dictionary<string, motionAverage>();
 		}
 
 		private void ClassifyPoseFromCharacter()
 		{
 			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
-            //Debug.Log(pose.ToString());
 			Emotion emo = poseBase.Classify(pose);
-			string textClassifierResult = emo.ToString();
-			string distResultText = textClassifierResult + " distance " + poseBase.lastDistance.ToString("0.0") + "%";
-			Debug.Log(distResultText);
+			string key = emo.ToString();
+
+            if (dicEmotions.ContainsKey(key))
+            {
+				motionAverage val = dicEmotions[key];
+				dicEmotions.Remove(key);
+				val.nTimes += 1;
+				val.sumatory += poseBase.lastDistance;
+				dicEmotions.Add(key, val);
+				Debug.Log("Update existente");
+            }
+            else
+            {
+				motionAverage newEmo = new motionAverage();
+				newEmo.nTimes = 1;
+				newEmo.sumatory = poseBase.lastDistance;
+				dicEmotions.Add(emo.ToString(), newEmo);
+				Debug.Log("Añadida nueva");
+            }
 		}
 
 
@@ -69,10 +75,45 @@ namespace ClassRoomVR
 			}
         }
 
+		public void finalResult()
+        {
+			// Mas cercana a 0
+			string closestEmo = "";
+			float averageDistanceClosest = float.MaxValue;
+			float resAverage = 0;
+
+			// Mas veces detectada
+			string moreRepeatedEmo = "";
+			float averageDistanceRepeated = float.MaxValue;
+			int resRepeated = 0;
+
+
+			foreach(KeyValuePair<string, motionAverage> emo in dicEmotions)
+            {
+				resAverage = emo.Value.sumatory / emo.Value.nTimes;
+
+				// Si la distancia media de la emocion es la mas pequeña
+				if(resAverage < averageDistanceClosest)
+                {
+					closestEmo = emo.Key;
+					averageDistanceClosest = resAverage;
+                }
+				// Si la emocion se ha repetido mas veces
+				if(emo.Value.nTimes > resRepeated)
+                {
+					resRepeated = emo.Value.nTimes;
+					moreRepeatedEmo = emo.Key;
+					averageDistanceRepeated = resAverage;
+                }
+            }
+
+			Debug.Log("La emocion mas repetida ha sido " + moreRepeatedEmo + " detectada un total de " + resRepeated + " con una distancia media de " + averageDistanceRepeated);
+			Debug.Log("La emocion mejor detectada ha sido " + closestEmo + " con una distancia media de " + averageDistanceClosest);
+        }
+
         public void onDestroy()
         {
 
         }
-
     }
 }

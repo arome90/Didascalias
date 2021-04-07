@@ -4,10 +4,9 @@ using UnityEngine.AI;
 namespace ClassRoomVR {
     public class Scene2 : MonoBehaviour
     {
-
         private Vector3 dest = new Vector3(0, 0, 0);
 
-        // Metodo de la situacion, path 3
+        // Metodo de la situacion, path 4
         public void separateProblematics()
         {
             MySceneManager sm = GameManager.Instance._sceneManager;
@@ -22,22 +21,17 @@ namespace ClassRoomVR {
             NavMeshAgent navMeshAgent = agent.GetComponent<NavMeshAgent>();
             navMeshAgent.enabled = true;
 
-            if (dest.x == 0 && dest.y == 0 && dest.z == 0)
+            for (int i = 0; i < asientosOcupados.Length; i++)
             {
-                for (int i = 0; i < asientosOcupados.Length; i++)
+                if (!asientosOcupados[i])
                 {
-                    if (!asientosOcupados[i])
-                    {
-                        dest = schoolClass.GetComponentInChildren<Transform>().Find("Desks").Find("DeskPositions").GetChild(i).position;
-                        break;
-                    }
+                    dest = schoolClass.GetComponentInChildren<Transform>().Find("Desks").Find("DeskPositions").GetChild(i).position;
+                    break;
                 }
             }
-
-            if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0) { 
-                navMeshAgent.SetDestination(dest);
-                agent.GetComponent<Animator>().Play("Walking");
-            }
+            
+            navMeshAgent.SetDestination(dest);
+            agent.GetComponent<Animator>().Play("Walking");
 
             float x = Mathf.Abs(agent.transform.position.x - dest.x);
             float y = Mathf.Abs(agent.transform.position.y - dest.y);
@@ -52,6 +46,8 @@ namespace ClassRoomVR {
             {
                 navMeshAgent.enabled = false;
                 agent.transform.position = dest;
+                agent.transform.position = new Vector3(agent.transform.position.x, agent.transform.position.y - 0.5f, agent.transform.position.z);
+                agent.transform.LookAt(sm.getClass().GetComponentInChildren<Transform>().Find("ParquetFloor").Find("ClassPositions").Find("TeacherIni").position);
                 sm.setSpecialPath(done);
             }
         }

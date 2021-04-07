@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClassRoomVR
@@ -16,6 +13,7 @@ namespace ClassRoomVR
         public Text textContexto;
         public GameObject textOpciones;
         public GameObject panelFinal;
+        public Text textFinal;
         //vr    
         [Header("Objectos Vr")]
         public GameObject canvasVR;
@@ -23,16 +21,14 @@ namespace ClassRoomVR
         public Text textContextoVR;
         public GameObject textOpcionesVR;
         public GameObject panelFinalVR;
-
-        //-----privates-----
-        private bool Vr;
+        public Text textFinalVR;
 
         //------Metodos---------
+        // Inicia para VR o normal
         public void enableCanvasVR()
         {
             canvasVR.SetActive(true);
             canvasNormal.SetActive(false);
-            Vr = true;
             UIHelpers.SetActive(true);
             eventSystem.SetActive(false);        
                   
@@ -41,11 +37,11 @@ namespace ClassRoomVR
         {
             canvasVR.SetActive(false);
             canvasNormal.SetActive(true);
-            Vr = false;
             UIHelpers.SetActive(false);
             eventSystem.SetActive(true);
-            
         }
+
+        // Inicia el panel del contexto dandole el texto que precisa
         public void panelContexto(string s ) {
             if (GameManager.Instance.getVR())
             {
@@ -83,22 +79,23 @@ namespace ClassRoomVR
             }
         }
 
-        public void endPanel()
+        public void endPanel(string text)
         {
             if (GameManager.Instance.getVR())
             {
                 textOpcionesVR.SetActive(false);
-                // TODO
+                // TODO (panel final, texto final)
             }
             else
             {
                 textOpciones.SetActive(false);
+                textFinal.text = text;
                 panelFinal.SetActive(true);
             }
         }
 
 
-        public void panelOpciones(string s)
+        public void panelOpciones(string s, string alumnsName)
         {
             GameObject aux = new GameObject();
             Text t = aux.AddComponent<Text>();
@@ -112,7 +109,8 @@ namespace ClassRoomVR
                 textOpciones.SetActive(true);
                 aux.transform.parent = textOpciones.transform;        
             }
-            t.text = s;
+            string tex = s.Replace("alum", alumnsName);
+            t.text = tex;
             t.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
             t.color = Color.black;
             t.fontSize = 20;

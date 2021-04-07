@@ -61,6 +61,7 @@ namespace ClassRoomVR {
         private bool specialSituatiuon = false;
         private bool specialPath = false;
         private Vector3 probIniPos;
+        private string alumsName = "";
 
         //--Tiempos--
         // DeltaTime
@@ -90,7 +91,6 @@ namespace ClassRoomVR {
             soundController = GetComponent<SoundLoudness>();
             wordRecognizer = new KeyWordRecognizer();
 
-            //emoPose = new MotionCaptureManager();
             emoPose.init();
 
             timeToStart = sceneInfo.timeToStart;
@@ -123,16 +123,16 @@ namespace ClassRoomVR {
             }
 
             // Mostramos el texto descriptivo de la escena
-            string contexto = "";
             for(int i = 0; i < _problematicStudents.Length; i++) {
-                if (i > 0 && i != _problematicStudents.Length-1) contexto += ", ";
-                else if(i > 0 && i == _problematicStudents.Length-1) contexto += " y ";
-                contexto += _students[_problematicStudents[i]].name;
-                if (i > 1 && i == _problematicStudents.Length-1) contexto += ";"; 
+                if (i > 0 && i != _problematicStudents.Length-1) alumsName += ", ";
+                else if(i > 0 && i == _problematicStudents.Length-1) alumsName += " y ";
+                alumsName += _students[_problematicStudents[i]].name;
+                if (i > 1 && i == _problematicStudents.Length-1) alumsName += ";"; 
             }
+
+            string t = sceneInfo.iniMessage.Replace("alum", alumsName);
            
-            contexto += " " + sceneInfo.iniMessage;
-            uiManager.panelContexto(contexto);
+            uiManager.panelContexto(t);
 
             // Comprobacion de errores para volver al menu
             if (_error) loadMenu();
@@ -294,7 +294,7 @@ namespace ClassRoomVR {
                 for (int i = 0; i < sceneInfo.paths.Length; i++)
                 {
                     // Mostramos los caminos a tomar
-                    uiManager.panelOpciones(sceneInfo.paths[i].pathInfo);
+                    uiManager.panelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
                     // Añadimos las palabras al reconocimiento de voz
                     wordRecognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
                 }
@@ -317,7 +317,7 @@ namespace ClassRoomVR {
                 }//SIGUIENTE ESTADO
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
-                    Debug.Log("Se acabo el tiempo de reaccion");
+                    //Debug.Log("Se acabo el tiempo de reaccion");
                     // Si alguno de los caminos era ignorar
                     for(int i = 0; i < sceneInfo.paths.Length; i++) if (sceneInfo.paths[i].ignore) pathReaction(i);
 
@@ -361,13 +361,15 @@ namespace ClassRoomVR {
             }
             else if (_sceneState == State.ShowFeedBack)
             {
-                //Debug.Log("FEEDBACK");
                 // Si no esta el audio ejecutandose se muestra el feedback
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
-                    //textContexto
-                    //textContexto.text = pathFeedback;
-                    uiManager.endPanel();
-                    uiManager.panelContexto(selectedPath.feedbackPath);
+                    // Feedback final
+                    string text = selectedPath.feedbackPath.Replace("alum", alumsName);
+                    uiManager.endPanel(text);
+
+                    // Resultados deteccion emocion
+                    emoPose.finalResult();
+                    // Fin game
                     camManager.unlockCursor();
                     enablecameraPlayer(false);
                     _sceneFinished = true;
@@ -480,13 +482,12 @@ namespace ClassRoomVR {
                 // Lo colocamos en su pupitre
                 Transform pos = studentsPositions.GetComponent<Transform>().GetChild(deskPos);
                 pickedStudent.transform.SetPositionAndRotation(pos.position + new Vector3(0, -0.4f, 0), pos.rotation);
-                deskPos++;
-                //Debug.Log("POS: " + pos.position);
 
                 // Lo añadimos al array de estudiantes
                 _students[i] = pickedStudent;
                 _asientosOcupados[deskPos] = true;
                 _studentsSex[i] = sex;
+                deskPos++;
             }
 
             // Estudiantes problematicos
