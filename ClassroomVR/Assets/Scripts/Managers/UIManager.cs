@@ -79,7 +79,7 @@ namespace ClassRoomVR
             }
         }
 
-        public void endPanel(string text)
+        public void endPanel(string text, MotionCaptureManager.finalInfo res, float talkPeech)
         {
             if (GameManager.Instance.getVR())
             {

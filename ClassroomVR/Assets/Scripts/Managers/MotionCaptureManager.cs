@@ -6,6 +6,22 @@ namespace ClassRoomVR
 {
     public class MotionCaptureManager : MonoBehaviour
 	{
+		// Struct para informar del estado final
+		public struct finalInfo
+        {
+			public string closestEmo;
+			public float averageDistanceClosest;
+			public string moreRepeatedEmo;
+			public int resRepeated;
+			public float averageDistanceRepeated;
+
+			public void toString()
+            {
+				Debug.Log("La emocion mas repetida ha sido " + moreRepeatedEmo + " detectada un total de " + resRepeated + " con una distancia media de " + averageDistanceRepeated);
+				Debug.Log("La emocion mejor detectada ha sido " + closestEmo + " con una distancia media de " + averageDistanceClosest);
+			}
+		}
+
 		// Para los calculos de la emocion mas utilizada
 		struct motionAverage
         {
@@ -75,17 +91,19 @@ namespace ClassRoomVR
 			}
         }
 
-		public void finalResult()
+		public finalInfo finalResult()
         {
+			finalInfo res;
+
 			// Mas cercana a 0
-			string closestEmo = "";
-			float averageDistanceClosest = float.MaxValue;
+			res.closestEmo = "";
+			res.averageDistanceClosest = float.MaxValue;
 			float resAverage = 0;
 
 			// Mas veces detectada
-			string moreRepeatedEmo = "";
-			float averageDistanceRepeated = float.MaxValue;
-			int resRepeated = 0;
+			res.moreRepeatedEmo = "";
+			res.averageDistanceRepeated = float.MaxValue;
+			res.resRepeated = 0;
 
 
 			foreach(KeyValuePair<string, motionAverage> emo in dicEmotions)
@@ -93,22 +111,23 @@ namespace ClassRoomVR
 				resAverage = emo.Value.sumatory / emo.Value.nTimes;
 
 				// Si la distancia media de la emocion es la mas pequeña
-				if(resAverage < averageDistanceClosest)
+				if(resAverage < res.averageDistanceClosest)
                 {
-					closestEmo = emo.Key;
-					averageDistanceClosest = resAverage;
+					res.closestEmo = emo.Key;
+					res.averageDistanceClosest = resAverage;
                 }
 				// Si la emocion se ha repetido mas veces
-				if(emo.Value.nTimes > resRepeated)
+				if(emo.Value.nTimes > res.resRepeated)
                 {
-					resRepeated = emo.Value.nTimes;
-					moreRepeatedEmo = emo.Key;
-					averageDistanceRepeated = resAverage;
+					res.resRepeated = emo.Value.nTimes;
+					res.moreRepeatedEmo = emo.Key;
+					res.averageDistanceRepeated = resAverage;
                 }
             }
 
-			Debug.Log("La emocion mas repetida ha sido " + moreRepeatedEmo + " detectada un total de " + resRepeated + " con una distancia media de " + averageDistanceRepeated);
-			Debug.Log("La emocion mejor detectada ha sido " + closestEmo + " con una distancia media de " + averageDistanceClosest);
+			//res.toString();
+
+			return res;
         }
 
         public void onDestroy()

@@ -365,10 +365,8 @@ namespace ClassRoomVR {
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
-                    uiManager.endPanel(text);
-
-                    // Resultados deteccion emocion
-                    emoPose.finalResult();
+                    uiManager.endPanel(text, emoPose.finalResult(), 0);
+                    
                     // Fin game
                     camManager.unlockCursor();
                     enablecameraPlayer(false);
