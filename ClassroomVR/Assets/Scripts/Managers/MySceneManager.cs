@@ -368,7 +368,8 @@ namespace ClassRoomVR {
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
-                    uiManager.endPanel(text, selectedPath.correctPath, emoPose.finalResult(), timeToResolve, 0);
+                    float soundness = soundController.getSavedAverageSound();
+                    uiManager.endPanel(text, selectedPath.correctPath, emoPose.finalResult(), timeToResolve, soundness);
                     
                     // Fin game
                     camManager.unlockCursor();

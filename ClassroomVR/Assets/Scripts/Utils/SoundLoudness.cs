@@ -27,6 +27,7 @@ public class SoundLoudness : MonoBehaviour
     private bool collect = false;
 
     float actTime;
+    private float savedAverageSound = 0.0f;
 
     public double increase = 1.5;
     public double minNoiseTreshold = 0.02;
@@ -212,7 +213,7 @@ public class SoundLoudness : MonoBehaviour
         
         Debug.Log("Media de decibelios antes del comentario: " + mediaAntes);
         Debug.Log("Media de decibelios después del comentario: " + mediaDespues);
-
+        savedAverageSound = mediaDespues;
         if (mediaDespues > mediaAntes * increase)
         {
             Debug.Log("Respuesta firme detectada");
@@ -244,5 +245,8 @@ public class SoundLoudness : MonoBehaviour
             return true;
         }
         return false;
+    }
+    public float getSavedAverageSound() {
+        return savedAverageSound;
     }
 }
