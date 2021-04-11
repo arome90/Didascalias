@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace ClassRoomVR
 {
-    public class MotionCaptureManager : MonoBehaviour
-	{
+    public class MotionCaptureManager : MonoBehaviour {
 		// Struct para informar del estado final
 		public struct finalInfo
         {
@@ -128,6 +126,13 @@ namespace ClassRoomVR
 			//res.toString();
 
 			return res;
+        }
+
+		// Metodo que se encarga de puntuar la emocion detectada mas caracteristica de la escena
+		public static int emotionValue(finalInfo res)
+        {
+
+			return 0;
         }
 
         public void onDestroy()

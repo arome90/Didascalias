@@ -70,6 +70,8 @@ namespace ClassRoomVR {
         private float timeToStart = 3.0f;
         // Tiempo que tiene el profe para reaccionar a la situacion
         private float timeToReact = 10.0f;
+        // Tiempo que se tarda en resolver la situacion (de cualquier manera)
+        private float timeToResolve = 0.0f;
         // Tiempo de espera para el feedbackFinal
         private float timeToWait = 5.0f;
 
@@ -288,6 +290,8 @@ namespace ClassRoomVR {
         // Metodo que gestiona la eleccion del camino tras la presentacion de la situacion
         private void playPathChoosing()
         {
+            timeToResolve += Time.deltaTime;
+
             // Parametros especificos de los caminos
             if(_sceneState == State.GeneratePathSettings)
             {                
@@ -312,9 +316,9 @@ namespace ClassRoomVR {
 
                 // Si se toma un camino
                 if (_pathChosen) {
-                    _sceneState = State.ReactToPath;
+                    _sceneState = State.ReactToPath;    //SIGUIENTE ESTADO
                     soundController.StopRecordingAndCalculate();
-                }//SIGUIENTE ESTADO
+                } 
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
                     //Debug.Log("Se acabo el tiempo de reaccion");
@@ -325,7 +329,6 @@ namespace ClassRoomVR {
                     deltaTime = 0;
                     _sceneState = State.ReactToPath;   //SIGUIENTE ESTADO
                 }
-                
             }
         }
 
@@ -365,7 +368,7 @@ namespace ClassRoomVR {
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
-                    uiManager.endPanel(text, emoPose.finalResult(), 0);
+                    uiManager.endPanel(text, selectedPath.correctPath, emoPose.finalResult(), timeToResolve, 0);
                     
                     // Fin game
                     camManager.unlockCursor();

@@ -79,8 +79,26 @@ namespace ClassRoomVR
             }
         }
 
-        public void endPanel(string text, MotionCaptureManager.finalInfo res, float talkPeech)
+        // Metodo que muestra en el panel final como ha ido el desarrollo de la escena
+        public void endPanel(string feedBackText, bool goodPath, MotionCaptureManager.finalInfo res, float resolveTime, float talkPitch)
         {
+            // Calculamos la puntuacion por la emocion detectada mas caracteristica de la escena
+            int emoScrore = MotionCaptureManager.emotionValue(res);
+
+            int goodPathScore = 0;
+            if (goodPath) goodPathScore = 10;
+
+            // Menor tiempo -> + puntuacion por resolver la situacion rapidamente
+            int timeScore = 0;
+            //usar el resolveTime
+
+            // Puntuacion por el tono de voz
+            int pitchScore = 0;
+            // usar el talkPitch
+
+            // Score final
+            int finalScore = emoScrore + goodPathScore + timeScore + pitchScore;
+
             if (GameManager.Instance.getVR())
             {
                 textOpcionesVR.SetActive(false);
@@ -89,11 +107,10 @@ namespace ClassRoomVR
             else
             {
                 textOpciones.SetActive(false);
-                textFinal.text = text;
+                textFinal.text = feedBackText;
                 panelFinal.SetActive(true);
             }
         }
-
 
         public void panelOpciones(string s, string alumnsName)
         {
