@@ -12,6 +12,10 @@ namespace ClassRoomVR
         public GameObject eventSystem;
         public Text textContexto;
         public GameObject textOpciones;
+        public Text opcion1;
+        public Text opcion2;
+        public Text opcion3;
+        public Text opcion4;
         public GameObject panelFinal;
         public Text textFinal;
         //vr    
@@ -114,23 +118,39 @@ namespace ClassRoomVR
 
         public void panelOpciones(string s, string alumnsName)
         {
-            GameObject aux = new GameObject();
-            Text t = aux.AddComponent<Text>();
             if (GameManager.Instance.getVR())
             {
                 textOpcionesVR.SetActive(true);
-                aux.transform.parent = textOpcionesVR.transform;         
             }
             else
             {
                 textOpciones.SetActive(true);
-                aux.transform.parent = textOpciones.transform;        
             }
             string tex = s.Replace("alum", alumnsName);
-            t.text = tex;
-            t.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
-            t.color = Color.black;
-            t.fontSize = 20;
+            if(opcion1.text=="vacio")
+            {
+                opcion1.gameObject.SetActive(true);
+                opcion1.text = tex;
+            }
+            else if (opcion2.text == "vacio")
+            {
+                opcion2.gameObject.SetActive(true);
+                opcion2.text = tex;
+            }
+            else if (opcion3.text == "vacio")
+            {
+                opcion3.gameObject.SetActive(true);
+                opcion3.text = tex;
+            }
+            else if (opcion4.text == "vacio")
+            {
+                opcion4.gameObject.SetActive(true);
+                opcion4.text = tex;
+            }
+            /* t.text = tex;
+             t.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+             t.color = Color.black;
+             t.fontSize = 20;*/
         }
 
 
