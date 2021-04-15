@@ -148,7 +148,7 @@ namespace ClassRoomVR {
                 playSituation();
                 playPathChoosing();
                 playReactionToPath();
-                if (!_pathChosen) emoPose.update(Time.deltaTime);
+                emoPose.update(Time.deltaTime);
             }
         }
 
@@ -158,53 +158,6 @@ namespace ClassRoomVR {
         {
             _playing = PlayScene;
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
-        }
-
-        // Getters
-        public GameObject[] getStudents()
-        {
-            return _students;
-        }
-        public GameObject[] getProblematics()
-        {
-            GameObject[] ps = new GameObject[sceneInfo.problematicStudents];
-            for(int i = 0; i < _problematicStudents.Length; i++)
-            {
-                ps[i] = _students[_problematicStudents[i]];
-            }
-            return ps;
-        }
-        public GameObject getTeacher()
-        {
-            return _teacher;
-        }
-        public GameObject getClass()
-        {
-            return _schoolClass;
-        }
-        public bool[] getFreeDesks()
-        {
-            return _asientosOcupados;
-        }
-
-        public Vector3 getProblematicIniPos()
-        {
-            return probIniPos;
-        }
-
-        // Setters (para situaciones especiales)
-        public void setSpecialSituation(bool b)
-        {
-            specialSituatiuon = b;
-        }
-        public void setSpecialPath(bool b)
-        {
-            specialPath = b;
-        }
-
-        public void setCollision(string s)
-        {
-            teacherCollision = s;
         }
 
         // Otros publics
@@ -243,24 +196,7 @@ namespace ClassRoomVR {
                 // Hacemos k los alumnos rebeldes ejecuten su animacion y sonido
                 if (_sceneState == State.AnimSituation)
                 {
-                    if (!doSceneBehaviourOnce)
-                    {
-                        for (int i = 0; i < sceneInfo.problematicStudents; i++)
-                        {
-                            if (sceneInfo.problematicsAnimation != null) _students[_problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimation.name);
-                            if (_studentsSex[_problematicStudents[i]] == 0)
-                            {
-                                if (sceneInfo.audioSituationFemenino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationFemenino;
-                            }
-                            else
-                            {
-                                if (sceneInfo.audioSituationMasculino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationMasculino;
-                            }
-                            _teacher.GetComponent<AudioSource>().Play();
-
-                        }
-                        doSceneBehaviourOnce = true;
-                    }
+                    iniPlaySituation();
                     // Comportamiento especial
                     if (sceneInfo.especificBehaviour.GetPersistentEventCount() > 0)
                     {
@@ -287,29 +223,38 @@ namespace ClassRoomVR {
             }
         }
 
+        // Inicializaciones especiales de la ejecucion de la situacion
+        private void iniPlaySituation()
+        {
+            if (!doSceneBehaviourOnce)
+            {
+                for (int i = 0; i < sceneInfo.problematicStudents; i++)
+                {
+                    if (sceneInfo.problematicsAnimation != null) _students[_problematicStudents[i]].GetComponent<Animator>().Play(sceneInfo.problematicsAnimation.name);
+                    if (_studentsSex[_problematicStudents[i]] == 0)
+                    {
+                        if (sceneInfo.audioSituationFemenino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationFemenino;
+                    }
+                    else
+                    {
+                        if (sceneInfo.audioSituationMasculino != null) _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioSituationMasculino;
+                    }
+                    _teacher.GetComponent<AudioSource>().Play();
+
+                }
+                doSceneBehaviourOnce = true;
+            }
+        }
+
         // Metodo que gestiona la eleccion del camino tras la presentacion de la situacion
         private void playPathChoosing()
         {
             timeToResolve += Time.deltaTime;
 
-            // Parametros especificos de los caminos
-            if(_sceneState == State.GeneratePathSettings)
-            {                
-                for (int i = 0; i < sceneInfo.paths.Length; i++)
-                {
-                    // Mostramos los caminos a tomar
-                    uiManager.panelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
-                    // Añadimos las palabras al reconocimiento de voz
-                    wordRecognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
-                }
-                
-                wordRecognizer.init();
-                setCollision("");
-                _sceneState = State.ChoosingPath;   //SIGUIENTE ESTADO
-                soundController.startCollecting();
-            }
+            iniPlayPathChoosing();
+            
             // Durante la eleccion del camino
-            else if(_sceneState == State.ChoosingPath)
+            if(_sceneState == State.ChoosingPath)
             {
                 // En casos donde la eleccion del camino es acercarse a los alumnos liantes
                 collisionReaction();
@@ -332,24 +277,35 @@ namespace ClassRoomVR {
             }
         }
 
+        // Inicializaciones especiales de la eleccion de camino
+        private void iniPlayPathChoosing()
+        {
+            // Parametros especificos de los caminos
+            if (_sceneState == State.GeneratePathSettings)
+            {
+                emoPose.nextInterval();
+                for (int i = 0; i < sceneInfo.paths.Length; i++)
+                {
+                    // Mostramos los caminos a tomar
+                    uiManager.panelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
+                    // Añadimos las palabras al reconocimiento de voz
+                    wordRecognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
+                }
+
+                wordRecognizer.init();
+                setCollision("");
+                _sceneState = State.ChoosingPath;   //SIGUIENTE ESTADO
+                soundController.startCollecting();
+            }
+        }
+
         // Metodo que gestiona la reaccion al camino elegido
         private void playReactionToPath()
         {
             // Reaccion al camino tomado
             if(_sceneState == State.ReactToPath)
             {
-                if (!doPathOptionOnce)
-                {
-                    // Audio de respuesta de los estudiantes
-                    if (selectedPath.audio != null) {
-                        _teacher.GetComponent<AudioSource>().clip = selectedPath.audio;
-                        _teacher.GetComponent<AudioSource>().Play();
-                    }
-                    // Animaciones de respuesta de los estudiantes
-                    if (selectedPath.pathClassAnimation != null) PlayAnimationsAtDifferentTimeClass(selectedPath.pathClassAnimation.name);
-                    if (selectedPath.pathProbAnimation != null) PlayAnimationsAtDifferentTimeProblematic(selectedPath.pathProbAnimation.name);
-                    doPathOptionOnce = true;
-                }
+                initReactionToPath();
 
                 // Comportamiento especial del camino
                 if (selectedPath.especificBehaviour.GetPersistentEventCount() > 0)
@@ -366,10 +322,12 @@ namespace ClassRoomVR {
             {
                 // Si no esta el audio ejecutandose se muestra el feedback
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
+                    emoPose.nextInterval();
+
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
                     float soundness = soundController.getSavedAverageSound();
-                    uiManager.endPanel(text, selectedPath.correctPath, emoPose.finalResult(), timeToResolve, soundness);
+                    uiManager.endPanel(text, selectedPath.correctPath, timeToResolve, soundness);
                     
                     // Fin game
                     camManager.unlockCursor();
@@ -379,6 +337,26 @@ namespace ClassRoomVR {
                 }
             }
         }
+
+        // Inicializaciones especiales de la reaccion al camino
+        private void initReactionToPath()
+        {
+            if (!doPathOptionOnce)
+            {
+                emoPose.nextInterval();
+                // Audio de respuesta de los estudiantes
+                if (selectedPath.audio != null)
+                {
+                    _teacher.GetComponent<AudioSource>().clip = selectedPath.audio;
+                    _teacher.GetComponent<AudioSource>().Play();
+                }
+                // Animaciones de respuesta de los estudiantes
+                if (selectedPath.pathClassAnimation != null) PlayAnimationsAtDifferentTimeClass(selectedPath.pathClassAnimation.name);
+                if (selectedPath.pathProbAnimation != null) PlayAnimationsAtDifferentTimeProblematic(selectedPath.pathProbAnimation.name);
+                doPathOptionOnce = true;
+            }
+        }
+
         //----------------------------------------------------------------------------------
         //--------------Metodos para la generalizacion del camino elegido-------------------
 
@@ -556,6 +534,54 @@ namespace ClassRoomVR {
             else _teacher = sceneObjects.GetComponent<Transform>().Find("Player").gameObject;
 
             _teacher.SetActive(true);
+        }
+
+
+        // Getters
+        public GameObject[] getStudents()
+        {
+            return _students;
+        }
+        public GameObject[] getProblematics()
+        {
+            GameObject[] ps = new GameObject[sceneInfo.problematicStudents];
+            for (int i = 0; i < _problematicStudents.Length; i++)
+            {
+                ps[i] = _students[_problematicStudents[i]];
+            }
+            return ps;
+        }
+        public GameObject getTeacher()
+        {
+            return _teacher;
+        }
+        public GameObject getClass()
+        {
+            return _schoolClass;
+        }
+        public bool[] getFreeDesks()
+        {
+            return _asientosOcupados;
+        }
+
+        public Vector3 getProblematicIniPos()
+        {
+            return probIniPos;
+        }
+
+        // Setters (para situaciones especiales)
+        public void setSpecialSituation(bool b)
+        {
+            specialSituatiuon = b;
+        }
+        public void setSpecialPath(bool b)
+        {
+            specialPath = b;
+        }
+
+        public void setCollision(string s)
+        {
+            teacherCollision = s;
         }
     }
 }

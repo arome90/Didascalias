@@ -84,10 +84,14 @@ namespace ClassRoomVR
         }
 
         // Metodo que muestra en el panel final como ha ido el desarrollo de la escena
-        public void endPanel(string feedBackText, bool goodPath, MotionCaptureManager.finalInfo res, float resolveTime, float talkPitch)
+        public void endPanel(string feedBackText, bool goodPath, float resolveTime, float talkPitch)
         {
+            // Toda la info obtenida por el motionCaptureManager
+            Debug.Log(MotionCaptureManager.getIntervalsInfo());
+
+
             // Calculamos la puntuacion por la emocion detectada mas caracteristica de la escena
-            int emoScrore = MotionCaptureManager.emotionValue(res);
+            int emoScrore = 0;
 
             int goodPathScore = 0;
             if (goodPath) goodPathScore = 10;

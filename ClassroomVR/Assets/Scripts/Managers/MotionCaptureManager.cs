@@ -4,30 +4,30 @@ using UnityEngine;
 namespace ClassRoomVR
 {
     public class MotionCaptureManager : MonoBehaviour {
-		// Struct para informar del estado final
-		public struct finalInfo
+		// Struct que guarda la informacion de cada intervalo
+		public struct IntervalResult
         {
-			public string closestEmo;
-			public float averageDistanceClosest;
-			public string moreRepeatedEmo;
-			public int resRepeated;
-			public float averageDistanceRepeated;
+			/// <summary>
+			/// La lista resultEmotion guarda las emociones repetidas consecutivamente.
+			/// El vector2 indica:
+			/// 1. Nº de repeticiones
+			/// 2. Fiabilidad de esa lectura consecutiva
+			/// </summary>
+			public List<Vector2> resultEmotion;
+			// Guarda la emocion respectiva a la lista anterior.
+			public List<Emotion> emoRelated;
 
-			public void toString()
-            {
-				Debug.Log("La emocion mas repetida ha sido " + moreRepeatedEmo + " detectada un total de " + resRepeated + " con una distancia media de " + averageDistanceRepeated);
-				Debug.Log("La emocion mejor detectada ha sido " + closestEmo + " con una distancia media de " + averageDistanceClosest);
-			}
-		}
-
-		// Para los calculos de la emocion mas utilizada
-		struct motionAverage
-        {
-			public int nTimes;
-			public float sumatory;
+			/// <summary>
+			/// El Diccionario totalEmoRepeated guarda cuantas veces se ha repetido en total una emocion durante el intervalo.
+			/// El vector2 indica:
+			/// 1.El total de veces que se ha detectado la emocion
+			/// 2.Nº de veces que se ha detectado la emocion por mas tiempo seguido
+			/// Se utiliza para calcular el numero de emociones totales durante el intervalo y, por tanto, el tiempo del mismo.
+			/// </summary>
+			public Dictionary<Emotion, Vector2> totalEmoRepeated;
         }
 
-        public Transform playerTransform;
+		public Transform playerTransform;
 
 		// For builidng poses from the UI
 		public PoseBuilder poseBuilder;
@@ -37,46 +37,42 @@ namespace ClassRoomVR
 		// Url of the "InsertGenericData.php" file for this EmoPose application
 		private string url = "http://webdiis.unizar.es/~ivangmg/emopose/InsertGenericData.php";
 
+		public bool debug = false;
+
 		// Delay entre calculo de emocion asociada a la pose
-		public float delay = 1.0f;
+		public float delay = 0.5f;
 		private float delta = 0.0f;
 
-		// Diccionario para el calculo de las emociones detectadas
-		private Dictionary<string, motionAverage> dicEmotions;
+		// Lista con la info de los intervalos
+		static private List<IntervalResult> intervals;
+
+		// Para cada intervalo
+		private IntervalResult actualInterval;
+		private List<Vector2> actResultEmo;
+		private List<Emotion> actEmo;
+		private Dictionary<Emotion, Vector2> actEmoRepeated;
+		//Para cada fragmento de cada intervalo
+		private Emotion lastEmotion;
+		private Vector2 recurrentEmo;
+
 
 		// Use this for initialization
 		public void init() {
 			poseBase = new PoseBase();
 			poseBase.AddDefaultCases();
 
-			dicEmotions = new Dictionary<string, motionAverage>();
+			Debug.Log(delay);
+
+			//---
+			intervals = new List<IntervalResult>();
+			//---
+			actResultEmo = new List<Vector2>();
+			actEmo = new List<Emotion>();
+			actEmoRepeated = new Dictionary<Emotion, Vector2>();
+			//---
+			lastEmotion = Emotion.None;
+			recurrentEmo = new Vector2(0, 0);
 		}
-
-		private void ClassifyPoseFromCharacter()
-		{
-			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
-			Emotion emo = poseBase.Classify(pose);
-			string key = emo.ToString();
-
-            if (dicEmotions.ContainsKey(key))
-            {
-				motionAverage val = dicEmotions[key];
-				dicEmotions.Remove(key);
-				val.nTimes += 1;
-				val.sumatory += poseBase.lastDistance;
-				dicEmotions.Add(key, val);
-				Debug.Log("Update existente");
-            }
-            else
-            {
-				motionAverage newEmo = new motionAverage();
-				newEmo.nTimes = 1;
-				newEmo.sumatory = poseBase.lastDistance;
-				dicEmotions.Add(emo.ToString(), newEmo);
-				Debug.Log("Añadida nueva");
-            }
-		}
-
 
 		public void update(float deltaTime)
         {
@@ -88,56 +84,126 @@ namespace ClassRoomVR
 				ClassifyPoseFromCharacter();
 			}
         }
+		public void onDestroy()
+		{
 
-		public finalInfo finalResult()
+		}
+
+		static public string getIntervalsInfo()
+		{
+			string intervalsInfo = "";
+
+			int interval = 1;
+			foreach (IntervalResult iRes in intervals)
+			{
+				//---
+				intervalsInfo += "Por orden de deteccion durante el intervalo " + interval + ":\n";
+				string emoDuringIntervalInfo = "";
+				int i = 0;
+				foreach (Emotion em in iRes.emoRelated)
+				{
+					if (iRes.resultEmotion[i].y > 33.3)
+					{
+						emoDuringIntervalInfo += "Se detecto la emocion " + em.ToString() +
+							" con una fiabilidad media del " + iRes.resultEmotion[i].y +
+							" un total de " + iRes.resultEmotion[i].x + "\n";
+					}
+					i++;
+				}
+				intervalsInfo += emoDuringIntervalInfo;
+
+				//----
+				string emotionsDuringIntervalInfo = "";
+				foreach (KeyValuePair<Emotion, Vector2> emInfo in iRes.totalEmoRepeated)
+				{
+					emotionsDuringIntervalInfo += "Se detecto la emocion " + emInfo.Key.ToString() + 
+						" un total de " + emInfo.Value.x +
+						" veces, con una repeticion maxima de " + emInfo.Value.y + "\n";
+				}
+				intervalsInfo += emotionsDuringIntervalInfo + "\n";
+				interval++;
+			}
+			return intervalsInfo;
+		}
+
+		// Actualiza la informacion de los intervalos con la calculada hasta ahora
+		public void nextInterval()
         {
-			finalInfo res;
+			// Actualizamos la info del intervalo actual
+			actualInterval = new IntervalResult();
+			actualInterval.resultEmotion = new List<Vector2>();
+			actualInterval.resultEmotion = actResultEmo;
+			actualInterval.emoRelated = new List<Emotion>();
+			actualInterval.emoRelated = actEmo;
+			actualInterval.totalEmoRepeated = new Dictionary<Emotion, Vector2>();
+			actualInterval.totalEmoRepeated = actEmoRepeated;
 
-			// Mas cercana a 0
-			res.closestEmo = "";
-			res.averageDistanceClosest = float.MaxValue;
-			float resAverage = 0;
+			// Guardamos el intervalo en la lista de intervalos.
+			intervals.Add(actualInterval);
 
-			// Mas veces detectada
-			res.moreRepeatedEmo = "";
-			res.averageDistanceRepeated = float.MaxValue;
-			res.resRepeated = 0;
-
-
-			foreach(KeyValuePair<string, motionAverage> emo in dicEmotions)
-            {
-				resAverage = emo.Value.sumatory / emo.Value.nTimes;
-
-				// Si la distancia media de la emocion es la mas pequeña
-				if(resAverage < res.averageDistanceClosest)
-                {
-					res.closestEmo = emo.Key;
-					res.averageDistanceClosest = resAverage;
-                }
-				// Si la emocion se ha repetido mas veces
-				if(emo.Value.nTimes > res.resRepeated)
-                {
-					res.resRepeated = emo.Value.nTimes;
-					res.moreRepeatedEmo = emo.Key;
-					res.averageDistanceRepeated = resAverage;
-                }
-            }
-
-			//res.toString();
-
-			return res;
+			// Limpiamos los objetos para el siguiente intervalo
+			actResultEmo = new List<Vector2>();
+			actEmo = new List<Emotion>();
+			actEmoRepeated = new Dictionary<Emotion, Vector2>();
+			lastEmotion = Emotion.None;
+			recurrentEmo = new Vector2(0, 0);
         }
 
-		// Metodo que se encarga de puntuar la emocion detectada mas caracteristica de la escena
-		public static int emotionValue(finalInfo res)
-        {
+		// Obtiene la info de la emocion a partir del cuerpo del character
+		private void ClassifyPoseFromCharacter()
+		{
+			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
+			Emotion emo = poseBase.Classify(pose);
 
-			return 0;
-        }
+			storeInfo(emo);
+		}
 
-        public void onDestroy()
-        {
+		// Guarda la info cada vez que se detecta una emocion
+		private void storeInfo(Emotion emo)
+		{
+			if (lastEmotion == emo || lastEmotion == Emotion.None)
+			{
+				if(debug) Debug.Log("Misma emocion " + emo.ToString());
+				//repeticiones, fiabilidad
+				recurrentEmo.x += 1;
+				recurrentEmo.y += poseBase.lastDistance;
+			}
+			else
+			{
+				if (debug) Debug.Log("Cambio en la emocion detectada el ultimo intervalo");
+				// Preparamos el valor de y para que muestre lo que nos interesa
+				recurrentEmo.y = recurrentEmo.y / recurrentEmo.x;
 
-        }
-    }
+				// Añadimos la emocion detectada repetidamente a la lista
+				actResultEmo.Add(recurrentEmo);
+				// Emocion asociada a actResultEmo
+				actEmo.Add(lastEmotion);
+
+				Vector2 val = new Vector2();
+				// Actualizamos las emociones detectadas durante el intervalo actual en el diccionario
+				if (actEmoRepeated.ContainsKey(lastEmotion))
+				{
+					val = actEmoRepeated[lastEmotion];
+					actEmoRepeated.Remove(lastEmotion);
+					// Numero total de veces que se repite la emo
+					val.x += recurrentEmo.x;
+					// Duracion mas larga de deteccion de la emo
+					if (recurrentEmo.x > val.y) val.y = recurrentEmo.x;
+					actEmoRepeated.Add(lastEmotion, val);
+					if (debug) Debug.Log("Update de emo existente");
+				}
+				else
+				{
+					val.x = recurrentEmo.x;
+					val.y = recurrentEmo.x;
+					actEmoRepeated.Add(lastEmotion, val);
+					if (debug) Debug.Log("Añadida nueva emo");
+				}
+
+				// Reiniciamos recurrentEmo
+				recurrentEmo = new Vector2(0, 0);
+			}
+			lastEmotion = emo;
+		}
+	}
 }

@@ -34,7 +34,7 @@ public class PoseBase{
 			return Emotion.None;
 		// Obtains the most similar
 		float minDist = Mathf.Infinity;
-		PoseCase mostSimilarCase = new PoseCase(new Pose(),Emotion.None);
+		PoseCase mostSimilarCase = new PoseCase(new Pose(), Emotion.None);
 		foreach (PoseCase poseCase in listCases) {
 			float dist = pose.DistanceWithSymmetry (poseCase.pose);
 			if (dist < minDist) {
