@@ -24,6 +24,10 @@ namespace ClassRoomVR
         public GameObject UIHelpers;
         public Text textContextoVR;
         public GameObject textOpcionesVR;
+        public Text opcion1Vr;
+        public Text opcion2Vr;
+        public Text opcion3Vr;
+        public Text opcion4Vr;
         public GameObject panelFinalVR;
         public Text textFinalVR;
 
@@ -110,7 +114,9 @@ namespace ClassRoomVR
             if (GameManager.Instance.getVR())
             {
                 textOpcionesVR.SetActive(false);
-                // TODO (panel final, texto final)
+                textFinalVR.text = feedBackText;
+                panelFinalVR.SetActive(true);
+               
             }
             else
             {
@@ -120,7 +126,7 @@ namespace ClassRoomVR
             }
         }
 
-        public void panelOpciones(string s, string alumnsName)
+        public void panelOpciones(string s, string alumnsName)//Idea con un botor activar o desctivar las opciones queda mucho mejor para este formato
         {
             if (GameManager.Instance.getVR())
             {
@@ -135,26 +141,30 @@ namespace ClassRoomVR
             {
                 opcion1.gameObject.SetActive(true);
                 opcion1.text = tex;
+                opcion1Vr.gameObject.SetActive(true);
+                opcion1Vr.text = tex;
             }
             else if (opcion2.text == "vacio")
             {
                 opcion2.gameObject.SetActive(true);
                 opcion2.text = tex;
+                opcion2Vr.gameObject.SetActive(true);
+                opcion2Vr.text = tex;
             }
             else if (opcion3.text == "vacio")
             {
                 opcion3.gameObject.SetActive(true);
                 opcion3.text = tex;
+                opcion3Vr.gameObject.SetActive(true);
+                opcion3Vr.text = tex;
             }
             else if (opcion4.text == "vacio")
             {
                 opcion4.gameObject.SetActive(true);
                 opcion4.text = tex;
+                opcion4Vr.gameObject.SetActive(true);
+                opcion4Vr.text = tex;
             }
-            /* t.text = tex;
-             t.font = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
-             t.color = Color.black;
-             t.fontSize = 20;*/
         }
 
 
