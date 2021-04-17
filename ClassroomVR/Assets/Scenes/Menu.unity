@@ -1504,7 +1504,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 400592391}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -378.00003}
+  m_LocalPosition: {x: 0, y: 0, z: -1310.2}
   m_LocalScale: {x: 1, y: 1, z: 189.00002}
   m_Children:
   - {fileID: 493155222}
@@ -3160,6 +3160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PackTriade_Obj: {fileID: 785680044}
   packB: {fileID: 3624055866123293480, guid: 734aada5693dbe341ad11d56659f35cc, type: 3}
+  packBVR: {fileID: 7950753722825494040, guid: 47fda25d7e4e05d4ea294ea031885a3e, type: 3}
   PackTriade_ObjVR: {fileID: 1739234377}
   cameraRig: {fileID: 4216981943291268793}
 --- !u!4 &1035096742
@@ -4483,12 +4484,12 @@ GameObject:
   - component: {fileID: 1739234378}
   - component: {fileID: 1739234379}
   m_Layer: 5
-  m_Name: PackMenu
+  m_Name: PackMenuVR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1739234378
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4497,17 +4498,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1739234377}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 67.3}
+  m_LocalScale: {x: 1, y: 1, z: 189.00002}
   m_Children: []
   m_Father: {fileID: 2038575112}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -322.9}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 12.000004}
+  m_SizeDelta: {x: 224.53088, y: 215.81921}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1739234379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4530,8 +4531,8 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 400, y: 100}
   m_Spacing: {x: 0, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 1
+  m_ConstraintCount: 1
 --- !u!1 &1773948543
 GameObject:
   m_ObjectHideFlags: 0
@@ -5195,7 +5196,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2038575109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5473,7 +5474,7 @@ PrefabInstance:
     - target: {fileID: 4216981944675060971, guid: 654c0f41c700f3048a9543785735adf7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2.478
       objectReference: {fileID: 0}
     - target: {fileID: 4216981944675060971, guid: 654c0f41c700f3048a9543785735adf7,
         type: 3}
@@ -5627,7 +5628,7 @@ PrefabInstance:
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
       propertyPath: VRHardware
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}
