@@ -77,7 +77,6 @@ namespace ClassRoomVR
 		public void update(float deltaTime)
         {
 			delta += deltaTime;
-			// Habria que hacer que mirara cual es y la añadiera a la lista de leidas.
 			if (delta > delay)
 			{
 				delta = 0.0f;
