@@ -27,6 +27,7 @@ El manager de esta escena es "MySceneManager"
 - Grabar mas emoPose
 - Player con vr no detecta colision con objetos
 - Gravar animacion de sentarse para los alumnos ;)
+- Confirmar que se puede eliminar el script "PlayerMovement" (deberia poder quitarse)
 
 ---
 
