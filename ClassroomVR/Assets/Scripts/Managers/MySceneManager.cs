@@ -13,8 +13,8 @@ namespace ClassRoomVR {
 
         // UI MANAGER
         public UIManager uiManager;
-        //CameraManager 
-        public CameraManager camManager;
+        // Player Movements Manager
+        public PlayerMotion playerMotion;
 
         // EmoPose (emocion - pose) manager
         public MotionCaptureManager emoPose;
@@ -143,13 +143,37 @@ namespace ClassRoomVR {
 
         // Update is called once per frame
         void Update() {
-            if (_playing) {
-                deltaTime += Time.deltaTime;
-                playSituation();
-                playPathChoosing();
-                playReactionToPath();
-                emoPose.update(Time.deltaTime);
+            if (!_sceneFinished) {
+                if (_playing)
+                {
+                    deltaTime += Time.deltaTime;
+                    playSituation();
+                    playPathChoosing();
+                    playReactionToPath();
+                    emoPose.update(Time.deltaTime);
+                }
+
+                handleInput();
             }
+        }
+
+        private void handleInput()
+        {
+            // Para la pausa de la escena en el cambio de show/unshow posibles caminos a elegir
+            if (Input.GetKeyDown(KeyCode.Q) && _sceneState == State.ChoosingPath)
+            {
+                pause();
+                uiManager.setOptions(!_playing);
+            }
+
+            // Para el cambio de texto en el feedback
+            if (Input.GetMouseButton(0) && _sceneState == State.ShowFeedBack)
+            {
+                uiManager.changeEndPanel(emoPose.getIntervalsInfo());
+                uiManager.showEndButtons();
+                _sceneFinished = true;
+            }
+
         }
 
         //-------------------PUBLICS-------------------------
@@ -170,20 +194,12 @@ namespace ClassRoomVR {
             GameManager.Instance.makeChoice(i);
         }
 
-        public void enablecameraPlayer(bool t)
+        // Para pausar el juego
+        public void pause()
         {
-            try
-            {
-                _teacher.GetComponent<CameraManager>().enabled = t;
-                _teacher.GetComponent<PlayerMovement>().enabled = t;
-            }
-            catch (Exception e)
-            {
-                Debug.Log("FATAL ERROR: El player no tiene un script CameraManager");
-                _error = true;
-            }
+            _playing = !_playing;
+            playerMotion.gameObject.SetActive(_playing);
         }
-
 
         //-------------------PRIVATES-------------------------
         // METODOS DE CONTROL DE LOGICA DE LA ESCENA
@@ -286,11 +302,14 @@ namespace ClassRoomVR {
                 emoPose.nextInterval();
                 for (int i = 0; i < sceneInfo.paths.Length; i++)
                 {
-                    // Mostramos los caminos a tomar
-                    uiManager.panelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
+                    // Iniciamos el texto de los caminos a tomar
+                    uiManager.initPanelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
                     // Añadimos las palabras al reconocimiento de voz
                     wordRecognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
                 }
+
+                pause();
+                uiManager.setOptions(!_playing);
 
                 wordRecognizer.init();
                 setCollision("");
@@ -327,13 +346,12 @@ namespace ClassRoomVR {
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
                     float soundness = soundController.getSavedAverageSound();
-                    uiManager.endPanel(text, selectedPath.correctPath, timeToResolve, soundness);
+                    uiManager.initEndPanel(text, selectedPath.correctPath, timeToResolve, soundness);
                     
                     // Fin game
-                    camManager.unlockCursor();
-                    enablecameraPlayer(false);
-                    _sceneFinished = true;
                     _playing = false;
+                    playerMotion.unlockCursor();
+                    playerMotion.gameObject.SetActive(_playing);
                 }
             }
         }
@@ -578,7 +596,6 @@ namespace ClassRoomVR {
         {
             specialPath = b;
         }
-
         public void setCollision(string s)
         {
             teacherCollision = s;

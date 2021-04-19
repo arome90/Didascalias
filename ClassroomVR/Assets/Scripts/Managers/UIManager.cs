@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClassRoomVR
@@ -6,40 +7,46 @@ namespace ClassRoomVR
     public class UIManager : MonoBehaviour
     {
         //-----Publics-------
-        //Canvas normal y CanvasVR
+        // Canvas normal
         [Header("Objectos Normales")]
         public GameObject canvasNormal;
         public GameObject eventSystem;
+        // Contexto
         public Text textContexto;
-        public GameObject textOpciones;
-        public Text opcion1;
-        public Text opcion2;
-        public Text opcion3;
-        public Text opcion4;
+        // Caminos
+        public GameObject ObjectOpciones;
+        public List<Text> OptionsTexts;
+        // Final
         public GameObject panelFinal;
         public Text textFinal;
-        //vr    
+        public List<GameObject> finalButtons;
+
+        // CanvasVR
         [Header("Objectos Vr")]
         public GameObject canvasVR;
         public GameObject UIHelpers;
         public Text textContextoVR;
-        public GameObject textOpcionesVR;
-        public Text opcion1Vr;
-        public Text opcion2Vr;
-        public Text opcion3Vr;
-        public Text opcion4Vr;
+        public GameObject ObjectOpcionesVR;
+        public List<Text> OptionsTextsVR;
         public GameObject panelFinalVR;
         public Text textFinalVR;
+        public List<GameObject> finalButtonsVR;
 
         //------Metodos---------
+        // Start is called before the first frame update
+        void Start()
+        {
+            if (GameManager.Instance.getVR()) enableCanvasVR();
+            else enableCanvasNormal();
+        }
+
         // Inicia para VR o normal
         public void enableCanvasVR()
         {
             canvasVR.SetActive(true);
             canvasNormal.SetActive(false);
             UIHelpers.SetActive(true);
-            eventSystem.SetActive(false);        
-                  
+            eventSystem.SetActive(false);
         }
         public void enableCanvasNormal()
         {
@@ -49,8 +56,9 @@ namespace ClassRoomVR
             eventSystem.SetActive(true);
         }
 
+        //-------------------------------PANEL CONTEXTO----------------------------------
         // Inicia el panel del contexto dandole el texto que precisa
-        public void panelContexto(string s ) {
+        public void panelContexto(string s) {
             if (GameManager.Instance.getVR())
             {
                 textContextoVR.text = s;
@@ -74,25 +82,10 @@ namespace ClassRoomVR
             }
         }
 
-        // Activar/desactivar opciones
-        public void setOptions(bool b)
-        {     
-            if (GameManager.Instance.getVR())
-            {
-                textOpcionesVR.SetActive(b);
-            }
-            else {
-                textOpciones.SetActive(b);
-                
-            }
-        }
-
+        //-------------------------------PANEL FINAL----------------------------------
         // Metodo que muestra en el panel final como ha ido el desarrollo de la escena
-        public void endPanel(string feedBackText, bool goodPath, float resolveTime, float talkPitch)
-        {
-            // Toda la info obtenida por el motionCaptureManager
-            Debug.Log(MotionCaptureManager.getIntervalsInfo());
-
+        public void initEndPanel(string feedBackText, bool goodPath, float resolveTime, float talkPitch) {
+            // Alguna info
 
             // Calculamos la puntuacion por la emocion detectada mas caracteristica de la escena
             int emoScrore = 0;
@@ -113,73 +106,86 @@ namespace ClassRoomVR
 
             if (GameManager.Instance.getVR())
             {
-                textOpcionesVR.SetActive(false);
+                ObjectOpcionesVR.SetActive(false);
                 textFinalVR.text = feedBackText;
                 panelFinalVR.SetActive(true);
-               
             }
             else
             {
-                textOpciones.SetActive(false);
+                ObjectOpciones.SetActive(false);
                 textFinal.text = feedBackText;
                 panelFinal.SetActive(true);
             }
         }
 
-        public void panelOpciones(string s, string alumnsName)//Idea con un botor activar o desctivar las opciones queda mucho mejor para este formato
+        public void changeEndPanel(string t)
         {
             if (GameManager.Instance.getVR())
             {
-                textOpcionesVR.SetActive(true);
+                textFinalVR.text = t;
             }
             else
             {
-                textOpciones.SetActive(true);
-            }
-            string tex = s.Replace("alum", alumnsName);
-            if(opcion1.text=="vacio")
-            {
-                opcion1.gameObject.SetActive(true);
-                opcion1.text = tex;
-                opcion1Vr.gameObject.SetActive(true);
-                opcion1Vr.text = tex;
-            }
-            else if (opcion2.text == "vacio")
-            {
-                opcion2.gameObject.SetActive(true);
-                opcion2.text = tex;
-                opcion2Vr.gameObject.SetActive(true);
-                opcion2Vr.text = tex;
-            }
-            else if (opcion3.text == "vacio")
-            {
-                opcion3.gameObject.SetActive(true);
-                opcion3.text = tex;
-                opcion3Vr.gameObject.SetActive(true);
-                opcion3Vr.text = tex;
-            }
-            else if (opcion4.text == "vacio")
-            {
-                opcion4.gameObject.SetActive(true);
-                opcion4.text = tex;
-                opcion4Vr.gameObject.SetActive(true);
-                opcion4Vr.text = tex;
+                textFinal.text = t;
             }
         }
 
-
-
-        // Start is called before the first frame update
-        void Start()
-        { 
-            if (GameManager.Instance.getVR()) enableCanvasVR();
-            else enableCanvasNormal();
-        }
-
-        // Update is called once per frame
-        void Update()
+        public void showEndButtons()
         {
-
+            if (GameManager.Instance.getVR())
+            {
+                foreach(GameObject g in finalButtonsVR)
+                {
+                    g.SetActive(true);
+                }
+            }
+            else
+            {
+                foreach (GameObject g in finalButtons)
+                {
+                    g.SetActive(true);
+                }
+            }
         }
+
+        //-------------------------------PANEL OPCIONES------------------------------
+        // Activar/desactivar opciones
+        public void setOptions(bool b)
+        {
+            if (GameManager.Instance.getVR())
+            {
+                ObjectOpcionesVR.SetActive(b);
+            }
+            else
+            {
+                ObjectOpciones.SetActive(b);
+            }
+        }
+
+        //Idea con un botor activar o desctivar las opciones queda mucho mejor para este formato
+        public void initPanelOpciones(string s, string alumnsName)
+        {
+            string tex = s.Replace("alum", alumnsName);
+
+            if (GameManager.Instance.getVR()) {
+                foreach (Text t in OptionsTextsVR) {
+                    if (t.text == "vacio") {
+                        t.gameObject.SetActive(true);
+                        t.text = tex;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                foreach (Text t in OptionsTexts) {
+                    if (t.text == "vacio") {
+                        t.gameObject.SetActive(true);
+                        t.text = tex;
+                        break;
+                    }
+                }
+            }
+        } // end iniPanelOpciones
     }
 }

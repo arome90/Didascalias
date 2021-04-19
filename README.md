@@ -17,8 +17,16 @@ El manager de esta escena es "MySceneManager"
 ---
 
 # WIP
-- Quitar el componente de PoseBuilder al player normal, ya que solo al vr se le detectara la posicion
+- Quitar el componente de PoseBuilder al player normal, ya que solo al vr se le detectara la posicion (dejarlo mientras pruebas)
 - Arreglar/modificar el poseBuilder para la deteccion de la apertura de las manos.
+- Arreglar menus (textos y panelFinal)
+- Pausar app con opciones --DONE
+- Escena inicio
+- Manos
+- Feedback final (camino, emoPose, "voz") --emoPose DONE
+- Grabar mas emoPose
+- Player con vr no detecta colision con objetos
+- Gravar animacion de sentarse para los alumnos ;)
 
 ---
 

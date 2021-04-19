@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace ClassRoomVR
 {
-    public class CameraManager : MonoBehaviour
+    public class PlayerMotion : MonoBehaviour
     {
-
+        // Camara
         public float sensitivity = 1;
-
 
         [SerializeField]
         private Transform playerRoot, lookRoot;
@@ -39,34 +38,40 @@ namespace ClassRoomVR
         private Vector2 look_Angles;
 
         private Vector2 current_Mouse_Look;
-        private Vector2 smooth_Move;
-
-        private float current_Roll_Angle;
-
-        private int last_Look_Frame;
 
         private bool start = true;
 
-        private bool funtion;
+        // Movimiento
+        private CharacterController character_Controller;
+
+        private Vector3 move_Direction;
+
+        public float speed = 5f;
+        private float gravity = 25f;
+
+        public float jump_Force = 10f;
+        private float vertical_Velocity;
+
+        void Awake()
+        {
+            character_Controller = GetComponent<CharacterController>();
+        }
 
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
-            funtion = true;
         }
 
         void Update()
         {
-            //if(GameManager.Instance.getVR()) 
-             //LockAndUnlockCursor();
-
-            //Cursor.lockState = CursorLockMode.Confined;
             if (Cursor.lockState == CursorLockMode.Locked)
             {
                 LookAround();
             }
-
+            MoveThePlayer();
         }
+
+        // Camara
         public void unlockCursor()
         {
             Cursor.lockState = CursorLockMode.Confined;
@@ -114,17 +119,39 @@ namespace ClassRoomVR
 
         private void OnTriggerEnter(Collider other)
         {
-            //Debug.Log("Me he acercado al alumno " + other.GetComponentInParent<Transform>().gameObject.name);
             GameManager.Instance._sceneManager.setCollision(other.GetComponentInParent<Transform>().gameObject.name);
-            /*
-            if (other.name == Constants.INAPPROPRIATE_STUDENT_NAME)
+        }
+
+        // Movimiento
+        private void MoveThePlayer()
+        {
+            move_Direction = new Vector3(Input.GetAxis(Constants.HORIZONTAL_AXIS), 0f,
+                                         Input.GetAxis(Constants.VERTICAL_AXIS));
+
+            move_Direction = transform.TransformDirection(move_Direction);
+            move_Direction *= speed * Time.deltaTime;
+
+            ApplyGravity();
+
+            character_Controller.Move(move_Direction);
+        }
+
+        private void ApplyGravity()
+        {
+
+            vertical_Velocity -= gravity * Time.deltaTime;
+
+            PlayerJump();
+
+            move_Direction.y = vertical_Velocity * Time.deltaTime;
+        }
+
+        private void PlayerJump()
+        {
+            if (character_Controller.isGrounded && Input.GetKeyDown(KeyCode.Space))
             {
-                 * if (timeSinceSceneStarted > Constants.TIME_FOR_AUDIO + audioLength && timeSinceSceneStarted < Constants.TIME_FOR_AUDIO + audioLength + Constants.TIME_FOR_REACTION_E1)
-                {
-                    this.SecondPath();
-                }
+                vertical_Velocity = jump_Force;
             }
-            */
         }
     }
 }

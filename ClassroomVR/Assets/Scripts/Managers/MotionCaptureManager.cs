@@ -61,8 +61,6 @@ namespace ClassRoomVR
 			poseBase = new PoseBase();
 			poseBase.AddDefaultCases();
 
-			Debug.Log(delay);
-
 			//---
 			intervals = new List<IntervalResult>();
 			//---
@@ -88,7 +86,7 @@ namespace ClassRoomVR
 
 		}
 
-		static public string getIntervalsInfo()
+		public string getIntervalsInfo()
 		{
 			string intervalsInfo = "";
 
