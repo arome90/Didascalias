@@ -55,6 +55,9 @@ namespace ClassRoomVR
 		private Emotion lastEmotion;
 		private Vector2 recurrentEmo;
 
+        // Info de cada intervalo
+        private List<string> intervalsInfo;
+
 
 		// Use this for initialization
 		public void init() {
@@ -70,6 +73,10 @@ namespace ClassRoomVR
 			//---
 			lastEmotion = Emotion.None;
 			recurrentEmo = new Vector2(0, 0);
+
+            //---InitList---
+            intervalsInfo = new List<string>();
+
 		}
 
 		public void update(float deltaTime)
@@ -81,20 +88,16 @@ namespace ClassRoomVR
 				ClassifyPoseFromCharacter();
 			}
         }
-		public void onDestroy()
+
+		public void saveIntervalsInfo()
 		{
-
-		}
-
-		public string getIntervalsInfo()
-		{
-			string intervalsInfo = "";
-
 			int interval = 1;
 			foreach (IntervalResult iRes in intervals)
 			{
-				//---
-				intervalsInfo += "Por orden de deteccion durante el intervalo " + interval + ":\n";
+                string tempString = "";
+
+                //---
+                tempString += "Por orden de deteccion durante el intervalo " + interval + ":\n";
 				string emoDuringIntervalInfo = "";
 				int i = 0;
 				foreach (Emotion em in iRes.emoRelated)
@@ -107,21 +110,28 @@ namespace ClassRoomVR
 					}
 					i++;
 				}
-				intervalsInfo += emoDuringIntervalInfo;
+				tempString += emoDuringIntervalInfo;
 
 				//----
-				string emotionsDuringIntervalInfo = "";
+				string emotionsDuringIntervalInfo = "\nEn total durante la escena:\n";
 				foreach (KeyValuePair<Emotion, Vector2> emInfo in iRes.totalEmoRepeated)
 				{
 					emotionsDuringIntervalInfo += "Se detecto la emocion " + emInfo.Key.ToString() + 
 						" un total de " + emInfo.Value.x +
 						" veces, con una repeticion maxima de " + emInfo.Value.y + "\n";
 				}
-				intervalsInfo += emotionsDuringIntervalInfo + "\n";
-				interval++;
+				tempString += emotionsDuringIntervalInfo;
+
+                // Guardamos
+                intervalsInfo.Add(tempString);
+                interval++;
 			}
-			return intervalsInfo;
 		}
+
+        public string getIntInfo(int i)
+        {
+            return intervalsInfo[i];
+        }
 
 		// Actualiza la informacion de los intervalos con la calculada hasta ahora
 		public void nextInterval()
@@ -151,6 +161,8 @@ namespace ClassRoomVR
 		{
 			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
 			Emotion emo = poseBase.Classify(pose);
+
+            //Debug.Log(emo.ToString());
 
 			storeInfo(emo);
 		}

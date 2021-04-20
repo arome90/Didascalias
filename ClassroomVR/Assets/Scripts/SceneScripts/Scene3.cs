@@ -33,27 +33,34 @@ namespace ClassRoomVR {
                 Debug.Log("No se encontraron las posiciones de la clase en el prefab");
             }
 
-            if (navMeshAgent.destination == null && dest.x != 0 || dest.y != 0 || dest.z != 0)
+            if (!agent.GetComponent<Animator>().GetBool("onFoot"))
             {
-                navMeshAgent.SetDestination(dest);
-                agent.GetComponent<Animator>().Play("Walking");
+                agent.GetComponent<Animator>().SetBool("onFoot", true);
             }
-
-            float x = Mathf.Abs(agent.transform.position.x - dest.x);
-            float y = Mathf.Abs(agent.transform.position.y - dest.y);
-            float z = Mathf.Abs(agent.transform.position.z - dest.z);
-
-            if (x < 0.5 && y < 0.5 && z < 0.5) {
-                agent.GetComponent<Animator>().Play("Standing");
-                agent.transform.Rotate(new Vector3(0, 180, 0));
-                done = true;
-            }
-
-            if (done)
+            else
             {
-                navMeshAgent.enabled = false;
-                agent.transform.position = dest;
-                sm.setSpecialSituation(done);
+                if (agent.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0)[0].clip.name == "Walking")
+                {
+                    navMeshAgent.SetDestination(dest);
+                }
+
+                float x = Mathf.Abs(agent.transform.position.x - dest.x);
+                float y = Mathf.Abs(agent.transform.position.y - dest.y);
+                float z = Mathf.Abs(agent.transform.position.z - dest.z);
+
+                if (x < 0.5 && y < 0.5 && z < 0.5)
+                {
+                    agent.GetComponent<Animator>().Play("Standing");
+                    agent.transform.Rotate(new Vector3(0, 180, 0));
+                    done = true;
+                }
+
+                if (done)
+                {
+                    navMeshAgent.enabled = false;
+                    agent.transform.position = dest;
+                    sm.setSpecialSituation(done);
+                }
             }
         }
 
@@ -75,11 +82,11 @@ namespace ClassRoomVR {
 
             if (x < 0.5 && y < 0.5 && z < 0.5)
             {
-                agent.GetComponent<Animator>().Play("Sitting");
+                agent.GetComponent<Animator>().SetBool("onFoot", false);
                 done = true;
             }
 
-            if (done)
+            if (done && agent.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0)[0].clip.name == "Sitting")
             {
                 navMeshAgent.enabled = false;
                 agent.transform.position = dest;
@@ -113,8 +120,7 @@ namespace ClassRoomVR {
                 done = true;
             }
 
-
-            if (done)
+            if (done && agent.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime > 2)
             {
                 navMeshAgent.enabled = false;
                 agent.transform.position = dest;

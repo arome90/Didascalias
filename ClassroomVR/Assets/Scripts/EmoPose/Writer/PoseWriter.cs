@@ -83,7 +83,14 @@ public class PoseWriter{
 	}
 
 	private string Vector3ToString(Vector3 vector){
-		return ("(" + vector.x + "," + vector.y + "," + vector.z + ")");
+        string a = vector.x.ToString();
+        a = a.Replace(",", ".");
+        string b = vector.y.ToString();
+        b = b.Replace(",", ".");
+        string c = vector.z.ToString();
+        c = c.Replace(",", ".");
+
+		return ("(" + a + "," + b + "," + c + ")");
 	}
 	private Vector3 StringToVector3(string str){
 		string strAux = str.Substring (1, str.Length - 2);

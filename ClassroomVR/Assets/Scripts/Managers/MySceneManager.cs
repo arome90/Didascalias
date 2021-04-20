@@ -45,6 +45,9 @@ namespace ClassRoomVR {
         private bool doSceneBehaviourOnce = false;
         // Bool para fin de escena
         private bool _sceneFinished = false;
+        // Bool para el feedbackFinal
+        private bool _endFeedback = false;
+        private int _showInterval = 0;
         // Estado de la escena
         private State _sceneState;
 
@@ -152,7 +155,6 @@ namespace ClassRoomVR {
                     playReactionToPath();
                     emoPose.update(Time.deltaTime);
                 }
-
                 handleInput();
             }
         }
@@ -160,18 +162,24 @@ namespace ClassRoomVR {
         private void handleInput()
         {
             // Para la pausa de la escena en el cambio de show/unshow posibles caminos a elegir
-            if (Input.GetKeyDown(KeyCode.Q) && _sceneState == State.ChoosingPath)
+            if (Input.GetKeyUp(KeyCode.Q) && _sceneState == State.ChoosingPath)
             {
                 pause();
                 uiManager.setOptions(!_playing);
             }
 
             // Para el cambio de texto en el feedback
-            if (Input.GetMouseButton(0) && _sceneState == State.ShowFeedBack)
+            if (Input.GetMouseButtonUp(0) && _sceneState == State.ShowFeedBack)
             {
-                uiManager.changeEndPanel(emoPose.getIntervalsInfo());
-                uiManager.showEndButtons();
-                _sceneFinished = true;
+                uiManager.changeEndPanel(emoPose.getIntInfo(_showInterval));
+                _showInterval++;
+                Debug.Log(_showInterval);
+                if (_showInterval > 2) _endFeedback = true;
+
+                if (_endFeedback) {
+                    uiManager.showEndButtons();
+                    _sceneFinished = true;
+                }
             }
 
         }
@@ -198,7 +206,7 @@ namespace ClassRoomVR {
         public void pause()
         {
             _playing = !_playing;
-            playerMotion.gameObject.SetActive(_playing);
+            playerMotion.enabled = _playing;
         }
 
         //-------------------PRIVATES-------------------------
@@ -351,7 +359,8 @@ namespace ClassRoomVR {
                     // Fin game
                     _playing = false;
                     playerMotion.unlockCursor();
-                    playerMotion.gameObject.SetActive(_playing);
+                    playerMotion.enabled = _playing;
+                    emoPose.saveIntervalsInfo();
                 }
             }
         }

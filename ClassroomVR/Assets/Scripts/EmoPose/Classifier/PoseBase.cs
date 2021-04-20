@@ -66,8 +66,9 @@ public class PoseBase{
 	public void AddDefaultCases(){
 		foreach(Emotion emotion in Enum.GetValues(typeof(Emotion))){
 			if (emotion != Emotion.None) {
-				List<PoseCase> poseCases = writer.ReadPoseCases(emotion);
-                //Debug.Log(emotion + "--------------------------------");
+                // true -> default, false -> learned
+				List<PoseCase> poseCases = writer.ReadPoseCases(emotion, false);
+                //Debug.Log(emotion.ToString() + "--------------------------------");
 				foreach (PoseCase poseCase in poseCases) {
                     //Debug.Log(poseCase.pose.ToString());
 					listCases.Add (poseCase);
