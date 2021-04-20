@@ -176,11 +176,29 @@ namespace ClassRoomVR {
                 Debug.Log(_showInterval);
                 if (_showInterval > 2) _endFeedback = true;
 
-                if (_endFeedback) {
+                if (_endFeedback)
+                {
                     uiManager.showEndButtons();
                     _sceneFinished = true;
                 }
             }
+            //Version VR
+
+            if (OVRInput.GetUp(OVRInput.Button.Two))
+            {
+                pause();
+                uiManager.setOptions(!_playing);
+
+            }
+
+
+            if (OVRInput.Get(OVRInput.Button.Two))
+            {
+
+               
+
+
+            };
 
         }
 
