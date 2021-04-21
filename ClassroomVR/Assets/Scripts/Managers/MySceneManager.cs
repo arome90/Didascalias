@@ -182,24 +182,27 @@ namespace ClassRoomVR {
                     _sceneFinished = true;
                 }
             }
-            //Version VR
+            //Version VR // //TODO Se puede poner mas bonito juntandolo, por ahora se quedaa asi para mejorar
 
-            if (OVRInput.GetUp(OVRInput.Button.Two))
+            if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ChoosingPath)//Boton B
             {
                 pause();
                 uiManager.setOptions(!_playing);
 
             }
-
-
-            if (OVRInput.Get(OVRInput.Button.Two))
+            if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ShowFeedBack)//Boton A
             {
+                uiManager.changeEndPanel(emoPose.getIntInfo(_showInterval));
+                _showInterval++;
+                Debug.Log(_showInterval);
+                if (_showInterval > 2) _endFeedback = true;
 
-               
-
-
-            };
-
+                if (_endFeedback)
+                {
+                    uiManager.showEndButtons();
+                    _sceneFinished = true;
+                }
+            }
         }
 
         //-------------------PUBLICS-------------------------
@@ -221,7 +224,7 @@ namespace ClassRoomVR {
         }
 
         // Para pausar el juego
-        public void pause()
+        public void pause()//pausar para vR?=
         {
             _playing = !_playing;
             playerMotion.enabled = _playing;
@@ -351,7 +354,7 @@ namespace ClassRoomVR {
             if(_sceneState == State.ReactToPath)
             {
                 initReactionToPath();
-
+               
                 // Comportamiento especial del camino
                 if (selectedPath.especificBehaviour.GetPersistentEventCount() > 0)
                 {
