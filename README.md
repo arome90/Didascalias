@@ -17,12 +17,9 @@ El manager de esta escena es "MySceneManager"
 ---
 
 # WIP
-- Quitar el componente de PoseBuilder al player normal, ya que solo al vr se le detectara la posicion (dejarlo mientras pruebas)
 - Arreglar menus visualmente
 - Manos/personaje -> linkear manos al person
-- Feedback final (camino, emoPose, "voz") --emoPose revisar los strings
 - Player con vr no detecta colision con objetos
-- Confirmar que se puede eliminar el script "PlayerMovement" (deberia poder quitarse), playerMotion inclute mov camara y mov teclado
 
 ---
 
