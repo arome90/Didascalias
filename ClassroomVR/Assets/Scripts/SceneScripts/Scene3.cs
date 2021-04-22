@@ -86,7 +86,7 @@ namespace ClassRoomVR {
                 done = true;
             }
 
-            if (done && agent.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0)[0].clip.name == "Sitting")
+            if (done)
             {
                 navMeshAgent.enabled = false;
                 agent.transform.position = dest;

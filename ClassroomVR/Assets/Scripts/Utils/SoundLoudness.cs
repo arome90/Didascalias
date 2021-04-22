@@ -211,12 +211,12 @@ public class SoundLoudness : MonoBehaviour
         if (soundAfterComment.Length > 0)
             mediaDespues = sumaDespues / soundAfterComment.Length;
         
-        Debug.Log("Media de decibelios antes del comentario: " + mediaAntes);
-        Debug.Log("Media de decibelios después del comentario: " + mediaDespues);
+        //Debug.Log("Media de decibelios antes del comentario: " + mediaAntes);
+        //Debug.Log("Media de decibelios después del comentario: " + mediaDespues);
         savedAverageSound = mediaDespues;
         if (mediaDespues > mediaAntes * increase)
         {
-            Debug.Log("Respuesta firme detectada");
+            //Debug.Log("Respuesta firme detectada");
             return true;
             //strongResponseEvent.Invoke();
         }

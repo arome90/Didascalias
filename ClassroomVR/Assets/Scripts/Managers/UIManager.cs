@@ -84,36 +84,29 @@ namespace ClassRoomVR
 
         //-------------------------------PANEL FINAL----------------------------------
         // Metodo que muestra en el panel final como ha ido el desarrollo de la escena
-        public void initEndPanel(string feedBackText, bool goodPath, float resolveTime, float talkPitch) {
-            // Alguna info
+        public void initEndPanel(string feedBackText, bool goodPath, float resolveTime) {
+            // Info general de la escena
 
-            // Calculamos la puntuacion por la emocion detectada mas caracteristica de la escena
-            int emoScrore = 0;
+            int t1 = (int)(resolveTime * 100);
+            float t2 = (float)t1 / 100;
 
-            int goodPathScore = 0;
-            if (goodPath) goodPathScore = 10;
+            string endText = "Tiempo en resolver la situación: " + t2 + " segundos\n";
 
-            // Menor tiempo -> + puntuacion por resolver la situacion rapidamente
-            int timeScore = 0;
-            //usar el resolveTime
+            if (goodPath) endText += "Has tomado el camino correcto!\n";
+            else endText += "La decisión tomada NO ha sido la mas adecuada\n";
 
-            // Puntuacion por el tono de voz
-            int pitchScore = 0;
-            // usar el talkPitch
-
-            // Score final
-            int finalScore = emoScrore + goodPathScore + timeScore + pitchScore;
+            endText += "\n" + feedBackText;
 
             if (GameManager.Instance.getVR())
             {
                 ObjectOpcionesVR.SetActive(false);
-                textFinalVR.text = feedBackText;
+                textFinalVR.text = endText;
                 panelFinalVR.SetActive(true);
             }
             else
             {
                 ObjectOpciones.SetActive(false);
-                textFinal.text = feedBackText;
+                textFinal.text = endText;
                 panelFinal.SetActive(true);
             }
         }

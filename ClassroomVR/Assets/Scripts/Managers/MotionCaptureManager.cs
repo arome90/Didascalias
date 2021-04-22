@@ -37,7 +37,7 @@ namespace ClassRoomVR
 		// Url of the "InsertGenericData.php" file for this EmoPose application
 		private string url = "http://webdiis.unizar.es/~ivangmg/emopose/InsertGenericData.php";
 
-		public bool debug = false;
+		public int debugLevel = 0;
 
 		// Delay entre calculo de emocion asociada a la pose
 		public float delay = 0.5f;
@@ -76,7 +76,6 @@ namespace ClassRoomVR
 
             //---InitList---
             intervalsInfo = new List<string>();
-
 		}
 
 		public void update(float deltaTime)
@@ -94,39 +93,89 @@ namespace ClassRoomVR
 			int interval = 1;
 			foreach (IntervalResult iRes in intervals)
 			{
-                string tempString = "";
-
-                //---
-                tempString += "Por orden de deteccion durante el intervalo " + interval + ":\n";
-				string emoDuringIntervalInfo = "";
-				int i = 0;
-				foreach (Emotion em in iRes.emoRelated)
+				string tempString = "";
+				// Intervalo 2 (toma de decision)
+				if (interval == 2)
 				{
-					if (iRes.resultEmotion[i].y > 33.3)
+					tempString += "Al tomar la decisión de como actuar frente a la situación, nuestro software ha detectado:\n";
+					// Buscar la emo mas repetida y la menos
+					int moreRepeated = 0;
+					string moreRepEmo = "";
+					foreach (KeyValuePair<Emotion, Vector2> emInfo in iRes.totalEmoRepeated)
 					{
-						emoDuringIntervalInfo += "Se detecto la emocion " + em.ToString() +
-							" con una fiabilidad media del " + iRes.resultEmotion[i].y +
-							" un total de " + iRes.resultEmotion[i].x + "\n";
+						// Mas repetida
+                        if (moreRepeated < emInfo.Value.x)
+                        {
+							moreRepeated = (int)emInfo.Value.x;
+							moreRepEmo = emInfo.Key.ToString();
+						}
 					}
-					i++;
-				}
-				tempString += emoDuringIntervalInfo;
 
-				//----
-				string emotionsDuringIntervalInfo = "\nEn total durante la escena:\n";
-				foreach (KeyValuePair<Emotion, Vector2> emInfo in iRes.totalEmoRepeated)
-				{
-					emotionsDuringIntervalInfo += "Se detecto la emocion " + emInfo.Key.ToString() + 
-						" un total de " + emInfo.Value.x +
-						" veces, con una repeticion maxima de " + emInfo.Value.y + "\n";
+					tempString += "Que " + moreRepEmo + 
+						" ha sido la emoción mas repetida, con una repetición total de " + 
+						moreRepeated + " veces.\n";
+					tempString += "Se detecto:\n";
+
+					// Buscar cuando se reprodujo la emocion
+					int i = 0;
+					string emoInfo = "";
+					float time = 0.0f;
+					foreach (Emotion em in iRes.emoRelated)
+					{
+						if (em.ToString() == moreRepEmo)
+						{
+							int a = (int)(iRes.resultEmotion[i].y * 100);
+							float fiability = (float)a / 100;
+							emoInfo = "En el segundo " + time + " tras el inicio del intervalo, " +
+								"con una fiabilidad media del " + fiability +
+								"%, un total de " + iRes.resultEmotion[i].x + ".\n";
+
+						}
+						time += (iRes.resultEmotion[i].x * 0.5f);
+						i++;
+					}
+					tempString += emoInfo;
+
 				}
-				tempString += emotionsDuringIntervalInfo;
+				// Intervalos 1 y 3, pre situ y post decision
+				else
+				{
+					//---
+					if (interval == 1) tempString += "Ántes de que se produjera la situación critica:\n";
+					if (interval == 3) tempString += "Después de tomar la decisión del camino a seguir:\n";
+
+					string emoDuringIntervalInfo = "";
+					int i = 0;
+					foreach (Emotion em in iRes.emoRelated)
+					{
+						if (iRes.resultEmotion[i].y > 33.3)
+						{
+							int a = (int)(iRes.resultEmotion[i].y * 100);
+							float fiability = (float)a / 100;
+							emoDuringIntervalInfo += "Se detecto la emoción " + em.ToString() +
+								" con una fiabilidad media del " + fiability +
+								"%, un total de " + iRes.resultEmotion[i].x + ".\n";
+						}
+						i++;
+					}
+					tempString += emoDuringIntervalInfo;
+
+					//----
+					string emotionsDuringIntervalInfo = "\nEn total durante el intervalo:\n";
+					foreach (KeyValuePair<Emotion, Vector2> emInfo in iRes.totalEmoRepeated)
+					{
+						emotionsDuringIntervalInfo += "Se detecto la emoción " + emInfo.Key.ToString() +
+							" un total de " + emInfo.Value.x +
+							" veces, con una repetición maxima de " + emInfo.Value.y + "\n";
+					}
+					tempString += emotionsDuringIntervalInfo;
+				} //end else
 
                 // Guardamos
                 intervalsInfo.Add(tempString);
                 interval++;
-			}
-		}
+			} // end foreach
+		} // end saveIntervalsInfo
 
         public string getIntInfo(int i)
         {
@@ -136,6 +185,8 @@ namespace ClassRoomVR
 		// Actualiza la informacion de los intervalos con la calculada hasta ahora
 		public void nextInterval()
         {
+			storeInfo(Emotion.None);
+
 			// Actualizamos la info del intervalo actual
 			actualInterval = new IntervalResult();
 			actualInterval.resultEmotion = new List<Vector2>();
@@ -144,6 +195,31 @@ namespace ClassRoomVR
 			actualInterval.emoRelated = actEmo;
 			actualInterval.totalEmoRepeated = new Dictionary<Emotion, Vector2>();
 			actualInterval.totalEmoRepeated = actEmoRepeated;
+
+			//-------
+			if (debugLevel == 3)
+			{
+				Debug.Log("Por orden de deteccion durante el intervalo " + 0 + ":");
+
+				int i = 0;
+				foreach (Emotion em in actEmo)
+				{
+					Debug.Log("Se detecto la emocion " + em.ToString() +
+						" con una fiabilidad media del " + actResultEmo[i].y +
+						" un total de " + actResultEmo[i].x);
+				}
+
+				//----
+				Debug.Log("En total durante la escena:");
+				foreach (KeyValuePair<Emotion, Vector2> emInfo in actEmoRepeated)
+				{
+					Debug.Log("Se detecto la emocion " + emInfo.Key.ToString() +
+						" un total de " + emInfo.Value.x +
+						" veces, con una repeticion maxima de " + emInfo.Value.y);
+				}
+				Debug.Log("-------------------------");
+			}
+			//-------
 
 			// Guardamos el intervalo en la lista de intervalos.
 			intervals.Add(actualInterval);
@@ -162,7 +238,7 @@ namespace ClassRoomVR
 			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
 			Emotion emo = poseBase.Classify(pose);
 
-            //Debug.Log(emo.ToString());
+            if(debugLevel == 1) Debug.Log(emo.ToString());
 
 			storeInfo(emo);
 		}
@@ -172,14 +248,14 @@ namespace ClassRoomVR
 		{
 			if (lastEmotion == emo || lastEmotion == Emotion.None)
 			{
-				if(debug) Debug.Log("Misma emocion " + emo.ToString());
+				if(debugLevel == 2) Debug.Log("Misma emocion " + emo.ToString());
 				//repeticiones, fiabilidad
 				recurrentEmo.x += 1;
 				recurrentEmo.y += poseBase.lastDistance;
 			}
 			else
 			{
-				if (debug) Debug.Log("Cambio en la emocion detectada el ultimo intervalo");
+				if (debugLevel == 2) Debug.Log("Cambio en la emocion detectada el ultimo intervalo " + emo.ToString());
 				// Preparamos el valor de y para que muestre lo que nos interesa
 				recurrentEmo.y = recurrentEmo.y / recurrentEmo.x;
 
@@ -199,14 +275,12 @@ namespace ClassRoomVR
 					// Duracion mas larga de deteccion de la emo
 					if (recurrentEmo.x > val.y) val.y = recurrentEmo.x;
 					actEmoRepeated.Add(lastEmotion, val);
-					if (debug) Debug.Log("Update de emo existente");
 				}
 				else
 				{
 					val.x = recurrentEmo.x;
 					val.y = recurrentEmo.x;
 					actEmoRepeated.Add(lastEmotion, val);
-					if (debug) Debug.Log("Añadida nueva emo");
 				}
 
 				// Reiniciamos recurrentEmo

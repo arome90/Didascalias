@@ -161,7 +161,7 @@ namespace ClassRoomVR {
 
         private void handleInput()
         {
-            // Para la pausa de la escena en el cambio de show/unshow posibles caminos a elegir
+            // Para la pausa de la escena, en el cambio de show/unshow posibles caminos a elegir
             if (Input.GetKeyUp(KeyCode.Q) && _sceneState == State.ChoosingPath)
             {
                 pause();
@@ -171,10 +171,15 @@ namespace ClassRoomVR {
             // Para el cambio de texto en el feedback
             if (Input.GetMouseButtonUp(0) && _sceneState == State.ShowFeedBack)
             {
-                uiManager.changeEndPanel(emoPose.getIntInfo(_showInterval));
+                if (_showInterval == 0) {
+                    uiManager.changeEndPanel("Entre el comienzo de la clase y el desarrollo de la situación crítica, tu tono de voz se vio modificado un " + 
+                        (soundController.getSavedAverageSound() * 1000) + " %");
+                }
+                if (_showInterval == 1) uiManager.changeEndPanel(emoPose.getIntInfo(1));
+                if (_showInterval == 2) uiManager.changeEndPanel(emoPose.getIntInfo(0));
+                if (_showInterval == 3) uiManager.changeEndPanel(emoPose.getIntInfo(2));
                 _showInterval++;
-                Debug.Log(_showInterval);
-                if (_showInterval > 2) _endFeedback = true;
+                if (_showInterval > 3) _endFeedback = true;
 
                 if (_endFeedback)
                 {
@@ -182,20 +187,26 @@ namespace ClassRoomVR {
                     _sceneFinished = true;
                 }
             }
-            //Version VR // //TODO Se puede poner mas bonito juntandolo, por ahora se quedaa asi para mejorar
 
+            //Version VR // 
+            //TODO Se puede poner mas bonito juntandolo, por ahora se quedaa asi para mejorar
             if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ChoosingPath)//Boton B
             {
                 pause();
                 uiManager.setOptions(!_playing);
-
             }
+
             if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ShowFeedBack)//Boton A
             {
-                uiManager.changeEndPanel(emoPose.getIntInfo(_showInterval));
+                if (_showInterval == 0) {
+                    uiManager.changeEndPanel("Entre el comienzo de la clase y el desarrollo de la situación crítica, tu tono de voz se vio modificado un " +
+                        (soundController.getSavedAverageSound() * 1000) + " %");
+                }
+                if (_showInterval == 1) uiManager.changeEndPanel(emoPose.getIntInfo(1));
+                if (_showInterval == 2) uiManager.changeEndPanel(emoPose.getIntInfo(0));
+                if (_showInterval == 3) uiManager.changeEndPanel(emoPose.getIntInfo(2));
                 _showInterval++;
-                Debug.Log(_showInterval);
-                if (_showInterval > 2) _endFeedback = true;
+                if (_showInterval > 3) _endFeedback = true;
 
                 if (_endFeedback)
                 {
@@ -210,6 +221,7 @@ namespace ClassRoomVR {
         public void starplaying()
         {
             _playing = PlayScene;
+            playerMotion.enabled = _playing;
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
         }
 
@@ -374,8 +386,7 @@ namespace ClassRoomVR {
 
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
-                    float soundness = soundController.getSavedAverageSound();
-                    uiManager.initEndPanel(text, selectedPath.correctPath, timeToResolve, soundness);
+                    uiManager.initEndPanel(text, selectedPath.correctPath, timeToResolve);
                     
                     // Fin game
                     _playing = false;
