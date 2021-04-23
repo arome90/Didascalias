@@ -41,13 +41,29 @@ public class Pose{
 		headLookDirection = Vector3.zero;
 	}
 	// Returns a string that describes the pose
-	public override string ToString(){
+	public override string ToString() {
+		string hands = openingHandsNormalized[(int)Hand.Left] + "/" +
+			+openingHandsNormalized[(int)Hand.Right];
+		hands = hands.Replace(",", ".");
+
 		return "leftHandPos " + leftHandPos + "; rightHandPos " + rightHandPos +
 			"; leftFootPos " + leftFootPos + "; rightFootPos " + rightFootPos +
 			"; headPos " + headPos+"; headLookDirection "+headLookDirection+
-			"; openingHandsNormalized("+openingHandsNormalized[(int)Hand.Left]+","+
-			+openingHandsNormalized[(int)Hand.Right]+"),";
+			"; openingHandsNormalized("+hands+")";
 	}
+
+	public string ToStringNoNames()
+    {
+		string hands = openingHandsNormalized[(int)Hand.Left] + "; " +
+			+openingHandsNormalized[(int)Hand.Right];
+		hands = hands.Replace(",", ".");
+
+		return leftHandPos + "; " + rightHandPos +
+			"; " + leftFootPos + "; " + rightFootPos +
+			"; " + headPos + "; " + headLookDirection +
+			"; " + hands;
+	}
+
 	// It returns the symmetric posture
 	public Pose SymmetricPose(){
 		Pose pose = new Pose ();

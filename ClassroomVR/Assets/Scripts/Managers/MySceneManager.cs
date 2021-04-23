@@ -89,15 +89,28 @@ namespace ClassRoomVR {
 
         // Start is called before the first frame update
         void Start() {
+            // Info necesaria
             sceneInfo = GameManager.Instance.getPack();
             classInfo = GameManager.Instance.getClass();
             VRHardware = GameManager.Instance.getVR();
 
-            soundController = GetComponent<SoundLoudness>();
+            try
+            {
+                soundController = GetComponent<SoundLoudness>();
+            }
+            catch(Exception e)
+            {
+                Debug.Log("Fatal Error!: El sceneManager no cuenta con un componente 'SoundLoudness'");
+                _error = true;
+            }
+            // Iniciamos reconocimiento de voz
             wordRecognizer = new KeyWordRecognizer();
 
+            // Iniciamos captura de emoPose
             emoPose.init();
+            emoPose.iniSerializer(sceneInfo.name);
 
+            // Data
             timeToStart = sceneInfo.timeToStart;
             timeToReact = sceneInfo.timeToReact;
             if (timeToReact == 0) timeToReact = float.MaxValue;
@@ -136,7 +149,6 @@ namespace ClassRoomVR {
             }
 
             string t = sceneInfo.iniMessage.Replace("alum", alumsName);
-           
             uiManager.panelContexto(t);
 
             // Comprobacion de errores para volver al menu

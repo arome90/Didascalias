@@ -34,15 +34,18 @@ namespace ClassRoomVR
 		// A pose base for classifying the pose of the UI
 		private PoseBase poseBase;
 
-		// Url of the "InsertGenericData.php" file for this EmoPose application
-		private string url = "http://webdiis.unizar.es/~ivangmg/emopose/InsertGenericData.php";
+		// CSVSerializer
+		private CSVSerializer serializer;
 
+		// Para debug
 		public int debugLevel = 0;
 
 		// Delay entre calculo de emocion asociada a la pose
 		public float delay = 0.5f;
 		private float delta = 0.0f;
 
+
+		//-----------INFO------------
 		// Lista con la info de los intervalos
 		static private List<IntervalResult> intervals;
 
@@ -57,12 +60,14 @@ namespace ClassRoomVR
 
         // Info de cada intervalo
         private List<string> intervalsInfo;
-
+		//----------------------------
 
 		// Use this for initialization
 		public void init() {
 			poseBase = new PoseBase();
 			poseBase.AddDefaultCases();
+
+			serializer = new CSVSerializer();
 
 			//---
 			intervals = new List<IntervalResult>();
@@ -88,6 +93,7 @@ namespace ClassRoomVR
 			}
         }
 
+		//-----------------PUBLICS----------------
 		public void saveIntervalsInfo()
 		{
 			int interval = 1;
@@ -223,6 +229,7 @@ namespace ClassRoomVR
 
 			// Guardamos el intervalo en la lista de intervalos.
 			intervals.Add(actualInterval);
+			serializer.writeWhiteSpaces();
 
 			// Limpiamos los objetos para el siguiente intervalo
 			actResultEmo = new List<Vector2>();
@@ -232,6 +239,13 @@ namespace ClassRoomVR
 			recurrentEmo = new Vector2(0, 0);
         }
 
+		// Inicia el serializer dandole el nmombre de la escena
+		public void iniSerializer(string sceneName)
+        {
+			serializer.iniFile(sceneName);
+        }
+
+		//-----------------PRIVATES----------------
 		// Obtiene la info de la emocion a partir del cuerpo del character
 		private void ClassifyPoseFromCharacter()
 		{
@@ -239,6 +253,10 @@ namespace ClassRoomVR
 			Emotion emo = poseBase.Classify(pose);
 
             if(debugLevel == 1) Debug.Log(emo.ToString());
+
+			// LOGS
+			string CSVData = emo.ToString() + ";" + pose.ToStringNoNames();
+			serializer.saveData(CSVData);
 
 			storeInfo(emo);
 		}
