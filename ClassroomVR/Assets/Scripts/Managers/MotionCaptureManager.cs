@@ -35,7 +35,7 @@ namespace ClassRoomVR
 		private PoseBase poseBase;
 
 		// CSVSerializer
-		private CSVSerializer serializer;
+		//private CSVSerializer serializer;
 
 		// Para debug
 		public int debugLevel = 0;
@@ -67,7 +67,7 @@ namespace ClassRoomVR
 			poseBase = new PoseBase();
 			poseBase.AddDefaultCases();
 
-			serializer = new CSVSerializer();
+			//serializer = new CSVSerializer();
 
 			//---
 			intervals = new List<IntervalResult>();
@@ -229,7 +229,7 @@ namespace ClassRoomVR
 
 			// Guardamos el intervalo en la lista de intervalos.
 			intervals.Add(actualInterval);
-			serializer.writeWhiteSpaces();
+			CSVSerializer.saveData("\n\n");
 
 			// Limpiamos los objetos para el siguiente intervalo
 			actResultEmo = new List<Vector2>();
@@ -237,12 +237,6 @@ namespace ClassRoomVR
 			actEmoRepeated = new Dictionary<Emotion, Vector2>();
 			lastEmotion = Emotion.None;
 			recurrentEmo = new Vector2(0, 0);
-        }
-
-		// Inicia el serializer dandole el nmombre de la escena
-		public void iniSerializer(string sceneName)
-        {
-			serializer.iniFile(sceneName);
         }
 
 		//-----------------PRIVATES----------------
@@ -256,7 +250,11 @@ namespace ClassRoomVR
 
 			// LOGS
 			string CSVData = emo.ToString() + ";" + pose.ToStringNoNames();
-			serializer.saveData(CSVData);
+			CSVData = CSVData.Replace(",", "/");
+			CSVData = CSVData.Replace(";", ",");
+			CSVData += "\n";
+
+			CSVSerializer.saveData(CSVData);
 
 			storeInfo(emo);
 		}

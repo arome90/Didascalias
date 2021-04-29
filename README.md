@@ -17,9 +17,9 @@ El manager de esta escena es "MySceneManager"
 ---
 
 # WIP
-- Arreglar menus visualmente
 - Manos/personaje -> linkear manos al person
-- Player con vr no detecta colision con objetos
+- Evitar que haya 2 listeners en MainMenu
+- Añadir audios femeninos
 
 ---
 

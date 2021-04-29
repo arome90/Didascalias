@@ -108,7 +108,7 @@ namespace ClassRoomVR {
 
             // Iniciamos captura de emoPose
             emoPose.init();
-            emoPose.iniSerializer(sceneInfo.name);
+            CSVSerializer.iniFile(sceneInfo.name);
 
             // Data
             timeToStart = sceneInfo.timeToStart;
@@ -162,10 +162,10 @@ namespace ClassRoomVR {
                 if (_playing)
                 {
                     deltaTime += Time.deltaTime;
+                    emoPose.update(Time.deltaTime);
                     playSituation();
                     playPathChoosing();
                     playReactionToPath();
-                    emoPose.update(Time.deltaTime);
                 }
                 handleInput();
             }
@@ -181,51 +181,17 @@ namespace ClassRoomVR {
             }
 
             // Para el cambio de texto en el feedback
-            if (Input.GetMouseButtonUp(0) && _sceneState == State.ShowFeedBack)
-            {
-                if (_showInterval == 0) {
-                    uiManager.changeEndPanel("Entre el comienzo de la clase y el desarrollo de la situación crítica, tu tono de voz se vio modificado un " + 
-                        (soundController.getSavedAverageSound() * 1000) + " %");
-                }
-                if (_showInterval == 1) uiManager.changeEndPanel(emoPose.getIntInfo(1));
-                if (_showInterval == 2) uiManager.changeEndPanel(emoPose.getIntInfo(0));
-                if (_showInterval == 3) uiManager.changeEndPanel(emoPose.getIntInfo(2));
-                _showInterval++;
-                if (_showInterval > 3) _endFeedback = true;
-
-                if (_endFeedback)
-                {
-                    uiManager.showEndButtons();
-                    _sceneFinished = true;
-                }
-            }
+            if (Input.GetMouseButtonUp(0) && _sceneState == State.ShowFeedBack) endInfo();
 
             //Version VR // 
-            //TODO Se puede poner mas bonito juntandolo, por ahora se quedaa asi para mejorar
             if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ChoosingPath)//Boton B
             {
                 pause();
                 uiManager.setOptions(!_playing);
             }
 
-            if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ShowFeedBack)//Boton A
-            {
-                if (_showInterval == 0) {
-                    uiManager.changeEndPanel("Entre el comienzo de la clase y el desarrollo de la situación crítica, tu tono de voz se vio modificado un " +
-                        (soundController.getSavedAverageSound() * 1000) + " %");
-                }
-                if (_showInterval == 1) uiManager.changeEndPanel(emoPose.getIntInfo(1));
-                if (_showInterval == 2) uiManager.changeEndPanel(emoPose.getIntInfo(0));
-                if (_showInterval == 3) uiManager.changeEndPanel(emoPose.getIntInfo(2));
-                _showInterval++;
-                if (_showInterval > 3) _endFeedback = true;
-
-                if (_endFeedback)
-                {
-                    uiManager.showEndButtons();
-                    _sceneFinished = true;
-                }
-            }
+            //Boton A
+            if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ShowFeedBack) endInfo();
         }
 
         //-------------------PUBLICS-------------------------
@@ -255,8 +221,30 @@ namespace ClassRoomVR {
         }
 
         //-------------------PRIVATES-------------------------
-        // METODOS DE CONTROL DE LOGICA DE LA ESCENA
+        // Muestra la info del la escena desarrollada
+        private void endInfo()
+        {
+            if (_showInterval == 0)
+            {
+                string pitchChange = "Entre el comienzo de la clase y el desarrollo de la situación crítica el tono de voz se vio modificado un " +
+                    (soundController.getSavedAverageSound() * 1000) + " %";
+                CSVSerializer.saveData("\n" + pitchChange);
+                uiManager.changeEndPanel(pitchChange);
+            }
+            if (_showInterval == 1) uiManager.changeEndPanel(emoPose.getIntInfo(1));
+            if (_showInterval == 2) uiManager.changeEndPanel(emoPose.getIntInfo(0));
+            if (_showInterval == 3) uiManager.changeEndPanel(emoPose.getIntInfo(2));
+            _showInterval++;
+            if (_showInterval > 3) _endFeedback = true;
 
+            if (_endFeedback)
+            {
+                uiManager.showEndButtons();
+                _sceneFinished = true;
+            }
+        }
+
+        // ---METODOS DE CONTROL DE LOGICA DE LA ESCENA---
         // Metodo que gestiona la presentacion inicial de la situacion
         private void playSituation()
         {

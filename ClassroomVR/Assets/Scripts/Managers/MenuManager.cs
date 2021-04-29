@@ -44,29 +44,26 @@ namespace ClassRoomVR
             GameObject a;
             if (!GameManager.Instance.getVR())
             {
-                a = Instantiate(packB);
+                a = Instantiate(packB, PackTriade_Obj.transform);
                 a.name = i.ToString();
                 a.GetComponent<Button>().onClick.AddListener(delegate { PackButton(i); });
                 TextMeshProUGUI text = a.GetComponentInChildren<TextMeshProUGUI>();
                 string index = (i + 1).ToString();
-                text.text = "Pack" + index;
+                text.text = GameManager.Instance.getpackName(i);
                 a.transform.localScale = new Vector3(1, 1, 1);
                 a.gameObject.transform.localScale = new Vector3(1, 1, 1);
-                a.transform.parent = PackTriade_Obj.transform;
             }
             else
             {
-                a = Instantiate(packBVR);
-                a.transform.parent = PackTriade_ObjVR.transform;
+                a = Instantiate(packBVR, PackTriade_ObjVR.transform);
                 a.gameObject.transform.position = new Vector3(0, 0, 0);
                 a.name = i.ToString();
                 a.GetComponent<Button>().onClick.AddListener(delegate { PackButton(i); });
                 TextMeshProUGUI text = a.GetComponentInChildren<TextMeshProUGUI>();
                 string index = (i + 1).ToString();
-                text.text = "Pack" + index;
+                text.text = GameManager.Instance.getpackName(i);
                 a.transform.localScale = new Vector3(1, 1, 1);
                 a.gameObject.transform.localScale = new Vector3(1, 1, 1);
-              
             }
         }
     }

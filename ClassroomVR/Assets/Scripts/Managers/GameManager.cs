@@ -38,11 +38,7 @@ namespace ClassRoomVR
             return VRHardware;
         }
 
-        public void makeChoice(int i)
-        {
-            chosenPack = _packeges[i];
-            LoadMainScene();
-        }
+        
 
         public void LoadMainMenu()
         {
@@ -51,6 +47,17 @@ namespace ClassRoomVR
         public void LoadMainScene()
         {
             SceneManager.LoadScene("Class_GameScene");
+        }
+
+        public void makeChoice(int i)
+        {
+            chosenPack = _packeges[i];
+            LoadMainScene();
+        }
+
+        public string getpackName(int i)
+        {
+            return _packeges[i].name;
         }
 
         public int getNPacks() { return _packeges.Length; }

@@ -1,30 +1,25 @@
 ﻿using UnityEngine;
 using System.IO;
 
-namespace ClassRoomVR
-{
+namespace ClassRoomVR {
     public class CSVSerializer : MonoBehaviour
     {
-        private string extension = ".csv";
-        private string file = "session_";
-        private string folderName = "/Logs/";
-        private int sessionID = 0;
+        private static string extension = ".csv";
+        private static string file = "session_";
+        private static string folderName = "/Logs/";
+        private static int sessionID = 0;
 
-        private string filename = "";
-        private string fullpath = "";
+        private static string filename = "";
+        private static string fullpath = "";
 
-        // Constructor
-        public CSVSerializer() {
+        // Inicializa el archivo que se usara durante la escena
+        public static void iniFile(string sceneName) {
             // Creamos el directorio si no existe
             string directory = Application.dataPath + folderName;
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
-        }
-
-        // Inicializa el archivo que se usara durante la escena
-        public void iniFile(string sceneName) {
             // Ubicacion y nombre del archivo
             filename = file + sceneName + "_" + sessionID + extension;
             fullpath = Application.dataPath + folderName + filename;
@@ -43,25 +38,10 @@ namespace ClassRoomVR
             w.Close();
         }
 
-        // Deja interniliado (usando para el cambio de intervalo)
-        public void writeWhiteSpaces()
-        {
-            using (StreamWriter w = File.AppendText(fullpath))
-            {
-                w.Write("\n");
-                w.Write("\n");
-            }
-        }
-
         // Guarda en el archivo que se este usando la info
-        public bool saveData(string data)
+        public static bool saveData(string data)
         {
             bool result = false;
-
-            // Cambios respectivos para buena visualizacion
-            data = data.Replace(",", "/");
-            data = data.Replace(";", ",");
-            data += "\n";
 
             // Guardamos el data
             using (StreamWriter w = File.AppendText(fullpath))

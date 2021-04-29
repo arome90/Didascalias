@@ -92,8 +92,8 @@ namespace ClassRoomVR
 
             string endText = "Tiempo en resolver la situación: " + t2 + " segundos\n";
 
-            if (goodPath) endText += "Has tomado el camino correcto!\n";
-            else endText += "La decisión tomada NO ha sido la mas adecuada\n";
+            if (goodPath) endText += "La reacción de la clase ante tu comportamiento ha sido positiva\n";
+            else endText += "La decisión tomada NO ha permitido que el ambiente de clase sea el mas propicio\n";
 
             endText += "\n" + feedBackText;
 
