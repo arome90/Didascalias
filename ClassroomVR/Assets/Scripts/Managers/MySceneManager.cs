@@ -228,7 +228,8 @@ namespace ClassRoomVR {
             {
                 string pitchChange = "Entre el comienzo de la clase y el desarrollo de la situación crítica el tono de voz se vio modificado un " +
                     (soundController.getSavedAverageSound() * 1000) + " %";
-                CSVSerializer.saveData("\n" + pitchChange);
+                CSVSerializer.saveData("\n" + pitchChange+ "\n");
+                CSVSerializer.saveRcogniceWord();
                 uiManager.changeEndPanel(pitchChange);
             }
             if (_showInterval == 1) uiManager.changeEndPanel(emoPose.getIntInfo(1));

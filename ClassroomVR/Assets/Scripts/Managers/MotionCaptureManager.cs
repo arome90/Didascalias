@@ -249,7 +249,7 @@ namespace ClassRoomVR
             if(debugLevel == 1) Debug.Log(emo.ToString());
 
 			// LOGS
-			string CSVData = emo.ToString() + ";" + pose.ToStringNoNames();
+			string CSVData = emo.ToString() + ";" + pose.ToStringNoNames() + ";" + poseBase.lastDistance;
 			CSVData = CSVData.Replace(",", "/");
 			CSVData = CSVData.Replace(";", ",");
 			CSVData += "\n";

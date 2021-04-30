@@ -101,6 +101,7 @@ namespace ClassRoomVR
             {
                 Debug.Log("Se ha reconocido: " + args.text);
                 keywordAction();
+                CSVSerializer.storeData("Se ha reconocido: " + args.text);
             }
         }
     }

@@ -12,8 +12,11 @@ namespace ClassRoomVR {
         private static string filename = "";
         private static string fullpath = "";
 
+        private static string recognicedWord = "";
+
         // Inicializa el archivo que se usara durante la escena
         public static void iniFile(string sceneName) {
+            recognicedWord = "";
             // Creamos el directorio si no existe
             string directory = Application.dataPath + folderName;
             if (!Directory.Exists(directory))
@@ -33,12 +36,12 @@ namespace ClassRoomVR {
 
             File.Create(fullpath).Close();
             StreamWriter w = File.AppendText(fullpath);
-            w.Write("Emocion, Mano Izquierda, Mano Derecha, Pierna Izquierda, Pierna Derecha, Cabeza, Direccion de vista, Apertura mano Izq, Apertura mano Der\n");
+            w.Write("Emocion, Mano Izquierda, Mano Derecha, Pierna Izquierda, Pierna Derecha, Cabeza, Direccion de vista, Apertura mano Izq, Apertura mano Der,Distancia,\n");
             //w.Write(System.DateTime.Now.ToString() + "\n");
             w.Close();
         }
 
-        // Guarda en el archivo que se este usando la info
+        // Guarda en el archivo que se este usando la info en cualquier momento
         public static bool saveData(string data)
         {
             bool result = false;
@@ -50,6 +53,17 @@ namespace ClassRoomVR {
                 result = true;
             }
             return result;
+        }
+        //Almacena los datos en la lista para escribirla al final
+        public static void storeData(string data)
+        {
+            recognicedWord = data;
+        }
+        //Salva la informacion de la palabra reconocida al final del archivo
+        public static void saveRcogniceWord()
+        {
+            if (recognicedWord == "") recognicedWord = "No se ha detectado ninguna palabra";
+            saveData(recognicedWord);
         }
     }   // end CsvSerializer
 }
