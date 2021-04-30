@@ -7,19 +7,19 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
-        private void Awake()
+        private void Start()
         {
             if (Instance == null)
             {
                 Instance = this;
                 //Instance._sceneManager = _sceneManager;
                 if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
-                DontDestroyOnLoad(gameObject);
+                DontDestroyOnLoad(this);
             }
             else
             {
                 Instance._sceneManager = _sceneManager;
-                DestroyImmediate(gameObject);
+                DestroyImmediate(this);
             }
         }
 
@@ -63,7 +63,7 @@ namespace ClassRoomVR
         public int getNPacks() { return _packeges.Length; }
 
         /// ATRIBUTOS ESTATICOS ///
-        public static GameManager Instance { get; private set; }
+        public static GameManager Instance;
 
         /// ATRIBUTOS NO ESTATICOS ///
         public MySceneManager _sceneManager;
