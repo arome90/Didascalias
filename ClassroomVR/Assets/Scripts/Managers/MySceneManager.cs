@@ -15,6 +15,7 @@ namespace ClassRoomVR {
         public UIManager uiManager;
         // Player Movements Manager
         public PlayerMotion playerMotion;
+        public OVRPlayerController playerVrMotion;
 
         // EmoPose (emocion - pose) manager
         public MotionCaptureManager emoPose;
@@ -200,6 +201,7 @@ namespace ClassRoomVR {
         {
             _playing = PlayScene;
             playerMotion.enabled = _playing;
+            playerVrMotion.EnableLinearMovement = _playing;
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
         }
 
@@ -218,6 +220,7 @@ namespace ClassRoomVR {
         {
             _playing = !_playing;
             playerMotion.enabled = _playing;
+            playerVrMotion.EnableLinearMovement = _playing;
         }
 
         //-------------------PRIVATES-------------------------
@@ -393,6 +396,7 @@ namespace ClassRoomVR {
                     _playing = false;
                     playerMotion.unlockCursor();
                     playerMotion.enabled = _playing;
+                    playerVrMotion.EnableLinearMovement = _playing;
                     emoPose.saveIntervalsInfo();
                 }
             }
