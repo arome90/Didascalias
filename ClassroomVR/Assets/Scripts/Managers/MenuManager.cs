@@ -21,7 +21,7 @@ namespace ClassRoomVR
         public GameObject PackTriade_Obj;  //Objeto "PackMenu"
         public GameObject packB; //Objetos PackI
 
-        private void Start()
+        void Start()
         {
             if (GameManager.Instance.getVR()) enableCanvasVR();
             else enableCanvasNormal();
