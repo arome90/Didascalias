@@ -8,18 +8,41 @@ namespace ClassRoomVR
     public class MenuManager : MonoBehaviour
     {
         //public GameObject PlayAndQuit_Obj; //Objeto "MenuPrincipal"
+        [Header("Objectos Vr")]
+        public GameObject canvasVR;
+        public GameObject cameraRig;
+        public GameObject UIHelpers;
+        public GameObject PackTriade_ObjVR;
+        public GameObject packBVR; //Objetos PackIpara VR
+
+        [Header("Objectos Normales")]
+        public GameObject MainCamera;
+        public GameObject canvasNormal;
         public GameObject PackTriade_Obj;  //Objeto "PackMenu"
         public GameObject packB; //Objetos PackI
-        public GameObject packBVR; //Objetos PackIpara VR
-        public GameObject PackTriade_ObjVR;
-        public GameObject cameraRig;
-
 
         private void Start()
         {
-            if (GameManager.Instance.getVR()) cameraRig.SetActive(true);
-            else cameraRig.SetActive(false);
+            if (GameManager.Instance.getVR()) enableCanvasVR();
+            else enableCanvasNormal();
         }
+        public void enableCanvasVR()
+        {
+            canvasVR.SetActive(true);
+            cameraRig.SetActive(true);
+            UIHelpers.SetActive(true);
+            MainCamera.SetActive(false);
+            canvasNormal.SetActive(false);
+        }
+        public void enableCanvasNormal()
+        {
+            MainCamera.SetActive(true);
+            canvasNormal.SetActive(true);
+            canvasVR.SetActive(false);
+            cameraRig.SetActive(false);
+            UIHelpers.SetActive(false);      
+        }
+
         public void PlayButton() { 
             //PlayAndQuit_Obj.SetActive(false);
             //PackTriade_Obj.SetActive(true);

@@ -1,4 +1,4 @@
-﻿        using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -38,8 +38,6 @@ namespace ClassRoomVR
             return VRHardware;
         }
 
-        
-
         public void LoadMainMenu()
         {
             SceneManager.LoadScene("Menu");
@@ -69,7 +67,7 @@ namespace ClassRoomVR
         public MySceneManager _sceneManager;
         public ScenePackage[] _packeges;
         public ClassInfo _classInfo;
-        public bool VRHardware;
+        public bool VRHardware = true;
 
 
         private ScenePackage chosenPack;
