@@ -67,7 +67,8 @@ namespace ClassRoomVR
         public MySceneManager _sceneManager;
         public ScenePackage[] _packeges;
         public ClassInfo _classInfo;
-        private bool VRHardware = true;
+        //Private para la build
+        public  bool VRHardware = true;
 
 
         private ScenePackage chosenPack;

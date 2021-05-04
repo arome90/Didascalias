@@ -35,7 +35,7 @@ public class PoseBuilder : MonoBehaviour {
     }
 
 	// It creates a pose from the character
-	public Pose CreatePoseFromCharacter(){
+	public Pose CreatePoseFromCharacter3(){
 		Pose pose = new Pose ();
 		pose.leftHandPos = leftHand.position - iniLeftHand;
 		pose.rightHandPos = rightHand.position - iniRightHand;
@@ -47,6 +47,22 @@ public class PoseBuilder : MonoBehaviour {
 		pose.openingHandsNormalized = openingHandsHandler.GetOpeningHandsNormalized ();
 		return pose;
 	}
+
+
+    public Pose CreatePoseFromCharacter()
+    {
+        Pose pose = new Pose();
+        pose.leftHandPos = leftHand.position;
+        pose.rightHandPos = rightHand.position ;
+        pose.leftFootPos = leftFoot.position ;
+        pose.rightFootPos = rightFoot.position ;
+        pose.headPos = head.position ;
+        Vector3 lookDirection = lookPos.position;
+        pose.headLookDirection = lookDirection.normalized;
+        pose.openingHandsNormalized = openingHandsHandler.GetOpeningHandsNormalized();
+        return pose;
+    }
+
 
     public Pose CreatePoseFromCharacterWithoutMove(Vector3 genPos)
     {
