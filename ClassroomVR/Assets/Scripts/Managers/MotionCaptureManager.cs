@@ -132,10 +132,12 @@ namespace ClassRoomVR
 						{
 							int a = (int)(iRes.resultEmotion[i].y * 100);
 							float fiability = (float)a / 100;
-							emoInfo = "En el segundo " + time + " tras el inicio del intervalo, " +
-								"con una fiabilidad media del " + fiability +
-								"%, un total de " + iRes.resultEmotion[i].x + ".\n";
-
+							if (fiability < 70)
+							{
+								emoInfo = "En el segundo " + time + " tras el inicio del intervalo, " +
+									"con una fiabilidad media del " + fiability +
+									"%, un total de " + iRes.resultEmotion[i].x + ".\n";
+							}
 						}
 						time += (iRes.resultEmotion[i].x * 0.5f);
 						i++;
@@ -158,16 +160,20 @@ namespace ClassRoomVR
 						{
 							int a = (int)(iRes.resultEmotion[i].y * 100);
 							float fiability = (float)a / 100;
-							emoDuringIntervalInfo += "Se detecto la emoción " + em.ToString() +
+							if (fiability < 70)
+							{
+								emoDuringIntervalInfo += "Se detecto la emoción " + em.ToString() +
 								" con una fiabilidad media del " + fiability +
 								"%, un total de " + iRes.resultEmotion[i].x + ".\n";
+							}
 						}
 						i++;
 					}
 					tempString += emoDuringIntervalInfo;
 
 					//----
-					string emotionsDuringIntervalInfo = "\nEn total durante el intervalo:\n";
+					string emotionsDuringIntervalInfo = "";
+					if (emoDuringIntervalInfo != "") emotionsDuringIntervalInfo = "\nEn total durante el intervalo:\n";
 					foreach (KeyValuePair<Emotion, Vector2> emInfo in iRes.totalEmoRepeated)
 					{
 						emotionsDuringIntervalInfo += "Se detecto la emoción " + emInfo.Key.ToString() +
@@ -229,7 +235,7 @@ namespace ClassRoomVR
 
 			// Guardamos el intervalo en la lista de intervalos.
 			intervals.Add(actualInterval);
-			CSVSerializer.saveData("\n\n");
+			CSVSerializer.saveData("--------------------,-------------,--------------------,-------------,--------------------,-------------,--------------------,-------------,--------------------,-------------\n");
 
 			// Limpiamos los objetos para el siguiente intervalo
 			actResultEmo = new List<Vector2>();
@@ -243,13 +249,15 @@ namespace ClassRoomVR
 		// Obtiene la info de la emocion a partir del cuerpo del character
 		private void ClassifyPoseFromCharacter()
 		{
-			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position);
+			//Pose pose = poseBuilder.CreatePoseFromCharacter();
+			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position); // Debria ser asi pero nope
 			Emotion emo = poseBase.Classify(pose);
 
             if(debugLevel == 1) Debug.Log(emo.ToString());
 
 			// LOGS
-			string CSVData = emo.ToString() + ";" + pose.ToStringNoNames() + ";" + poseBase.lastDistance;
+			string distance = poseBase.lastDistance.ToString().Replace(",", ".");
+			string CSVData = emo.ToString() + ";" + pose.ToStringNoNames() + ";" + distance;
 			CSVData = CSVData.Replace(",", "/");
 			CSVData = CSVData.Replace(";", ",");
 			CSVData += "\n";

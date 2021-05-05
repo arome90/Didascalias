@@ -37,7 +37,6 @@ namespace ClassRoomVR {
             File.Create(fullpath).Close();
             StreamWriter w = File.AppendText(fullpath);
             w.Write("Emocion, Mano Izquierda, Mano Derecha, Pierna Izquierda, Pierna Derecha, Cabeza, Direccion de vista, Apertura mano Izq, Apertura mano Der,Distancia,\n");
-            //w.Write(System.DateTime.Now.ToString() + "\n");
             w.Close();
         }
 

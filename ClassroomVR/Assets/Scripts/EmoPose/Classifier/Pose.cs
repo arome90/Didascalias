@@ -25,11 +25,11 @@ public class Pose{
 	public float headLookDirMaxDist=2f;
 
 	// The weights for the comparison
-	public float handsWeight=2;
-	public float feetWeight=1;
-	public float headPosWeight=0.01f;
-	public float headLookDirWeight=3f;
-	public float openingHandsWeight=1.5f;
+	public float handsWeight=4.5f;
+	public float feetWeight=4.5f;
+	public float headPosWeight=0.33f;
+	public float headLookDirWeight=0.33f;
+	public float openingHandsWeight=0.33f;
 
 	// Default constructor. A pose can also be created from the PoseBuilder.
 	public Pose(){
