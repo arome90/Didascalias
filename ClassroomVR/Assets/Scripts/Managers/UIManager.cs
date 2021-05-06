@@ -90,10 +90,11 @@ namespace ClassRoomVR
             int t1 = (int)(resolveTime * 100);
             float t2 = (float)t1 / 100;
 
-            string endText = "Tiempo en resolver la situación: " + t2 + " segundos\n";
+            CSVSerializer.saveData("Tiempo en resolver la situación: " + t2 + " segundos\n");
 
-            if (goodPath) endText += "La reacción de la clase ante tu comportamiento ha sido positiva\n";
-            else endText += "La decisión tomada NO ha permitido que el ambiente de clase sea el mas propicio\n";
+            string endText = "";
+            if (goodPath) endText += "ESTRATEGIA APROPIADA:\n";
+            else endText += "ESTRATEGIA POCO APROPIADA:\n";
 
             endText += "\n" + feedBackText;
 
