@@ -249,8 +249,8 @@ namespace ClassRoomVR
 		// Obtiene la info de la emocion a partir del cuerpo del character
 		private void ClassifyPoseFromCharacter()
 		{
-			//Pose pose = poseBuilder.CreatePoseFromCharacter();
-			Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position); // Debria ser asi pero nope
+			Pose pose = poseBuilder.CreatePoseFromCharacter();
+			//Pose pose = poseBuilder.CreatePoseFromCharacterWithoutMove(playerTransform.position); // Debria ser asi pero nope
 			Emotion emo = poseBase.Classify(pose);
 
             if(debugLevel == 1) Debug.Log(emo.ToString());

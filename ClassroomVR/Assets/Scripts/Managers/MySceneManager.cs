@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections;
+
 
 namespace ClassRoomVR {
     public class MySceneManager : MonoBehaviour {
@@ -113,6 +115,7 @@ namespace ClassRoomVR {
 
             // Data
             timeToStart = sceneInfo.timeToStart;
+            if (timeToStart < 1) _sceneState = State.GeneratePathSettings;
             timeToReact = sceneInfo.timeToReact;
             if (timeToReact == 0) timeToReact = float.MaxValue;
 
@@ -193,13 +196,15 @@ namespace ClassRoomVR {
 
             //Boton A
             if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ShowFeedBack) endInfo();
+            //if (OVRInput.GetUp(OVRInput.Button.Two) && !_playing) startplaying();
         }
 
         //-------------------PUBLICS-------------------------
         //Metodo para cuando se pulsa el boton tras la explicacion de la escena
-        public void starplaying()
+        public void startplaying()
         {
             _playing = PlayScene;
+            //uiManager.setContext(false);
             playerMotion.enabled = _playing;
             playerVrMotion.EnableLinearMovement = _playing;
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
@@ -227,6 +232,14 @@ namespace ClassRoomVR {
         // Muestra la info del la escena desarrollada
         private void endInfo()
         {
+
+            string pitchChange = "Entre el comienzo de la clase y el desarrollo de la situación crítica el tono de voz se vio modificado un " +
+                    (soundController.getSavedAverageSound() * 1000) + " %";
+            CSVSerializer.saveData("\n" + pitchChange + "\n");
+            CSVSerializer.saveRcogniceWord();
+            _endFeedback = true;
+
+            /*
             if (_showInterval == 0)
             {
                 string pitchChange = "Entre el comienzo de la clase y el desarrollo de la situación crítica el tono de voz se vio modificado un " +
@@ -240,10 +253,11 @@ namespace ClassRoomVR {
             if (_showInterval == 3) uiManager.changeEndPanel(emoPose.getIntInfo(2));
             _showInterval++;
             if (_showInterval > 3) _endFeedback = true;
-
+            */
             if (_endFeedback)
             {
-                uiManager.showEndButtons();
+                loadMenu();
+                //uiManager.showEndButtons();
                 _sceneFinished = true;
             }
         }
@@ -427,12 +441,29 @@ namespace ClassRoomVR {
         // Metodo para detectar colisiones del teacher con los alumnos
         private void collisionReaction()
         {
-            for (int i = 0; i < sceneInfo.paths.Length; i++)
-            {
+            for (int i = 0; i < sceneInfo.paths.Length; i++) {
                 // Si has chocado con el alumno liante indicarlo de alguna forma
-                if (sceneInfo.paths[i].getClose && teacherCollision == _students[_problematicStudents[0]].name) pathReaction(i);
+                if (sceneInfo.paths[i].getClose && teacherCollision == _students[_problematicStudents[0]].name)
+                {
+                    Debug.Log("Colision con " + teacherCollision);
+                    IEnumerator coroutine = waiter(i);
+                    StartCoroutine(coroutine);
+                    //pathReaction(i);
+                }
             }
         }
+
+        IEnumerator waiter(int i)
+        {
+            deltaTime = 0;
+
+            CSVSerializer.saveData("\n" + "CAMINO " + (i + 1) + "\n");
+            //Wait for 10 seconds, (para darle tiempo al usuario a hablar con el alumno)
+            yield return new WaitForSeconds(10);
+            Debug.Log("Dentro de la coorrutina");
+            pathReaction(i);
+        }
+        
 
         // Metodo que se llama al detectarse una palabra
         private void pathReaction(int i)
@@ -544,6 +575,9 @@ namespace ClassRoomVR {
                     if (problematic == -1)
                     {
                         problematic = UnityEngine.Random.Range(0, sceneInfo.nStudents);
+
+                        // FEISIMO (para evitar errores de generacion)
+                        if (problematic == 4) problematic -= 1;
                     }
                     // Colocacion de los demas alrededor del anterior problematico
                     else
