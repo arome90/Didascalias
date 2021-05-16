@@ -39,6 +39,10 @@ namespace ClassRoomVR {
         private int[] _problematicStudents;
         private bool[] _asientosOcupados;
 
+        //Objetos para la mirada de los alumnos (Paso intermedio de transforms)
+        public GameObject _aimNoVR;
+        public GameObject _aimVR;
+
         // Control de estados
         // Bool error
         private bool _error = false;
