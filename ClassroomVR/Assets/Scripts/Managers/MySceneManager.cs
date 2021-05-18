@@ -156,6 +156,8 @@ namespace ClassRoomVR {
                 if (i > 1 && i == _problematicStudents.Length-1) alumsName += ";"; 
             }
 
+            _teacher.GetComponent<AudioSourceScript>().setClip(sceneInfo.contextClip);
+            _teacher.GetComponent<AudioSourceScript>().playClip();
             string t = sceneInfo.iniMessage.Replace("alum", alumsName);
             uiManager.panelContexto(t);
 
@@ -167,6 +169,7 @@ namespace ClassRoomVR {
         // Update is called once per frame
         void Update() {
             if (!_sceneFinished) {
+
                 if (_playing)
                 {
                     deltaTime += Time.deltaTime;
@@ -409,6 +412,8 @@ namespace ClassRoomVR {
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
                     uiManager.initEndPanel(text, selectedPath.correctPath, timeToResolve);
+                    _teacher.GetComponent<AudioSourceScript>().setClip(selectedPath.finalFeedback);
+                    _teacher.GetComponent<AudioSourceScript>().playClip();
                     
                     // Fin game
                     _playing = false;

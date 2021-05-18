@@ -16,6 +16,7 @@ namespace ClassRoomVR {
         [Tooltip("Estudiantes problematicos entre los estudiantes")]
         public int problematicStudents;
 
+
         [Tooltip("Estudiantes problematicos juntos")]
         public bool problematicTogether;
 
@@ -27,6 +28,9 @@ namespace ClassRoomVR {
         
         [Tooltip("Mensaje con la informacion inicial de la situacion")]
         public string iniMessage;
+
+        [Tooltip("Audio a reproducir como contexto de la escena.")]
+        public AudioClip contextClip;
 
         [Tooltip("Tiempo para dar clase antes de que se ejecute la situacion")]
         public float timeToStart = 0;

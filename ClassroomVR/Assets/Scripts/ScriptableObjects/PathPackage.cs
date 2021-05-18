@@ -37,6 +37,9 @@ namespace ClassRoomVR
         [Tooltip("Feedback final")]
         public string feedbackPath;
 
+        [Tooltip("Audio del feedback final")]
+        public AudioClip finalFeedback;
+
         [Tooltip("Booleano que indica si es un camino correcto")]
         public bool correctPath;
     }
