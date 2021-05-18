@@ -273,35 +273,44 @@ namespace ClassRoomVR {
         // Metodo que gestiona la presentacion inicial de la situacion
         private void playSituation()
         {
-            // Si pasa el tiempo inicial de espera
-            if (deltaTime > timeToStart) {
-                // Hacemos k los alumnos rebeldes ejecuten su animacion y sonido
-                if (_sceneState == State.AnimSituation)
+            if (timeToStart != -1) //Valor especial para escenarios sin presentación inicial.
+            {
+                // Si pasa el tiempo inicial de espera
+                if (deltaTime > timeToStart)
                 {
-                    iniPlaySituation();
-                    // Comportamiento especial
-                    if (sceneInfo.especificBehaviour.GetPersistentEventCount() > 0)
+                    // Hacemos k los alumnos rebeldes ejecuten su animacion y sonido
+                    if (_sceneState == State.AnimSituation)
                     {
-                        sceneInfo.especificBehaviour.Invoke();
-                        if(specialSituatiuon) _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
+                        iniPlaySituation();
+                        // Comportamiento especial
+                        if (sceneInfo.especificBehaviour.GetPersistentEventCount() > 0)
+                        {
+                            sceneInfo.especificBehaviour.Invoke();
+                            if (specialSituatiuon) _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
+                        }
+                        else
+                        {
+                            _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
+                        }
                     }
-                    else
+                    // Reaccion de la clase
+                    else if (_sceneState == State.AnimReactSituation && !_teacher.GetComponent<AudioSource>().isPlaying)
                     {
-                        _sceneState = State.AnimReactSituation; //SIGUIENTE ESTADO
+                        if (sceneInfo.audioReaccionClase != null)
+                        {
+                            _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                            _teacher.GetComponent<AudioSource>().Play();
+                        }
+                        _sceneState = State.GeneratePathSettings;   //SIGUIENTE ESTADO
+                        soundController.setCommentFinished();
+                        deltaTime = 0;
                     }
                 }
-                // Reaccion de la clase
-                else if (_sceneState == State.AnimReactSituation && !_teacher.GetComponent<AudioSource>().isPlaying)
-                {
-                    if (sceneInfo.audioReaccionClase != null)
-                    {
-                        _teacher.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
-                        _teacher.GetComponent<AudioSource>().Play();
-                    }
-                    _sceneState = State.GeneratePathSettings;   //SIGUIENTE ESTADO
-                    soundController.setCommentFinished();
-                    deltaTime = 0;
-                }
+            }
+            else if (timeToStart == -1 && _sceneState == State.AnimSituation) {  //Caso para discriminar los escenarios sin presentación.
+                _sceneState = State.GeneratePathSettings;
+                soundController.setCommentFinished();
+                deltaTime = 0;
             }
         }
 
