@@ -31,6 +31,10 @@ namespace ClassRoomVR//NOSE SI ES ENECESARIO
         List<float> angerList;
         List<float> neutralList;
 
+
+        //Valores para serializacion
+        public float mediaHappy, mediaSad, mediaFear, mediaAnger, mediaNeutral;
+        public float finalHappy, finalSad, finalFear, finalAnger, finalNeutral;
         public RadarPolygon radarPolygon;
 
         // Start is called before the first frame update
@@ -184,6 +188,8 @@ namespace ClassRoomVR//NOSE SI ES ENECESARIO
             Debug.Log("Media Anger: " + anger);
             Debug.Log("Media Fear: " + fear);
 
+            mediaHappy = happy; mediaAnger = anger; mediaSad = sad; mediaFear = fear; mediaNeutral = neutral;
+
             float max = -1;
             float[] floats = { fear, anger, happy, sad, neutral };
 
@@ -204,19 +210,22 @@ namespace ClassRoomVR//NOSE SI ES ENECESARIO
             happy = happy / max > (float)0.1 ? happy / max : (float)0.1;
             neutral = neutral / max > (float)0.1 ? neutral / max : (float)0.1;
 
+            finalHappy = happy; finalAnger = anger; finalSad = sad; finalFear = fear; finalNeutral = neutral;
+
             Debug.Log("Valor final Neutrality: " + neutral);
             Debug.Log("Valor final Happiness: " + happy);
             Debug.Log("Valor final Sadness: " + sad);
             Debug.Log("Valor final Anger: " + anger);
             Debug.Log("Valor final Fear: " + fear);
 
-            radarPolygon.value[0] = fear;
-            radarPolygon.value[1] = anger;
-            radarPolygon.value[2] = sad;
-            radarPolygon.value[3] = happy;
-            radarPolygon.value[4] = neutral;
+            //radarPolygon = new RadarPolygon();
+            //radarPolygon.value[0] = fear;
+            //radarPolygon.value[1] = anger;
+            //radarPolygon.value[2] = sad;
+            //radarPolygon.value[2] = happy;
+            //radarPolygon.value[4] = neutral;
 
-            radarPolygon.SetAllDirty();
+            //radarPolygon.SetAllDirty();
         }
     }
 }

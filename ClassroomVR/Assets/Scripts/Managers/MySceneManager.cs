@@ -27,9 +27,10 @@ namespace ClassRoomVR {
         //------------------------------------------------------------------------
         // -----Privates-----
         // Managers
+        public SoundManager _soundManager;
         // Audio
-        private SoundLoudness soundController;
-        private KeyWordRecognizer wordRecognizer;
+       // private SoundLoudness soundController;
+     //   private KeyWordRecognizer wordRecognizer;
 
         // Objetos de la escena
         private GameObject _schoolClass;
@@ -101,7 +102,7 @@ namespace ClassRoomVR {
             classInfo = GameManager.Instance.getClass();
             VRHardware = GameManager.Instance.getVR();
 
-            try
+            /*try
             {
                 soundController = GetComponent<SoundLoudness>();
             }
@@ -109,9 +110,11 @@ namespace ClassRoomVR {
             {
                 Debug.Log("Fatal Error!: El sceneManager no cuenta con un componente 'SoundLoudness'");
                 _error = true;
-            }
+            }*/
             // Iniciamos reconocimiento de voz
-            wordRecognizer = new KeyWordRecognizer();
+            //wordRecognizer = new KeyWordRecognizer();
+
+            _soundManager._vokaturi.StartCollecting();
 
             // Iniciamos captura de emoPose
             emoPose.init();
@@ -241,8 +244,11 @@ namespace ClassRoomVR {
         {
 
             string pitchChange = "Entre el comienzo de la clase y el desarrollo de la situación crítica el tono de voz se vio modificado un " +
-                    (soundController.getSavedAverageSound() * 1000) + " %";
+                    (_soundManager._loudness.getSavedAverageSound() * 1000) + " %";
             CSVSerializer.saveData("\n" + pitchChange + "\n");
+
+            CSVSerializer.saveData(_soundManager.processVokaturiInfo());
+
             CSVSerializer.saveRcogniceWord();
             _endFeedback = true;
 
@@ -302,14 +308,14 @@ namespace ClassRoomVR {
                             _teacher.GetComponent<AudioSource>().Play();
                         }
                         _sceneState = State.GeneratePathSettings;   //SIGUIENTE ESTADO
-                        soundController.setCommentFinished();
+                        _soundManager._loudness.setCommentFinished();
                         deltaTime = 0;
                     }
                 }
             }
             else if (timeToStart == -1 && _sceneState == State.AnimSituation) {  //Caso para discriminar los escenarios sin presentación.
                 _sceneState = State.GeneratePathSettings;
-                soundController.setCommentFinished();
+                _soundManager._loudness.setCommentFinished();
                 deltaTime = 0;
             }
         }
@@ -347,13 +353,14 @@ namespace ClassRoomVR {
             // Durante la eleccion del camino
             if(_sceneState == State.ChoosingPath)
             {
+                _soundManager._vokaturi.StartCollecting();
                 // En casos donde la eleccion del camino es acercarse a los alumnos liantes
                 collisionReaction();
 
                 // Si se toma un camino
                 if (_pathChosen) {
                     _sceneState = State.ReactToPath;    //SIGUIENTE ESTADO
-                    soundController.StopRecordingAndCalculate();
+                    _soundManager._loudness.StopRecordingAndCalculate();
                 } 
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
@@ -361,7 +368,7 @@ namespace ClassRoomVR {
                     // Si alguno de los caminos era ignorar
                     for(int i = 0; i < sceneInfo.paths.Length; i++) if (sceneInfo.paths[i].ignore) pathReaction(i);
 
-                    soundController.StopRecordingAndCalculate();
+                    _soundManager._loudness.StopRecordingAndCalculate();
                     deltaTime = 0;
                     _sceneState = State.ReactToPath;   //SIGUIENTE ESTADO
                 }
@@ -374,22 +381,23 @@ namespace ClassRoomVR {
             // Parametros especificos de los caminos
             if (_sceneState == State.GeneratePathSettings)
             {
+                _soundManager._vokaturi.StopCollecting();
                 emoPose.nextInterval();
                 for (int i = 0; i < sceneInfo.paths.Length; i++)
                 {
                     // Iniciamos el texto de los caminos a tomar
                     uiManager.initPanelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
                     // Añadimos las palabras al reconocimiento de voz
-                    wordRecognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
+                    _soundManager._recognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
                 }
 
                 pause();
                 uiManager.setOptions(!_playing);
 
-                wordRecognizer.init();
+                _soundManager._recognizer.init();
                 setCollision("");
                 _sceneState = State.ChoosingPath;   //SIGUIENTE ESTADO
-                soundController.startCollecting();
+                _soundManager._loudness.startCollecting();
             }
         }
 
@@ -423,13 +431,17 @@ namespace ClassRoomVR {
                     uiManager.initEndPanel(text, selectedPath.correctPath, timeToResolve);
                     _teacher.GetComponent<AudioSourceScript>().setClip(selectedPath.finalFeedback);
                     _teacher.GetComponent<AudioSourceScript>().playClip();
-                    
+
+
+
                     // Fin game
+                    _soundManager._vokaturi.StopCollecting();
                     _playing = false;
                     playerMotion.unlockCursor();
                     playerMotion.enabled = _playing;
                     playerVrMotion.EnableLinearMovement = _playing;
                     emoPose.saveIntervalsInfo();
+                    _soundManager._vokaturi.fillChart();
                 }
             }
         }
