@@ -218,10 +218,10 @@ namespace ClassRoomVR//NOSE SI ES ENECESARIO
             Debug.Log("Valor final Anger: " + anger);
             Debug.Log("Valor final Fear: " + fear);
 
-            //radarPolygon = new RadarPolygon();
-            //radarPolygon.value[0] = fear;
-            //radarPolygon.value[1] = anger;
-            //radarPolygon.value[2] = sad;
+            radarPolygon = new RadarPolygon();
+            radarPolygon.value[0] = fear;
+            radarPolygon.value[1] = anger;
+            radarPolygon.value[2] = sad;
             //radarPolygon.value[2] = happy;
             //radarPolygon.value[4] = neutral;
 

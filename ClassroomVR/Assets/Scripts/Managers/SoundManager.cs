@@ -6,8 +6,12 @@ namespace ClassRoomVR
     public class SoundManager : MonoBehaviour
     {
         public MicToVokaturi _vokaturi;
+
         public MicrophoneManager _micManager;
+
+        [HideInInspector]
         public KeyWordRecognizer _recognizer;
+
         public SoundLoudness _loudness;
 
 

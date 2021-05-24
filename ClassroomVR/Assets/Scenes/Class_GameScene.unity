@@ -1901,8 +1901,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1494066369}
   - component: {fileID: 1494066370}
-  - component: {fileID: 1494066368}
-  - component: {fileID: 1494066371}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -1910,26 +1908,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1494066368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1494066367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87401d4feee46304cb1c63debdee3708, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  strongResponseEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  increase: 1.5
-  minNoiseTreshold: 0.02
-  noAverageThreshold: 0.1
-  firstScenario: 0
-  secondScenario: 0
 --- !u!4 &1494066369
 Transform:
   m_ObjectHideFlags: 0
@@ -1965,20 +1943,6 @@ MonoBehaviour:
   _soundManager: {fileID: 1971743200}
   _aimNoVR: {fileID: 1606086382}
   _aimVR: {fileID: 242422733}
---- !u!114 &1494066371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1494066367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 060672a39a502724cbc31d118cfe0241, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ClipLength: 5
-  radarPolygon: {fileID: 0}
 --- !u!224 &1548122768 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5581032517494173820, guid: 471dd5739fe98f8408cfe062aafa18ba,
@@ -3087,10 +3051,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc7da65f91687b149aea6f96c3462130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _vokaturi: {fileID: 1494066371}
-  _micManager: {fileID: 0}
+  _vokaturi: {fileID: 1971743203}
+  _micManager: {fileID: 1971743201}
   _recognizer: {fileID: 0}
-  _loudness: {fileID: 1494066368}
+  _loudness: {fileID: 1971743202}
 --- !u!114 &1971743201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3137,6 +3101,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClipLength: 5
+  mediaHappy: 0
+  mediaSad: 0
+  mediaFear: 0
+  mediaAnger: 0
+  mediaNeutral: 0
+  finalHappy: 0
+  finalSad: 0
+  finalFear: 0
+  finalAnger: 0
+  finalNeutral: 0
   radarPolygon: {fileID: 0}
 --- !u!4 &1971743204
 Transform:
