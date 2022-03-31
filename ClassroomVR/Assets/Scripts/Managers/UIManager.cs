@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -181,5 +182,22 @@ namespace ClassRoomVR
                 }
             }
         } // end iniPanelOpciones
+
+
+
+        // Start is called before the first frame update
+        public TMP_Text heartrateText;
+        public TMP_Text expressionsText;
+
+
+        public void ChangeRate(double heartRate)
+        {
+
+            heartrateText.text = "Pulso : " + heartRate.ToString("F");
+        }
+        public void ChangeExpressions(string expression)
+        {
+            expressionsText.text = "Expression :" + expression;
+        }
     }
 }
