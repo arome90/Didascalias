@@ -21,7 +21,6 @@ namespace ClassRoomVR {
         [Tooltip("Animacion 'idle' (sitting) de los estudiantes")]
         public AnimationClip idleAnim;
 
-        [Tooltip("Prefab del profesor")]
-        public GameObject teacher;
+      
     }
 }

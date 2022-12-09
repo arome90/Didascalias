@@ -1011,6 +1011,7 @@ GameObject:
   - component: {fileID: 5567678623167346454}
   - component: {fileID: 1459354719485498927}
   - component: {fileID: 5144026579020405590}
+  - component: {fileID: 8772090595018528617}
   m_Layer: 0
   m_Name: Nina3
   m_TagString: Untagged
@@ -1108,6 +1109,32 @@ MonoBehaviour:
   _VRPlayerAImTarget: {fileID: 0}
   _ownAiming: {fileID: 9067658970771904219}
   _builder: {fileID: 1459354719485498927}
+--- !u!114 &8772090595018528617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504327533302297581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9981709ae24fdf4fbfe39a242328bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseCustomId: 0
+  CustomId: 
+  UpdateRate: 0.1
+  UseCustomMesh: 1
+  MeshName: nina3
+  CommonMesh: 0
+  PositionThreshold: 0.01
+  RotationThreshold: 0.1
+  ScaleThreshold: 0.1
+  IsController: 0
+  IsRight: 0
+  ControllerType: 0
+  IdPool: {fileID: 11400000, guid: 712b0e36d978d7e4884b47e1d87ee6e1, type: 2}
+  SyncWithPlayerGazeTick: 0
 --- !u!1 &2623794209822788716
 GameObject:
   m_ObjectHideFlags: 0
@@ -2064,9 +2091,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5497478924229346984}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.369, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.014, y: 0.419, z: 0.865}
+  m_LocalScale: {x: 0.38826, y: 0.38826, z: 0.38826}
   m_Children: []
   m_Father: {fileID: 8228333986810507427}
   m_RootOrder: 2
@@ -2082,8 +2109,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.43127978
+  m_Center: {x: -0.06541836, y: -0.5121223, z: 0}
 --- !u!1 &5523506863147032559
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,6 +2120,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8175975702272865414}
+  - component: {fileID: 3870592435921360323}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -2123,6 +2151,20 @@ Transform:
   m_Father: {fileID: 8228333986810507427}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &3870592435921360323
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5523506863147032559}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &5551714494007557894
 GameObject:
   m_ObjectHideFlags: 0

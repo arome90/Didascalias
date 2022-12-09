@@ -624,6 +624,7 @@ GameObject:
   - component: {fileID: 4796980584249534422}
   - component: {fileID: 1759592721811408459}
   - component: {fileID: 3228883704559027143}
+  - component: {fileID: 3660047960594094376}
   m_Layer: 0
   m_Name: Nina2
   m_TagString: Untagged
@@ -721,6 +722,32 @@ MonoBehaviour:
   _VRPlayerAImTarget: {fileID: 0}
   _ownAiming: {fileID: 8873262826688249512}
   _builder: {fileID: 1759592721811408459}
+--- !u!114 &3660047960594094376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387082996104091894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9981709ae24fdf4fbfe39a242328bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseCustomId: 0
+  CustomId: 
+  UpdateRate: 0.1
+  UseCustomMesh: 1
+  MeshName: nina2
+  CommonMesh: 0
+  PositionThreshold: 0.01
+  RotationThreshold: 0.1
+  ScaleThreshold: 0.1
+  IsController: 0
+  IsRight: 0
+  ControllerType: 0
+  IdPool: {fileID: 11400000, guid: 227b7097beec8c344a89f026584c08b9, type: 2}
+  SyncWithPlayerGazeTick: 0
 --- !u!1 &2439799327565295507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1689,7 +1716,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1634634516196500668}
-  - component: {fileID: 9044326827127110495}
+  - component: {fileID: 3406191783620055313}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -1704,14 +1731,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5429014432602268839}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.369, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.014, y: 0.419, z: 0.865}
+  m_LocalScale: {x: 0.38826, y: 0.38826, z: 0.38826}
   m_Children: []
   m_Father: {fileID: 32893000443391615}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &9044326827127110495
+--- !u!135 &3406191783620055313
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1722,8 +1749,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.43127978
+  m_Center: {x: -0.06541836, y: -0.5121223, z: 0}
 --- !u!1 &5453071067934981971
 GameObject:
   m_ObjectHideFlags: 0
@@ -2759,6 +2786,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3164724899436950982}
+  - component: {fileID: 6460348421244568510}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -2788,6 +2816,20 @@ Transform:
   m_Father: {fileID: 32893000443391615}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &6460348421244568510
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8449404032972639246}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &8646923945084671875
 GameObject:
   m_ObjectHideFlags: 0

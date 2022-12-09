@@ -320,6 +320,7 @@ GameObject:
   - component: {fileID: 603630366400300132}
   - component: {fileID: 3076640443669917130}
   - component: {fileID: 5067559428875596857}
+  - component: {fileID: 887590776848475695}
   m_Layer: 0
   m_Name: Nino4
   m_TagString: Untagged
@@ -417,6 +418,32 @@ MonoBehaviour:
   _VRPlayerAImTarget: {fileID: 0}
   _ownAiming: {fileID: 7062017630804450945}
   _builder: {fileID: 3076640443669917130}
+--- !u!114 &887590776848475695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945931324204841794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9981709ae24fdf4fbfe39a242328bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseCustomId: 0
+  CustomId: 
+  UpdateRate: 0.1
+  UseCustomMesh: 1
+  MeshName: nino4
+  CommonMesh: 0
+  PositionThreshold: 0.01
+  RotationThreshold: 0.1
+  ScaleThreshold: 0.1
+  IsController: 0
+  IsRight: 0
+  ControllerType: 0
+  IdPool: {fileID: 11400000, guid: 85ede6c8a616d8b44ba6682f14078b71, type: 2}
+  SyncWithPlayerGazeTick: 0
 --- !u!1 &957606117017924827
 GameObject:
   m_ObjectHideFlags: 0
@@ -1446,6 +1473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6948364996756247406}
+  - component: {fileID: 2979637903486541243}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -1476,6 +1504,20 @@ Transform:
   m_Father: {fileID: 592343178387458588}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &2979637903486541243
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3253122316038009873}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &3284592754781244977
 GameObject:
   m_ObjectHideFlags: 0
@@ -1811,9 +1853,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4274469363201815642}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.369, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.014, y: 0.419, z: 0.865}
+  m_LocalScale: {x: 0.38826, y: 0.38826, z: 0.38826}
   m_Children: []
   m_Father: {fileID: 592343178387458588}
   m_RootOrder: 2
@@ -1829,8 +1871,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.43127978
+  m_Center: {x: -0.06541836, y: -0.5121223, z: 0}
 --- !u!1 &4323961478472710647
 GameObject:
   m_ObjectHideFlags: 0
@@ -2704,7 +2746,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8238918218122918068}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.13714023, y: -0.2624879, z: -0.004504204}
+  m_LocalPosition: {x: 0.007, y: 0.611, z: 0.044}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5360108894232489230}

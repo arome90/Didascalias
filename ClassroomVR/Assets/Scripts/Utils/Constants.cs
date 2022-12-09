@@ -24,6 +24,9 @@ public class Constants
     public const string ANGRY_AUDIO = "AhiOsQuedais";
     public const string EXPLANATION_AUDIO = "YoPaso";
 
+    public const string AFTER_CLASS_BELL = "Afterclass_School_Bell";
+    public const string BEFORE_CLASS_BELL = "Beforeclass_School_Bell";
+
     public const string STUDENT_TAG = "Student";
 	public const string PLAYER_TAG = "Player";
 
@@ -37,11 +40,6 @@ public class Constants
     public const string CHEERING_STATE = "Cheering";
     public const string SITTING_STATE = "Sitting";
 
-    public const string HORIZONTAL_AXIS = "Horizontal";
-	public const string VERTICAL_AXIS = "Vertical";
-
-	public const string MOUSE_X = "Mouse X";
-	public const string MOUSE_Y = "Mouse Y";
 
 	// Escenario 1
 	public const double TIME_FOR_AUDIO = 5; // Time before audio plays
@@ -107,6 +105,9 @@ public class Constants
         "Tu silla",
         "Tu sitio",
         "Vuelve",
+        // Nuevas
+        "Folículo",
+        "Asiento",
     };
 
     public static string[] END_WORDS =

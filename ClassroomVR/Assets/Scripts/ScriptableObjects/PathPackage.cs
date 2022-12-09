@@ -30,6 +30,7 @@ namespace ClassRoomVR
         [Tooltip("Animacion de reaccion de los problematicos a la respuesta del profe")]
         public AnimationClip pathProbAnimation;
 
+
         // Se debe crear un prefab, ubicados en "Resources/prefabs/ScenesBeheviours" al cual se le añade un script con los metodos que se quieran implementar
         [Tooltip("Comportamiento especial de la escena tras la eleccion del camino")]
         public UnityEvent especificBehaviour;
@@ -42,5 +43,9 @@ namespace ClassRoomVR
 
         [Tooltip("Booleano que indica si es un camino correcto")]
         public bool correctPath;
+
+        [Tooltip("Campana despues de clase")]
+        public AudioClip after_bell;
+
     }
 }

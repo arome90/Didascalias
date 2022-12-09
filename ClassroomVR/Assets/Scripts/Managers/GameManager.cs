@@ -7,18 +7,19 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
-        private void Start()
+        private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
                 //Instance._sceneManager = _sceneManager;
-                if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
+                // if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
+                chosenPack = _packeges[0];
                 DontDestroyOnLoad(this);
             }
             else
             {
-                Instance._sceneManager = _sceneManager;
+               // Instance._sceneManager = _sceneManager;
                 DestroyImmediate(this);
             }
         }
@@ -60,15 +61,43 @@ namespace ClassRoomVR
 
         public int getNPacks() { return _packeges.Length; }
 
+
+
+        public void SetUIManager(UIManager ui)
+        {
+            //Presentamos el UIManager al GameManager
+            UIManager = ui;
+        }
+
+        public void SetPlayer(GameObject pl)
+        {
+            //Presentamos el Player al GameManager
+            player = pl;
+        }
+
+        public GameObject GetPlayer()
+        {
+            return player;      
+        }
+        public ClassManager GetClassManager()
+        {
+            return classManager;
+        }
+
+
         /// ATRIBUTOS ESTATICOS ///
         public static GameManager Instance;
 
         /// ATRIBUTOS NO ESTATICOS ///
-        public MySceneManager _sceneManager;
+        //public MySceneManager _sceneManager;
         public ScenePackage[] _packeges;
         public ClassInfo _classInfo;
         public bool VRHardware = false;
 
         private ScenePackage chosenPack;
+        UIManager UIManager;
+        GameObject player;
+        [SerializeField] ClassManager classManager;
+
     }
 }

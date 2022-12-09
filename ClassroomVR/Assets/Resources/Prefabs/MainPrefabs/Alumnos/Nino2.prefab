@@ -624,9 +624,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2248510272621337831}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.369, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.014, y: 0.419, z: 0.865}
+  m_LocalScale: {x: 0.38826, y: 0.38826, z: 0.38826}
   m_Children: []
   m_Father: {fileID: 8729323185018938257}
   m_RootOrder: 2
@@ -642,8 +642,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.43127978
+  m_Center: {x: -0.06541836, y: -0.5121223, z: 0}
 --- !u!1 &2541872308431673003
 GameObject:
   m_ObjectHideFlags: 0
@@ -2624,6 +2624,7 @@ GameObject:
   - component: {fileID: 7930953308836982907}
   - component: {fileID: 4381689439959497102}
   - component: {fileID: 8457912823423189017}
+  - component: {fileID: -9047409842760369331}
   m_Layer: 0
   m_Name: Nino2
   m_TagString: Untagged
@@ -2721,6 +2722,32 @@ MonoBehaviour:
   _VRPlayerAImTarget: {fileID: 0}
   _ownAiming: {fileID: 5277515871860630614}
   _builder: {fileID: 4381689439959497102}
+--- !u!114 &-9047409842760369331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7841032562494156965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9981709ae24fdf4fbfe39a242328bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseCustomId: 0
+  CustomId: 
+  UpdateRate: 0.1
+  UseCustomMesh: 1
+  MeshName: nino2
+  CommonMesh: 0
+  PositionThreshold: 0.01
+  RotationThreshold: 0.1
+  ScaleThreshold: 0.1
+  IsController: 0
+  IsRight: 0
+  ControllerType: 0
+  IdPool: {fileID: 11400000, guid: e4dc316ef7e8a9f42be63f89bb43606e, type: 2}
+  SyncWithPlayerGazeTick: 0
 --- !u!1 &7842497084072191154
 GameObject:
   m_ObjectHideFlags: 0
@@ -2859,6 +2886,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7701604043775955423}
+  - component: {fileID: 659867567015772761}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -2889,6 +2917,20 @@ Transform:
   m_Father: {fileID: 8729323185018938257}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &659867567015772761
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981438080679085626}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &8027979999307831782
 GameObject:
   m_ObjectHideFlags: 0

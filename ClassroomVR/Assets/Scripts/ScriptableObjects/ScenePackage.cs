@@ -13,6 +13,9 @@ namespace ClassRoomVR {
         [Tooltip("Numero total de estudiantes, maximo 30")]
         public int nStudents;
 
+        [Tooltip("Estudiante tutorial")]
+        public int tutoStudent;
+
         [Tooltip("Estudiantes problematicos entre los estudiantes")]
         public int problematicStudents;
 
@@ -48,6 +51,14 @@ namespace ClassRoomVR {
 
         [Tooltip("Audio de reaccion de la clase a la situacion critica")]
         public AudioClip audioReaccionClase;
+
+        // Campanas de entrada y salida
+        [Tooltip("Campana antes de clase")]
+        public AudioClip before_bell;
+        [Tooltip("Mix campana antes de clase")]
+        public AudioClip mix_before_bell;
+        [Tooltip("Campana despues de clase")]
+        public AudioClip after_bell;
 
         // TODO
         // Se debe crear un prefab, ubicados en "Resources/prefabs/ScenesBeheviours" al cual se le añade un script con los metodos que se quieran implementar

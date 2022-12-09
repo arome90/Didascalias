@@ -2,13 +2,13 @@
 using UnityEngine;
 using System.Collections;
 
-
 namespace ClassRoomVR {
     public class MySceneManager : MonoBehaviour {
         //------------------------------------------------------------------------
         // -----Publics-----
         // Enum para las fases de la escena
         public enum State { AnimSituation, AnimReactSituation, GeneratePathSettings, ChoosingPath, ReactToPath, ShowFeedBack };
+
 
         [Tooltip("Booleano para la ejecucion de la situacion")]
         public bool PlayScene;
@@ -17,17 +17,17 @@ namespace ClassRoomVR {
         public UIManager uiManager;
         // Player Movements Manager
         public PlayerMotion playerMotion;
-        public OVRPlayerController playerVrMotion;
+       // public OVRPlayerController playerVrMotion;
 
         // EmoPose (emocion - pose) manager
-        public MotionCaptureManager emoPose;
+        //public MotionCaptureManager emoPose;
 
         // GameObject vacio para colocar los objetos de la escena
         public GameObject sceneObjects;
         //------------------------------------------------------------------------
         // -----Privates-----
         // Managers
-        public SoundManager _soundManager;
+       // public SoundManager _soundManager;
         // Audio
        // private SoundLoudness soundController;
      //   private KeyWordRecognizer wordRecognizer;
@@ -78,8 +78,10 @@ namespace ClassRoomVR {
         // DeltaTime
         private float deltaTime = 0f;
         // Tiempo para empezar a ejecutar la situacion
+        [SerializeField]
         private float timeToStart = 3.0f;
         // Tiempo que tiene el profe para reaccionar a la situacion
+        [SerializeField]
         private float timeToReact = 10.0f;
         // Tiempo que se tarda en resolver la situacion (de cualquier manera)
         private float timeToResolve = 0.0f;
@@ -114,10 +116,10 @@ namespace ClassRoomVR {
             // Iniciamos reconocimiento de voz
             //wordRecognizer = new KeyWordRecognizer();
 
-            _soundManager._vokaturi.StartCollecting();
+            //_soundManager._vokaturi.StartCollecting();
 
             // Iniciamos captura de emoPose
-            emoPose.init();
+            //emoPose.init();
             CSVSerializer.iniFile(sceneInfo.name);
 
             // Data
@@ -163,7 +165,7 @@ namespace ClassRoomVR {
             _teacher.GetComponent<AudioSourceScript>().playClip();
             string t = sceneInfo.iniMessage.Replace("alum", alumsName);
             uiManager.panelContexto(t);
-
+           
             // Comprobacion de errores para volver al menu
             if (_error) loadMenu();
         }
@@ -176,7 +178,7 @@ namespace ClassRoomVR {
                 if (_playing)
                 {
                     deltaTime += Time.deltaTime;
-                    emoPose.update(Time.deltaTime);
+                    //emoPose.update(Time.deltaTime);
                     playSituation();
                     playPathChoosing();
                     playReactionToPath();
@@ -198,14 +200,14 @@ namespace ClassRoomVR {
             if (Input.GetMouseButtonUp(0) && _sceneState == State.ShowFeedBack) endInfo();
 
             //Version VR // 
-            if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ChoosingPath)//Boton B
-            {
-                pause();
-                uiManager.setOptions(!_playing);
-            }
+            //if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ChoosingPath)//Boton B
+            //{
+            //    pause();
+            //    uiManager.setOptions(!_playing);
+            //}
 
             //Boton A
-            if (OVRInput.GetUp(OVRInput.Button.Two) && _sceneState == State.ShowFeedBack) endInfo();
+            //if (OVRInput.GetUp(OVRInput.Button.Two) && (_sceneState == State.ShowFeedBack)) endInfo();
             //if (OVRInput.GetUp(OVRInput.Button.Two) && !_playing) startplaying();
         }
 
@@ -213,10 +215,20 @@ namespace ClassRoomVR {
         //Metodo para cuando se pulsa el boton tras la explicacion de la escena
         public void startplaying()
         {
+            //Ruido alumnos
+            /*_teacher.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+            _teacher.GetComponent<AudioSource>().Play();*/
+
+            //QUE NO SE PISEN LOS SONIDOS
+
+            //Campana antes de clase 
+            _teacher.GetComponent<AudioSource>().clip = sceneInfo.mix_before_bell;
+            _teacher.GetComponent<AudioSource>().Play();
+
             _playing = PlayScene;
             //uiManager.setContext(false);
             playerMotion.enabled = _playing;
-            playerVrMotion.EnableLinearMovement = _playing;
+          //  playerVrMotion.EnableLinearMovement = _playing;
             _sceneState = State.AnimSituation;  //SIGUIENTE ESTADO
         }
 
@@ -233,9 +245,9 @@ namespace ClassRoomVR {
         // Para pausar el juego
         public void pause()//pausar para vR?=
         {
-            _playing = !_playing;
+            /*_playing = !_playing;
             playerMotion.enabled = _playing;
-            playerVrMotion.EnableLinearMovement = _playing;
+            playerVrMotion.EnableLinearMovement = _playing;*/
         }
 
         //-------------------PRIVATES-------------------------
@@ -243,11 +255,11 @@ namespace ClassRoomVR {
         private void endInfo()
         {
 
-            string pitchChange = "Entre el comienzo de la clase y el desarrollo de la situación crítica el tono de voz se vio modificado un " +
-                    (_soundManager._loudness.getSavedAverageSound() * 1000) + " %";
+          //  string pitchChange = "Entre el comienzo de la clase y el desarrollo de la situación crítica el tono de voz se vio modificado un ";
+                    /*(_soundManager._loudness.getSavedAverageSound() * 1000) + " %";
             CSVSerializer.saveData("\n" + pitchChange + "\n");
 
-            CSVSerializer.saveData(_soundManager.processVokaturiInfo());
+            //CSVSerializer.saveData(_soundManager.processVokaturiInfo());
 
             CSVSerializer.saveRcogniceWord();
             _endFeedback = true;
@@ -308,14 +320,14 @@ namespace ClassRoomVR {
                             _teacher.GetComponent<AudioSource>().Play();
                         }
                         _sceneState = State.GeneratePathSettings;   //SIGUIENTE ESTADO
-                        _soundManager._loudness.setCommentFinished();
+                                                                    // _soundManager._loudness.setCommentFinished();
                         deltaTime = 0;
                     }
                 }
             }
             else if (timeToStart == -1 && _sceneState == State.AnimSituation) {  //Caso para discriminar los escenarios sin presentación.
                 _sceneState = State.GeneratePathSettings;
-                _soundManager._loudness.setCommentFinished();
+                // _soundManager._loudness.setCommentFinished();
                 deltaTime = 0;
             }
         }
@@ -353,22 +365,22 @@ namespace ClassRoomVR {
             // Durante la eleccion del camino
             if(_sceneState == State.ChoosingPath)
             {
-                _soundManager._vokaturi.StartCollecting();
+                // _soundManager._vokaturi.StartCollecting();
                 // En casos donde la eleccion del camino es acercarse a los alumnos liantes
                 collisionReaction();
 
                 // Si se toma un camino
                 if (_pathChosen) {
                     _sceneState = State.ReactToPath;    //SIGUIENTE ESTADO
-                    _soundManager._loudness.StopRecordingAndCalculate();
-                } 
+                    //_soundManager._loudness.StopRecordingAndCalculate();
+                }
                 // Se acabo el tiempo de tomar una decision
                 if (deltaTime > timeToReact) {
                     //Debug.Log("Se acabo el tiempo de reaccion");
                     // Si alguno de los caminos era ignorar
                     for(int i = 0; i < sceneInfo.paths.Length; i++) if (sceneInfo.paths[i].ignore) pathReaction(i);
 
-                    _soundManager._loudness.StopRecordingAndCalculate();
+                    //_soundManager._loudness.StopRecordingAndCalculate();
                     deltaTime = 0;
                     _sceneState = State.ReactToPath;   //SIGUIENTE ESTADO
                 }
@@ -381,23 +393,23 @@ namespace ClassRoomVR {
             // Parametros especificos de los caminos
             if (_sceneState == State.GeneratePathSettings)
             {
-                _soundManager._vokaturi.StopCollecting();
-                emoPose.nextInterval();
+                //_soundManager._vokaturi.StopCollecting();
+                //emoPose.nextInterval();
                 for (int i = 0; i < sceneInfo.paths.Length; i++)
                 {
                     // Iniciamos el texto de los caminos a tomar
-                    uiManager.initPanelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
+                    //uiManager.initPanelOpciones(sceneInfo.paths[i].pathInfo, alumsName);
                     // Añadimos las palabras al reconocimiento de voz
-                    _soundManager._recognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
+                    // _soundManager._recognizer.addWordsToKeyWord(sceneInfo.paths[i].keyWords, i, pathReaction);
                 }
 
                 pause();
                 uiManager.setOptions(!_playing);
 
-                _soundManager._recognizer.init();
+                //  _soundManager._recognizer.init();
                 setCollision("");
                 _sceneState = State.ChoosingPath;   //SIGUIENTE ESTADO
-                _soundManager._loudness.startCollecting();
+                                                    // _soundManager._loudness.startCollecting();
             }
         }
 
@@ -424,24 +436,28 @@ namespace ClassRoomVR {
             {
                 // Si no esta el audio ejecutandose se muestra el feedback
                 if (!_teacher.GetComponent<AudioSource>().isPlaying && deltaTime > timeToWait) {
-                    emoPose.nextInterval();
+                    //emoPose.nextInterval();
 
                     // Feedback final
                     string text = selectedPath.feedbackPath.Replace("alum", alumsName);
-                    uiManager.initEndPanel(text, selectedPath.correctPath, timeToResolve);
-                    _teacher.GetComponent<AudioSourceScript>().setClip(selectedPath.finalFeedback);
-                    _teacher.GetComponent<AudioSourceScript>().playClip();
+                    //uiManager.initEndPanel(text, selectedPath.correctPath, timeToResolve);
+                    //_teacher.GetComponent<AudioSourceScript>().setClip(selectedPath.finalFeedback);
+                    //_teacher.GetComponent<AudioSourceScript>().playClip();
 
-
+                    //Campana despues de clase 
+                    _teacher.GetComponent<AudioSource>().clip = sceneInfo.after_bell;
+                    _teacher.GetComponent<AudioSource>().Play();
 
                     // Fin game
-                    _soundManager._vokaturi.StopCollecting();
+                   // _soundManager._vokaturi.StopCollecting();
                     _playing = false;
                     playerMotion.unlockCursor();
                     playerMotion.enabled = _playing;
-                    playerVrMotion.EnableLinearMovement = _playing;
-                    emoPose.saveIntervalsInfo();
-                    _soundManager._vokaturi.fillChart();
+                    //playerVrMotion.EnableLinearMovement = _playing;
+                    //emoPose.saveIntervalsInfo();
+                    // _soundManager._vokaturi.fillChart();
+
+                    //CognitiveVR.Core.SendDataEvent();
                 }
             }
         }
@@ -451,7 +467,7 @@ namespace ClassRoomVR {
         {
             if (!doPathOptionOnce)
             {
-                emoPose.nextInterval();
+                //emoPose.nextInterval();
                 // Audio de respuesta de los estudiantes
                 if (selectedPath.audio != null)
                 {
@@ -493,7 +509,6 @@ namespace ClassRoomVR {
             Debug.Log("Dentro de la coorrutina");
             pathReaction(i);
         }
-        
 
         // Metodo que se llama al detectarse una palabra
         private void pathReaction(int i)
@@ -548,7 +563,7 @@ namespace ClassRoomVR {
 
             int deskPos = 0;
 
-            // Instanciamos los alumnos en sus posiciones de manera aleatoria(el prefab).
+            // Instanciamos los alumnos en sus posiciones de manera aleatoria (el prefab).
             for (int i = 0; i < sceneInfo.nStudents && deskPos < 30; i++) {
                 // Elegimos el sexo del estudiante
                 GameObject pickedStudent;
@@ -691,7 +706,6 @@ namespace ClassRoomVR {
         {
             return _asientosOcupados;
         }
-
         public Vector3 getProblematicIniPos()
         {
             return probIniPos;

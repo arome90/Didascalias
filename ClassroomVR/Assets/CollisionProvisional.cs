@@ -8,7 +8,7 @@ namespace ClassRoomVR
         private void OnTriggerEnter(Collider other)
         {
             Debug.Log("Collision con " + other.GetComponentInParent<Transform>().gameObject.name);
-            GameManager.Instance._sceneManager.setCollision(other.GetComponentInParent<Transform>().gameObject.name);
+           // GameManager.Instance._sceneManager.setCollision(other.GetComponentInParent<Transform>().gameObject.name);
         }
 
         void OnCollisionEnter(Collision other)

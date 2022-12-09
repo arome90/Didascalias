@@ -11,8 +11,7 @@ namespace ClassRoomVR
         [Tooltip("Audio del contexto. Primer audio de la escena.")]
         public AudioClip _contextClip; 
         [Tooltip("Audios posibles en funcion del path elegido.")]
-        public AudioClip[] pathclips;  
+        public AudioClip[] pathclips;
 
-        
     }
 }
