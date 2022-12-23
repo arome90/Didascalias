@@ -1,0 +1,176 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5a46bda3295124c99b0e6537ac7252, type: 3}
+  m_Name: Voice
+  m_EditorClassIdentifier: 
+  _clientAccessToken: DS7FEKH2KPTP76EJPFQUQ77LS4AL673I
+  _appInfo:
+    name: classroom
+    id: 1539749049803011
+    lang: es
+    isPrivate: 0
+    createdAt: 2022-12-12T07:10:48-0800
+    trainingStatus: 1
+    lastTrainDuration: 19
+    lastTrainedAt: 2022-12-19T06:51:43-0800
+    nextTrainAt: 2022-12-19T06:51:24-0800
+    intents:
+    - id: 1669560047161851
+      name: Expulsar
+      entities: []
+    - id: 708815970761168
+      name: Faltar_Respeto
+      entities:
+      - name: Palabras_malas:Palabras_malas
+        id: 1218313562086452
+    - id: 517500816806587
+      name: Posponer_Situacion
+      entities:
+      - name: Futuro:Futuro
+        id: 460255672952016
+    - id: 835287377553041
+      name: cambiar_sitio
+      entities:
+      - name: EspaciosClase:EspaciosClase
+        id: 824347951969974
+      - name: wit$contact:contact
+        id: 8415274241878102
+    - id: 1706561293078114
+      name: sentar
+      entities:
+      - name: EspaciosClase:EspaciosClase
+        id: 824347951969974
+      - name: wit$contact:contact
+        id: 8415274241878102
+    entities:
+    - name: EspaciosClase
+      id: 1773729506335513
+      lookups:
+      - keywords
+      roles:
+      - name: EspaciosClase
+        id: 824347951969974
+      keywords:
+      - keyword: esquina
+        synonyms:
+        - esquina
+      - keyword: fondo
+        synonyms:
+        - atras
+        - fondo
+      - keyword: fuera
+        synonyms:
+        - fuera
+      - keyword: sitio
+        synonyms:
+        - lugar
+        - pupitre
+        - silla
+        - sitio
+    - name: Futuro
+      id: 1499532083877042
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Futuro
+        id: 460255672952016
+      keywords:
+      - keyword: luego
+        synonyms:
+        - luego
+    - name: Palabras_malas
+      id: 446980634292094
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Palabras_malas
+        id: 1218313562086452
+      keywords:
+      - keyword: gilipollas
+        synonyms:
+        - cabron
+        - "co\xF1o"
+        - culo
+        - gilipollas
+        - hijo de puta
+        - mierda
+        - polla
+        - puta
+        - retrasado
+        - tonto
+        - tus muertos
+    - name: wit$contact
+      id: 5367a164-cfc3-466e-84cb-add680abfc7b
+      lookups: []
+      roles:
+      - name: contact
+        id: 8415274241878102
+      keywords: []
+    traits: []
+    voices:
+    - name: Charlie
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - fast
+      - projected
+    - name: Cooper
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+    - name: Prospector
+      locale: en_US
+      gender: male
+      styles:
+      - default
+    - name: Rebecca
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+    - name: Vampire
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+  _configurationId: 7f01c972-8790-490f-a921-7d43a7fa1fce
+  timeoutMS: 10000
+  endpointConfiguration:
+    uriScheme: 
+    authority: 
+    port: 0
+    witApiVersion: 
+    speech: 
+    message: 
+    dictation: 
+  isDemoOnly: 0
+  useConduit: 1
+  _manifestLocalPath: ConduitManifest-534e33a1-76ca-4d6b-904a-d8d87db28c9f.json
+  excludedAssemblies: []
+  relaxedResolution: 0
