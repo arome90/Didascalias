@@ -68,5 +68,8 @@ namespace ClassRoomVR {
         //-----
         [Header("Posibles paths a tomar por el profesor")]
         public PathPackage[] paths;
+
+        public GameObject scene;
+
     }
 }

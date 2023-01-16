@@ -9,9 +9,12 @@ namespace ClassRoomVR
     {
         public GameObject PackTriade_Obj;  //Objeto "PackMenu"
         public GameObject packB; //Objetos PackI
+        public Vector3 position;
+        public Vector3 rotation;
 
         public void PlayButton()
         {
+            transform.SetLocalPositionAndRotation(position, Quaternion.Euler(rotation));
             for (int i = 0; i < GameManager.Instance.getNPacks(); i++)
             {
                 createPackButton(i);
@@ -41,6 +44,7 @@ namespace ClassRoomVR
         //Y en la z -99999 , por lo demas va perfect
         private void createPackButton(int i)
         {
+            
             GameObject a = Instantiate(packB, PackTriade_Obj.transform);
             a.name = i.ToString();
             a.GetComponent<Button>().onClick.AddListener(delegate { PackButton(i); });
@@ -49,6 +53,7 @@ namespace ClassRoomVR
             text.text = GameManager.Instance.getpackName(i);
             a.transform.localScale = new Vector3(1, 1, 1);
             a.gameObject.transform.localScale = new Vector3(1, 1, 1);
+
 
         }
     }

@@ -31,13 +31,14 @@ namespace ClassRoomVR
         Animator animator;
         AudioSource audio;
         NavMeshAgent agent;
-
+        Collider collider;
         Vector3 dest;
         private void Start()
         {
             audio = GetComponent<AudioSource>();
             agent = GetComponent<NavMeshAgent>();
             state = State.Sit;
+            
         }
         public void SetParameters(string na, int s)
         {
@@ -65,7 +66,7 @@ namespace ClassRoomVR
             {
                 animator.runtimeAnimatorController = controller;
             }
-           
+           collider= transform.GetChild(1).GetComponent<Collider>();
         }
 
 
@@ -157,11 +158,19 @@ namespace ClassRoomVR
             
         }
 
+
         public void ChangeDesk(Vector3 pos)
         {
             deskPosition = pos;
-            animator.SetBool("onFoot", true);
-            StartCoroutine(OnCompleteStandChange());
+            if (state == State.Stand)
+            {
+                SitBack();
+            }
+            else
+            {
+                animator.SetBool("onFoot", true);
+                StartCoroutine(OnCompleteStandChange());
+            }
         }
 
         IEnumerator OnCompleteStandChange()
@@ -172,6 +181,7 @@ namespace ClassRoomVR
             SitBack();
         }
 
+        public Collider GetCollider() { return collider; }
     }
 
 }

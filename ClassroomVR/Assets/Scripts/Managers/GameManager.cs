@@ -34,6 +34,7 @@ namespace ClassRoomVR
             return _classInfo;
         }
 
+        
         public bool getVR()
         {
             return VRHardware;
@@ -83,7 +84,10 @@ namespace ClassRoomVR
         {
             return classManager;
         }
-
+        public void setClass(ClassManager cl)
+        {
+            classManager = cl;
+        }
 
         /// ATRIBUTOS ESTATICOS ///
         public static GameManager Instance;
@@ -93,7 +97,7 @@ namespace ClassRoomVR
         public ScenePackage[] _packeges;
         public ClassInfo _classInfo;
         public bool VRHardware = false;
-
+        public VoiceActivation voice;
         private ScenePackage chosenPack;
         UIManager UIManager;
         GameObject player;

@@ -24,6 +24,7 @@ namespace Meta.WitAi.Samples.Shapes
             if (intent == "change_color")
             {
                 var colorString = WitResultUtilities.GetAllEntityValues(response, "color:color");
+                
                 var shapeString = WitResultUtilities.GetAllEntityValues(response, "shape:shape");
 
                 if (colorString.Length != shapeString.Length)

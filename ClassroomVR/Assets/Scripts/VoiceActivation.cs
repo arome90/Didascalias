@@ -2,21 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Meta.WitAi;
+using Meta.WitAi.Json;
 
-public class VoiceActivation : MonoBehaviour
+namespace ClassRoomVR
 {
-    private Wit wit ;
-
-    private void Start()
+    public class VoiceActivation : MonoBehaviour
     {
-        wit = GetComponent<Wit>();
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.V)) 
+        private Wit wit;
+        bool shout;
+        private void Start()
         {
+            wit = GetComponent<Wit>();
+
+        }
+
+
+
+        public void OnResponse(WitResponseNode response)
+        {
+
+            if (!string.IsNullOrEmpty(response["text"]))
+            {
+                Debug.Log("I heard: " + response["text"]);
+            }
+            else
+            {
+                Debug.Log(
+                     "Try pressing the Activate button and saying ");
+            }
+        }
+
+
+        public void ActivateWit()
+        {
+            Debug.Log("Habla");
             wit.Activate();
         }
+
+        public void OnMicLevelChanged(float a)
+        {
+            if (!shout && a > 0.05f)
+            {
+                shout = true;
+                GameManager.Instance.GetClassManager().SetMode(ClassManager.TalkMode.Disrespect);
+                Debug.Log("Gritando");
+            }
+
+        }
+
+
+
+
+
     }
 
 }
