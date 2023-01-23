@@ -9,7 +9,6 @@ namespace ClassRoomVR {
         public string[] boysNames;
         [Tooltip("Nombres de alumnos femeninos")]
         public string[] girlsNames;
-
         [Tooltip("Prefabs de alumnos masculinos")]
         public GameObject[] boysPrefabs;
         [Tooltip("Prefabs de alumnos femeninos")]

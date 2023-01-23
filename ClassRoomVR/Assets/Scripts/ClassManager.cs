@@ -40,13 +40,14 @@ namespace ClassRoomVR
             StartScene();
         }
 
-
+        //Genera los alumnos de la clase en sus posiciones
         private void generateChilds()
         {
             ScenePackage sceneInfo = GameManager.Instance.getPack();
             ClassInfo classInfo = GameManager.Instance.getClass();
             Instantiate(sceneInfo.scene);
-
+            //Se usan listas para tener una lista auxiliar de la que se eliminan sus componentes
+            //De esta manera no se repite ningun nombre ni body hasta que se agoten
             List<List<string>> names = new List<List<string>>();
             names.Add(classInfo.girlsNames.ToList());
             names.Add(classInfo.boysNames.ToList());
@@ -152,8 +153,6 @@ namespace ClassRoomVR
                 _students.ElementAt(problematic).Value.SetProblematicStudent();
             }   // end estudiantes problematicos
 
-            //probIniPos = _students[_problematicStudents[0]].gameObject.transform.position;
-
             // Ejecutamos animaciones con distinto timing
             PlayAnimationsAtDifferentTimeClass(classInfo.idleAnim.name);
         }
@@ -189,6 +188,209 @@ namespace ClassRoomVR
             //uiManager.panelContexto(t);
         }
 
+       
+        public Student[] GetStudents() { return _students.Values.ToArray(); }
+
+
+        /// <summary>
+        /// Orden de mandar a cambiar de sitio
+        /// </summary>
+        /// <param name="values"></param>
+        public void SendChangeDesk(string[] values)
+        {
+            Student stu1 = SearchName(values[0]);
+            Student stu2 = SearchName(values[1]);
+            if(stu1 !=null && stu2!=null)ChangeDesk(stu1, stu2);
+        }
+
+        /// <summary>
+        /// Cambio de sitio entre dos alumnos
+        /// </summary>
+        /// <param name="stu1"></param>
+        /// <param name="stu2"></param>
+        private void ChangeDesk(Student stu1, Student stu2)
+        {
+            Vector3 pos1 = stu1.GetDesk();
+            Vector3 pos2 = stu2.GetDesk();
+            stu1.ChangeDesk(pos2);
+            stu2.ChangeDesk(pos1);
+        }
+
+        /// <summary>
+        /// Busca un estudiante por su nombre 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="numSearch"></param>
+        /// <returns> devuelve el estdiante. Si no lo encuentra devuelve al problematico </returns>
+        private Student SearchName(string name)
+        {
+            string n = StringExtensions.SinTildes(name);
+            if (_students.ContainsKey(n))
+            {
+                return _students[n];
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Devuelve la lista de todos los alumnos que estan en la vision del profe
+        /// </summary>
+        /// <returns></returns>
+        public List<string>  StudentsOnVision()
+        {
+            Plane[] cameraFrustum;
+            List<string> names ;
+            names = new List<string>();
+            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(camera);
+
+            foreach (Student s in _students.Values)
+            {
+                var bounds = s.GetCollider().bounds;
+                bounds.center += new Vector3(0, 1f, 0);
+                if (GeometryUtility.TestPlanesAABB(cameraFrustum, bounds))
+                {
+                    names.Add(s.GetName());
+
+                }
+            }
+            return names;
+        }
+
+        /// <summary>
+        /// Detecta si un alumno esta en el campo de vision del profesor
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public bool IsStudentOnVision(Student s) 
+        {
+            Plane[] cameraFrustum;
+            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(camera);
+            var bounds = s.GetCollider().bounds;
+            bounds.center += new Vector3(0, 1f, 0);
+            return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
+        }
+
+
+        //Gestion de las ordenes del profesor
+        public void UpdateClass(WitResponseNode response)
+        {
+            var intent = WitResultUtilities.GetIntentName(response);
+            var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");
+            switch (intent) 
+            {
+                case "Sit":
+
+                    if (alumnos.Length > 1)
+                    {
+                        SendChangeDesk(alumnos);
+                    }
+                    else
+                    {
+                     
+
+                        Student stu;
+                        if (alumnos.Length > 0)
+                        {
+                            stu = SearchName(alumnos[0]);
+
+                        }
+                        else stu = _students[_problematicStudents.First()];
+
+                        if (stu != null)
+                        {
+                            stu.SitBack();
+                        }
+
+                    }
+
+                    break;
+                case "Move":
+                    if (alumnos.Length > 1)
+                    {
+                        SendChangeDesk(alumnos);
+                    }
+                    else
+                    {
+                        string place = WitResultUtilities.GetFirstEntityValue(response, "places:places");
+                        Transform pos = Place(place);
+                        if (pos != null)
+                        {
+                           
+
+                            Student stu;
+                            if (alumnos.Length > 0)
+                            {
+                                stu = SearchName(alumnos[0]);
+
+                            }
+                            else stu = _students[_problematicStudents.First()];
+
+                            if (stu != null)
+                            {
+                                stu.MoveTo(pos.position);
+                            }
+                        }
+                    }
+                    break;
+                case "Postpone":
+                    Debug.Log("Posponer situacion");
+                    mode = TalkMode.Good;
+                    break;
+                case "Expel":
+                    {
+                        Student stu ;
+                        if (alumnos.Length >  0)
+                        {
+                            stu = SearchName(alumnos[0]);
+                           
+                        }
+                        else stu = _students[_problematicStudents.First()];
+
+                        if (stu != null) 
+                        {
+                            stu.MoveTo(door.position);
+                        }
+                        break;
+                    }  
+                case "Disrespect":
+                    Debug.Log("Has faltado el respeto");
+                    mode = TalkMode.Disrespect;
+                    break;
+                case "Calm":
+                    Debug.Log("Has hablado bien ");
+                    mode = TalkMode.Good;
+                    break;
+
+            }
+           
+        }
+
+        private Transform Place(string place) 
+        {
+            Transform trplace=null;
+            switch (place) 
+            {
+                case "fondo":
+                    trplace= backCorner;
+                    break;
+                case "esquina":
+                    trplace= frontSide;
+                    break;
+            }
+            return trplace;
+        }
+
+        public TalkMode GetMode() 
+        {
+            return mode;
+        }
+
+        public void SetMode(TalkMode value)
+        {
+            mode=value;
+        }
+
         //private void Update()
         //{
         //    if (Input.GetKeyDown(KeyCode.B))
@@ -213,144 +415,6 @@ namespace ClassRoomVR
 
         //    //}
         //}
-        public Student[] GetStudents() { return _students.Values.ToArray(); }
-
-
-        public void SendChangeDesk(string[] values)
-        {
-            Student stu1 = SearchName(values[0]);
-            Student stu2 = SearchName(values[1]);
-            ChangeDesk(stu1, stu2);
-        }
-
-
-        private void ChangeDesk(Student stu1, Student stu2)
-        {
-            Vector3 pos1 = stu1.GetDesk();
-            Vector3 pos2 = stu2.GetDesk();
-            stu1.ChangeDesk(pos2);
-            stu2.ChangeDesk(pos1);
-        }
-
-
-        private Student SearchName(string name, int numSearch = 0)
-        {
-            string n = StringExtensions.SinTildes(name);
-            if (_students.ContainsKey(n))
-            {
-                return _students[n];
-            }
-            //return problematic student or student that you are seeing
-            return _students[_problematicStudents.ElementAt(numSearch)];
-        }
-
-
-
-        public List<string>  StudentsOnVision()
-        {
-            Plane[] cameraFrustum;
-            List<string> names ;
-            names = new List<string>();
-            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(camera);
-
-            foreach (Student s in _students.Values)
-            {
-                var bounds = s.GetCollider().bounds;
-                bounds.center += new Vector3(0, 1f, 0);
-                if (GeometryUtility.TestPlanesAABB(cameraFrustum, bounds))
-                {
-                    names.Add(s.GetName());
-
-                }
-            }
-            return names;
-        }
-
-        public bool IsStudentOnVision(Student s) 
-        {
-            Plane[] cameraFrustum;
-            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(camera);
-            var bounds = s.GetCollider().bounds;
-            bounds.center += new Vector3(0, 1f, 0);
-            return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
-        }
-
-
-
-        public void UpdateClass(WitResponseNode response)
-        {
-            var intent = WitResultUtilities.GetIntentName(response);
-            var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");
-            switch (intent) 
-            {
-                case "Sit":
-
-                    if (alumnos.Length>1)
-                    {
-                        SendChangeDesk(alumnos);
-                    }
-                    else SearchName(alumnos[0]).SitBack();
-
-                    break;
-                case "Move":
-                    if (alumnos.Length > 1)
-                    {
-                        SendChangeDesk(alumnos);
-                    }
-                    else
-                    {
-                        string place = WitResultUtilities.GetFirstEntityValue(response, "places:places");
-                        Transform pos = Place(place);
-                        if (pos != null)
-                        {
-                            SearchName(alumnos[0]).MoveTo(pos.position);
-                        }
-                    }
-                    break;
-                case "Postpone":
-                    Debug.Log("Posponer situacion");
-                    mode = TalkMode.Good;
-                    break;
-                case "Expel":
-                    SearchName(alumnos[0]).MoveTo(door.position);
-                    break;
-                case "Disrespect":
-                    Debug.Log("Has faltado el respeto");
-                    mode = TalkMode.Disrespect;
-                    break;
-                case "Calm":
-                    Debug.Log("Has hablado bien ");
-                    mode = TalkMode.Good;
-                    break;
-
-            }
-           
-        }
-
-        private Transform Place(string place) 
-        {
-            switch (place) 
-            {
-                case "fondo":
-                    return backCorner;
-                    break;
-                case "esquina":
-                    return frontSide;
-                    break;
-            }
-            return null;
-        }
-
-        public TalkMode GetMode() 
-        {
-            return mode;
-        }
-
-        public void SetMode(TalkMode value)
-        {
-            mode=value;
-        }
-
     }
 }
         public static class StringExtensions

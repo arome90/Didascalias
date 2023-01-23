@@ -7,19 +7,19 @@ using UnityEngine.Events;
 
 namespace ClassRoomVR
 {
-    
+
     [System.Serializable]
     public class Student : MonoBehaviour
     {
         public enum Sex { Women, Men };
-        private enum State {Sit,Stand};
+        private enum State { Sit, Stand };
         State state;
         [SerializeField] Sex sex;
         [SerializeField] string name;
-        [SerializeField] bool problematic=false;
+        [SerializeField] bool problematic = false;
 
         [SerializeField] TextMesh text;
-        
+
 
         [SerializeField] RigLayer rig;
 
@@ -38,7 +38,7 @@ namespace ClassRoomVR
             audio = GetComponent<AudioSource>();
             agent = GetComponent<NavMeshAgent>();
             state = State.Sit;
-            
+
         }
         public void SetParameters(string na, int s)
         {
@@ -46,7 +46,7 @@ namespace ClassRoomVR
             transform.name = na;
             text.text = na;
             sex = (Sex)s;
-            
+
 
         }
 
@@ -55,57 +55,53 @@ namespace ClassRoomVR
         {
             GameObject body = Instantiate(obj, transform);
             body.AddComponent<MeshCollider>();
+            //Para añadir los rigbuilder necesarios para girar la cabeza o seguir con los ojos un objeto 
             //obj.AddComponent<RigBuilder>();
             //if (rig != null)
             //{
             //    obj.GetComponent<RigBuilder>().layers.Add(rig);
             //}
 
-             animator = body.GetComponent<Animator>();
+            animator = body.GetComponent<Animator>();
             if (animator != null)
             {
                 animator.runtimeAnimatorController = controller;
             }
-           collider= transform.GetChild(1).GetComponent<Collider>();
+            collider = transform.GetChild(1).GetComponent<Collider>();
         }
 
 
-        
+
         public void SetProblematicStudent()
         {
             text.color = Color.red;
             problematic = true;
         }
 
-        public bool GetProblematicStudent()
-        {
-            return problematic;
-        }
 
         public void SetDesk(Vector3 pos)
         {
             deskPosition = pos;
         }
 
-        public Vector3 GetDesk()
-        {
-            return deskPosition;
-        }
-
+        public Vector3 GetDesk() { return deskPosition; }
         public Sex GetSex() { return sex; }
         public string GetName() { return name; }
+        public Collider GetCollider() { return collider; }
+        public bool GetProblematicStudent() { return problematic; }
+        public AudioSource getAudio() { return audio; }
+
+    
+
+
 
         public void PlayAnimation(string stateName) 
         {
             animator.Play(stateName);
-
         }
 
-        public AudioSource getAudio()
-        {
-            return audio;
-        }
-
+        
+        //Corrutina para completar moviemitno
         IEnumerator OnCompleteMove()
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
@@ -119,7 +115,7 @@ namespace ClassRoomVR
             agent.enabled = false;
             state = State.Stand;
         }
-
+        //Corrutina para completar accion de sentarse
         IEnumerator OnCompleteSitBack()
         {
             while (Vector3.Distance(transform.position, deskPosition) > 0.1f)
@@ -133,6 +129,7 @@ namespace ClassRoomVR
             state = State.Sit;
         }
 
+        //Sentarse en tu sitio
         public void SitBack() 
         {
             agent.enabled = true;
@@ -141,6 +138,10 @@ namespace ClassRoomVR
             StartCoroutine(OnCompleteSitBack());
 
         }
+        /// <summary>
+        /// Moverse a la posicion des
+        /// </summary>
+        /// <param name="des"></param>
         public void MoveTo(Vector3 des)
         {
             agent.enabled = true;
@@ -158,7 +159,7 @@ namespace ClassRoomVR
             
         }
 
-
+        //Cambiar de asiento 
         public void ChangeDesk(Vector3 pos)
         {
             deskPosition = pos;
@@ -172,7 +173,7 @@ namespace ClassRoomVR
                 StartCoroutine(OnCompleteStandChange());
             }
         }
-
+        //Corrutina para completar accion de cambiar sitio
         IEnumerator OnCompleteStandChange()
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
@@ -181,7 +182,6 @@ namespace ClassRoomVR
             SitBack();
         }
 
-        public Collider GetCollider() { return collider; }
     }
 
 }

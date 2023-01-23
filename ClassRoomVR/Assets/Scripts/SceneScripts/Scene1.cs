@@ -28,12 +28,20 @@ namespace ClassRoomVR
             classManager.GetComponent<AudioSource>().Play();
         }
 
+        /// <summary>
+        /// Invoca un metodo en x segundos y empieza una corrutina para controlar si el profesor deja de
+        /// observar al alumno durante unos segunos 
+        /// </summary>
+        /// <param name="time"></param>
         public void Ignore(float time) 
         {
             Invoke("IgnoreTime", time);
-            StartCoroutine(IgnoreStudent());        
-            
+            StartCoroutine(IgnoreStudent());            
         }
+        /// <summary>
+        /// Invocacion para elegir el camino de ignore si no
+        /// se ha elegido otro antes
+        /// </summary>
         void IgnoreTime() 
         {
             if ((int)bh.GetVariable("Path").GetValue() < 0)
@@ -43,6 +51,10 @@ namespace ClassRoomVR
                 player.GetComponent<AudioSource>().Play();
             }
         }
+        /// <summary>
+        /// Corrutina para controlar si el profesor ignora al alumno
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator IgnoreStudent()
         {
             yield return new WaitUntil(() => !classManager.IsStudentOnVision(problematic));
@@ -61,13 +73,16 @@ namespace ClassRoomVR
 
 
 
-
+        /// <summary>
+        /// Metodo para controlar el camino . Acercarse y hablar bien 
+        /// </summary>
         public void Near()
         {
             if (classManager.GetMode()==ClassManager.TalkMode.Good && Vector3.Distance(problematic.transform.position,player.transform.position)<= distanceInitial/2)
             {
                 bh.GetVariable("Path").SetValue(1);
                 Student[] students = classManager.GetStudents();
+                //Salen los demas alumnos de clase 
                 for (int i =0;i < students.Length; i++)
                 {
                     if(!students[i].GetProblematicStudent())StartCoroutine(WaitAndExit(students[i], i));
@@ -75,13 +90,16 @@ namespace ClassRoomVR
             }
         }
 
-
+        //Salida de un alumno de clase en x segundos 
         IEnumerator WaitAndExit(Student st,float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
             st.MoveTo(classManager.door.position);
         }
 
+        /// <summary>
+        /// Metodo para controlar el camino  . Grito o falta de respeto
+        /// </summary>
         public void Shout() 
         {
             if (classManager.GetMode()==ClassManager.TalkMode.Disrespect)
@@ -93,7 +111,9 @@ namespace ClassRoomVR
             }
         }
 
-
+        /// <summary>
+        /// Inicia la situacion 
+        /// </summary>
         public void InitSituation()
         {
             Student[]students = classManager.GetStudents();
@@ -120,7 +140,7 @@ namespace ClassRoomVR
             
         }
 
-
+        //Suena el clip de sonrisas 
         void Risas() 
         {
             if (sceneInfo.audioReaccionClase != null)
@@ -130,6 +150,7 @@ namespace ClassRoomVR
             }
         }
 
+        //Termina la clase
         public void Termina() 
         {
             classManager.GetComponent<AudioSource>().clip = sceneInfo.after_bell;

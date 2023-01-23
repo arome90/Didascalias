@@ -11,7 +11,7 @@ public class GameMenuManager : MonoBehaviour
     public InputActionProperty showButton;
    
 
-    // Update is called once per frame
+    //Script para controlar el pausa
     void Update()
     {
 

@@ -9,6 +9,7 @@ using UnityEngine.XR.Management;
 
 namespace Unity.Template.VR
 {
+    //Script para controlar la inicializacion de las gafas VR
     internal class XRPlatformControllerSetup : MonoBehaviour
     {
         [SerializeField]

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Meta.WitAi;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -89,6 +90,13 @@ namespace ClassRoomVR
             classManager = cl;
         }
 
+
+        public void SetVoiceActivation(VoiceActivation voi)
+        {
+            //Presentamos  Wit al GameManager
+            voice = voi;
+        }
+
         /// ATRIBUTOS ESTATICOS ///
         public static GameManager Instance;
 
@@ -99,6 +107,7 @@ namespace ClassRoomVR
         public bool VRHardware = false;
         public VoiceActivation voice;
         private ScenePackage chosenPack;
+        private Wit wit;
         UIManager UIManager;
         GameObject player;
         [SerializeField] ClassManager classManager;

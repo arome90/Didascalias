@@ -13,6 +13,7 @@ namespace ClassRoomVR
         private void Start()
         {
             wit = GetComponent<Wit>();
+            GameManager.Instance.SetVoiceActivation(this);
 
         }
 
@@ -28,7 +29,7 @@ namespace ClassRoomVR
             else
             {
                 Debug.Log(
-                     "Try pressing the Activate button and saying ");
+                     "I dont heard ");
             }
         }
 
@@ -49,10 +50,6 @@ namespace ClassRoomVR
             }
 
         }
-
-
-
-
 
     }
 

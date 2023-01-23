@@ -20,81 +20,66 @@ MonoBehaviour:
     isPrivate: 0
     createdAt: 2022-12-12T07:10:48-0800
     trainingStatus: 1
-    lastTrainDuration: 19
-    lastTrainedAt: 2022-12-19T06:51:43-0800
-    nextTrainAt: 2022-12-19T06:51:24-0800
+    lastTrainDuration: 35
+    lastTrainedAt: 2023-01-16T05:23:43-0800
+    nextTrainAt: 2023-01-16T05:23:08-0800
     intents:
-    - id: 1669560047161851
-      name: Expulsar
-      entities: []
+    - id: 1374575396691295
+      name: Calm
+      entities:
+      - name: wit$contact:student
+        id: 8415274241878102
     - id: 708815970761168
-      name: Faltar_Respeto
+      name: Disrespect
       entities:
-      - name: Palabras_malas:Palabras_malas
+      - name: badwords:badwords
         id: 1218313562086452
-    - id: 517500816806587
-      name: Posponer_Situacion
+    - id: 1669560047161851
+      name: Expel
       entities:
-      - name: Futuro:Futuro
-        id: 460255672952016
-    - id: 835287377553041
-      name: cambiar_sitio
-      entities:
-      - name: EspaciosClase:EspaciosClase
+      - name: places:places
         id: 824347951969974
-      - name: wit$contact:contact
+      - name: wit$contact:student
+        id: 8415274241878102
+    - id: 835287377553041
+      name: Move
+      entities:
+      - name: places:places
+        id: 824347951969974
+      - name: wit$contact:student
+        id: 8415274241878102
+    - id: 517500816806587
+      name: Postpone
+      entities:
+      - name: future:future
+        id: 460255672952016
+    - id: 493301599643626
+      name: Punishment
+      entities:
+      - name: wit$contact:student
+        id: 8415274241878102
+    - id: 1058709448858617
+      name: Separate
+      entities:
+      - name: godwords:godwords
+        id: 828007308263470
+      - name: wit$contact:student
         id: 8415274241878102
     - id: 1706561293078114
-      name: sentar
+      name: Sit
       entities:
-      - name: EspaciosClase:EspaciosClase
+      - name: places:places
         id: 824347951969974
-      - name: wit$contact:contact
+      - name: wit$contact:student
         id: 8415274241878102
     entities:
-    - name: EspaciosClase
-      id: 1773729506335513
-      lookups:
-      - keywords
-      roles:
-      - name: EspaciosClase
-        id: 824347951969974
-      keywords:
-      - keyword: esquina
-        synonyms:
-        - esquina
-      - keyword: fondo
-        synonyms:
-        - atras
-        - fondo
-      - keyword: fuera
-        synonyms:
-        - fuera
-      - keyword: sitio
-        synonyms:
-        - lugar
-        - pupitre
-        - silla
-        - sitio
-    - name: Futuro
-      id: 1499532083877042
-      lookups:
-      - free-text
-      - keywords
-      roles:
-      - name: Futuro
-        id: 460255672952016
-      keywords:
-      - keyword: luego
-        synonyms:
-        - luego
-    - name: Palabras_malas
+    - name: badwords
       id: 446980634292094
       lookups:
       - free-text
       - keywords
       roles:
-      - name: Palabras_malas
+      - name: badwords
         id: 1218313562086452
       keywords:
       - keyword: gilipollas
@@ -110,11 +95,64 @@ MonoBehaviour:
         - retrasado
         - tonto
         - tus muertos
+        - vete a la mierda
+    - name: future
+      id: 1499532083877042
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: future
+        id: 460255672952016
+      keywords:
+      - keyword: luego
+        synonyms:
+        - luego
+    - name: godwords
+      id: 727337748711628
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: godwords
+        id: 828007308263470
+      keywords:
+      - keyword: por favor
+        synonyms:
+        - haced el favor
+        - os pido que
+        - por favor
+        - si sois tan amables
+    - name: places
+      id: 1773729506335513
+      lookups:
+      - keywords
+      roles:
+      - name: places
+        id: 824347951969974
+      keywords:
+      - keyword: esquina
+        synonyms:
+        - esquina
+      - keyword: fondo
+        synonyms:
+        - atras
+        - fondo
+      - keyword: fuera
+        synonyms:
+        - fuera
+        - fuera de clase
+      - keyword: sitio
+        synonyms:
+        - lugar
+        - pupitre
+        - silla
+        - sitio
     - name: wit$contact
       id: 5367a164-cfc3-466e-84cb-add680abfc7b
       lookups: []
       roles:
-      - name: contact
+      - name: student
         id: 8415274241878102
       keywords: []
     traits: []

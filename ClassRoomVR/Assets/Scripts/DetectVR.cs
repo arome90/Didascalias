@@ -8,7 +8,7 @@ namespace ClassRoomVR {
     {
         public GameObject playerVR;
         public GameObject player;
-        // Start is called before the first frame update
+        //Si se puede inicializar correctamente las gafas . Elige al player en modo VR
         void Awake()
         {
             if (GameManager.Instance.getVR())
