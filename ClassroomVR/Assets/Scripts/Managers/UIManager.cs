@@ -9,14 +9,14 @@ namespace ClassRoomVR
         //-----Publics-------
         [Header("Objectos Normales")]
         // Contexto
-        public Text textContexto;
+        [SerializeField] Text textContexto;
         // Caminos
-        public GameObject ObjectOpciones;
-        public List<Text> OptionsTexts;
+        [SerializeField] GameObject ObjectOpciones;
+        [SerializeField] List<Text> OptionsTexts;
         // Final
-        public GameObject panelFinal;
-        public Text textFinal;
-        public List<GameObject> finalButtons;
+        [SerializeField] GameObject panelFinal;
+        [SerializeField] Text textFinal;
+        [SerializeField] List<GameObject> finalButtons;
 
         //------Metodos---------
 

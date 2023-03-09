@@ -24,9 +24,9 @@ namespace ClassRoomVR
         void Start()
         {
             bh = GetComponent<BehaviorTree>();
-            sceneInfo = GameManager.Instance._packeges[0];
+            sceneInfo = GameManager.Instance.GetScenePackage(0);
             player = GameManager.Instance.GetPlayer();
-            voice = GameManager.Instance.voice;
+            voice = GameManager.Instance.GetVoiceActivation();
             classManager = GameManager.Instance.GetClassManager();
             classManager.GetComponent<AudioSource>().clip = sceneInfo.before_bell;
             classManager.GetComponent<AudioSource>().Play();
@@ -42,7 +42,7 @@ namespace ClassRoomVR
                 {
                     pro--;
                     problematic = students[i];
-                    problematic.MoveTo(classManager.frontSide.position);
+                    problematic.MoveTo(classManager.GetStudentsController().FrontSide.position);
 
                 }
                 i++;
@@ -73,9 +73,9 @@ namespace ClassRoomVR
         }
         public IEnumerator IgnoreStudent()
         {
-            yield return new WaitUntil(() => !classManager.IsStudentOnVision(problematic));
+            yield return new WaitUntil(() => !classManager.GetStudentsController().IsStudentOnVision(problematic));
             yield return new WaitForSecondsRealtime(3);
-            if (!classManager.IsStudentOnVision(problematic))
+            if (!classManager.GetStudentsController().IsStudentOnVision(problematic))
             {
                 bh.GetVariable("Path").SetValue(3);
                 player.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
@@ -92,7 +92,7 @@ namespace ClassRoomVR
 
         public void Near()
         {
-            if (classManager.GetMode() == ClassManager.TalkMode.Good && Vector3.Distance(problematic.transform.position, player.transform.position) <= distanceInitial / 2)
+            if (classManager.GetStudentsController().GetMode() == StudentsController.TalkMode.Good && Vector3.Distance(problematic.transform.position, player.transform.position) <= distanceInitial / 2)
             {
                 bh.GetVariable("Path").SetValue(1);
                 Student[] students = classManager.GetStudents();
@@ -107,12 +107,12 @@ namespace ClassRoomVR
         IEnumerator WaitAndExit(Student st, float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            st.MoveTo(classManager.door.position);
+            st.MoveTo(classManager.GetStudentsController().Door.position);
         }
 
         public void Shout()
         {
-            if (classManager.GetMode() == ClassManager.TalkMode.Disrespect)
+            if (classManager.GetStudentsController().GetMode() == StudentsController.TalkMode.Disrespect)
             {
                 bh.GetVariable("Path").SetValue(2);
                 classManager.GetComponent<AudioSource>().clip = ruido;

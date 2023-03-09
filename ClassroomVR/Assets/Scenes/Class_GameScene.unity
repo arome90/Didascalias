@@ -125,6 +125,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &13916993 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8785479453160636918, guid: 30026254a41da3f4eb202264ab31261c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1613999403}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &18730239
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,6 +211,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 18730239}
   m_CullTransparentMesh: 0
+--- !u!4 &82599649 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4000011755943050, guid: 30026254a41da3f4eb202264ab31261c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1613999403}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &128877516 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5581032517494173820, guid: 471dd5739fe98f8408cfe062aafa18ba,
@@ -704,12 +716,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!4 &692672147 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4000012495788918, guid: 30026254a41da3f4eb202264ab31261c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1613999403}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &854486040 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8032100570058719187, guid: c5c391686e921054285eb63eca09ace1,
@@ -940,8 +946,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1899928209}
-          m_TargetAssemblyTypeName: ClassRoomVR.ClassManager, Assembly-CSharp
+        - m_Target: {fileID: 1899928212}
+          m_TargetAssemblyTypeName: ClassRoomVR.StudentsController, Assembly-CSharp
           m_MethodName: UpdateClass
           m_Mode: 0
           m_Arguments:
@@ -2453,6 +2459,21 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1613999403}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1796462726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13916993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc50f2e997736a48b26bc984fb101d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groups: 0
+  F: 0
+  C: 0
 --- !u!1 &1831266367 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6910466297940059788, guid: d521b5e698c6bb8448997e28dd47a17b,
@@ -2865,6 +2886,7 @@ GameObject:
   - component: {fileID: 1899928210}
   - component: {fileID: 1899928209}
   - component: {fileID: 1899928211}
+  - component: {fileID: 1899928212}
   m_Layer: 0
   m_Name: Students
   m_TagString: Untagged
@@ -2887,9 +2909,7 @@ MonoBehaviour:
   studentsPositions: {fileID: 1796462725}
   prefabStudent: {fileID: 9019673390633054933, guid: 9f267a2b04d8de5439269014065ea1d0,
     type: 3}
-  frontSide: {fileID: 509912279}
-  backCorner: {fileID: 1403649777}
-  door: {fileID: 692672147}
+  desksManager: {fileID: 1796462726}
 --- !u!4 &1899928210
 Transform:
   m_ObjectHideFlags: 0
@@ -3001,6 +3021,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1899928212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899928208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54cbeb99cecd72045bc9f35fc4dded71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontSide: {fileID: 509912279}
+  backCorner: {fileID: 1403649777}
+  door: {fileID: 82599649}
 --- !u!1001 &1906091840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3108,7 +3143,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _packeges.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: b4898579cf1b6e54c868b37e9904c093,
+      objectReference: {fileID: 11400000, guid: 8831e49bd3d175d47bdd1e2fedcc71aa,
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}

@@ -45,7 +45,7 @@ namespace ClassRoomVR
             if (!shout && a > 0.05f)
             {
                 shout = true;
-                GameManager.Instance.GetClassManager().SetMode(ClassManager.TalkMode.Disrespect);
+                GameManager.Instance.GetClassManager().GetStudentsController().SetMode(StudentsController.TalkMode.Disrespect);
                 Debug.Log("Gritando");
             }
 

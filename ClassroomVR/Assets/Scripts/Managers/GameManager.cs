@@ -56,6 +56,10 @@ namespace ClassRoomVR
             LoadMainScene();
         }
 
+        public ScenePackage GetScenePackage(int i)
+        {
+            return _packeges[i];
+        }
         public string getpackName(int i)
         {
             return _packeges[i].name;
@@ -91,6 +95,10 @@ namespace ClassRoomVR
         }
 
 
+        public VoiceActivation GetVoiceActivation()
+        {
+            return voice;
+        }
         public void SetVoiceActivation(VoiceActivation voi)
         {
             //Presentamos  Wit al GameManager
@@ -102,10 +110,10 @@ namespace ClassRoomVR
 
         /// ATRIBUTOS NO ESTATICOS ///
         //public MySceneManager _sceneManager;
-        public ScenePackage[] _packeges;
-        public ClassInfo _classInfo;
-        public bool VRHardware = false;
-        public VoiceActivation voice;
+        [SerializeField] ScenePackage[] _packeges;
+        [SerializeField] ClassInfo _classInfo;
+        [SerializeField] bool VRHardware = false;
+        [SerializeField] VoiceActivation voice;
         private ScenePackage chosenPack;
         private Wit wit;
         UIManager UIManager;

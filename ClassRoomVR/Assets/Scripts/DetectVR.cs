@@ -6,8 +6,8 @@ using UnityEngine.XR.Management;
 namespace ClassRoomVR {
     public class DetectVR : MonoBehaviour
     {
-        public GameObject playerVR;
-        public GameObject player;
+        [SerializeField] GameObject playerVR;
+        [SerializeField] GameObject player;
         //Si se puede inicializar correctamente las gafas . Elige al player en modo VR
         void Awake()
         {

@@ -5,10 +5,10 @@ using UnityEngine.InputSystem;
 
 public class GameMenuManager : MonoBehaviour
 {
-    public Transform head;
-    public float spawnDistance=2;
-    public GameObject menu;
-    public InputActionProperty showButton;
+    [SerializeField] Transform head;
+    [SerializeField] float spawnDistance=2;
+    [SerializeField] GameObject menu;
+    [SerializeField] InputActionProperty showButton;
    
 
     //Script para controlar el pausa
