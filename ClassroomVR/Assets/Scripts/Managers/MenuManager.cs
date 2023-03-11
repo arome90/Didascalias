@@ -7,10 +7,10 @@ namespace ClassRoomVR
 {
     public class MenuManager : MonoBehaviour
     {
-        public GameObject PackTriade_Obj;  //Objeto "PackMenu"
-        public GameObject packB; //Objetos PackI
-        public Vector3 position;
-        public Vector3 rotation;
+        [SerializeField] GameObject PackTriade_Obj;  //Objeto "PackMenu"
+        [SerializeField] GameObject packB; //Objetos PackI
+        [SerializeField] Vector3 position;
+        [SerializeField] Vector3 rotation;
 
         public void PlayButton()
         {

@@ -17,6 +17,9 @@ namespace ClassRoomVR
         StudentsController studentsController;
 
         [SerializeField] DesksManager desksManager;
+
+        [SerializeField]  Transform[] targetsHead;
+
         private void Start()
         {
             GameManager.Instance.setClass(this);
@@ -45,7 +48,7 @@ namespace ClassRoomVR
             _students = new Dictionary<string, Student>();
 
             int deskPos = 0;
-
+           
             // Instanciamos los alumnos en sus posiciones de manera aleatoria (el prefab).
             for (int i = 0; i < sceneInfo.nStudents && deskPos < 30; i++)
             {
@@ -69,6 +72,7 @@ namespace ClassRoomVR
             pickedStudent = Instantiate(prefabStudent, transform);
             pickedStudent.SetParameters(name, sex);
             pickedStudent.CreateBody(prefabBodys[sex][UnityEngine.Random.Range(0, prefabBodys[sex].Length)]);
+            pickedStudent.SetTargets(targetsHead);
             _students.Add(name, pickedStudent);
             return pickedStudent;
         }
@@ -111,7 +115,7 @@ namespace ClassRoomVR
             }
         }
 
-        public void StartScene()
+        private void StartScene()
         {
             string alumsName = "";
             // Mostramos el texto descriptivo de la escena

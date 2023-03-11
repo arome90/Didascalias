@@ -24,6 +24,7 @@ namespace ClassRoomVR
         [SerializeField] Transform backCorner;
         [SerializeField] Transform door;
 
+
         public Transform FrontSide { get { return frontSide; } }
         public Transform BackCorner { get { return backCorner; } }
         public Transform Door { get { return door; } }

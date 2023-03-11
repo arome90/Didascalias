@@ -20,9 +20,6 @@ namespace ClassRoomVR
 
         [SerializeField] TextMesh text;
 
-
-        [SerializeField] RigLayer rig;
-
         Vector3 deskPosition;
 
         [SerializeField]
@@ -33,11 +30,20 @@ namespace ClassRoomVR
         NavMeshAgent agent;
         Collider collider;
         Vector3 dest;
+
+        [SerializeField]Transform target;
+        Transform[] targets;
+
+        [SerializeField] MultiAimConstraint head;
+        
+
         private void Start()
         {
             audio = GetComponent<AudioSource>();
             agent = GetComponent<NavMeshAgent>();
             state = State.Sit;
+            Invoke("cambiar", 2);
+            
 
         }
         public void SetParameters(string na, int s)
@@ -50,27 +56,32 @@ namespace ClassRoomVR
 
         }
 
-
         public void CreateBody(GameObject obj)
         {
             GameObject body = Instantiate(obj, transform);
             body.AddComponent<MeshCollider>();
-            //Para añadir los rigbuilder necesarios para girar la cabeza o seguir con los ojos un objeto 
-            //obj.AddComponent<RigBuilder>();
-            //if (rig != null)
-            //{
-            //    obj.GetComponent<RigBuilder>().layers.Add(rig);
-            //}
 
             animator = body.GetComponent<Animator>();
             if (animator != null)
             {
                 animator.runtimeAnimatorController = controller;
             }
-            collider = transform.GetChild(1).GetComponent<Collider>();
+            Debug.Log(transform.childCount);
+            collider = transform.GetChild(transform.childCount-1).GetComponent<Collider>();
+            head.data.constrainedObject = getHeadBone();
+            transform.GetComponent<RigBuilder>().Build();
         }
 
 
+
+
+        //TODO: cambiar esto al meter nuevos prefabs
+        private Transform getHeadBone() 
+        {
+            Transform body = transform.GetChild(2);
+            int i = body.childCount - 3;
+            return body.GetChild(i).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0);
+        }
 
         public void SetProblematicStudent()
         {
@@ -92,8 +103,55 @@ namespace ClassRoomVR
         public AudioSource getAudio() { return audio; }
 
     
+        
+        public void SetTargets(Transform[] tar) 
+        {
+            targets = tar;
+            ////Posiciones desde el estudiante
+            //Vector3[] dir = getDirections();
+            ////tar = posiciones globales para todos
+            //int pos = Random.Range(0, tar.Length + dir.Length);
+            //if (pos < tar.Length) Debug.Log(tar[pos].localPosition);
+            ////Debug.Log(target.localPosition);
+            //target.position = pos < tar.Length ? tar[pos].localPosition : dir[pos- tar.Length] ;
+            ////Debug.Log(pos + " " + name + target.localPosition);
+        }
 
+        void cambiar()
+        {
+            //Posiciones desde el estudiante
+            Vector3[] dir = getDirections();
+            //tar = posiciones globales para todos
+            int pos = Random.Range(0, targets.Length + dir.Length);
+            if (pos < targets.Length) Debug.Log(targets[pos].localPosition);
+            Debug.Log(target.localPosition);
+            target.position = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
+            Debug.Log(pos + " " + name + target.localPosition);
+        }
+        private void Update()
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                {
+                    Vector3[] dir = getDirections();
 
+                    target.position = i < targets.Length ? targets[i].localPosition : dir[i - targets.Length];
+                }
+
+            }
+        }
+
+        private Vector3[] getDirections() 
+        {
+            Vector3[] vec = new Vector3[4];
+            vec[0] = transform.localPosition + new Vector3(0, 1.5f, 1);
+            vec[1] = transform.localPosition + Vector3.right;
+            vec[2] = transform.localPosition + new Vector3(0,-1, 1);
+            vec[3] = transform.localPosition + Vector3.left;
+            return vec;
+
+        }
 
         public void PlayAnimation(string stateName) 
         {
