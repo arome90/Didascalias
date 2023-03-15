@@ -1424,8 +1424,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 904727590}
-  - component: {fileID: 904727589}
   - component: {fileID: 904727588}
+  - component: {fileID: 904727591}
   m_Layer: 0
   m_Name: Wit
   m_TagString: Untagged
@@ -1445,7 +1445,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7eed01cef1d8f4091b8fc170a91dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &904727589
+--- !u!4 &904727590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904727587}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.7240458, y: 0.72644573, z: 5.8773203}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &904727591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1454,7 +1469,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 904727587}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89cc923dc7c7b4f0b91a7df096c80b00, type: 3}
+  m_Script: {fileID: 11500000, guid: 28779cfed47441a42a6cd4fb49c8dc89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   events:
@@ -1601,21 +1616,8 @@ MonoBehaviour:
     customTranscriptionProvider: {fileID: 0}
     alwaysRecord: 1
     preferredActivationOffset: -0.5
---- !u!4 &904727590
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 904727587}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7240458, y: 0.72644573, z: 5.8773203}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  usePlatformServices: 0
+  enableConsoleLogging: 0
 --- !u!1 &905926394
 GameObject:
   m_ObjectHideFlags: 0
