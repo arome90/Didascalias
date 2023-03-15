@@ -126,7 +126,7 @@ namespace ClassRoomVR
             if (pos < targets.Length) Debug.Log(targets[pos].localPosition);
             Debug.Log(target.localPosition);
             target.position = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
-            Debug.Log(pos + " " + name + target.localPosition);
+            //Debug.Log(pos + " " + name + target.localPosition);
         }
         private void Update()
         {

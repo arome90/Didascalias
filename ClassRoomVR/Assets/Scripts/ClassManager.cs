@@ -56,7 +56,7 @@ namespace ClassRoomVR
                 int indexName = UnityEngine.Random.Range(0, names[sex].Count);
                 Student pickedStudent = CreateStudent(prefabBodys, names[sex][indexName], sex);
                 names[sex].RemoveAt(indexName);
-                PlaceStudent(deskPos, pickedStudent, sceneInfo.nGroups);
+                PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
                 deskPos++;
             }
 
@@ -77,7 +77,7 @@ namespace ClassRoomVR
             return pickedStudent;
         }
 
-        private void PlaceStudent(int deskPos,Student pickedStudent, int nGruops)
+        private void PlaceStudent( ref int deskPos,Student pickedStudent, int nGruops)
         {
             desksManager.getFreeDesk(ref deskPos, nGruops);
             // Lo colocamos en su pupitre
@@ -99,9 +99,10 @@ namespace ClassRoomVR
             if (scene.problematicTogether)
             {
                 problematic = desksManager.GetNearDeskRandom(problematic, scene.nStudents);
+                _problematicStudents.Add(_students.ElementAt(problematic).Key);
+                _students.ElementAt(problematic).Value.SetProblematicStudent();
             }
-            _problematicStudents.Add(_students.ElementAt(problematic).Key);
-            _students.ElementAt(problematic).Value.SetProblematicStudent();
+           
         }
 
         private void PlayAnimationsAtDifferentTimeClass(string animName)
