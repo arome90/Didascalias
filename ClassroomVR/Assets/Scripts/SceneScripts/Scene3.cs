@@ -47,7 +47,7 @@ namespace ClassRoomVR
                 }
                 i++;
             }
-            problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Sex.Men
+            problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Gender.Men
                ? sceneInfo.audioSituationMasculino : sceneInfo.audioSituationFemenino;
             problematic.GetComponent<AudioSource>().Play();
             bh.GetVariable("AccionAlumno").SetValue(true);

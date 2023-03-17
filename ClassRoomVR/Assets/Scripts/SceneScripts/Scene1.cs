@@ -129,7 +129,7 @@ namespace ClassRoomVR
             {
                 problematic.PlayAnimation(sceneInfo.problematicsAnimation.name);
             }
-            problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Sex.Men
+            problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Gender.Men
                 ? sceneInfo.audioSituationMasculino : sceneInfo.audioSituationFemenino;
             problematic.GetComponent<AudioSource>().Play();
             Invoke("Risas", 2f);

@@ -18,17 +18,22 @@ namespace ClassRoomVR
 
         [SerializeField] DesksManager desksManager;
 
-        [SerializeField]  Transform[] targetsHead;
+        [SerializeField] Transform[] targetsHead;
+
+        [SerializeField]StudentsSettings settings;
 
         private void Start()
         {
             GameManager.Instance.setClass(this);
             studentsController = GetComponent<StudentsController>();
+
+            _asientosOcupados = new bool[studentsPositions.childCount];
+            _students = new Dictionary<string, Student>();
+
             generateChilds();
             StartScene();
         }
 
-        //Trocear
         //Genera los alumnos de la clase en sus posiciones
         private void generateChilds()
         {
@@ -44,18 +49,22 @@ namespace ClassRoomVR
             prefabBodys.Add(classInfo.girlsPrefabs);
             prefabBodys.Add(classInfo.boysPrefabs);
 
-            _asientosOcupados = new bool[studentsPositions.childCount];
-            _students = new Dictionary<string, Student>();
-
+            
             int deskPos = 0;
-           
-            // Instanciamos los alumnos en sus posiciones de manera aleatoria (el prefab).
-            for (int i = 0; i < sceneInfo.nStudents && deskPos < 30; i++)
+            int randomStudents = settings.NumStu;
+
+            if (settings.Mode == StudentsSettings.GenerateMode.Personalizado)
             {
-                int sex = UnityEngine.Random.Range(0, 2); // 0 mujer, 1 hombre
-                int indexName = UnityEngine.Random.Range(0, names[sex].Count);
-                Student pickedStudent = CreateStudent(prefabBodys, names[sex][indexName], sex);
-                names[sex].RemoveAt(indexName);
+                generatePersonalizedChild(ref deskPos, classInfo, sceneInfo);
+                randomStudents -= deskPos;
+            }
+            // Instanciamos los alumnos en sus posiciones de manera aleatoria (el prefab).
+            for (int i = 0; i <= randomStudents && deskPos < 30; i++)
+            {
+                int gender = Random.Range(0, 2); // 0 mujer, 1 hombre
+                int indexName = Random.Range(0, names[gender].Count);
+                Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Student.Gender)gender);
+                names[gender].RemoveAt(indexName);
                 PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
                 deskPos++;
             }
@@ -65,13 +74,13 @@ namespace ClassRoomVR
             PlayAnimationsAtDifferentTimeClass(classInfo.idleAnim.name);
         }
 
-        private Student CreateStudent(List<GameObject[]> prefabBodys, string name,int sex) 
+        private Student CreateStudent(GameObject body, string name, Student.Gender gender)
         {
             // Elegimos el sexo del estudiante
             Student pickedStudent;
             pickedStudent = Instantiate(prefabStudent, transform);
-            pickedStudent.SetParameters(name, sex);
-            pickedStudent.CreateBody(prefabBodys[sex][UnityEngine.Random.Range(0, prefabBodys[sex].Length)]);
+            pickedStudent.SetParameters(name, gender);
+            pickedStudent.CreateBody(body);
             pickedStudent.SetTargets(targetsHead);
             _students.Add(name, pickedStudent);
             return pickedStudent;
@@ -89,16 +98,54 @@ namespace ClassRoomVR
 
         }
 
+
+        private void generatePersonalizedChild(ref int deskPos, ClassInfo classInfo,ScenePackage sceneInfo)
+        {
+ 
+            var list = settings.Students;
+            // Instanciamos los alumnos en sus posiciones .
+            for (int i = 0; i < list.Length ; i++)
+            {
+                StudentInfo info = list[i];
+                Student.Gender gen = (Student.Gender) GetEnumValue<StudentInfo.GenderInfo>((int)info.Gender);
+                int nBody =GetEnumValue<StudentInfo.BodyInfo>((int)info.Body);
+                GameObject body = gen == Student.Gender.Men ? classInfo.boysPrefabs[nBody] : classInfo.girlsPrefabs[nBody];
+                Student pickedStudent = CreateStudent(body, info.Name, gen);
+                PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                deskPos++;
+               
+            }
+          
+        }
+        /// <summary>
+        /// Todos los Enums tienen un identificador random al principio. Si el valor es cero se devuelve un valor random entre los demas valores.
+        /// Si el valor no es cero se devuelve ese valor directamente . Se resta uno en ambos lados para normalizar sin random 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private int GetEnumValue<T>(int value) 
+        {
+            int lenght = System.Enum.GetNames(typeof(T)).Length - 1;
+            return value == 0 ? Random.Range(0,lenght): value -1;
+        }
+
+        //public T PickRandom<T>(IList<T> options)
+        //{
+        //    int index = Random.Range(0, options.Count);
+        //    return options[index];
+        //}
+
+
         private void SetProblematicStudents(ScenePackage scene ) 
         {
             // Estudiantes problematicos
             _problematicStudents = new HashSet<string>();
-            int problematic = UnityEngine.Random.Range(0, scene.nStudents);
+            int problematic = UnityEngine.Random.Range(0, settings.NumStu);
             _problematicStudents.Add(_students.ElementAt(problematic).Key);
             _students.ElementAt(problematic).Value.SetProblematicStudent();
             if (scene.problematicTogether)
             {
-                problematic = desksManager.GetNearDeskRandom(problematic, scene.nStudents);
+                problematic = desksManager.GetNearDeskRandom(problematic, settings.NumStu);
                 _problematicStudents.Add(_students.ElementAt(problematic).Key);
                 _students.ElementAt(problematic).Value.SetProblematicStudent();
             }

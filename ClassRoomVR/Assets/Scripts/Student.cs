@@ -11,10 +11,10 @@ namespace ClassRoomVR
     [System.Serializable]
     public class Student : MonoBehaviour
     {
-        public enum Sex { Women, Men };
+        public enum Gender { Women, Men };
         private enum State { Sit, Stand };
         State state;
-        [SerializeField] Sex sex;
+        [SerializeField] Gender gender;
         [SerializeField] string name;
         [SerializeField] bool problematic = false;
 
@@ -46,12 +46,12 @@ namespace ClassRoomVR
             
 
         }
-        public void SetParameters(string na, int s)
+        public void SetParameters(string na, Gender s)
         {
             name = na;
             transform.name = na;
             text.text = na;
-            sex = (Sex)s;
+            gender = s;
 
 
         }
@@ -66,7 +66,6 @@ namespace ClassRoomVR
             {
                 animator.runtimeAnimatorController = controller;
             }
-            Debug.Log(transform.childCount);
             collider = transform.GetChild(transform.childCount-1).GetComponent<Collider>();
             head.data.constrainedObject = getHeadBone();
             transform.GetComponent<RigBuilder>().Build();
@@ -96,7 +95,7 @@ namespace ClassRoomVR
         }
 
         public Vector3 GetDesk() { return deskPosition; }
-        public Sex GetSex() { return sex; }
+        public Gender GetSex() { return gender; }
         public string GetName() { return name; }
         public Collider GetCollider() { return collider; }
         public bool GetProblematicStudent() { return problematic; }
