@@ -15,7 +15,6 @@ namespace ClassRoomVR
         Camera camera;
         public enum TalkMode { None, Disrespect, Good };
         TalkMode mode;
-        ClassManager cm;
         Dictionary<string, Student> _students;
         HashSet<string> _problematicStudents;
 
@@ -34,7 +33,6 @@ namespace ClassRoomVR
         private void Start()
         {
             camera = Camera.main;
-            cm = GameManager.Instance.GetClassManager();
             
 
         }
@@ -122,6 +120,9 @@ namespace ClassRoomVR
             bounds.center += new Vector3(0, 1f, 0);
             return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
         }
+
+
+
 
 
 

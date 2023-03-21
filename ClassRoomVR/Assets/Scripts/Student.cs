@@ -32,6 +32,7 @@ namespace ClassRoomVR
         Vector3 dest;
 
         [SerializeField]Transform target;
+        Vector3 targetPosition;
         Transform[] targets;
 
         [SerializeField] MultiAimConstraint head;
@@ -42,7 +43,7 @@ namespace ClassRoomVR
             audio = GetComponent<AudioSource>();
             agent = GetComponent<NavMeshAgent>();
             state = State.Sit;
-            Invoke("cambiar", 2);
+            //Invoke("cambiar", 2);
             
 
         }
@@ -124,22 +125,62 @@ namespace ClassRoomVR
             int pos = Random.Range(0, targets.Length + dir.Length);
             if (pos < targets.Length) Debug.Log(targets[pos].localPosition);
             Debug.Log(target.localPosition);
-            target.position = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
+            targetPosition= pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
+
+            //target.position = 
             //Debug.Log(pos + " " + name + target.localPosition);
         }
+
+
+        public void PayAttention() 
+        {
+            //target.position = targets[0].localPosition;
+            targetPosition = targets[0].localPosition;
+        }
+
+        public void GetDistracted() 
+        {
+
+            Vector3[] dir = getDirections();
+            //tar = posiciones globales para todos
+            int pos = Random.Range(1, targets.Length + dir.Length);
+            if (pos < targets.Length) Debug.Log(targets[pos].localPosition);
+            targetPosition = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
+
+            // target.position = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
+        }
+
+
         private void Update()
         {
-            for (int i = 0; i < 7; i++)
+            //for (int i = 0; i < 7; i++)
+            //{
+            //    if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            //    {
+            //        Vector3[] dir = getDirections();
+
+            //        target.position = i < targets.Length ? targets[i].localPosition : dir[i - targets.Length];
+            //    }
+
+            //}
+
+            if (Input.GetKeyDown(KeyCode.Alpha1)) 
             {
-                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-                {
-                    Vector3[] dir = getDirections();
-
-                    target.position = i < targets.Length ? targets[i].localPosition : dir[i - targets.Length];
-                }
-
+                PayAttention();
             }
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) 
+            {
+                GetDistracted();
+            }
+
+
+           target.position = Vector3.MoveTowards(target.position, targetPosition, 3.0f* Time.deltaTime);
+
+
         }
+
+
+       
 
         private Vector3[] getDirections() 
         {
@@ -157,7 +198,9 @@ namespace ClassRoomVR
             animator.Play(stateName);
         }
 
-        
+
+        #region Move
+
         //Corrutina para completar moviemitno
         IEnumerator OnCompleteMove()
         {
@@ -238,7 +281,7 @@ namespace ClassRoomVR
             text.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             SitBack();
         }
-
+        #endregion
     }
 
 }
