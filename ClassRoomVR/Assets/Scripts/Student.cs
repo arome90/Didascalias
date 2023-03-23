@@ -144,7 +144,6 @@ namespace ClassRoomVR
             Vector3[] dir = getDirections();
             //tar = posiciones globales para todos
             int pos = Random.Range(1, targets.Length + dir.Length);
-            if (pos < targets.Length) Debug.Log(targets[pos].localPosition);
             targetPosition = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
 
             // target.position = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];

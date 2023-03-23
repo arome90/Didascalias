@@ -4,14 +4,12 @@ using System.Text;
 using System.Globalization;
 using System;
 using System.Linq;
-using Meta.WitAi.Json;
-using Meta.WitAi;
 
 namespace ClassRoomVR
 {
     public class StudentsController : MonoBehaviour
     {
-
+        
         Camera camera;
         public enum TalkMode { None, Disrespect, Good };
         TalkMode mode;
@@ -71,7 +69,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="name"></param>
         /// <param name="numSearch"></param>
-        /// <returns> devuelve el estdiante. Si no lo encuentra devuelve al problematico </returns>
+        /// <returns> devuelve el estudiante. NUll si no lo encuentra
         private Student SearchName(string name)
         {
             string n = StringExtensions.SinTildes(name);
@@ -121,107 +119,69 @@ namespace ClassRoomVR
             return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
         }
 
-
-
-
-
-
-        //Gestion de las ordenes del profesor
-        //TO DO : CAMBIAR PARA QUE SEA GENERICO
-        public void UpdateClass(WitResponseNode response)
+        public void HandleSit(string[] alumnos)
         {
-            var intent = WitResultUtilities.GetIntentName(response);
-            var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");
-            switch (intent)
+            if (alumnos.Length == 1)
             {
-                case "Sit":
-
-                    if (alumnos.Length > 1)
-                    {
-                        SendChangeDesk(alumnos);
-                    }
-                    else
-                    {
-
-
-                        Student stu;
-                        if (alumnos.Length > 0)
-                        {
-                            stu = SearchName(alumnos[0]);
-
-                        }
-                        else stu = _students[_problematicStudents.First()];
-
-                        if (stu != null)
-                        {
-                            stu.SitBack();
-                        }
-
-                    }
-
-                    break;
-                case "Move":
-                    if (alumnos.Length > 1)
-                    {
-                        SendChangeDesk(alumnos);
-                    }
-                    else
-                    {
-                        string place = WitResultUtilities.GetFirstEntityValue(response, "places:places");
-                        Transform pos = Place(place);
-                        if (pos != null)
-                        {
-
-
-                            Student stu;
-                            if (alumnos.Length > 0)
-                            {
-                                stu = SearchName(alumnos[0]);
-
-                            }
-                            else stu = _students[_problematicStudents.First()];
-
-                            if (stu != null)
-                            {
-                                stu.MoveTo(pos.position);
-                            }
-                        }
-                    }
-                    break;
-                case "Postpone":
-                    Debug.Log("Posponer situacion");
-                    mode = TalkMode.Good;
-                    break;
-                case "Expel":
-                    {
-                        Student stu;
-                        if (alumnos.Length > 0)
-                        {
-                            stu = SearchName(alumnos[0]);
-
-                        }
-                        else stu = _students[_problematicStudents.First()];
-
-                        if (stu != null)
-                        {
-                            stu.MoveTo(door.position);
-                        }
-                        break;
-                    }
-                case "Disrespect":
-                    Debug.Log("Has faltado el respeto");
-                    mode = TalkMode.Disrespect;
-                    break;
-                case "Calm":
-                    Debug.Log("Has hablado bien ");
-                    mode = TalkMode.Good;
-                    break;
-
+                Student stu = SearchName(alumnos[0]);
+                if (stu)
+                {
+                    stu.SitBack();
+                }
             }
+        }
+        public void HandleMove(string[] alumnos, string place)
+        {
+            if (alumnos.Length > 1)
+            {
+                SendChangeDesk(alumnos);
+            }
+            else if( alumnos.Length ==1)
+            {
+                var pos = Place(place);
 
+                if (pos != null)
+                {
+                    Student stu = SearchName(alumnos[0]);
+                    if (stu)
+                    {
+                        stu.MoveTo(pos.position);
+                    }
+                }
+            }
         }
 
-        private Transform Place(string place)
+        public void HandlePostpone()
+        {
+            Debug.Log("Posponer situación");
+            mode = TalkMode.Good;
+        }
+        public void HandleExpel(string[] alumnos)
+        {
+            if (alumnos.Length == 1)
+            {
+                Student stu = SearchName(alumnos[0]);
+                if (stu)
+                {
+                    stu.MoveTo(door.position);
+                }
+            }
+        }
+
+
+        public void HandleDisrespect()
+        {
+            Debug.Log("Has faltado el respeto");
+            mode = TalkMode.Disrespect;
+        }
+
+        public void HandleCalm() 
+        {
+            Debug.Log("Has hablado bien ");
+            mode = TalkMode.Good;
+        }
+
+        public Transform Place(string place)
         {
             Transform trplace = null;
             switch (place)

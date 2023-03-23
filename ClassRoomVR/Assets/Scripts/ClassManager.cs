@@ -22,6 +22,8 @@ namespace ClassRoomVR
 
         [SerializeField]StudentsSettings settings;
 
+
+
         private void Start()
         {
             GameManager.Instance.setClass(this);

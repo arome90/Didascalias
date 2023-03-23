@@ -52,7 +52,7 @@ namespace ClassRoomVR
             problematic.GetComponent<AudioSource>().Play();
             bh.GetVariable("AccionAlumno").SetValue(true);
             distanceInitial = Vector3.Distance(problematic.transform.position, player.transform.position);
-            voice.ActivateWit();
+            //voice.ActivateWit();
 
         }
 
