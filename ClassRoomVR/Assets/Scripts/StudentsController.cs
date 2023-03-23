@@ -21,6 +21,7 @@ namespace ClassRoomVR
         [SerializeField] Transform backCorner;
         [SerializeField] Transform door;
 
+        [SerializeField] DisruptiveAction[] actions;
 
         public Transform FrontSide { get { return frontSide; } }
         public Transform BackCorner { get { return backCorner; } }
@@ -31,8 +32,6 @@ namespace ClassRoomVR
         private void Start()
         {
             camera = Camera.main;
-            
-
         }
         public void SetParameters(Dictionary<string, Student> students, HashSet<string> problematicStudents) 
         {
@@ -207,6 +206,26 @@ namespace ClassRoomVR
         }
 
 
+        public void DoSomethingDisruptive(int i)
+        {
+            DisruptiveAction a = actions[i];
+            int nStu = UnityEngine.Random.Range(0, _students.Count);
+            Student stu = _students.ElementAt(nStu).Value;
+            AudioClip clip = stu.GetSex() == Student.Gender.Women ? a.audioSituationFemenino : a.audioSituationMasculino;
+            stu.SetProblematicStudent();
+            stu.PayAttention();
+            stu.PlayDisruptiveAction(a.problematicsAnimation.name, clip);
+            GameManager.Instance.GetClassManager().DisruptiveSituation = true;
+            //AÑADIR VARIOS ALUMNOS Y ACCIONES QUE SIGNIFICAN UN METODO 
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.G)) 
+            {
+                DoSomethingDisruptive(0);
+            }
+        }
     }
 
 

@@ -7,7 +7,6 @@ using UnityEngine.Events;
 
 namespace ClassRoomVR
 {
-
     [System.Serializable]
     public class Student : MonoBehaviour
     {
@@ -17,7 +16,7 @@ namespace ClassRoomVR
         [SerializeField] Gender gender;
         [SerializeField] string name;
         [SerializeField] bool problematic = false;
-
+        int problematicPercentage = 10;
         [SerializeField] TextMesh text;
 
         Vector3 deskPosition;
@@ -88,6 +87,8 @@ namespace ClassRoomVR
             text.color = Color.red;
             problematic = true;
         }
+
+        
 
 
         public void SetDesk(Vector3 pos)
@@ -194,9 +195,25 @@ namespace ClassRoomVR
 
         public void PlayAnimation(string stateName) 
         {
+           
             animator.Play(stateName);
+            
         }
 
+
+        public void PlayDisruptiveAction(string stateName, AudioClip clip)
+        {
+            animator.Play(stateName);
+            audio.clip = clip;
+            audio.Play();
+            Invoke("SetNoProblematicStudent", 2.0f);
+        }
+
+        public void SetNoProblematicStudent() 
+        {
+            text.color = Color.black;
+            problematic = false;
+        }
 
         #region Move
 

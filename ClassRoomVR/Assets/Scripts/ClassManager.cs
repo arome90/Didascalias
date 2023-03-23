@@ -22,7 +22,12 @@ namespace ClassRoomVR
 
         [SerializeField]StudentsSettings settings;
 
+        bool disruptiveSituation;
 
+        public bool DisruptiveSituation { get => disruptiveSituation; set => disruptiveSituation = value; }
+
+
+        int clima;
 
         private void Start()
         {
