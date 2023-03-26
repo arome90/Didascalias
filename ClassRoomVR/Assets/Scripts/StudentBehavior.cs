@@ -8,24 +8,47 @@ namespace ClassRoomVR
     {
         [SerializeField] float nivelAtencion = 50.0f; // a>50 atento   a<50 despistado
         [SerializeField] bool disruptiveBehavior;
-
+        [SerializeField] float timeOfDecision=2.5f;
         Student st;
 
+        [SerializeField] float addAttention=30;
+        [SerializeField] float subAttention=20;
+
+        [SerializeField] float contAdd=0.2f;
+        [SerializeField] float contSub=0.1f;
+
+
+        float contAddAux;
+        float contSubAux;
         // Start is called before the first frame update
         void Start()
         {
             st = GetComponent<Student>();
-            InvokeRepeating("DecidirComportamiento", 2.5f, 2.5f);
+            InvokeRepeating("DecidirComportamiento", timeOfDecision, timeOfDecision);
+            contAddAux = contAdd;
+            contSubAux = contSub;
         }
 
 
 
-        public void AddAttention(float value)
+        public void AddAttention()
         {
-            nivelAtencion += value;
-            if (nivelAtencion < 0) { nivelAtencion = 0; }
-            else if (nivelAtencion > 100) { nivelAtencion = 100; }
+            nivelAtencion += addAttention*(1+contAdd);
+            if (nivelAtencion > 100) { nivelAtencion = 100; }
+            //0.01 o tener otra variable para el aumento
+            contAdd += contAddAux;
+            contSub = contSubAux;
         }
+
+        public void SubAttention() 
+        {
+            nivelAtencion -= subAttention*(1+contSub);
+            if (nivelAtencion < 0) { nivelAtencion = 0; }
+            contSub += contSubAux;
+            contAdd = contAddAux;
+        }
+
+
         public void SetDisruptive(bool value) { disruptiveBehavior = value; }
 
 
@@ -44,11 +67,13 @@ namespace ClassRoomVR
         //Método de toma de decisiones
         private void DecidirComportamiento()
         {
-            
 
-            AddAttention(VisionOfProfessor() ? 20 : -20);
-            float v=nivelAtencion / 100.0f;
-            if (Random.Range(0.0f,1.0f) < v)
+            if (VisionOfProfessor()) 
+                AddAttention(); 
+            else SubAttention();
+
+            float v=nivelAtencion / 100.0f ;
+            if (Random.Range(0.0f,1.0f) <= v)
             {
                 // El personaje está atento
                 st.PayAttention();

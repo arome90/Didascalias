@@ -53,7 +53,6 @@ namespace ClassRoomVR
         public void makeChoice(int i)
         {
             chosenPack = _packeges[i];
-            LoadMainScene();
         }
 
         public ScenePackage GetScenePackage(int i)

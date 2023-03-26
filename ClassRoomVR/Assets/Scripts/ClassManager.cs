@@ -29,6 +29,11 @@ namespace ClassRoomVR
 
         int clima;
 
+
+        ScenePackage sceneInfo;
+        ClassInfo classInfo;
+        List<List<string>> names;
+        List<GameObject[]> prefabBodys;
         private void Start()
         {
             GameManager.Instance.setClass(this);
@@ -36,7 +41,17 @@ namespace ClassRoomVR
 
             _asientosOcupados = new bool[studentsPositions.childCount];
             _students = new Dictionary<string, Student>();
-
+            sceneInfo = GameManager.Instance.getPack();
+            Instantiate(sceneInfo.scene);
+            classInfo = GameManager.Instance.getClass();
+            //Se usan listas para tener una lista auxiliar de la que se eliminan sus componentes
+            //De esta manera no se repite ningun nombre ni body hasta que se agoten
+            names = new List<List<string>>();
+            names.Add(classInfo.girlsNames.ToList());
+            names.Add(classInfo.boysNames.ToList());
+            prefabBodys = new List<GameObject[]>();
+            prefabBodys.Add(classInfo.girlsPrefabs);
+            prefabBodys.Add(classInfo.boysPrefabs);
             generateChilds();
             StartScene();
         }
@@ -44,36 +59,34 @@ namespace ClassRoomVR
         //Genera los alumnos de la clase en sus posiciones
         private void generateChilds()
         {
-            ScenePackage sceneInfo = GameManager.Instance.getPack();
-            Instantiate(sceneInfo.scene);
-            ClassInfo classInfo = GameManager.Instance.getClass();
-            //Se usan listas para tener una lista auxiliar de la que se eliminan sus componentes
-            //De esta manera no se repite ningun nombre ni body hasta que se agoten
-            List<List<string>> names = new List<List<string>>();
-            names.Add(classInfo.girlsNames.ToList());
-            names.Add(classInfo.boysNames.ToList());
-            List<GameObject[]> prefabBodys = new List<GameObject[]>();
-            prefabBodys.Add(classInfo.girlsPrefabs);
-            prefabBodys.Add(classInfo.boysPrefabs);
-
-            
+           
             int deskPos = 0;
-            int randomStudents = settings.NumStu;
+           
+            if (settings.Mode == StudentsSettings.GenerateMode.Gender)
+            {
+                generatePersonalizedChildWithGender(ref deskPos, (int)Student.Gender.Women, settings.women);
+                generatePersonalizedChildWithGender(ref deskPos, (int)Student.Gender.Men, settings.men);
 
-            if (settings.Mode == StudentsSettings.GenerateMode.Personalizado)
-            {
-                generatePersonalizedChild(ref deskPos, classInfo, sceneInfo);
-                randomStudents -= deskPos;
             }
-            // Instanciamos los alumnos en sus posiciones de manera aleatoria (el prefab).
-            for (int i = 0; i <= randomStudents && deskPos < 30; i++)
+            else
             {
-                int gender = Random.Range(0, 2); // 0 mujer, 1 hombre
-                int indexName = Random.Range(0, names[gender].Count);
-                Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Student.Gender)gender);
-                names[gender].RemoveAt(indexName);
-                PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
-                deskPos++;
+                int randomStudents = settings.NumStu;
+
+                if (settings.Mode == StudentsSettings.GenerateMode.Personalizado)
+                {
+                    generatePersonalizedChild(ref deskPos);
+                    randomStudents -= deskPos;
+                }
+                // Instanciamos los alumnos en sus posiciones de manera aleatoria (el prefab).
+                for (int i = 0; i <= randomStudents && deskPos < 30; i++)
+                {
+                    int gender = Random.Range(0, 2); // 0 mujer, 1 hombre
+                    int indexName = Random.Range(0, names[gender].Count);
+                    Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Student.Gender)gender);
+                    names[gender].RemoveAt(indexName);
+                    PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                    deskPos++;
+                }
             }
 
             SetProblematicStudents(sceneInfo);
@@ -104,9 +117,21 @@ namespace ClassRoomVR
             _asientosOcupados[deskPos] = true;
 
         }
+        private void generatePersonalizedChildWithGender(ref int deskPos, int gender, int n) 
+        {
 
+            for (int i = 0; i < n; i++)
+            {
+                int indexName = Random.Range(0, names[gender].Count);
+                Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Student.Gender)gender);
+                names[gender].RemoveAt(indexName);
+                PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                deskPos++;
 
-        private void generatePersonalizedChild(ref int deskPos, ClassInfo classInfo,ScenePackage sceneInfo)
+            }
+        }
+
+        private void generatePersonalizedChild(ref int deskPos)
         {
  
             var list = settings.Students;

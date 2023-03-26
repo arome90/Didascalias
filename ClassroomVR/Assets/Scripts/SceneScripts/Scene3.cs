@@ -47,9 +47,11 @@ namespace ClassRoomVR
                 }
                 i++;
             }
-            problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Gender.Men
-               ? sceneInfo.audioSituationMasculino : sceneInfo.audioSituationFemenino;
-            problematic.GetComponent<AudioSource>().Play();
+            if(problematic){
+                problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Gender.Men
+                   ? sceneInfo.audioSituationMasculino : sceneInfo.audioSituationFemenino;
+                problematic.GetComponent<AudioSource>().Play();
+            }
             bh.GetVariable("AccionAlumno").SetValue(true);
             distanceInitial = Vector3.Distance(problematic.transform.position, player.transform.position);
             //voice.ActivateWit();
