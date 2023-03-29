@@ -1587,31 +1587,7 @@ MonoBehaviour:
     - OnStoppedListening
     OnResponse:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 904727588}
-          m_TargetAssemblyTypeName: VoiceActivation, Assembly-CSharp
-          m_MethodName: OnResponse
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1899928212}
-          m_TargetAssemblyTypeName: ClassRoomVR.StudentsController, Assembly-CSharp
-          m_MethodName: UpdateClass
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnPartialResponse:
       m_PersistentCalls:
         m_Calls: []
@@ -1629,34 +1605,10 @@ MonoBehaviour:
         m_Calls: []
     OnRequestCompleted:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 904727588}
-          m_TargetAssemblyTypeName: VoiceActivation, Assembly-CSharp
-          m_MethodName: ActivateWit
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnMicLevelChanged:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 904727588}
-          m_TargetAssemblyTypeName: VoiceActivation, Assembly-CSharp
-          m_MethodName: OnMicLevelChanged
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnRequestOptionSetup:
       m_PersistentCalls:
         m_Calls: []
@@ -1668,19 +1620,7 @@ MonoBehaviour:
         m_Calls: []
     OnStoppedListening:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 904727588}
-          m_TargetAssemblyTypeName: ClassRoomVR.VoiceActivation, Assembly-CSharp
-          m_MethodName: ActivateWit
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     OnStoppedListeningDueToInactivity:
       m_PersistentCalls:
         m_Calls: []
@@ -1710,19 +1650,19 @@ MonoBehaviour:
         m_Calls: []
   witRuntimeConfiguration:
     witConfiguration: {fileID: 11400000, guid: ebd079d8e86f12741a74faa3aeb1fa11, type: 2}
-    minKeepAliveVolume: 0.14
+    minKeepAliveVolume: 1.11
     minKeepAliveTimeInSeconds: 2
     minTranscriptionKeepAliveTimeInSeconds: 1
-    maxRecordingTime: 20
-    soundWakeThreshold: 0.0005
+    maxRecordingTime: 5
+    soundWakeThreshold: 0.005
     sampleLengthInMs: 10
     micBufferLengthInSeconds: 1
-    maxConcurrentRequests: 5
+    maxConcurrentRequests: 1
     sendAudioToWit: 0
     customTranscriptionProvider: {fileID: 0}
     alwaysRecord: 1
-    preferredActivationOffset: -0.5
-  usePlatformServices: 0
+    preferredActivationOffset: -1
+  usePlatformServices: 1
   enableConsoleLogging: 0
 --- !u!1 &905926394
 GameObject:
@@ -4478,7 +4418,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _packeges.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: d2850e8af4e0c0547b44b20f38f9f730,
+      objectReference: {fileID: 11400000, guid: b4898579cf1b6e54c868b37e9904c093,
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}
@@ -8119,7 +8059,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3291510597165079843}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 4, y: -0.56, z: -1.141}
+  m_LocalPosition: {x: 4, y: -1.28, z: -1.141}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

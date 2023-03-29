@@ -51,9 +51,9 @@ namespace ClassRoomVR
                 problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Gender.Men
                    ? sceneInfo.audioSituationMasculino : sceneInfo.audioSituationFemenino;
                 problematic.GetComponent<AudioSource>().Play();
+                distanceInitial = Vector3.Distance(problematic.transform.position, player.transform.position);
             }
             bh.GetVariable("AccionAlumno").SetValue(true);
-            distanceInitial = Vector3.Distance(problematic.transform.position, player.transform.position);
             //voice.ActivateWit();
 
         }
