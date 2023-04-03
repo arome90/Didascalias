@@ -14,7 +14,7 @@ using UnityEngine;
         public enum BodyInfo{Random, Body1, Body2, Body3, Body4};
         public enum GenderInfo {Random, Women, Men  };
 
-        [SerializeField] string nameStudent;
+        public string nameStudent;
         [SerializeField] GenderInfo gender;
         [SerializeField] bool hasDisability;
         [SerializeField] OriginInfo origin;

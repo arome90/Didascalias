@@ -126,7 +126,7 @@ namespace ClassRoomVR
             
             var intent = WitResultUtilities.GetIntentName(response);
             var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");
-            
+           
             switch (intent)
             {
                 case "Sit":

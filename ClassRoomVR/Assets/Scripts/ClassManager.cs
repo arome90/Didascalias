@@ -20,7 +20,6 @@ namespace ClassRoomVR
 
         [SerializeField] Transform[] targetsHead;
 
-        [SerializeField]StudentsSettings settings;
 
         bool disruptiveSituation;
 
@@ -34,9 +33,12 @@ namespace ClassRoomVR
         ClassInfo classInfo;
         List<List<string>> names;
         List<GameObject[]> prefabBodys;
+        StudentsSettings settings;
         private void Start()
         {
+
             GameManager.Instance.setClass(this);
+            settings = GameManager.Instance.Settings;
             studentsController = GetComponent<StudentsController>();
 
             _asientosOcupados = new bool[studentsPositions.childCount];
@@ -62,7 +64,7 @@ namespace ClassRoomVR
            
             int deskPos = 0;
            
-            if (settings.Mode == StudentsSettings.GenerateMode.Gender)
+            if (settings.Mode == GenerateMode.Gender)
             {
                 generatePersonalizedChildWithGender(ref deskPos, (int)Student.Gender.Women, settings.women);
                 generatePersonalizedChildWithGender(ref deskPos, (int)Student.Gender.Men, settings.men);
@@ -72,13 +74,13 @@ namespace ClassRoomVR
             {
                 int randomStudents = settings.NumStu;
 
-                if (settings.Mode == StudentsSettings.GenerateMode.Personalizado)
+                if (settings.Mode == GenerateMode.Personalizado)
                 {
                     generatePersonalizedChild(ref deskPos);
                     randomStudents -= deskPos;
                 }
                 // Instanciamos los alumnos en sus posiciones de manera aleatoria (el prefab).
-                for (int i = 0; i <= randomStudents && deskPos < 30; i++)
+                for (int i = 0; i < randomStudents && deskPos < 30; i++)
                 {
                     int gender = Random.Range(0, 2); // 0 mujer, 1 hombre
                     int indexName = Random.Range(0, names[gender].Count);
@@ -221,6 +223,7 @@ namespace ClassRoomVR
         public Student[] GetStudents() { return _students.Values.ToArray(); }
 
        public StudentsController GetStudentsController() { return studentsController; }
+
 
     }
 }

@@ -16,6 +16,8 @@ namespace ClassRoomVR
                 //Instance._sceneManager = _sceneManager;
                 // if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
                 chosenPack = _packeges[0];
+                data = SaveSystem.LoadData();
+                InitData();
                 DontDestroyOnLoad(this);
             }
             else
@@ -104,6 +106,43 @@ namespace ClassRoomVR
             voice = voi;
         }
 
+
+
+        private void InitData()
+        {
+            
+            if (data != null)
+            {
+                settings.NumStu = data.numStu;
+                settings.Edad = data.edad;
+                settings.StructureClass = data.structureClass;
+                settings.Mode = data.mode;
+                //settings.Students = data.students;
+                settings.men = data.men;
+                settings.women = data.women;
+            }
+            else
+            {
+                data = new DataSystem();
+            }
+
+        }
+        private void OnApplicationQuit()
+        {
+            SaveState();
+        }
+        public void SaveState()
+        {
+            data.numStu = settings.NumStu;
+            data.edad = settings.Edad;
+            data.structureClass = settings.StructureClass;
+            data.mode = settings.Mode;
+            //data.students = settings.Students;
+            data.men = settings.men;
+            data.women = settings.women;
+            SaveSystem.SaveData(data);
+        }
+
         /// ATRIBUTOS ESTATICOS ///
         public static GameManager Instance;
 
@@ -118,6 +157,9 @@ namespace ClassRoomVR
         UIManager UIManager;
         GameObject player;
         [SerializeField] ClassManager classManager;
+        [SerializeField] StudentsSettings settings;
+        public StudentsSettings Settings => settings;
 
+        DataSystem data;
     }
 }

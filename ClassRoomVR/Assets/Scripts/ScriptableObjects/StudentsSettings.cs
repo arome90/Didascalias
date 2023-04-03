@@ -9,13 +9,14 @@ using UnityEditor;
 
 namespace ClassRoomVR
 {
+    public enum GenerateMode { Random, Personalizado, Gender };
+    public enum Age { Primero, Segundo, Tercero };
+    public enum Structure { Fila, U };
+
     [CreateAssetMenu(fileName = "New StudentsSettings", menuName = "ScriptableObject/StudentsSettings", order = 5)]
     public class StudentsSettings : ScriptableObject
     {
 
-        public enum GenerateMode { Random, Personalizado, Gender };
-        public enum Age { Primero, Segundo, Tercero };
-        public enum Structure { Fila, U };
 
         [Range(1, 30)]
         [SerializeField]
@@ -46,26 +47,35 @@ namespace ClassRoomVR
         public int NumStu
         {
             get { return numStu; }
+            set { numStu = value; }
         }
 
         public Age Edad
         {
             get { return edad; }
+            set { edad = value; }
+
         }
 
         public Structure StructureClass
         {
             get { return structureClass; }
+            set { structureClass = value; }
+
         }
 
         public GenerateMode Mode
         {
             get { return mode; }
+            set { mode = value; }
+
         }
 
         public StudentInfo[] Students
         {
             get { return students; }
+            set { students = value; }
+
         }
 
         public void ChangeMen(Slider s) 
@@ -149,8 +159,8 @@ namespace ClassRoomVR
 
        
     
+        }
         #endif
         #endregion
-        }
 
 }
