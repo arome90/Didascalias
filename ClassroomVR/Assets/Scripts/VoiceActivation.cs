@@ -108,14 +108,24 @@ namespace ClassRoomVR
             appVoiceExperience.Activate();
         }
 
-        public void OnMicLevelChanged(float a)
+        private void Update()
         {
-            if (!shout && a > 0.05f)
+            if(Input.GetKeyDown(KeyCode.G)) 
             {
                 shout = true;
                 st.SetMode(StudentsController.TalkMode.Disrespect);
                 Debug.Log("Gritando");
             }
+        }
+        public void OnMicLevelChanged(float a)
+        {
+            if (!shout && a > 0.05f )
+            {
+                shout = true;
+                st.SetMode(StudentsController.TalkMode.Disrespect);
+                Debug.Log("Gritando");
+            }
+            
 
         }
 
@@ -125,32 +135,39 @@ namespace ClassRoomVR
         {
             
             var intent = WitResultUtilities.GetIntentName(response);
+
             var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");
            
+            var insulto =  WitResultUtilities.GetFirstEntityValue(response, "Insultos:Insultos");
+
+            
+
             switch (intent)
             {
-                case "Sit":
+                case "Sentarse":
                     st.HandleSit(alumnos);
                     break;
-                case "Move":
-                    st.HandleMove(alumnos, WitResultUtilities.GetFirstEntityValue(response, "places:places"));
+                case "CambiarSitio":
+                    st.HandleMove(alumnos, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
                     break;
-                case "Postpone":
+                case "Postponer":
                     st.HandlePostpone();
                     break;
-                case "Expel":
+                case "Expulsion":
                     st.HandleExpel(alumnos);
                     break;
-                case "Disrespect":
-                    st.HandleDisrespect();
-                    break;
-                case "Calm":
-                    st.HandleCalm();
+                case "LLamarAlumno":
+                    st.HandleCall(alumnos);
                     break;
                 default:
                     Debug.LogError($"Intent no reconocido: {intent}");
                     break;
 
+            }
+
+            if (insulto != "") 
+            {
+                st.HandleDisrespect();
             }
 
         }

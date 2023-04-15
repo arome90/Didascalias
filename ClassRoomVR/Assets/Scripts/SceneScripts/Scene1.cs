@@ -13,7 +13,6 @@ namespace ClassRoomVR
         ClassManager classManager;
         ScenePackage sceneInfo;
         GameObject player;
-        VoiceActivation voice;
         float distanceInitial;
        
         [SerializeField] AudioClip ruido;
@@ -22,7 +21,6 @@ namespace ClassRoomVR
             bh = GetComponent<BehaviorTree>();
             sceneInfo = GameManager.Instance.GetScenePackage(0);
             player = GameManager.Instance.GetPlayer();
-            voice = GameManager.Instance.GetVoiceActivation();
             classManager = GameManager.Instance.GetClassManager();
             classManager.GetComponent<AudioSource>().clip = sceneInfo.before_bell;
             classManager.GetComponent<AudioSource>().Play();
@@ -136,7 +134,6 @@ namespace ClassRoomVR
 
             bh.GetVariable("AccionAlumno").SetValue(true);
             distanceInitial = Vector3.Distance(problematic.transform.position,player.transform.position);
-            //voice.ActivateWit();
             
         }
 

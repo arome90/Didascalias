@@ -30,12 +30,12 @@ namespace ClassRoomVR
         Collider collider;
         Vector3 dest;
 
-        [SerializeField]Transform target;
+        [SerializeField] Transform target;
         Vector3 targetPosition;
         Transform[] targets;
 
         [SerializeField] MultiAimConstraint head;
-        
+
 
         private void Start()
         {
@@ -43,7 +43,7 @@ namespace ClassRoomVR
             agent = GetComponent<NavMeshAgent>();
             state = State.Sit;
             //Invoke("cambiar", 2);
-            
+
 
         }
         public void SetParameters(string na, Gender s)
@@ -66,7 +66,7 @@ namespace ClassRoomVR
             {
                 animator.runtimeAnimatorController = controller;
             }
-            collider = transform.GetChild(transform.childCount-1).GetComponent<Collider>();
+            collider = transform.GetChild(transform.childCount - 1).GetComponent<Collider>();
             head.data.constrainedObject = getHeadBone();
             transform.GetComponent<RigBuilder>().Build();
         }
@@ -75,7 +75,7 @@ namespace ClassRoomVR
 
 
         //TODO: cambiar esto al meter nuevos prefabs
-        private Transform getHeadBone() 
+        private Transform getHeadBone()
         {
             Transform body = transform.GetChild(2);
             int i = body.childCount - 3;
@@ -88,7 +88,7 @@ namespace ClassRoomVR
             problematic = true;
         }
 
-        
+
 
 
         public void SetDesk(Vector3 pos)
@@ -103,9 +103,9 @@ namespace ClassRoomVR
         public bool GetProblematicStudent() { return problematic; }
         public AudioSource getAudio() { return audio; }
 
-    
-        
-        public void SetTargets(Transform[] tar) 
+
+
+        public void SetTargets(Transform[] tar)
         {
             targets = tar;
             ////Posiciones desde el estudiante
@@ -126,20 +126,20 @@ namespace ClassRoomVR
             int pos = Random.Range(0, targets.Length + dir.Length);
             if (pos < targets.Length) Debug.Log(targets[pos].localPosition);
             Debug.Log(target.localPosition);
-            targetPosition= pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
+            targetPosition = pos < targets.Length ? targets[pos].localPosition : dir[pos - targets.Length];
 
             //target.position = 
             //Debug.Log(pos + " " + name + target.localPosition);
         }
 
 
-        public void PayAttention() 
+        //En futuro implementar atencion al profesor jugando con source objects de multi aim
+        public void PayAttention()
         {
-            //target.position = targets[0].localPosition;
-            targetPosition = targets[0].localPosition;
+            target.position = targets[0].localPosition;
         }
 
-        public void GetDistracted() 
+        public void GetDistracted()
         {
 
             Vector3[] dir = getDirections();
@@ -164,40 +164,40 @@ namespace ClassRoomVR
 
             //}
 
-            if (Input.GetKeyDown(KeyCode.Alpha1)) 
+            if (Input.GetKeyDown(KeyCode.Alpha7))
             {
                 PayAttention();
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) 
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
                 GetDistracted();
             }
 
 
-           target.position = Vector3.MoveTowards(target.position, targetPosition, 3.0f* Time.deltaTime);
+            target.position = Vector3.MoveTowards(target.position, targetPosition, 3.0f * Time.deltaTime);
 
 
         }
 
 
-       
 
-        private Vector3[] getDirections() 
+
+        private Vector3[] getDirections()
         {
             Vector3[] vec = new Vector3[4];
             vec[0] = transform.localPosition + new Vector3(0, 1.5f, 1);
             vec[1] = transform.localPosition + Vector3.right;
-            vec[2] = transform.localPosition + new Vector3(0,-1, 1);
+            vec[2] = transform.localPosition + new Vector3(0, -1, 1);
             vec[3] = transform.localPosition + Vector3.left;
             return vec;
 
         }
 
-        public void PlayAnimation(string stateName) 
+        public void PlayAnimation(string stateName)
         {
-           
+
             animator.Play(stateName);
-            
+
         }
 
 
@@ -206,13 +206,24 @@ namespace ClassRoomVR
             animator.Play(stateName);
             audio.clip = clip;
             audio.Play();
-            Invoke("SetNoProblematicStudent", 2.0f);
+            //Invoke("SetNoProblematicStudent", 2.0f);
         }
 
-        public void SetNoProblematicStudent() 
+        public void SetNoProblematicStudent()
         {
             text.color = Color.black;
             problematic = false;
+            if(state==State.Stand) SitBack();
+        }
+
+
+        public bool IsStudentOnVision()
+        {
+            Plane[] cameraFrustum;
+            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+            var bounds = GetCollider().bounds;
+            bounds.center += new Vector3(0, 1f, 0);
+            return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
         }
 
         #region Move
@@ -246,7 +257,7 @@ namespace ClassRoomVR
         }
 
         //Sentarse en tu sitio
-        public void SitBack() 
+        public void SitBack()
         {
             agent.enabled = true;
             agent.SetDestination(deskPosition);
@@ -262,17 +273,17 @@ namespace ClassRoomVR
         {
             agent.enabled = true;
             dest = des;
-            if (state == State.Sit) 
+            if (state == State.Sit)
             {
-               animator.SetBool("onFoot", true);
-               
+                animator.SetBool("onFoot", true);
+
             }
             else
             {
                 animator.Play("Walking");
             }
             StartCoroutine(OnCompleteMove());
-            
+
         }
 
         //Cambiar de asiento 

@@ -17,7 +17,6 @@ namespace ClassRoomVR
         float distanceInitial;
 
         [SerializeField] AudioClip ruido;
-        [SerializeField] AnimationClip classAnimation;
         [SerializeField] AnimationClip probAnimation;
         void Start()
         {
@@ -29,6 +28,7 @@ namespace ClassRoomVR
             classManager.GetComponent<AudioSource>().clip = sceneInfo.before_bell;
             classManager.GetComponent<AudioSource>().Play();
         }
+        
         public void InitSituation()
         {
             Student[] students = classManager.GetStudents();

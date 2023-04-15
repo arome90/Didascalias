@@ -644,7 +644,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   witRuntimeConfiguration:
-    witConfiguration: {fileID: 11400000, guid: ebd079d8e86f12741a74faa3aeb1fa11, type: 2}
+    witConfiguration: {fileID: 11400000, guid: 19f6b0532c21147468ac16b4dedcb031, type: 2}
     minKeepAliveVolume: 1.11
     minKeepAliveTimeInSeconds: 2
     minTranscriptionKeepAliveTimeInSeconds: 1
@@ -793,6 +793,12 @@ MonoBehaviour:
   m_VoxelSize: 0.016666668
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: 9ad811b68c6805a47a9f9576f79997ea, type: 2}
+--- !u!4 &1297631616 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1403025452546203723, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+    type: 3}
+  m_PrefabInstance: {fileID: 4527603365333444012}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1403649777 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3244742245726976837, guid: 30026254a41da3f4eb202264ab31261c,
@@ -1651,7 +1657,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1899928210}
-  - component: {fileID: 1899928209}
+  - component: {fileID: 1899928213}
   - component: {fileID: 1899928211}
   - component: {fileID: 1899928212}
   m_Layer: 0
@@ -1660,27 +1666,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1899928209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1899928208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53806d3014ba02348b0b13aaa99ce9a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  studentsPositions: {fileID: 1796462725}
-  prefabStudent: {fileID: 9019673390633054933, guid: 9f267a2b04d8de5439269014065ea1d0,
-    type: 3}
-  desksManager: {fileID: 1796462726}
-  targetsHead:
-  - {fileID: 208386856}
-  - {fileID: 82599649}
-  - {fileID: 1242703533}
+  m_IsActive: 1
 --- !u!4 &1899928210
 Transform:
   m_ObjectHideFlags: 0
@@ -1808,7 +1794,32 @@ MonoBehaviour:
   backCorner: {fileID: 1403649777}
   door: {fileID: 82599649}
   actions:
+  - {fileID: 11400000, guid: 0f06dc8d11a509b48a6b88c0b8c9b145, type: 2}
+  - {fileID: 11400000, guid: f7edba2a86cdda54cab9bfc53005ed8e, type: 2}
   - {fileID: 11400000, guid: fa612d223f01b5d4bb68bfff9de1fc4b, type: 2}
+--- !u!114 &1899928213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899928208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53806d3014ba02348b0b13aaa99ce9a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  studentsPositions: {fileID: 1796462725}
+  prefabStudent: {fileID: 9019673390633054933, guid: 9f267a2b04d8de5439269014065ea1d0,
+    type: 3}
+  desksManager: {fileID: 1796462726}
+  targetsHead:
+  - {fileID: 208386856}
+  - {fileID: 82599649}
+  - {fileID: 1242703533}
+  - {fileID: 1297631616}
+  before_bell: {fileID: 8300000, guid: ab5010ab38510d74cb1c5d5a75a89adc, type: 3}
+  after_bell: {fileID: 0}
 --- !u!1001 &1906091840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1895,7 +1906,7 @@ PrefabInstance:
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
       propertyPath: VRHardware
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
@@ -1907,7 +1918,7 @@ PrefabInstance:
         type: 3}
       propertyPath: classManager
       value: 
-      objectReference: {fileID: 1899928209}
+      objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
       propertyPath: _sceneManager
@@ -2457,6 +2468,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1403025452365219624, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452704113784, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1403025453598942444, guid: d9eb0447aa6d0e14b992cf2912b11a07,
         type: 3}
       propertyPath: m_Name

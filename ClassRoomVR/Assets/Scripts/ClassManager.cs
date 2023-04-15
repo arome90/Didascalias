@@ -29,11 +29,17 @@ namespace ClassRoomVR
         int clima;
 
 
-        ScenePackage sceneInfo;
+       // ScenePackage sceneInfo;
         ClassInfo classInfo;
         List<List<string>> names;
         List<GameObject[]> prefabBodys;
         StudentsSettings settings;
+
+        // Campanas de entrada y salida
+        [SerializeField] AudioClip before_bell;
+        //[SerializeField] AudioClip mix_before_bell;
+        [SerializeField] AudioClip after_bell;
+
         private void Start()
         {
 
@@ -43,8 +49,9 @@ namespace ClassRoomVR
 
             _asientosOcupados = new bool[studentsPositions.childCount];
             _students = new Dictionary<string, Student>();
-            sceneInfo = GameManager.Instance.getPack();
-            Instantiate(sceneInfo.scene);
+            _problematicStudents = new HashSet<string>();
+            //sceneInfo = GameManager.Instance.getPack();
+            //Instantiate(sceneInfo.scene);
             classInfo = GameManager.Instance.getClass();
             //Se usan listas para tener una lista auxiliar de la que se eliminan sus componentes
             //De esta manera no se repite ningun nombre ni body hasta que se agoten
@@ -55,7 +62,11 @@ namespace ClassRoomVR
             prefabBodys.Add(classInfo.girlsPrefabs);
             prefabBodys.Add(classInfo.boysPrefabs);
             generateChilds();
-            StartScene();
+            //StartScene();
+            studentsController.SetParameters(_students);
+
+            GetComponent<AudioSource>().clip = before_bell;
+            GetComponent<AudioSource>().Play();
         }
 
         //Genera los alumnos de la clase en sus posiciones
@@ -86,12 +97,13 @@ namespace ClassRoomVR
                     int indexName = Random.Range(0, names[gender].Count);
                     Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Student.Gender)gender);
                     names[gender].RemoveAt(indexName);
-                    PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                    //PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                    PlaceStudent(ref deskPos, pickedStudent, 1);
                     deskPos++;
                 }
             }
 
-            SetProblematicStudents(sceneInfo);
+            //SetProblematicStudents(sceneInfo);
             // Ejecutamos animaciones con distinto timing
             PlayAnimationsAtDifferentTimeClass(classInfo.idleAnim.name);
         }
@@ -127,7 +139,8 @@ namespace ClassRoomVR
                 int indexName = Random.Range(0, names[gender].Count);
                 Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Student.Gender)gender);
                 names[gender].RemoveAt(indexName);
-                PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+               // PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                PlaceStudent(ref deskPos, pickedStudent, 1);
                 deskPos++;
 
             }
@@ -145,7 +158,8 @@ namespace ClassRoomVR
                 int nBody =GetEnumValue<StudentInfo.BodyInfo>((int)info.Body);
                 GameObject body = gen == Student.Gender.Men ? classInfo.boysPrefabs[nBody] : classInfo.girlsPrefabs[nBody];
                 Student pickedStudent = CreateStudent(body, info.Name, gen);
-                PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                //PlaceStudent(ref deskPos, pickedStudent, sceneInfo.nGroups);
+                PlaceStudent(ref deskPos, pickedStudent,1);
                 deskPos++;
                
             }
@@ -173,7 +187,6 @@ namespace ClassRoomVR
         private void SetProblematicStudents(ScenePackage scene ) 
         {
             // Estudiantes problematicos
-            _problematicStudents = new HashSet<string>();
             int problematic = UnityEngine.Random.Range(0, settings.NumStu);
             _problematicStudents.Add(_students.ElementAt(problematic).Key);
             _students.ElementAt(problematic).Value.SetProblematicStudent();
@@ -215,7 +228,7 @@ namespace ClassRoomVR
             string t = sceneInfo.iniMessage.Replace("alum", alumsName);
             Debug.Log(t);
 
-            studentsController.SetParameters(_students, _problematicStudents);
+            studentsController.SetParameters(_students);
             //uiManager.panelContexto(t);
         }
 
