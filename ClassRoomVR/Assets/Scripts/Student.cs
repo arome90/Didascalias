@@ -36,11 +36,16 @@ namespace ClassRoomVR
 
         [SerializeField] MultiAimConstraint head;
 
+        //de momento 
+        [SerializeField]
+        TextMesh atencion;
 
+        StudentBehavior behavior;
         private void Start()
         {
             audio = GetComponent<AudioSource>();
             agent = GetComponent<NavMeshAgent>();
+            behavior = GetComponent<StudentBehavior>();
             state = State.Sit;
             //Invoke("cambiar", 2);
 
@@ -176,7 +181,7 @@ namespace ClassRoomVR
 
             target.position = Vector3.MoveTowards(target.position, targetPosition, 3.0f * Time.deltaTime);
 
-
+            atencion.text = behavior.NivelAtencion.ToString("0.##");
         }
 
 
@@ -308,6 +313,13 @@ namespace ClassRoomVR
             text.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             SitBack();
         }
+        #endregion
+
+
+        #region Behavior
+
+        public StudentBehavior GetBehavior() { return behavior; }
+
         #endregion
     }
 

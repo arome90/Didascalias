@@ -40,7 +40,7 @@ namespace ClassRoomVR
         //[SerializeField] AudioClip mix_before_bell;
         [SerializeField] AudioClip after_bell;
 
-        private void Start()
+        private void Awake()
         {
 
             GameManager.Instance.setClass(this);
@@ -62,6 +62,7 @@ namespace ClassRoomVR
             prefabBodys.Add(classInfo.girlsPrefabs);
             prefabBodys.Add(classInfo.boysPrefabs);
             generateChilds();
+
             //StartScene();
             studentsController.SetParameters(_students);
 
@@ -229,6 +230,7 @@ namespace ClassRoomVR
             Debug.Log(t);
 
             studentsController.SetParameters(_students);
+            
             //uiManager.panelContexto(t);
         }
 

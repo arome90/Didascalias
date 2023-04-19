@@ -6,16 +6,24 @@ namespace ClassRoomVR
 {
     public class StudentBehavior : MonoBehaviour
     {
-        [SerializeField] float nivelAtencion = 50.0f; // a>50 atento   a<50 despistado
+        [SerializeField] float nivelAtencion = 50.0f;// a>50 atento   a<50 despistado
+        public float NivelAtencion => nivelAtencion;
+
         [SerializeField] bool disruptiveBehavior;
-        [SerializeField] float timeOfDecision=2.5f;
-        Student st;
+        [SerializeField] float timeOfDecision  = 2.5f;
+        public float TimeOfDecision => timeOfDecision;
 
         [SerializeField] float addAttention=30;
         [SerializeField] float subAttention=20;
 
         [SerializeField] float contAdd=0.2f;
         [SerializeField] float contSub=0.1f;
+
+
+        Student st;
+
+        private float nivelAtencionMedia;
+        private int cont;
 
 
         float contAddAux;
@@ -52,23 +60,11 @@ namespace ClassRoomVR
         public void SetDisruptive(bool value) { disruptiveBehavior = value; }
 
 
-        private bool VisionOfProfessor()
-        {
-            Plane[] cameraFrustum;
-            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-            var bounds = st.GetCollider().bounds;
-            bounds.center += new Vector3(0, 1f, 0);
-            return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
-        }
-
-
-
 
         //Método de toma de decisiones
         private void DecidirComportamiento()
         {
-
-            if (VisionOfProfessor()) 
+            if (st.IsStudentOnVision()) 
                 AddAttention(); 
             else SubAttention();
 
@@ -92,5 +88,23 @@ namespace ClassRoomVR
             //     Implementa aquí el comportamiento correspondiente
             //}
         }
+
+        /// <summary>
+        /// Calcula la media de la atencion 
+        /// </summary>
+        public float CalculateMedia() 
+        {
+            float sum = nivelAtencionMedia * cont + nivelAtencion;
+            cont++;
+            nivelAtencionMedia = sum/cont;
+            return nivelAtencionMedia;
+        }
+
+        public float GetNivelAtencionMedia()
+        {
+            return nivelAtencionMedia;
+        }
+
+
     }
 }
