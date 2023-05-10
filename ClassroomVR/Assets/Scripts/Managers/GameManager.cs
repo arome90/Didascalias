@@ -16,8 +16,11 @@ namespace ClassRoomVR
                 //Instance._sceneManager = _sceneManager;
                 // if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
                 chosenPack = _packeges[0];
-                data = SaveSystem.LoadData();
-                InitData();
+                if (save)
+                {
+                    data = SaveSystem.LoadData();
+                    InitData();
+                }
                 DontDestroyOnLoad(this);
             }
             else
@@ -129,10 +132,14 @@ namespace ClassRoomVR
         }
         private void OnApplicationQuit()
         {
-            SaveState();
+            if (save)
+            {
+                SaveState();
+            }
         }
         public void SaveState()
         {
+            
             data.numStu = settings.NumStu;
             data.edad = settings.Edad;
             data.structureClass = settings.StructureClass;
@@ -143,6 +150,15 @@ namespace ClassRoomVR
             SaveSystem.SaveData(data);
         }
 
+        public void SetDeskFormation(List<bool> d) 
+        {
+            desks_ = d;
+        }
+
+        public List<bool> GetDeskFormation()
+        {
+            return desks_;
+        }
         /// ATRIBUTOS ESTATICOS ///
         public static GameManager Instance;
 
@@ -151,14 +167,17 @@ namespace ClassRoomVR
         [SerializeField] ScenePackage[] _packeges;
         [SerializeField] ClassInfo _classInfo;
         [SerializeField] bool VRHardware = false;
+        [SerializeField] bool save = false;
         [SerializeField] VoiceActivation voice;
         private ScenePackage chosenPack;
         private Wit wit;
         UIManager UIManager;
         GameObject player;
+        List<bool> desks_;
+
         [SerializeField] ClassManager classManager;
-        [SerializeField] StudentsSettings settings;
-        public StudentsSettings Settings => settings;
+        [SerializeField] ClassSettings settings;
+        public ClassSettings Settings => settings;
 
         DataSystem data;
     }

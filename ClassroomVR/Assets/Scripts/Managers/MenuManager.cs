@@ -12,9 +12,14 @@ namespace ClassRoomVR
         [SerializeField] GameObject positionPlayer;
         [SerializeField] GameObject player;
         Vector3 playerInit;
+
+
         private void Start()
         {
-            playerInit = player.transform.position;
+            if (player != null)
+            {
+                playerInit = player.transform.position;
+            }
         }
         public void PlayButton()
         {
@@ -40,7 +45,7 @@ namespace ClassRoomVR
 
             }
         }
-
+       
         public void QuitButton()
         {
         #if UNITY_EDITOR

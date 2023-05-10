@@ -7,7 +7,7 @@ namespace ClassRoomVR
     {
         [SerializeField]
         private Transform lookRoot;
-        
+
         [SerializeField]
         private float sensivity = 5f;
         [SerializeField]
@@ -39,7 +39,7 @@ namespace ClassRoomVR
         }
         private void OnTriggerEnter(Collider other)
         {
-           // GameManager.Instance._sceneManager.setCollision(other.GetComponentInParent<Transform>().gameObject.name);
+            // GameManager.Instance._sceneManager.setCollision(other.GetComponentInParent<Transform>().gameObject.name);
         }
 
         // Camara
@@ -55,7 +55,7 @@ namespace ClassRoomVR
         void Pause()
         {
             if (Input.GetKeyDown(KeyCode.Q))
-            {       
+            {
                 if (Cursor.lockState == CursorLockMode.Locked)
                 {
                     unlockCursor();
@@ -65,7 +65,7 @@ namespace ClassRoomVR
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                     Time.timeScale = 1;
-                    
+
                 }
             }
         }
@@ -96,6 +96,6 @@ namespace ClassRoomVR
 
             character_Controller.Move(velocity * Time.deltaTime);
         }
-      
+
     }
 }
