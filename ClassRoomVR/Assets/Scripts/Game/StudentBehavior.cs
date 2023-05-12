@@ -37,9 +37,9 @@ namespace ClassRoomVR
         {
             st = GetComponent<Student>();
             player = Camera.main.transform;
-            InvokeRepeating("DecidirComportamiento", timeOfDecision, timeOfDecision);
             contAddAux = contAdd;
             contSubAux = contSub;
+            InvokeRepeating("DecidirComportamiento", timeOfDecision, timeOfDecision);
         }
 
         
@@ -47,22 +47,23 @@ namespace ClassRoomVR
         public void AddAttention()
         {
 
-            float dis = 1 - Vector3.Distance(transform.position, player.transform.position)*distanceFactorAdd / 100;
-            nivelAtencion += Mathf.Abs(addAttention*(1+contAdd)*dis);
+
+            float dis = distanceFactorAdd * (1 - Vector3.Distance(transform.position, player.transform.position)/10) ;
+            nivelAtencion += addAttention*(1+contAdd)*(1+dis);
             if (nivelAtencion > 100) { nivelAtencion = 100; }
-            //0.01 o tener otra variable para el aumento
             contAdd += contAddAux;
             contSub = contSubAux;
+            
         }
 
         public void SubAttention()
         {
-            float dis = 1 - Vector3.Distance(transform.position, player.transform.position) * distanceFactorSub / 100;
-
-            nivelAtencion -= subAttention * (1 + contSub)/dis;
+            float dis = distanceFactorSub * (1 + Vector3.Distance(transform.position, player.transform.position) / 10);
+            nivelAtencion -= subAttention * (1 + contSub)*(1+dis);
             if (nivelAtencion <= 0) { nivelAtencion = 0; }
             contSub += contSubAux;
             contAdd = contAddAux;
+            Debug.Log(nivelAtencion+name);
         }
 
 

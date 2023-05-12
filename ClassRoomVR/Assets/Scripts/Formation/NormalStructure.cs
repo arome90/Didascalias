@@ -51,18 +51,10 @@ namespace ClassRoomVR
             }
         }
 
-
-
-
-
-
-
         void ChangeDesk(Toggle toggle)
         {
             list_[toggle].gameObject.SetActive(toggle.isOn);
         }
-
-
 
         private void Update()
         {
@@ -81,7 +73,7 @@ namespace ClassRoomVR
             {
                 ChangeRows(settings.rows - 1f);
                 rowsOpt.SetValue(settings.rows);
-
+                
             }
             else if (Input.GetKeyDown(KeyCode.Alpha4))
             {

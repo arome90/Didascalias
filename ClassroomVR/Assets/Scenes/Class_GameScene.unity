@@ -131,6 +131,52 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1613999403}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &42315553
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 42315555}
+  - component: {fileID: 42315554}
+  m_Layer: 0
+  m_Name: DeskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &42315554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42315553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9edb0d3acb8333948b3892c34f05c617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabDesk: {fileID: 8700244462872127080, guid: 6e83329dfaa430c41ba0ad82352bd5c1,
+    type: 3}
+--- !u!4 &42315555
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42315553}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.187, y: 0.55, z: -7.29}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &58415561 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000010644921320, guid: 30026254a41da3f4eb202264ab31261c,
@@ -645,7 +691,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 904727587}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7240458, y: 0.72644573, z: 5.8773203}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -785,12 +831,12 @@ GameObject:
   - component: {fileID: 1011640704}
   - component: {fileID: 1011640703}
   m_Layer: 0
-  m_Name: DeskManager
+  m_Name: DeskManager2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1011640703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -803,18 +849,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc50f2e997736a48b26bc984fb101d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  desksNum: 0
   groups: 0
-  F: 10
-  C: 10
+  freeDesks: 
+  F: 0
+  C: 0
   sillasVacias: 0
   prefabDesk: {fileID: 8700244462872127080, guid: 6e83329dfaa430c41ba0ad82352bd5c1,
     type: 3}
-  spaceX: 1
+  spaceX: 1.12
   spaceZ: 1
   numObjects: 23
   radius: 3.4
   allign: 1
   grados: 360
+  desks_: []
+  gam: {fileID: 0}
 --- !u!4 &1011640704
 Transform:
   m_ObjectHideFlags: 0
@@ -1822,7 +1872,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc50f2e997736a48b26bc984fb101d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  desksNum: 0
   groups: 0
+  freeDesks: 
   F: 0
   C: 0
   sillasVacias: 0
@@ -1833,6 +1885,8 @@ MonoBehaviour:
   radius: 2
   allign: 0
   grados: 360
+  desks_: []
+  gam: {fileID: 0}
 --- !u!1 &1801419638
 GameObject:
   m_ObjectHideFlags: 0
@@ -2005,7 +2059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1899928210
 Transform:
   m_ObjectHideFlags: 0
@@ -2148,10 +2202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53806d3014ba02348b0b13aaa99ce9a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  studentsPositions: {fileID: 1011640704}
   prefabStudent: {fileID: 9019673390633054933, guid: 9f267a2b04d8de5439269014065ea1d0,
     type: 3}
-  desksManager: {fileID: 1011640703}
   targetsHead:
   - {fileID: 1242703533}
   - {fileID: 82599649}

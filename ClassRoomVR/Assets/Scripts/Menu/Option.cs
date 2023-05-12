@@ -59,7 +59,13 @@ public class Option : MonoBehaviour
         max = value;
     }
 
-    
+
+    public void SetMin(float value)
+    {
+        min = value;
+    }
+
+
 
     public void SetValue(float v)
     {

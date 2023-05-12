@@ -59,9 +59,9 @@ MonoBehaviour:
   addAttention: 6
   subAttention: 5
   contAdd: 0.23
-  contSub: 0.19
-  distanceFactorAdd: 20
-  distanceFactorSub: 4
+  contSub: 0.25
+  distanceFactorAdd: 1.5
+  distanceFactorSub: 0.6
 --- !u!195 &7404835763489981494
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -617,8 +617,8 @@ MonoBehaviour:
         transform: {fileID: 0}
         weight: 0
     m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: -75
-    m_MaxLimit: 75
+    m_MinLimit: -20
+    m_MaxLimit: 60
     m_AimAxis: 4
     m_UpAxis: 2
     m_WorldUpType: 1

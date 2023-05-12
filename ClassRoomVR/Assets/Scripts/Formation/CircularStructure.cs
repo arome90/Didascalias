@@ -45,6 +45,10 @@ namespace ClassRoomVR
             }
         }
 
+
+
+
+
         void ChangeDesk(Toggle toggle) 
         {
             list_[toggle].gameObject.SetActive(toggle.isOn);
@@ -60,9 +64,10 @@ namespace ClassRoomVR
 
         private void OnEnable()
         {
-            radiusOpt.onValueChanged.AddListener(ChangeRadius);
+            radiusOpt.onValueChanged.AddListener(ChangeRadius); 
+            gradesOpt.onValueChanged.AddListener(ChangeGrades);
+
             // SetMaxDesks();
-            radiusOpt.SetValue(settings.radius);
             if (settings.StructureClass == StructureMode.U) 
             {
                 gradesOpt.gameObject.SetActive(false);
@@ -73,6 +78,8 @@ namespace ClassRoomVR
                 gradesOpt.gameObject.SetActive(true);
                 settings.grades = settings.grades == 180f ? 360f : settings.grades;
             }
+            gradesOpt.SetValue(settings.grades);
+            radiusOpt.SetValue(settings.radius);
 
             Set();
 
@@ -85,7 +92,14 @@ namespace ClassRoomVR
             Set();
         }
 
+        void ChangeGrades(float value)
+        {
+            settings.grades = value;
+            // SetMaxDesks();
+            Set();
+        }
 
+     
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))

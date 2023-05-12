@@ -22,6 +22,8 @@ namespace ClassRoomVR
                 GoNextScreen();
             });
             salir.onClick.AddListener(QuitButton);
+            //Quitar en un futuro 
+            DontDestroyOnLoad(GameObject.Find("DeskManager"));
         }
 
         void GoNextScreen()

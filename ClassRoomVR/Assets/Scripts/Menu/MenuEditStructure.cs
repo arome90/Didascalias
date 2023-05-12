@@ -47,11 +47,7 @@ namespace ClassRoomVR
             circular.gameObject.SetActive(circu);
             fila.gameObject.SetActive(!circu);
             struActual = circu ? circular : fila;
-            aplicar.onClick.AddListener(() =>
-            {
-                struActual.Accept();
-                GoNextScreen();
-            });
+            aplicar.onClick.AddListener(GoNextScreen);
         }
 
     }

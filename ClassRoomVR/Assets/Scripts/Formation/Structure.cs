@@ -20,34 +20,33 @@ namespace ClassRoomVR
 
         public abstract void Set();
 
-        public List<bool> getList() 
-        {
-            //List<bool> l = new List<bool>();
-            //foreach(Toggle t in toggles) 
-            //{
-            //    l.Add(t.isOn);
-            //}
-            //return l;
-            return null;
-        }
-
-
-        public void Accept()
-        {
-            GameManager.Instance.SetDeskFormation(getList());
-        }
-
         private void Awake()
         {
             //toggles = new List<Toggle>();
             list_ = new Dictionary<Toggle, Desk>();
             settings = GameManager.Instance.Settings;
+            settings.numDesks = settings.NumStu;
             numDesks.SetValue(settings.numDesks);
+            numDesks.SetMin(settings.NumStu);
             numDesks.onValueChanged.AddListener(ChangeObjects);
             DontDestroyOnLoad(parentDesk);
         }
 
-        
+
+        private void OnDisable()
+        {
+
+            foreach (Transform child in parentDesk.transform)
+            {
+                if (!child.gameObject.activeSelf)
+                {
+                    Destroy(child.gameObject);
+
+                }
+            }
+
+        }
+
         protected void ChangeObjects(float value)
         {
             settings.numDesks = (int)value;

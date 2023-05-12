@@ -7,7 +7,6 @@ namespace ClassRoomVR
 {
     public class ClassManager : MonoBehaviour
     {
-        [SerializeField]
         Transform studentsPositions;
         [SerializeField]
         private Student prefabStudent;
@@ -16,7 +15,6 @@ namespace ClassRoomVR
         Dictionary<string, Student> _students;
         StudentsController studentsController;
 
-        [SerializeField] DesksManager desksManager;
 
         [SerializeField] Transform[] targetsHead;
 
@@ -47,8 +45,14 @@ namespace ClassRoomVR
             GameManager.Instance.setClass(this);
             settings = GameManager.Instance.Settings;
             studentsController = GetComponent<StudentsController>();
-
-            _asientosOcupados = new bool[studentsPositions.childCount];
+            studentsPositions = DeskManager.Instance.gameObject.transform;
+            if (studentsPositions.childCount == 0)
+            {
+                if (settings.StructureClass == StructureMode.Circular) { DeskManager.Instance.CreateO(); }
+                else if (settings.StructureClass == StructureMode.U) DeskManager.Instance.CreateU();
+                else DeskManager.Instance.CreateDesks();
+            }
+           _asientosOcupados = new bool[studentsPositions.childCount];
             _students = new Dictionary<string, Student>();
             _problematicStudents = new HashSet<string>();
             //sceneInfo = GameManager.Instance.getPack();
@@ -124,7 +128,7 @@ namespace ClassRoomVR
 
         private void PlaceStudent( ref int deskPos,Student pickedStudent, int nGruops)
         {
-            desksManager.getFreeDesk(ref deskPos, nGruops);
+            DeskManager.Instance.getFreeDesk(ref deskPos, nGruops);
             // Lo colocamos en su pupitre
             Transform pos = studentsPositions.GetChild(deskPos).GetChild(0);
             //Vector3 position = pos.position + new Vector3(0, -0.39f, 0);
@@ -186,20 +190,20 @@ namespace ClassRoomVR
         //}
 
 
-        private void SetProblematicStudents(ScenePackage scene ) 
-        {
-            // Estudiantes problematicos
-            int problematic = UnityEngine.Random.Range(0, settings.NumStu);
-            _problematicStudents.Add(_students.ElementAt(problematic).Key);
-            _students.ElementAt(problematic).Value.SetProblematicStudent();
-            if (scene.problematicTogether)
-            {
-                problematic = desksManager.GetNearDeskRandom(problematic, settings.NumStu);
-                _problematicStudents.Add(_students.ElementAt(problematic).Key);
-                _students.ElementAt(problematic).Value.SetProblematicStudent();
-            }
+        //private void SetProblematicStudents(ScenePackage scene ) 
+        //{
+        //    // Estudiantes problematicos
+        //    int problematic = UnityEngine.Random.Range(0, settings.NumStu);
+        //    _problematicStudents.Add(_students.ElementAt(problematic).Key);
+        //    _students.ElementAt(problematic).Value.SetProblematicStudent();
+        //    if (scene.problematicTogether)
+        //    {
+        //        problematic = desksManager.GetNearDeskRandom(problematic, settings.NumStu);
+        //        _problematicStudents.Add(_students.ElementAt(problematic).Key);
+        //        _students.ElementAt(problematic).Value.SetProblematicStudent();
+        //    }
            
-        }
+        //}
 
         private void PlayAnimationsAtDifferentTimeClass(string animName)
         {
