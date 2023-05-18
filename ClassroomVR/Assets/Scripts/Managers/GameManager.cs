@@ -1,5 +1,4 @@
 ﻿using Meta.WitAi;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,177 +7,162 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
+        private GameObject player;
+        private DataSystem savedData;
+        private ScenePackage chosenPackage;
+        //Managers
+        //private UIManager uiManager;
+        private ClassManager classManager;
+        private VoiceActivation voiceActivation;
+
+        [SerializeField] private ClassSettings currentSettings;
+        [SerializeField] private ClassSettings[] availableSettings;
+        [SerializeField] private ScenePackage[] availablePackages;
+        [SerializeField] private ClassInfo currentClassInfo;
+        [SerializeField] private bool isUsingVRHardware = false;
+        [SerializeField] private bool isAutoSavingEnabled = false;
+
+        public static GameManager Instance;
+
         private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
-                //Instance._sceneManager = _sceneManager;
-                // if (_sceneManager != null) if (chosenPack == null) chosenPack = _packeges[0];
-                chosenPack = _packeges[0];
-                if (save)
+                chosenPackage = availablePackages[0];
+
+                if (isAutoSavingEnabled)
                 {
-                    data = SaveSystem.LoadData();
+                    savedData = SaveSystem.LoadData();
                     InitData();
                 }
+
                 DontDestroyOnLoad(this);
             }
             else
             {
-               // Instance._sceneManager = _sceneManager;
                 DestroyImmediate(this);
             }
         }
 
-        public ScenePackage getPack()
+        public ScenePackage GetChosenPackage()
         {
-            return chosenPack;
+            return chosenPackage;
         }
 
-        public ClassInfo getClass()
+        public ClassInfo GetCurrentClassInfo()
         {
-            return _classInfo;
+            return currentClassInfo;
         }
 
-        
-        public bool getVR()
+        public bool IsUsingVRHardware()
         {
-            return VRHardware;
+            return isUsingVRHardware;
         }
 
         public void LoadMainMenu()
         {
             SceneManager.LoadScene("Menu");
         }
+
         public void LoadMainScene()
         {
             SceneManager.LoadScene("Class_GameScene");
         }
 
-        public void makeChoice(int i)
+        public void SetChosenPackage(int index)
         {
-            chosenPack = _packeges[i];
+            chosenPackage = availablePackages[index];
         }
 
-        public ScenePackage GetScenePackage(int i)
+        public ScenePackage GetPackageAtIndex(int index)
         {
-            return _packeges[i];
-        }
-        public string getpackName(int i)
-        {
-            return _packeges[i].name;
+            return availablePackages[index];
         }
 
-        public int getNPacks() { return _packeges.Length; }
+        //public void SetUIManager(UIManager ui)
+        //{
+        //    uiManager = ui;
+        //}
 
-
-
-        public void SetUIManager(UIManager ui)
+        public void SetPlayer(GameObject playerObj)
         {
-            //Presentamos el UIManager al GameManager
-            UIManager = ui;
-        }
-
-        public void SetPlayer(GameObject pl)
-        {
-            //Presentamos el Player al GameManager
-            player = pl;
+            player = playerObj;
         }
 
         public GameObject GetPlayer()
         {
-            return player;      
+            return player;
         }
+
         public ClassManager GetClassManager()
         {
             return classManager;
         }
-        public void setClass(ClassManager cl)
-        {
-            classManager = cl;
-        }
 
+        public void SetClassManager(ClassManager classMgr)
+        {
+            classManager = classMgr;
+        }
 
         public VoiceActivation GetVoiceActivation()
         {
-            return voice;
+            return voiceActivation;
         }
-        public void SetVoiceActivation(VoiceActivation voi)
+
+        public void SetVoiceActivation(VoiceActivation voice)
         {
-            //Presentamos  Wit al GameManager
-            voice = voi;
+            voiceActivation = voice;
         }
 
-
+        public void SetCurrentSettings(int index)
+        {
+            currentSettings = availableSettings[index];
+        }
 
         private void InitData()
         {
-            
-            if (data != null)
+            if (savedData != null)
             {
-                settings.NumStu = data.numStu;
-                settings.Edad = data.edad;
-                settings.StructureClass = data.structureClass;
-                settings.Mode = data.mode;
-                //settings.Students = data.students;
-                settings.men = data.men;
-                settings.women = data.women;
+                currentSettings.NumStudents = savedData.numStudents;
+                currentSettings.Age = savedData.Age;
+                currentSettings.StructureMode = savedData.StructureMode;
+                currentSettings.Mode = savedData.Mode;
+                currentSettings.NumMen = savedData.MenCount;
+                currentSettings.NumWomen = savedData.WomenCount;
             }
             else
             {
-                data = new DataSystem();
+                savedData = new DataSystem();
             }
-
         }
+
         private void OnApplicationQuit()
         {
-            if (save)
+            if (isAutoSavingEnabled)
             {
                 SaveState();
             }
         }
         public void SaveState()
         {
-            
-            data.numStu = settings.NumStu;
-            data.edad = settings.Edad;
-            data.structureClass = settings.StructureClass;
-            data.mode = settings.Mode;
-            //data.students = settings.Students;
-            data.men = settings.men;
-            data.women = settings.women;
-            SaveSystem.SaveData(data);
+            savedData.numStudents = currentSettings.NumStudents;
+            savedData.Age = currentSettings.Age;
+            savedData.StructureMode = currentSettings.StructureMode;
+            savedData.Mode = currentSettings.Mode;
+            savedData.MenCount = currentSettings.NumMen;
+            savedData.WomenCount = currentSettings.NumWomen;
+            SaveSystem.SaveData(savedData);
         }
 
-        public void SetDeskFormation(List<bool> d) 
+        public ClassSettings GetCurrentSettings()
         {
-            desks_ = d;
+            return currentSettings;
         }
 
-        public List<bool> GetDeskFormation()
+        public ClassSettings[] GetAvailableSettings()
         {
-            return desks_;
+            return availableSettings;
         }
-        /// ATRIBUTOS ESTATICOS ///
-        public static GameManager Instance;
-
-        /// ATRIBUTOS NO ESTATICOS ///
-        //public MySceneManager _sceneManager;
-        [SerializeField] ScenePackage[] _packeges;
-        [SerializeField] ClassInfo _classInfo;
-        [SerializeField] bool VRHardware = false;
-        [SerializeField] bool save = false;
-        [SerializeField] VoiceActivation voice;
-        private ScenePackage chosenPack;
-        private Wit wit;
-        UIManager UIManager;
-        GameObject player;
-        List<bool> desks_;
-
-        [SerializeField] ClassManager classManager;
-        [SerializeField] ClassSettings settings;
-        public ClassSettings Settings => settings;
-
-        DataSystem data;
     }
 }

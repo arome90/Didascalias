@@ -1,48 +1,36 @@
 using UnityEngine;
 using System.IO;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
 [System.Serializable]
 public class DataSystem
 {
-    public string hash = string.Empty;
+    public string Hash { get; set; } = string.Empty;
 
-    public int numStu;
+    public int numStudents { get; set; }
 
-    public ClassRoomVR.Age edad;
+    public Age Age { get; set; }
 
-    public ClassRoomVR.StructureMode structureClass;
+    public StructureMode StructureMode { get; set; }
 
-    public ClassRoomVR.GenerateMode mode;
+    public GenerateMode Mode { get; set; }
 
-    public ClassRoomVR.StudentInfo[] students;
+    public ClassRoomVR.StudentInfo[] Students { get; set; }
 
-    public int men;
-    public int women;
+    public int MenCount { get; set; }
+    public int WomenCount { get; set; }
 }
-
-//[System.Serializable]
-//public class Student 
-//{
-//   public string nameStudent;
-//   public int gender;
-//   public bool hasDisability;
-//   public int origin;
-//   public int body;
-//}
-
 
 public class SaveSystem
 {
     public static void SaveData(DataSystem data)
     {
-        data.hash = string.Empty;
-        data.hash = Hash(JsonUtility.ToJson(data));
+        data.Hash = string.Empty;
+        data.Hash = CalculateHash(JsonUtility.ToJson(data));
 
-        string json = JsonUtility.ToJson(data,true);
-        string path = Application.persistentDataPath + "/save.json";
+        string json = JsonUtility.ToJson(data, true);
+        string path = Path.Combine(Application.persistentDataPath, "save.json");
         if (File.Exists(path))
         {
             File.Delete(path);
@@ -52,39 +40,46 @@ public class SaveSystem
 
     public static DataSystem LoadData()
     {
-        string path = Application.persistentDataPath + "/save.json";
+        string path = Path.Combine(Application.persistentDataPath, "save.json");
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
             DataSystem data = JsonUtility.FromJson<DataSystem>(json);
 
-            string hash = data.hash;
-            data.hash = string.Empty;
-            if (Hash(JsonUtility.ToJson(data)).Equals(hash))
+            string hash = data.Hash;
+            data.Hash = string.Empty;
+            if (CalculateHash(JsonUtility.ToJson(data)).Equals(hash))
             {
                 return data;
             }
-            else return null;
+            else
+            {
+                return null;
+            }
         }
-        else { return null; }
+        else
+        {
+            return null;
+        }
     }
 
-
-    public static string Hash(string data)
+    public static string CalculateHash(string data)
     {
-        SHA256Managed mySha256 = new SHA256Managed();
-        byte[] textToBytes = Encoding.UTF8.GetBytes(data);
-        byte[] hashValue = mySha256.ComputeHash(textToBytes);
-        return GetHexStringFromHash(hashValue);
+        using (SHA256Managed sha256 = new SHA256Managed())
+        {
+            byte[] textBytes = Encoding.UTF8.GetBytes(data);
+            byte[] hashBytes = sha256.ComputeHash(textBytes);
+            return GetHexStringFromHash(hashBytes);
+        }
     }
 
     private static string GetHexStringFromHash(byte[] hash)
     {
-        string hexString = string.Empty;
+        StringBuilder hexBuilder = new StringBuilder(hash.Length * 2);
         foreach (byte b in hash)
         {
-            hexString += b.ToString("x2");
+            hexBuilder.Append(b.ToString("x2"));
         }
-        return hexString;
+        return hexBuilder.ToString();
     }
 }

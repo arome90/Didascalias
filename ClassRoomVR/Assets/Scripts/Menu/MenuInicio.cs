@@ -5,36 +5,30 @@ namespace ClassRoomVR
 {
     public class MenuInicio : MonoBehaviour
     {
-        [SerializeField] Button entrar;
-        [SerializeField] Button salir;
-        [SerializeField] GameObject nextScreen;
-        // Use this for initialization
-        [SerializeField] Vector3 playerDest;
-        [SerializeField] Vector3 playerInit;
-        [SerializeField] Transform player;
+        [SerializeField] private Button enterButton;
+        [SerializeField] private Button quitButton;
+        [SerializeField] private GameObject nextScreen;
+        [SerializeField] private Vector3 playerDestination;
+        [SerializeField] private Vector3 playerInitialPosition;
+        [SerializeField] private Transform player;
 
-        void Start()
+        private void Start()
         {
-            
-            entrar.onClick.AddListener(() =>
+            enterButton.onClick.AddListener(() =>
             {
                 PlayButton();
                 GoNextScreen();
             });
-            salir.onClick.AddListener(QuitButton);
-            //Quitar en un futuro 
+            quitButton.onClick.AddListener(QuitButton);
+            // Remove in the future
             DontDestroyOnLoad(GameObject.Find("DeskManager"));
         }
 
-        void GoNextScreen()
+        private void GoNextScreen()
         {
             nextScreen.SetActive(true);
             gameObject.SetActive(false);
         }
-
-
-
-
 
         public void QuitButton()
         {
@@ -45,14 +39,12 @@ namespace ClassRoomVR
 #endif
         }
 
-
         public void PlayButton()
         {
             if (player != null)
             {
                 player.rotation = Quaternion.Euler(Vector3.zero);
-                player.position = playerDest ;
-
+                player.position = playerDestination;
             }
         }
 
@@ -60,10 +52,8 @@ namespace ClassRoomVR
         {
             if (player != null)
             {
-
-                player.position = playerInit;
+                player.position = playerInitialPosition;
                 player.rotation = Quaternion.Euler(Vector3.down * 90.0f);
-
             }
         }
 

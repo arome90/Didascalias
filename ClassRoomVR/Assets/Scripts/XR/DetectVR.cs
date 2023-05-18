@@ -3,30 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Management;
 
-namespace ClassRoomVR {
+namespace ClassRoomVR
+{
     public class DetectVR : MonoBehaviour
     {
         [SerializeField] GameObject playerVR;
         [SerializeField] GameObject player;
-        //Si se puede inicializar correctamente las gafas . Elige al player en modo VR
-        void Start()
+
+        // If VR glasses can be initialized correctly, choose the player in VR mode
+        private void Start()
         {
-            if (GameManager.Instance.getVR())
+            if (GameManager.Instance.IsUsingVRHardware())
             {
-                var xrset = XRGeneralSettings.Instance;
-                if (xrset == null)
+                var xrSettings = XRGeneralSettings.Instance;
+                if (xrSettings == null)
                 {
                     Debug.Log("XRGeneralSettings is null");
                     return;
                 }
-                var xrman = xrset.Manager;
-                if (xrman == null)
+                var xrManager = xrSettings.Manager;
+                if (xrManager == null)
                 {
                     Debug.Log("XRManagerSettings is null");
                     return;
                 }
-                var xrloa = xrman.activeLoader;
-                if (xrloa == null)
+                var xrLoader = xrManager.activeLoader;
+                if (xrLoader == null)
                 {
                     Debug.Log("XRLoader is null");
                     SetPlayerVR(false);
@@ -34,18 +36,19 @@ namespace ClassRoomVR {
                 }
                 Debug.Log("XRLoader is okay");
                 SetPlayerVR(true);
-
             }
-            else SetPlayerVR(false);
+            else
+            {
+                SetPlayerVR(false);
+            }
         }
 
         private void SetPlayerVR(bool vr)
         {
             player.SetActive(!vr);
             playerVR.SetActive(vr);
-            GameObject pl = vr ? playerVR : player;
-            GameManager.Instance.SetPlayer(pl.transform.GetChild(0).gameObject);
+            GameObject selectedPlayer = vr ? playerVR : player;
+            GameManager.Instance.SetPlayer(selectedPlayer.transform.GetChild(0).gameObject);
         }
-
     }
 }

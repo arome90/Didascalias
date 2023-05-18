@@ -4,73 +4,75 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-namespace ClassRoomVR {
+
+namespace ClassRoomVR
+{
     public class MenuSettings : MonoBehaviour
     {
-        ClassSettings settings;
-        [SerializeField] TMP_Dropdown structure;
-        [SerializeField] Button empezar;
-        [SerializeField] Button volver;
-        [SerializeField] Button editDeskPosition;
-        [SerializeField] Option chicos;
-        [SerializeField] Option chicas;
-        [SerializeField] GameObject backScreen;
-        [SerializeField] GameObject editScreen;
+        private ClassSettings settings;
+        [SerializeField] private TMP_Dropdown structureDropdown;
+        [SerializeField] private Button startButton;
+        [SerializeField] private Button backButton;
+        [SerializeField] private Button editDeskPositionButton;
+        [SerializeField] private Option boysOption;
+        [SerializeField] private Option girlsOption;
+        [SerializeField] private GameObject backScreen;
+        [SerializeField] private GameObject editScreen;
 
 
-        void Start()
+        private void Start()
         {
-            settings = GameManager.Instance.Settings;
-            chicas.SetValue(settings.women);
-            chicos.SetValue(settings.men);
-            structure.onValueChanged.AddListener(ChangeEstructura);
-            chicos.onValueChanged.AddListener(ChangeChicos);
-            chicas.onValueChanged.AddListener(ChangeChicas);
-            empezar.onClick.AddListener(GameManager.Instance.LoadMainScene);
-            volver.onClick.AddListener(GoBackScreen);
-            editDeskPosition.onClick.AddListener(GoEditScreen);
-            structure.SetValueWithoutNotify((int)settings.StructureClass);
+            settings = GameManager.Instance.GetCurrentSettings();
+            girlsOption.SetValue(settings.NumWomen);
+            boysOption.SetValue(settings.NumMen);
+            structureDropdown.onValueChanged.AddListener(ChangeStructure);
+            boysOption.onValueChanged.AddListener(ChangeBoys);
+            girlsOption.onValueChanged.AddListener(ChangeGirls);
+            startButton.onClick.AddListener(GameManager.Instance.LoadMainScene);
+            backButton.onClick.AddListener(GoBackScreen);
+            editDeskPositionButton.onClick.AddListener(GoEditScreen);
+            structureDropdown.SetValueWithoutNotify((int)settings.StructureMode);
         }
 
 
 
 
-        void GoBackScreen()
+        private void GoBackScreen()
         {
             backScreen.SetActive(true);
             gameObject.SetActive(false);
         }
 
-        void GoEditScreen()
+        private void GoEditScreen()
         {
             editScreen.SetActive(true);
             gameObject.SetActive(false);
         }
 
 
-        void ChangeEstructura(int value) 
+        private void ChangeStructure(int value)
         {
-           settings.StructureClass = (StructureMode)value;
+            settings.StructureMode = (StructureMode)value;
         }
 
-        void ChangeChicos(float value)
+        private void ChangeBoys(float value)
         {
-            settings.men = (int)value;
+            settings.NumMen = (int)value;
             SetMaxStudents();
         }
 
-        void ChangeChicas(float value)
+        private void ChangeGirls(float value)
         {
-            settings.women = (int)value;
+            settings.NumWomen = (int)value;
             SetMaxStudents();
 
         }
 
-        void SetMaxStudents() 
+        private void SetMaxStudents()
         {
-            settings.NumStu = settings.men + settings.women;
-            chicos.SetMax(30 - settings.women);
-            chicas.SetMax(30 - settings.men);
+            settings.NumStudents = settings.NumMen + settings.NumWomen;
+            boysOption.SetMax(30 - settings.NumWomen);
+            girlsOption.SetMax(30 - settings.NumMen);
         }
     }
 

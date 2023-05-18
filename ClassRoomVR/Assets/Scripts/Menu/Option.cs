@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,45 +5,43 @@ using UnityEngine.UI;
 
 public class Option : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI optionName;
-    [SerializeField] TextMeshProUGUI optionValue;
-    [SerializeField] Button add;
-    [SerializeField] Button sub;
+    [SerializeField] private TextMeshProUGUI optionName;
+    [SerializeField] private TextMeshProUGUI optionValue;
+    [SerializeField] private Button addButton;
+    [SerializeField] private Button subButton;
 
-    //Variables
-    [SerializeField] float value;
+    // Variables
+    [SerializeField] private float value;
+    [SerializeField] private float minValue;
+    [SerializeField] private float maxValue;
+    [SerializeField] private float step;
 
-    [SerializeField] float min;
-    [SerializeField] float max;
-    [SerializeField] float step;
+    [HideInInspector] public UnityEvent<float> onValueChanged;
 
-    [HideInInspector]public UnityEvent<float> onValueChanged;
-
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         optionValue.text = value.ToString("0.##");
-        add.onClick.AddListener(Add);
-        sub.onClick.AddListener(Sub);
-        
+        addButton.onClick.AddListener(Add);
+        subButton.onClick.AddListener(Sub);
     }
 
-    void Add() 
+    private void Add()
     {
         value += step;
-        if (value >max) value = max;
+        if (value > maxValue)
+            value = maxValue;
         else
         {
             optionValue.text = value.ToString("0.##");
             onValueChanged.Invoke(value);
         }
     }
-    void Sub()
+
+    private void Sub()
     {
-        
         value -= step;
-        if (value < min) value = min;
+        if (value < minValue)
+            value = minValue;
         else
         {
             optionValue.text = value.ToString("0.##");
@@ -53,19 +49,15 @@ public class Option : MonoBehaviour
         }
     }
 
-
-    public void SetMax(float value) 
+    public void SetMax(float value)
     {
-        max = value;
+        maxValue = value;
     }
-
 
     public void SetMin(float value)
     {
-        min = value;
+        minValue = value;
     }
-
-
 
     public void SetValue(float v)
     {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
-using UnityEngine.Events;
 using System.Linq;
 
 namespace ClassRoomVR
@@ -11,150 +10,130 @@ namespace ClassRoomVR
     [System.Serializable]
     public class Student : MonoBehaviour
     {
-        [System.Flags]
-        public enum Vision
-        {
-             Arriba = 1, Derecha = 2, 
-            Abajo = 4, Izquierda = 8, Ventana = 16,  Puerta = 32, Profesor = 64
-        };
-        Vision vision;
-        public Vision distracted;
-        Vision[] distractedArray;
-
-        public enum Gender { Women, Men };
-        private enum State { Sit, Stand };
-        State state;
-        [SerializeField] Gender gender;
-        [SerializeField] string name;
-        [SerializeField] bool problematic = false;
-        int problematicPercentage = 10;
-        [SerializeField] TextMesh text;
-        Vector3 deskPosition;
-
-        [SerializeField]
-        private RuntimeAnimatorController controller;
-
-        Animator animator;
-        AudioSource audio;
-        NavMeshAgent agent;
-        Collider collider;
-        Vector3 dest;
-
-        [SerializeField] Transform target;
-        Vector3 targetPositionActual;
-        Dictionary<Vision,Vector3> targets;
        
-        [SerializeField] MultiAimConstraint head;
+        private FieldOfVision vision;
+        public FieldOfVision distracted;
+        private FieldOfVision[] distractedArray;
 
-        //de momento 
+        private State state;
+
+        [SerializeField] private Gender gender;
+        [SerializeField] private string studentName;
+        [SerializeField] private bool problematic = false;
+        [SerializeField] private TextMesh studentNameText;
+        private Vector3 deskPosition;
+
         [SerializeField]
-        TextMesh atencion;
+        private RuntimeAnimatorController animatorController;
 
-        StudentBehavior behavior;
+        private Animator animator;
+        private AudioSource audioSource;
+        private NavMeshAgent navMeshAgent;
+        private Collider collider;
+        private Vector3 destination;
 
-        Transform professor;
+        [SerializeField] private Transform target;
+        private Vector3 actualTargetPosition;
+        private Dictionary<FieldOfVision, Vector3> targets;
+
+        [SerializeField] private MultiAimConstraint headConstraint;
+
+        // Temporarily
+        [SerializeField]
+        private TextMesh attentionText;
+
+        private StudentBehavior behavior;
+
+        private Transform teacher;
+
+
+        #region Getters
+        public Vector3 GetDesk() { return deskPosition; }
+        public Gender GetGender() { return gender; }
+        public string GetStudentName() { return studentName; }
+        public Collider GetCollider() { return collider; }
+        public bool IsProblematicStudent() { return problematic; }
+        public AudioSource GetAudioSource() { return audioSource; }
+        #endregion
 
 
         private void Start()
         {
-            audio = GetComponent<AudioSource>();
-            agent = GetComponent<NavMeshAgent>();
+            audioSource = GetComponent<AudioSource>();
+            navMeshAgent = GetComponent<NavMeshAgent>();
             behavior = GetComponent<StudentBehavior>();
-            state = State.Sit;
-            professor = Camera.main.transform;
-            distractedArray= System.Enum.GetValues(typeof(Vision)).Cast<Vision>()
-                   .Where(c => (distracted & c) == c)    // or use HasFlag in .NET4
+            state = State.Sitting;
+            teacher = Camera.main.transform;
+            distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
+                   .Where(c => (distracted & c) == c)
                    .ToArray();
-           
-
-
-        }
-        public void SetParameters(string na, Gender s)
-        {
-            
-            name = na;
-            transform.name = na;
-            text.text = na;
-            gender = s;
-
-            
         }
 
-        public void CreateBody(GameObject obj)
+        public void SetParameters(string name, Gender gender)
         {
-            GameObject body = Instantiate(obj, transform);
+            studentName = name;
+            transform.name = name;
+            studentNameText.text = name;
+            this.gender = gender;
+        }
+
+        public void CreateBody(GameObject prefab)
+        {
+            GameObject body = Instantiate(prefab, transform);
             body.AddComponent<MeshCollider>();
 
             animator = body.GetComponent<Animator>();
             if (animator != null)
             {
-                animator.runtimeAnimatorController = controller;
+                animator.runtimeAnimatorController = animatorController;
             }
             collider = transform.GetChild(transform.childCount - 1).GetComponent<Collider>();
-            
-            head.data.constrainedObject = getHeadBone();
+
+            headConstraint.data.constrainedObject = GetHeadBone();
             transform.GetComponent<RigBuilder>().Build();
         }
 
-
-
-
-        //TODO: cambiar esto al meter nuevos prefabs
-        private Transform getHeadBone()
+        private Transform GetHeadBone()
         {
             Transform body = transform.GetChild(2);
-            int i = body.childCount - 3;
-            return body.GetChild(i).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0);
+            int index = body.childCount - 3;
+            return body.GetChild(index).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0);
         }
 
         public void SetProblematicStudent()
         {
-            text.color = Color.red;
+            studentNameText.color = Color.red;
             problematic = true;
         }
 
-
-
-
-        public void SetDesk(Vector3 pos)
+        public void SetDesk(Vector3 position)
         {
-            deskPosition = pos;
-        }
-
-        public Vector3 GetDesk() { return deskPosition; }
-        public Gender GetSex() { return gender; }
-        public string GetName() { return name; }
-        public Collider GetCollider() { return collider; }
-        public bool GetProblematicStudent() { return problematic; }
-        public AudioSource getAudio() { return audio; }
-
-
-
-        public void SetTargets(Transform[] tar)
-        {
-            targets = new Dictionary<Vision, Vector3>();
-            targets.Add(Vision.Arriba,new Vector3(0, 3, 1));
-            targets.Add(Vision.Derecha,Vector3.right);
-            targets.Add(Vision.Abajo, new Vector3(0, -1, 1));
-            targets.Add(Vision.Izquierda, Vector3.left);
-            targets.Add(Vision.Ventana,tar[0].position);
-            targets.Add(Vision.Puerta,tar[1].position);
-            targets.Add(Vision.Profesor,Vector3.zero);
-
+            deskPosition = position;
         }
 
 
-        //En futuro implementar atencion al profesor jugando con source objects de multi aim
+
+        public void SetTargets(Transform[] transforms)
+        {
+            targets = new Dictionary<FieldOfVision, Vector3>();
+            targets.Add(FieldOfVision.Up, new Vector3(0, 3, 1));
+            targets.Add(FieldOfVision.Right, Vector3.right);
+            targets.Add(FieldOfVision.Down, new Vector3(0, -1, 1));
+            targets.Add(FieldOfVision.Left, Vector3.left);
+            targets.Add(FieldOfVision.Window, transforms[0].position);
+            targets.Add(FieldOfVision.Door, transforms[1].position);
+            targets.Add(FieldOfVision.Teacher, Vector3.zero);
+        }
+
         public void PayAttention()
         {
-            SetDirection(Vision.Profesor);
+            SetDirection(FieldOfVision.Teacher);
         }
 
         public void GetDistracted()
         {
-            SetDirection(distractedArray[Random.Range(0,distractedArray.Length)]);
+            SetDirection(distractedArray[Random.Range(0, distractedArray.Length)]);
         }
-
 
         private void Update()
         {
@@ -162,13 +141,11 @@ namespace ClassRoomVR
             {
                 if (Input.GetKeyDown(KeyCode.Keypad0 + i))
                 {
-                    Vision v = targets.ElementAt(i).Key;
-                    Debug.Log(i +" "+ v);
+                    FieldOfVision fieldOfVision = targets.ElementAt(i).Key;
+                    Debug.Log(i + " " + fieldOfVision);
 
-                    SetDirection(v);
-                 
+                    SetDirection(fieldOfVision);
                 }
-
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha7))
@@ -179,78 +156,67 @@ namespace ClassRoomVR
             {
                 GetDistracted();
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha6)) 
+            else if (Input.GetKeyDown(KeyCode.Alpha6))
             {
-                StartCoroutine(Asentir());
+                StartCoroutine(Nod());
             }
             else if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                StartCoroutine(Negar());
+                StartCoroutine(ShakeHead());
             }
 
-            
-            if (vision != Vision.Profesor)
+            if (vision != FieldOfVision.Teacher)
             {
-                target.position = Vector2.MoveTowards(target.position, targetPositionActual, 5.0f * Time.deltaTime);
+                target.position = Vector2.MoveTowards(target.position, actualTargetPosition, 5.0f * Time.deltaTime);
             }
-           // else target.position = professor.position;
-            else target.position =  Vector2.MoveTowards(target.position, professor.position, 5.0f * Time.deltaTime); ;
-            atencion.text = behavior.NivelAtencion.ToString("0.##");
+            else
+            {
+                target.position = Vector2.MoveTowards(target.position, teacher.position, 5.0f * Time.deltaTime);
+            }
+            attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
 
-
-        IEnumerator  Asentir()
+        IEnumerator Nod()
         {
-
             for (int i = 0; i < 2; i++)
             {
-                SetDirection(Vision.Arriba);
-                while (Vector2.Distance(target.position, targetPositionActual) > 0.05)
+                SetDirection(FieldOfVision.Up);
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
                     yield return null;
-                SetDirection(Vision.Abajo);
-                while (Vector2.Distance(target.position, targetPositionActual) > 0.05)
+                SetDirection(FieldOfVision.Down);
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
                     yield return null;
             }
-            //while (Vector2.Distance(target.position, targetPositionActual) > 0.05)
-            //    yield return null;
-           // targetPositionActual = targets[0].localPosition;
-
         }
 
-
-        IEnumerator Negar()
+        IEnumerator ShakeHead()
         {
-
             for (int i = 0; i < 2; i++)
             {
-                SetDirection(Vision.Derecha);
-                while (Vector2.Distance(target.position, targetPositionActual) > 0.05)
+                SetDirection(FieldOfVision.Right);
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
                     yield return null;
-                SetDirection(Vision.Izquierda);
-                while (Vector2.Distance(target.position, targetPositionActual) > 0.05)
+                SetDirection(FieldOfVision.Left);
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
                     yield return null;
             }
-            //while (Vector2.Distance(target.position, targetPositionActual) > 0.05)
-            //    yield return null;
-            //targetPositionActual = targets[0].localPosition;
         }
 
-        private void SetDirection(Vision vis)
+        private void SetDirection(FieldOfVision fieldOfVision)
         {
-            vision = vis;
-            switch (vision) 
+            vision = fieldOfVision;
+            switch (vision)
             {
-                case Vision.Arriba:
-                case Vision.Abajo:
-                case Vision.Derecha:
-                case Vision.Izquierda:
-                targetPositionActual = transform.position + targets[vision];
+                case FieldOfVision.Up:
+                case FieldOfVision.Down:
+                case FieldOfVision.Right:
+                case FieldOfVision.Left:
+                    actualTargetPosition = transform.position + targets[vision];
                     break;
-                case Vision.Puerta:
-                case Vision.Ventana:
-                    targetPositionActual = targets[vision];
+                case FieldOfVision.Door:
+                case FieldOfVision.Window:
+                    actualTargetPosition = targets[vision];
                     break;
-
             }
         }
 
@@ -259,24 +225,22 @@ namespace ClassRoomVR
             animator.Play(stateName);
         }
 
-
         public void PlayDisruptiveAction(string stateName, AudioClip clip)
         {
             animator.Play(stateName);
-            audio.clip = clip;
-            audio.Play();
-            //Invoke("SetNoProblematicStudent", 2.0f);
+            audioSource.clip = clip;
+            audioSource.Play();
         }
 
-        public void SetNoProblematicStudent()
+        public void SetNotProblematicStudent()
         {
-            text.color = Color.black;
+            studentNameText.color = Color.black;
             problematic = false;
-            if(state==State.Stand) SitBack();
+            if (state == State.Standing)
+                SitBack();
         }
 
-
-        public bool IsStudentOnVision()
+        public bool IsStudentInFieldOfVision()
         {
             Plane[] cameraFrustum;
             cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
@@ -285,71 +249,62 @@ namespace ClassRoomVR
             return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
         }
 
-        #region Move
+        #region Movement
 
-        //Corrutina para completar moviemitno
         IEnumerator OnCompleteMove()
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
-            text.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
-            agent.SetDestination(dest);
-            while (Vector3.Distance(transform.position, dest) > 0.5f)
+            studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
+            navMeshAgent.SetDestination(destination);
+            while (Vector3.Distance(transform.position, destination) > 0.5f)
                 yield return null;
             animator.Play("Standing");
             transform.rotation = Quaternion.Euler(0, 90, 0);
-            agent.enabled = false;
-            state = State.Stand;
+            navMeshAgent.enabled = false;
+            state = State.Standing;
         }
-        //Corrutina para completar accion de sentarse
+
         IEnumerator OnCompleteSitBack()
         {
             while (Vector3.Distance(transform.position, deskPosition) > 0.1f)
                 yield return null;
             animator.SetBool("onFoot", false);
-            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Sit Down"))
+            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Sitting Down"))
                 yield return null;
-            text.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
+            studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
             transform.rotation = Quaternion.Euler(Vector3.zero);
-            agent.enabled = false;
-            state = State.Sit;
+            navMeshAgent.enabled = false;
+            state = State.Sitting;
         }
 
-        //Sentarse en tu sitio
         public void SitBack()
         {
-            agent.enabled = true;
-            agent.SetDestination(deskPosition);
+            navMeshAgent.enabled = true;
+            navMeshAgent.SetDestination(deskPosition);
             animator.Play("Walking");
             StartCoroutine(OnCompleteSitBack());
-
         }
-        /// <summary>
-        /// Moverse a la posicion des
-        /// </summary>
-        /// <param name="des"></param>
-        public void MoveTo(Vector3 des)
+
+        public void MoveTo(Vector3 destination)
         {
-            agent.enabled = true;
-            dest = des;
-            if (state == State.Sit)
+            navMeshAgent.enabled = true;
+            this.destination = destination;
+            if (state == State.Sitting)
             {
                 animator.SetBool("onFoot", true);
-
             }
             else
             {
                 animator.Play("Walking");
             }
             StartCoroutine(OnCompleteMove());
-
         }
 
-        //Cambiar de asiento 
-        public void ChangeDesk(Vector3 pos)
+        public void ChangeDesk(Vector3 position)
         {
-            deskPosition = pos;
-            if (state == State.Stand)
+            deskPosition = position;
+            if (state == State.Standing)
             {
                 SitBack();
             }
@@ -359,22 +314,25 @@ namespace ClassRoomVR
                 StartCoroutine(OnCompleteStandChange());
             }
         }
-        //Corrutina para completar accion de cambiar sitio
+
         IEnumerator OnCompleteStandChange()
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
-            text.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
+            studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             SitBack();
         }
-        #endregion
 
+        #endregion
 
         #region Behavior
 
-        public StudentBehavior GetBehavior() { return behavior; }
+        public StudentBehavior GetBehavior()
+        {
+            return behavior;
+        }
 
         #endregion
     }
-
 }
+

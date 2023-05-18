@@ -18,16 +18,16 @@ namespace ClassRoomVR
         {
             player = GameManager.Instance.GetPlayer();
             controller = GameManager.Instance.GetClassManager().GetStudentsController();
-            controller.SetMode(StudentsController.TalkMode.None);
+            controller.SetMode(TalkMode.None);
         }
 
         public void SetParameters(List<Student> st,DisruptiveAction dis) 
         {
             problematics = st;
             a = dis;
-            if (a.risas)
+            if (a.laughter)
             {
-                Invoke("Risas", 3.0f);
+                Invoke("Laughter", 3.0f);
             }
             bh = GetComponent<BehaviorTree>();
             bh.EnableBehavior();
@@ -39,7 +39,7 @@ namespace ClassRoomVR
         /// </summary>
         public void Ignore()
         {
-            Invoke("IgnoreTime", a.timeToReact);
+            Invoke("IgnoreTime", a.reactionTime);
             foreach (Student s in problematics)
             {
                 StartCoroutine(IgnoreStudent(s));
@@ -54,22 +54,20 @@ namespace ClassRoomVR
             if ((int)bh.GetVariable("Path").GetValue() < 0)
             {
                 bh.GetVariable("Path").SetValue(3);
-                player.GetComponent<AudioSource>().clip = a.reaccionClase;
-                player.GetComponent<AudioSource>().Play();
+                Laughter();
             }
         }
         
         public IEnumerator IgnoreStudent(Student s)
         {
-            yield return new WaitUntil(() => s.IsStudentOnVision());
+            yield return new WaitUntil(() => s.IsStudentInFieldOfVision());
             yield return new WaitForSecondsRealtime(3);
-            if (!s.IsStudentOnVision())
+            if (!s.IsStudentInFieldOfVision())
             {
                 bh.GetVariable("Path").SetValue(3);
-                if (a.reaccionClase != null)
+                if (a.classLaughter != null)
                 {
-                    player.GetComponent<AudioSource>().clip = a.reaccionClase;
-                    player.GetComponent<AudioSource>().Play();
+                    Laughter();
                 }
             }
             else if ((int)bh.GetVariable("Path").GetValue() < 0)
@@ -92,7 +90,7 @@ namespace ClassRoomVR
         {
             foreach (Student s in problematics)
             {
-                if (controller.GetMode() == StudentsController.TalkMode.Good && Vector3.Distance(s.transform.position, player.transform.position) <= distanceNear && s.IsStudentOnVision())
+                if (controller.GetMode() == TalkMode.Good && Vector3.Distance(s.transform.position, player.transform.position) <= distanceNear && s.IsStudentInFieldOfVision())
                 {
                     bh.GetVariable("Path").SetValue(1);
                     controller.GoOut();
@@ -106,37 +104,38 @@ namespace ClassRoomVR
         /// </summary>
         public void Shout()
         {
-            if (controller.GetMode() == StudentsController.TalkMode.Disrespect )
+            if (controller.GetMode() == TalkMode.Disrespect )
             {
                 bh.GetVariable("Path").SetValue(2);
-                player.GetComponent<AudioSource>().clip = a.ruido;
+                player.GetComponent<AudioSource>().clip = a.noise;
                 player.GetComponent<AudioSource>().Play();
+                
             }
         }
 
         //Suena el clip de sonrisas 
-        void Risas()
+        void Laughter()
         {
-            if (a.reaccionClase != null)
+            if (a.classLaughter != null)
             {
                 player.GetComponent<AudioSource>().Stop();
-                player.GetComponent<AudioSource>().clip = a.reaccionClase;
+                player.GetComponent<AudioSource>().clip = a.classLaughter;
                 player.GetComponent<AudioSource>().Play();
             }
         }
 
 
         //Termina la clase
-        public void Termina()
+        public void Finish()
         {
             
             GameManager.Instance.GetClassManager().DisruptiveSituation = false;
             foreach (Student s in problematics)
             {
-                s.SetNoProblematicStudent();
+                s.SetNotProblematicStudent();
             }
             Debug.Log(bh.GetVariable("Path").GetValue());
-            controller.SetMode(StudentsController.TalkMode.None);
+            controller.SetMode(TalkMode.None);
             //StopAllCoroutines();
             //gameObject.SetActive(false);
             Destroy(gameObject);

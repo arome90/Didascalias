@@ -1,6 +1,5 @@
 using System.Linq;
 using UnityEngine;
-
 public class BlackBoardMarker : MonoBehaviour
 {
     [SerializeField] Transform tip;
@@ -15,12 +14,12 @@ public class BlackBoardMarker : MonoBehaviour
     bool touchedLastTime;
     Vector2 lastTouchPos;
     Quaternion lastTouchRot;
+
     void Start()
     {
         colors = Enumerable.Repeat(tip.GetComponent<Renderer>().material.color, penSize * penSize).ToArray();
         tipHeight = tip.localScale.y;
     }
-
 
     void Update()
     {
@@ -31,11 +30,10 @@ public class BlackBoardMarker : MonoBehaviour
     {
         if (Physics.Raycast(tip.position, transform.up, out touch, tipHeight))
         {
-
             if (touch.transform.CompareTag("BlackBoard"))
             {
                 if (!blackBoard)
-                    blackBoard = touch.transform.GetComponent<BlackBoard>(); 
+                    blackBoard = touch.transform.GetComponent<BlackBoard>();
 
                 int x = (int)(touch.textureCoord.x * blackBoard.TextureSize.x - (penSize / 2));
                 int y = (int)(touch.textureCoord.y * blackBoard.TextureSize.y - (penSize / 2));
@@ -56,12 +54,14 @@ public class BlackBoardMarker : MonoBehaviour
 
                     blackBoard.Texture.Apply();
                 }
+
                 lastTouchPos = new Vector2(x, y);
                 lastTouchRot = transform.rotation;
                 touchedLastTime = true;
                 return;
             }
         }
+
         blackBoard = null;
         touchedLastTime = false;
     }

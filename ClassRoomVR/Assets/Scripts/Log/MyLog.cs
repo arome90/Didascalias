@@ -1,26 +1,26 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MyLog : MonoBehaviour
 {
-    string myLog;
-    Queue myLogQueue = new Queue();
+    private string myLog;
+    private Queue<string> myLogQueue = new Queue<string>();
 
-
-    void OnEnable()
+    private void OnEnable()
     {
         Application.logMessageReceived += HandleLog;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         Application.logMessageReceived -= HandleLog;
     }
 
-   public void HandleLog(string logString, string stackTrace, LogType type)
+    public void HandleLog(string logString, string stackTrace, LogType type)
     {
         myLog = logString;
-        string newString = "\n [" + type + "] : " + myLog;
+        string newString = "\n[" + type + "]: " + myLog;
         myLogQueue.Enqueue(newString);
         if (type == LogType.Exception)
         {
@@ -34,7 +34,7 @@ public class MyLog : MonoBehaviour
         }
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         GUILayout.Label(myLog);
     }

@@ -2,74 +2,74 @@
 using UnityEngine.Events;
 
 //---------------------------------------------------------------------
-// Se pueden crear instancias de ScriptableObject en los recursos
-namespace ClassRoomVR {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/scenePackage", order = 1)]
-    public class ScenePackage : ScriptableObject {
-
+// ScriptableObjects can be created in Resources
+namespace ClassRoomVR
+{
+    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/ScenePackage", order = 1)]
+    public class ScenePackage : ScriptableObject
+    {
         //-----
-        [Header("Generacion de la clase")]
+        [Header("Class Generation")]
+        [Tooltip("Total number of students, maximum 30")]
+        public int studentCount;
 
-        [Tooltip("Numero total de estudiantes, maximo 30")]
-        public int nStudents;
+        [Tooltip("Tutorial student")]
+        public int tutorialStudent;
 
-        [Tooltip("Estudiante tutorial")]
-        public int tutoStudent;
-
-        [Tooltip("Estudiantes problematicos entre los estudiantes")]
+        [Tooltip("Problematic students among the students")]
         public int problematicStudents;
 
-
-        [Tooltip("Estudiantes problematicos juntos")]
+        [Tooltip("Problematic students together")]
         public bool problematicTogether;
 
-        [Tooltip("Numero de grupos, 0 si no se quieren formar grupos")]
-        public int nGroups = 0;
+        [Tooltip("Number of groups, 0 if groups are not desired")]
+        public int groupCount = 0;
 
         //------
-        [Header("Recursos especificos de la situacion")]
-        
-        [Tooltip("Mensaje con la informacion inicial de la situacion")]
-        public string iniMessage;
+        [Header("Situation-Specific Resources")]
+        [Tooltip("Message with initial information about the situation")]
+        public string initialMessage;
 
-        [Tooltip("Audio a reproducir como contexto de la escena.")]
+        [Tooltip("Audio clip to play as scene context")]
         public AudioClip contextClip;
 
-        [Tooltip("Tiempo para dar clase antes de que se ejecute la situacion")]
+        [Tooltip("Time to teach before the situation is triggered")]
         public float timeToStart = 0;
 
-        [Tooltip("Tiempo para reaccionar a la situacion, si es 0 sera maxFloat")]
+        [Tooltip("Time to react to the situation, 0 for maxFloat")]
         public float timeToReact = 10.0f;
 
-        [Tooltip("Animaciones para la 'situacion critica', colocar en orden de ejecucion")]
+        [Tooltip("Animations for 'critical situation', list in execution order")]
         public AnimationClip problematicsAnimation;
 
-        [Tooltip("Audios necesarios para la 'situacion critica', colocar en orden de ejecucion")]
-        public AudioClip audioSituationMasculino;
-        [Tooltip("Audios necesarios para la 'situacion critica', colocar en orden de ejecucion")]
-        public AudioClip audioSituationFemenino;
+        [Tooltip("Audios needed for 'critical situation' (masculine), list in execution order")]
+        public AudioClip situationAudioMasculine;
 
-        [Tooltip("Audio de reaccion de la clase a la situacion critica")]
-        public AudioClip audioReaccionClase;
+        [Tooltip("Audios needed for 'critical situation' (feminine), list in execution order")]
+        public AudioClip situationAudioFeminine;
 
-        // Campanas de entrada y salida
-        [Tooltip("Campana antes de clase")]
-        public AudioClip before_bell;
-        [Tooltip("Mix campana antes de clase")]
-        public AudioClip mix_before_bell;
-        [Tooltip("Campana despues de clase")]
-        public AudioClip after_bell;
+        [Tooltip("Class reaction audio to the critical situation")]
+        public AudioClip classReactionAudio;
+
+        // Entry and exit bells
+        [Tooltip("Bell before class")]
+        public AudioClip beforeClassBell;
+
+        [Tooltip("Mix bell before class")]
+        public AudioClip mixBeforeClassBell;
+
+        [Tooltip("Bell after class")]
+        public AudioClip afterClassBell;
 
         // TODO
-        // Se debe crear un prefab, ubicados en "Resources/prefabs/ScenesBeheviours" al cual se le añade un script con los metodos que se quieran implementar
-        [Tooltip("Comportamiento especial de la escena en cualquier momento de ejecucion durante la eleccion del camino")]
-        public UnityEvent especificBehaviour;
+        // A prefab should be created, located in "Resources/prefabs/ScenesBehaviors", to which a script with desired methods is added
+        [Tooltip("Special behavior of the scene at any execution moment during path selection")]
+        public UnityEvent specificBehavior;
 
         //-----
-        [Header("Posibles paths a tomar por el profesor")]
+        [Header("Possible Paths for the Teacher")]
         public PathPackage[] paths;
 
         public GameObject scene;
-
     }
 }

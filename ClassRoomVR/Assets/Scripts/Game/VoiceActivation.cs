@@ -45,6 +45,8 @@ namespace ClassRoomVR
 
         private void Awake()
         {
+
+            GameManager.Instance.SetVoiceActivation(this);
             fullTrascriptionText.text = partialTrascriptionText.text = string.Empty;
 
             appVoiceExperience.events.onFullTranscription.AddListener((transcription) =>
@@ -113,7 +115,7 @@ namespace ClassRoomVR
             if(Input.GetKeyDown(KeyCode.G)) 
             {
                 shout = true;
-                st.SetMode(StudentsController.TalkMode.Disrespect);
+                st.SetMode(TalkMode.Disrespect);
                 Debug.Log("Gritando");
             }
         }
@@ -122,7 +124,7 @@ namespace ClassRoomVR
             if (!shout && a > 0.05f )
             {
                 shout = true;
-                st.SetMode(StudentsController.TalkMode.Disrespect);
+                st.SetMode(TalkMode.Disrespect);
                 Debug.Log("Gritando");
             }
             

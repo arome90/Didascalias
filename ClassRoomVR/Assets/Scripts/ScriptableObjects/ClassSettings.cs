@@ -9,185 +9,212 @@ using UnityEditor;
 
 namespace ClassRoomVR
 {
-    public enum GenerateMode { Random, Personalizado, Gender };
-    public enum Age { Primero, Segundo, Tercero };
-    public enum StructureMode { Fila, U ,Circular,UnPasillo, DosPasillos};
 
-    [CreateAssetMenu(fileName = "New ClassSettings", menuName = "ScriptableObject/ClassSettings", order = 5)]
+    [CreateAssetMenu(fileName = "NewClassSettings", menuName = "ScriptableObject/ClassSettings", order = 5)]
     public class ClassSettings : ScriptableObject
     {
 
         [Range(1, 30)]
         [SerializeField]
-        private int numStu;
-
+        private int numStudents;
+        public int NumStudents
+        {
+            get { return numStudents; }
+            set { numStudents = value; }
+        }
         [SerializeField]
-        private Age edad;
-
+        private Age age;
+        public Age Age
+        {
+            get { return age; }
+            set { age = value; }
+        }
         [SerializeField]
-        private StructureMode structureClass;
+        private StructureMode structureMode;
+        public StructureMode StructureMode
+        {
+            get { return structureMode; }
+            set { structureMode = value; }
+        }
 
         [SerializeField]
         private GenerateMode mode;
-
-        [SerializeField]
-        private StudentInfo[] students;
-
-
-
-        public int men;
-
-        public int women;
-
-        public bool desksEmpties;
-
-        public int numDesks;
-
-        //Circular Structure
-        [Range(1.0f,3.5f)]public float radius=3.5f;
-        [Range(-180f, 360f)] public float grades = 360.0f;
-        //Mode normal
-        public int columns = 5,rows;
-
-        public int NumStu
-        {
-            get { return numStu; }
-            set { numStu = value; }
-        }
-
-        public Age Edad
-        {
-            get { return edad; }
-            set { edad = value; }
-
-        }
-
-        public StructureMode StructureClass
-        {
-            get { return structureClass; }
-            set { structureClass = value; }
-
-        }
-
         public GenerateMode Mode
         {
             get { return mode; }
             set { mode = value; }
-
         }
 
+        [SerializeField]
+        private StudentInfo[] students;
         public StudentInfo[] Students
         {
             get { return students; }
             set { students = value; }
-
         }
 
-       
+        [SerializeField]
+        private int numMen;
+        public int NumMen
+        {
+            get { return numMen; }
+            set { numMen = value; }
+        }
 
-        #region Editor
+        [SerializeField]
+        private int numWomen;
+        public int NumWomen
+        {
+            get { return numWomen; }
+            set { numWomen = value; }
+        }
+
+        [SerializeField]
+        private bool areDesksEmpty;
+        public bool AreDesksEmpty
+        {
+            get { return areDesksEmpty; }
+            set { areDesksEmpty = value; }
+        }
+
+
+        [SerializeField]
+        private int numDesks;
+        public int NumDesks
+        {
+            get { return numDesks; }
+            set { numDesks = value; }
+        }
+
+
+        [Range(1.0f, 3.5f)]
+        [SerializeField]
+        private float radius;
+        public float Radius
+        {
+            get { return radius; }
+            set { radius = value; }
+        }
+
+        [Range(-180f, 360f)]
+        [SerializeField]
+        private float degrees;
+        public float Degrees
+        {
+            get { return degrees; }
+            set { degrees = value; }
+        }
+
+        [SerializeField]
+        private int columns;
+        public int Columns
+        {
+            get { return columns; }
+            set { columns = value; }
+        }
+        [SerializeField]
+        private int rows;
+        public int Rows
+        {
+            get { return rows; }
+            set { rows = value; }
+        }
+    
+
+
+
 #if UNITY_EDITOR
 
         [CustomEditor(typeof(ClassSettings))]
-        public class StudentsSettingsEditor : Editor
+        public class ClassSettingsEditor : Editor
         {
-           
-           // private ClassSettings set;
-            private SerializedProperty s_num;
-            private SerializedProperty s_edad;
-            private SerializedProperty s_str;
-            private SerializedProperty s_mode;
-            private SerializedProperty s_stu;
-            private SerializedProperty s_numMen;
-            private SerializedProperty s_numWom;
-            private SerializedProperty s_desksEmpties;
-            private SerializedProperty s_radius;
-            private SerializedProperty s_grades;
-            private SerializedProperty s_columns;
-            private SerializedProperty s_rows;
-            private SerializedProperty s_numDesks;
-
-
+            private SerializedProperty numStudentsProp;
+            private SerializedProperty numMenProp;
+            private SerializedProperty numWomenProp;
+            private SerializedProperty ageProp;
+            private SerializedProperty structureClassProp;
+            private SerializedProperty modeProp;
+            private SerializedProperty studentsProp;
+            private SerializedProperty areDesksEmptyProp;
+            private SerializedProperty radiusProp;
+            private SerializedProperty degreesProp;
+            private SerializedProperty columnsProp;
+            private SerializedProperty rowsProp;
+            private SerializedProperty numDesksProp;
 
             private void OnEnable()
             {
-                s_num = serializedObject.FindProperty("numStu");
-                s_numMen = serializedObject.FindProperty("men");
-                s_numWom = serializedObject.FindProperty("women");
-                s_edad = serializedObject.FindProperty("edad");
-                s_str = serializedObject.FindProperty("structureClass");
-                s_mode = serializedObject.FindProperty("mode");
-                s_stu = serializedObject.FindProperty("students");
-                s_desksEmpties = serializedObject.FindProperty("desksEmpties");
-                s_radius = serializedObject.FindProperty("radius");
-                s_grades = serializedObject.FindProperty("grades");
-                s_columns = serializedObject.FindProperty("columns");
-                s_rows = serializedObject.FindProperty("rows");
-                s_numDesks = serializedObject.FindProperty("numDesks");
+                numStudentsProp = serializedObject.FindProperty("numStudents");
+                numMenProp = serializedObject.FindProperty("numMen");
+                numWomenProp = serializedObject.FindProperty("numWomen");
+                ageProp = serializedObject.FindProperty("age");
+                structureClassProp = serializedObject.FindProperty("structureMode");
+                modeProp = serializedObject.FindProperty("mode");
+                studentsProp = serializedObject.FindProperty("students");
+                areDesksEmptyProp = serializedObject.FindProperty("areDesksEmpty");
+                radiusProp = serializedObject.FindProperty("radius");
+                degreesProp = serializedObject.FindProperty("degrees");
+                columnsProp = serializedObject.FindProperty("columns");
+                rowsProp = serializedObject.FindProperty("rows");
+                numDesksProp = serializedObject.FindProperty("numDesks");
             }
             public override void OnInspectorGUI()
             {
                 serializedObject.Update();
                 EditorGUI.BeginChangeCheck();
-               
-                EditorGUILayout.PropertyField(s_edad);
-                EditorGUILayout.PropertyField(s_numDesks);
-                EditorGUILayout.PropertyField(s_desksEmpties);
-                
 
-                s_str.enumValueIndex = (int)(StructureMode)EditorGUILayout.EnumPopup("Structure", (StructureMode)s_str.enumValueIndex);
 
-                switch (s_str.enumValueIndex) 
+                EditorGUILayout.PropertyField(ageProp);
+                EditorGUILayout.PropertyField(numDesksProp);
+                EditorGUILayout.PropertyField(areDesksEmptyProp);
+
+                structureClassProp.enumValueIndex = (int)(StructureMode)EditorGUILayout.EnumPopup("Structure", (StructureMode)structureClassProp.enumValueIndex);
+
+                switch ((StructureMode)structureClassProp.enumValueIndex)
                 {
-                    case (int)StructureMode.Fila:
-                        EditorGUILayout.PropertyField(s_columns);
-                        EditorGUILayout.PropertyField(s_rows);
+                    case StructureMode.Fila:
+                        EditorGUILayout.PropertyField(columnsProp);
+                        EditorGUILayout.PropertyField(rowsProp);
                         break;
-                    case (int)StructureMode.U:
-                        EditorGUILayout.PropertyField(s_radius);
+                    case StructureMode.U:
+                        EditorGUILayout.PropertyField(radiusProp);
                         break;
-                    case (int)StructureMode.Circular:
-                        EditorGUILayout.PropertyField(s_radius);
-                        EditorGUILayout.PropertyField(s_grades);
+                    case StructureMode.Circular:
+                        EditorGUILayout.PropertyField(radiusProp);
+                        EditorGUILayout.PropertyField(degreesProp);
                         break;
-                    case (int)StructureMode.UnPasillo:
-                    case (int)StructureMode.DosPasillos:
-                        EditorGUILayout.PropertyField(s_rows);
+                    case StructureMode.UnPasillo:
+                    case StructureMode.DosPasillos:
+                        EditorGUILayout.PropertyField(rowsProp);
                         break;
                 }
-                
 
-                s_mode.enumValueIndex = (int)(GenerateMode)EditorGUILayout.EnumPopup("Mode", (GenerateMode)s_mode.enumValueIndex);
+                modeProp.enumValueIndex = (int)(GenerateMode)EditorGUILayout.EnumPopup("Mode", (GenerateMode)modeProp.enumValueIndex);
 
-                switch (s_mode.enumValueIndex) 
+                switch ((GenerateMode)modeProp.enumValueIndex)
                 {
-                    case (int)GenerateMode.Random:
-                        EditorGUILayout.PropertyField(s_num);
+                    case GenerateMode.Random:
+                        EditorGUILayout.PropertyField(numStudentsProp);
                         break;
-                    case (int)GenerateMode.Personalizado:
-                        EditorGUILayout.PropertyField(s_num);
-                        EditorGUILayout.PropertyField(s_stu, new GUIContent("Personalized Students"));
-                        if (s_stu.arraySize >= s_num.intValue)
+                    case GenerateMode.Personalizado:
+                        EditorGUILayout.PropertyField(numStudentsProp);
+                        EditorGUILayout.PropertyField(studentsProp, new GUIContent("Personalized Students"));
+                        if (studentsProp.arraySize >= numStudentsProp.intValue)
                         {
-                            s_stu.arraySize = s_num.intValue;
+                            studentsProp.arraySize = numStudentsProp.intValue;
                         }
                         break;
-                    case (int)GenerateMode.Gender:
-                        EditorGUILayout.PropertyField(s_numWom);
-                        EditorGUILayout.PropertyField(s_numMen); break;
+                    case GenerateMode.Gender:
+                        EditorGUILayout.PropertyField(numWomenProp);
+                        EditorGUILayout.PropertyField(numMenProp);
+                        break;
                 }
-
 
                 EditorGUI.EndChangeCheck();
                 serializedObject.ApplyModifiedProperties();
             }
-
         }
-
-       
-    
-        }
-        #endif
-        #endregion
-
+#endif
+    }
 }
+

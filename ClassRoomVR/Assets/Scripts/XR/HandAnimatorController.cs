@@ -8,19 +8,19 @@ public class HandAnimatorController : MonoBehaviour
     [SerializeField] InputActionProperty triggerAction;
     [SerializeField] InputActionProperty gripAction;
 
-    private Animator anim;
-    void Start()
+    private Animator animator;
+
+    private void Start()
     {
-        anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        float trValue = triggerAction.action.ReadValue<float>();
-        float grValue = gripAction.action.ReadValue<float>();
+        float triggerValue = triggerAction.action.ReadValue<float>();
+        float gripValue = gripAction.action.ReadValue<float>();
 
-        anim.SetFloat("Trigger", trValue);
-        anim.SetFloat("Grip", grValue);
+        animator.SetFloat("Trigger", triggerValue);
+        animator.SetFloat("Grip", gripValue);
     }
 }

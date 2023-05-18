@@ -1,29 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Desk : MonoBehaviour
 {
-    Vector2 pos;
-    bool ocupado;
+    private Vector2 position;
+    private bool isOccupied;
 
-
-    public bool Ocupado { get { return ocupado; } set { ocupado = value; } }
-    public Vector2 Pos { get { return pos; } set { pos = value; } }
+    public bool IsOccupied { get { return isOccupied; } set { isOccupied = value; } }
+    public Vector2 Position { get { return position; } set { position = value; } }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Desk")) 
+        if (collision.collider.CompareTag("Desk"))
         {
-            Debug.Log("tocar");
+            Debug.Log("Collision Detected");
         }
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Desk"))
         {
-            Debug.Log("tocat");
+            Debug.Log("Trigger Entered");
         }
     }
-   
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,47 +10,37 @@ namespace ClassRoomVR
         [SerializeField] protected GameObject parentDesk;
         [SerializeField] protected Option numDesks;
         [SerializeField] protected Toggle prefab;
-        //protected List<Desk> desks_;
-        //protected List<Toggle> toggles;
 
         protected Dictionary<Toggle, Desk> list_;
         protected ClassSettings settings;
-        protected  GameObject parent;
+        protected GameObject parent;
 
         public abstract void Set();
 
         private void Awake()
         {
-            //toggles = new List<Toggle>();
             list_ = new Dictionary<Toggle, Desk>();
-            settings = GameManager.Instance.Settings;
-            settings.numDesks = settings.NumStu;
-            numDesks.SetValue(settings.numDesks);
-            numDesks.SetMin(settings.NumStu);
+            settings = GameManager.Instance.GetCurrentSettings();
             numDesks.onValueChanged.AddListener(ChangeObjects);
             DontDestroyOnLoad(parentDesk);
+            Debug.Log("hello");
         }
-
 
         private void OnDisable()
         {
-
             foreach (Transform child in parentDesk.transform)
             {
                 if (!child.gameObject.activeSelf)
                 {
                     Destroy(child.gameObject);
-
                 }
             }
-
         }
 
         protected void ChangeObjects(float value)
         {
-            settings.numDesks = (int)value;
+            settings.NumDesks = (int)value;
             Set();
         }
-
     }
 }

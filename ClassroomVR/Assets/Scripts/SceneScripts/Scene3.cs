@@ -1,146 +1,144 @@
 ﻿using BehaviorDesigner.Runtime;
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace ClassRoomVR
 {
     public class Scene3 : MonoBehaviour
     {
+        private BehaviorTree behaviorTree;
+        private Student problematicStudent;
+        private ClassManager classManager;
+        private ScenePackage sceneInfo;
+        private GameObject player;
+        private VoiceActivation voice;
+        private float initialDistance;
 
+        [SerializeField] private AudioClip noiseClip;
+        [SerializeField] private AnimationClip classAnimation;
+        [SerializeField] private AnimationClip problematicAnimation;
 
-        BehaviorTree bh;
-        Student problematic;
-        ClassManager classManager;
-        ScenePackage sceneInfo;
-        GameObject player;
-        VoiceActivation voice;
-        float distanceInitial;
-
-        [SerializeField] AudioClip ruido;
-        [SerializeField] AnimationClip classAnimation;
-        [SerializeField] AnimationClip probAnimation;
-        void Start()
+        private void Start()
         {
-            bh = GetComponent<BehaviorTree>();
-            sceneInfo = GameManager.Instance.GetScenePackage(0);
+            behaviorTree = GetComponent<BehaviorTree>();
+            sceneInfo = GameManager.Instance.GetPackageAtIndex(0);
             player = GameManager.Instance.GetPlayer();
             voice = GameManager.Instance.GetVoiceActivation();
             classManager = GameManager.Instance.GetClassManager();
-            classManager.GetComponent<AudioSource>().clip = sceneInfo.before_bell;
+            classManager.GetComponent<AudioSource>().clip = sceneInfo.beforeClassBell;
             classManager.GetComponent<AudioSource>().Play();
         }
-        public void InitSituation()
+
+        public void InitializeSituation()
         {
             Student[] students = classManager.GetStudents();
-            int pro = sceneInfo.problematicStudents;
+            int problematicCount = sceneInfo.problematicStudents;
             int i = 0;
-            while (pro != 0 && i < students.Length)
+            while (problematicCount != 0 && i < students.Length)
             {
-                if (students[i].GetProblematicStudent())
+                if (students[i].IsProblematicStudent())
                 {
-                    pro--;
-                    problematic = students[i];
-                    problematic.MoveTo(classManager.GetStudentsController().FrontSide.position);
-
+                    problematicCount--;
+                    problematicStudent = students[i];
+                    problematicStudent.MoveTo(classManager.GetStudentsController().FrontSide.position);
                 }
                 i++;
             }
-            if(problematic){
-                problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Gender.Men
-                   ? sceneInfo.audioSituationMasculino : sceneInfo.audioSituationFemenino;
-                problematic.GetComponent<AudioSource>().Play();
-                distanceInitial = Vector3.Distance(problematic.transform.position, player.transform.position);
-            }
-            bh.GetVariable("AccionAlumno").SetValue(true);
-            //voice.ActivateWit();
 
+            if (problematicStudent != null)
+            {
+                problematicStudent.GetComponent<AudioSource>().clip = problematicStudent.GetGender() == Gender.Men
+                    ? sceneInfo.situationAudioMasculine : sceneInfo.situationAudioFeminine;
+                problematicStudent.GetComponent<AudioSource>().Play();
+                initialDistance = Vector3.Distance(problematicStudent.transform.position, player.transform.position);
+            }
+
+            behaviorTree.GetVariable("AccionAlumno").SetValue(true);
+            //voice.ActivateWit();
         }
 
         public void Ignore(float time)
         {
             Invoke("IgnoreTime", time);
             StartCoroutine(IgnoreStudent());
+        }
 
-        }
-        void IgnoreTime()
+        private void IgnoreTime()
         {
-            if ((int)bh.GetVariable("Path").GetValue() < 0)
+            if ((int)behaviorTree.GetVariable("Path").GetValue() < 0)
             {
-                bh.GetVariable("Path").SetValue(3);
-                player.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                behaviorTree.GetVariable("Path").SetValue(3);
+                player.GetComponent<AudioSource>().clip = sceneInfo.classReactionAudio;
                 player.GetComponent<AudioSource>().Play();
             }
         }
-        public IEnumerator IgnoreStudent()
+
+        private IEnumerator IgnoreStudent()
         {
-            yield return new WaitUntil(() => !classManager.GetStudentsController().IsStudentOnVision(problematic));
+            yield return new WaitUntil(() => !classManager.GetStudentsController().IsStudentInFieldOfVision(problematicStudent));
             yield return new WaitForSecondsRealtime(3);
-            if (!classManager.GetStudentsController().IsStudentOnVision(problematic))
+            if (!classManager.GetStudentsController().IsStudentInFieldOfVision(problematicStudent))
             {
-                bh.GetVariable("Path").SetValue(3);
-                player.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                behaviorTree.GetVariable("Path").SetValue(3);
+                player.GetComponent<AudioSource>().clip = sceneInfo.classReactionAudio;
                 player.GetComponent<AudioSource>().Play();
             }
-            else if ((int)bh.GetVariable("Path").GetValue() < 0)
+            else if ((int)behaviorTree.GetVariable("Path").GetValue() < 0)
             {
                 StartCoroutine(IgnoreStudent());
             }
         }
 
-
-
-
         public void Near()
         {
-            if (classManager.GetStudentsController().GetMode() == StudentsController.TalkMode.Good && Vector3.Distance(problematic.transform.position, player.transform.position) <= distanceInitial / 2)
+            if (classManager.GetStudentsController().GetMode() == TalkMode.Good && Vector3.Distance(problematicStudent.transform.position, player.transform.position) <= initialDistance / 2)
             {
-                bh.GetVariable("Path").SetValue(1);
+                behaviorTree.GetVariable("Path").SetValue(1);
                 Student[] students = classManager.GetStudents();
                 for (int i = 0; i < students.Length; i++)
                 {
-                    if (!students[i].GetProblematicStudent()) StartCoroutine(WaitAndExit(students[i], i));
+                    if (!students[i].IsProblematicStudent())
+                    {
+                        StartCoroutine(WaitAndExit(students[i], i));
+                    }
                 }
             }
         }
 
-
-        IEnumerator WaitAndExit(Student st, float waitTime)
+        private IEnumerator WaitAndExit(Student student, float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            st.MoveTo(classManager.GetStudentsController().Door.position);
+            student.MoveTo(classManager.GetStudentsController().Door.position);
         }
 
         public void Shout()
         {
-            if (classManager.GetStudentsController().GetMode() == StudentsController.TalkMode.Disrespect)
+            if (classManager.GetStudentsController().GetMode() == TalkMode.Disrespect)
             {
-                bh.GetVariable("Path").SetValue(2);
-                classManager.GetComponent<AudioSource>().clip = ruido;
+                behaviorTree.GetVariable("Path").SetValue(2);
+                classManager.GetComponent<AudioSource>().clip = noiseClip;
                 classManager.GetComponent<AudioSource>().volume = 0.1f;
                 classManager.GetComponent<AudioSource>().Play();
             }
         }
 
-
-
-
-        void Risas()
+        private void Laughter()
         {
-            if (sceneInfo.audioReaccionClase != null)
+            if (sceneInfo.classReactionAudio != null)
             {
-                classManager.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                classManager.GetComponent<AudioSource>().clip = sceneInfo.classReactionAudio;
                 classManager.GetComponent<AudioSource>().Play();
             }
         }
 
-        public void Termina()
+        public void Finish()
         {
-            classManager.GetComponent<AudioSource>().clip = sceneInfo.after_bell;
+            classManager.GetComponent<AudioSource>().clip = sceneInfo.afterClassBell;
             classManager.GetComponent<AudioSource>().Play();
         }
     }
+
+}
 
     #region 
     //private GameObject agent;
@@ -271,5 +269,5 @@ namespace ClassRoomVR
     //        }
     //    }
     #endregion
-}
+
 

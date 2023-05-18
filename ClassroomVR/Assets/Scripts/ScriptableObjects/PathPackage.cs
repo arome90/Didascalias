@@ -3,49 +3,47 @@ using UnityEngine.Events;
 
 namespace ClassRoomVR
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/pathPackage", order = 1)]
+    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/PathPackage", order = 1)]
     public class PathPackage : ScriptableObject
     {
-        [Header("Informacion necesaria de un path")]
+        [Header("Required path information")]
 
-        [Tooltip("Info de que hacer para activar este camino")]
+        [Tooltip("Info on what to do to activate this path")]
         public string pathInfo;
 
-        [Tooltip("Palabras clave")]
+        [Tooltip("Keywords")]
         public string[] keyWords;
 
-        // Solo deberia haber un camino de este tipo en cada escena, sino se cogera el primero que lo tenga
-        [Tooltip("Acercarse al alumno problematica")]
+        // There should only be one path of this type in each scene; otherwise, the first one found will be used
+        [Tooltip("Get close to the problematic student")]
         public bool getClose;
 
-        // Solo deberia haber un camino de este tipo en cada escena, sino se cogera el primero que lo tenga
-        [Tooltip("Booleano que indica si es un camino de ignorar")]
+        // There should only be one path of this type in each scene; otherwise, the first one found will be used
+        [Tooltip("Boolean indicating if it is an ignore path")]
         public bool ignore;
 
-        [Tooltip("Audio de reaccion de la clase final")]
+        [Tooltip("Final class reaction audio")]
         public AudioClip audio;
 
-        [Tooltip("Animacion de reaccion de la clase a la respuesta del profe")]
+        [Tooltip("Class reaction animation to the teacher's response")]
         public AnimationClip pathClassAnimation;
-        [Tooltip("Animacion de reaccion de los problematicos a la respuesta del profe")]
+        [Tooltip("Problematic students' reaction animation to the teacher's response")]
         public AnimationClip pathProbAnimation;
 
+        // A prefab must be created, located in "Resources/prefabs/ScenesBeheviours," to which a script with the desired methods is added
+        [Tooltip("Special behavior of the scene after choosing the path")]
+        public UnityEvent specificBehavior;
 
-        // Se debe crear un prefab, ubicados en "Resources/prefabs/ScenesBeheviours" al cual se le añade un script con los metodos que se quieran implementar
-        [Tooltip("Comportamiento especial de la escena tras la eleccion del camino")]
-        public UnityEvent especificBehaviour;
-
-        [Tooltip("Feedback final")]
+        [Tooltip("Final feedback")]
         public string feedbackPath;
 
-        [Tooltip("Audio del feedback final")]
+        [Tooltip("Final feedback audio")]
         public AudioClip finalFeedback;
 
-        [Tooltip("Booleano que indica si es un camino correcto")]
+        [Tooltip("Boolean indicating if it is a correct path")]
         public bool correctPath;
 
-        [Tooltip("Campana despues de clase")]
-        public AudioClip after_bell;
-
+        [Tooltip("Bell after class")]
+        public AudioClip afterClassBell;
     }
 }

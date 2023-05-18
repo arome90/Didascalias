@@ -10,15 +10,9 @@ namespace ClassRoomVR
 {
     public class StudentsController : MonoBehaviour
     {
-        
-        public enum TalkMode { None, Disrespect, Good };
-       
-        TalkMode mode;
-        Dictionary<string, Student> _students;
-        
-        //En un futuro tener un set con los estudiantes que han sido o son problematicos
-        //HashSet<string> _problematicStudents;
 
+        TalkMode mode;
+        Dictionary<string, Student> students;
 
         [SerializeField] Transform frontSide;
         [SerializeField] Transform backCorner;
@@ -26,99 +20,68 @@ namespace ClassRoomVR
 
         [SerializeField] DisruptiveAction[] actions;
 
-        public Transform FrontSide { get { return frontSide; } }
-        public Transform BackCorner { get { return backCorner; } }
-        public Transform Door { get { return door; } }
-        //TO DO : cambiar por lista y agregar el nombre
+        public Transform FrontSide => frontSide;
+        public Transform BackCorner => backCorner;
+        public Transform Door => door;
 
-
-       
-        //public void SetParameters(Dictionary<string, Student> students, HashSet<string> problematicStudents)
-        //{
-        //    _students = students;
-        //    _problematicStudents = problematicStudents;
-        //}
         public void SetParameters(Dictionary<string, Student> students)
         {
-            _students = students;
-            
+            this.students = students;
         }
 
-        /// <summary>
-        /// Orden de mandar a cambiar de sitio
-        /// </summary>
-        /// <param name="values"></param>
         public void SendChangeDesk(string[] values)
         {
-            Student stu1 = SearchName(values[0]);
-            Student stu2 = SearchName(values[1]);
-            if (stu1 != null && stu2 != null) ChangeDesk(stu1, stu2);
+            Student student1 = SearchName(values[0]);
+            Student student2 = SearchName(values[1]);
+            if (student1 != null && student2 != null)
+                ChangeDesk(student1, student2);
         }
 
-        /// <summary>
-        /// Cambio de sitio entre dos alumnos
-        /// </summary>
-        /// <param name="stu1"></param>
-        /// <param name="stu2"></param>
-        private void ChangeDesk(Student stu1, Student stu2)
+        private void ChangeDesk(Student student1, Student student2)
         {
-            Vector3 pos1 = stu1.GetDesk();
-            Vector3 pos2 = stu2.GetDesk();
-            stu1.ChangeDesk(pos2);
-            stu2.ChangeDesk(pos1);
+            Vector3 position1 = student1.GetDesk();
+            Vector3 position2 = student2.GetDesk();
+            student1.ChangeDesk(position2);
+            student2.ChangeDesk(position1);
         }
 
-        /// <summary>
-        /// Busca un estudiante por su nombre 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="numSearch"></param>
-        /// <returns> devuelve el estudiante. NUll si no lo encuentra
         private Student SearchName(string name)
         {
-            string n = StringExtensions.SinTildes(name);
-            if (_students.ContainsKey(n))
+            string normalized = name.Normalize(NormalizationForm.FormD);
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (char c in normalized)
             {
-                return _students[n];
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    stringBuilder.Append(c);
             }
+            string noTildesName = stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+            if (students.ContainsKey(noTildesName))
+                return students[noTildesName];
             return null;
         }
 
-
-        /// <summary>
-        /// Devuelve la lista de todos los alumnos que estan en la vision del profe
-        /// </summary>
-        /// <returns></returns>
         public List<string> StudentsOnVision()
         {
             Plane[] cameraFrustum;
-            List<string> names;
-            names = new List<string>();
+            List<string> names = new List<string>();
             cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
 
-            foreach (Student s in _students.Values)
+            foreach (Student student in students.Values)
             {
-                var bounds = s.GetCollider().bounds;
+                Bounds bounds = student.GetCollider().bounds;
                 bounds.center += new Vector3(0, 1f, 0);
                 if (GeometryUtility.TestPlanesAABB(cameraFrustum, bounds))
                 {
-                    names.Add(s.GetName());
-
+                    names.Add(student.GetStudentName());
                 }
             }
             return names;
         }
 
-        /// <summary>
-        /// Detecta si un alumno esta en el campo de vision del profesor
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public bool IsStudentOnVision(Student s)
+        public bool IsStudentInFieldOfVision(Student student)
         {
-            Plane[] cameraFrustum;
-            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-            var bounds = s.GetCollider().bounds;
+            Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+            Bounds bounds = student.GetCollider().bounds;
             bounds.center += new Vector3(0, 1f, 0);
             return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
         }
@@ -126,69 +89,62 @@ namespace ClassRoomVR
         public void GoOut()
         {
             int i = 0;
-            foreach( Student st in _students.Values)
+            foreach (Student student in students.Values)
             {
                 i++;
-                if (!st.GetProblematicStudent()) StartCoroutine(WaitAndExit(st, i));
+                if (!student.IsProblematicStudent())
+                    StartCoroutine(WaitAndExit(student, i));
             }
         }
 
-        IEnumerator WaitAndExit(Student st, float waitTime)
+        IEnumerator WaitAndExit(Student student, float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            st.MoveTo(door.position);
+            student.MoveTo(door.position);
         }
 
-
-        public void HandleSit(string[] alumnos)
+        public void HandleSit(string[] students)
         {
-            if (alumnos.Length == 1)
+            if (students.Length == 1)
             {
-                Student stu = SearchName(alumnos[0]);
-                if (stu)
+                Student student = SearchName(students[0]);
+                if (student != null)
+                    student.SitBack();
+            }
+        }
+
+        public void HandleMove(string[] students, string place)
+        {
+            if (students.Length > 1)
+            {
+                SendChangeDesk(students);
+            }
+            else if (students.Length == 1)
+            {
+                Transform position = Place(place);
+                if (position != null)
                 {
-                    stu.SitBack();
+                    Student student = SearchName(students[0]);
+                    if (student != null)
+                        student.MoveTo(position.position);
                 }
             }
         }
-        public void HandleMove(string[] alumnos, string place)
-        {
-            if (alumnos.Length > 1)
-            {
-                SendChangeDesk(alumnos);
-            }
-            else if( alumnos.Length ==1)
-            {
-                var pos = Place(place);
-
-                if (pos != null)
-                {
-                    Student stu = SearchName(alumnos[0]);
-                    if (stu)
-                    {
-                        stu.MoveTo(pos.position);
-                    }
-                }
-            }
-        }
-
         public void HandlePostpone()
         {
             Debug.Log("Posponer situación");
             mode = TalkMode.Good;
         }
-        public void HandleExpel(string[] alumnos)
+
+        public void HandleExpel(string[] students)
         {
-            if (alumnos.Length == 1)
+            if (students.Length == 1)
             {
-                Student stu = SearchName(alumnos[0]);
-                if (stu)
-                {
-                    stu.MoveTo(door.position);
-                }
+                Student student = SearchName(students[0]);
+                if (student != null)
+                    student.MoveTo(door.position);
             }
         }
-
 
         public void HandleDisrespect()
         {
@@ -196,46 +152,43 @@ namespace ClassRoomVR
             mode = TalkMode.Disrespect;
         }
 
-        public void HandleCalm() 
+        public void HandleCalm()
         {
-            Debug.Log("Has hablado bien ");
+            Debug.Log("Has hablado bien");
             mode = TalkMode.Good;
         }
 
-
-        public void HandleCall(string[] alumnos)
+        public void HandleCall(string[] students)
         {
-            if (alumnos.Length == 1)
+            if (students.Length == 1)
             {
-                Student stu = SearchName(alumnos[0]);
-                if (stu)
-                {
-                    stu.PayAttention();
-                }
+                Student student = SearchName(students[0]);
+                if (student != null)
+                    student.PayAttention();
             }
         }
 
         public Transform Place(string place)
         {
-            Transform trplace = null;
+            Transform position = null;
             switch (place)
             {
                 case "Fondo":
-                    trplace = backCorner;
+                    position = backCorner;
                     break;
                 case "esquina":
-                    trplace = frontSide;
+                    position = frontSide;
                     break;
                 case "Fuera":
-                    trplace = door;
+                    position = door;
                     break;
                 case "Aquí":
-                    trplace = GameManager.Instance.GetPlayer().transform;
+                    position = GameManager.Instance.GetPlayer().transform;
                     break;
             }
-            return trplace;
+            return position;
         }
- 
+
         public TalkMode GetMode()
         {
             return mode;
@@ -247,66 +200,61 @@ namespace ClassRoomVR
         }
 
         private GameObject actionObject;
-        public void DoSomethingDisruptive(int i)
-        {
 
-            DisruptiveAction a = actions[i];
-            int nStu = UnityEngine.Random.Range(0, _students.Count);
-            Student stu = null;
-            List<Student> list = new List<Student>();
-            for (int j = 0; j < a.numStudents; j++)
+        public void DoSomethingDisruptive(int index)
+        {
+            DisruptiveAction action = actions[index];
+            int randomStudentIndex = UnityEngine.Random.Range(0, students.Count);
+            Student student = null;
+            List<Student> studentList = new List<Student>();
+            for (int i = 0; i < action.numStudents; i++)
             {
-                stu = _students.ElementAt(nStu).Value;
-                AudioClip clip = stu.GetSex() == Student.Gender.Women ? a.audioSituationFemenino : a.audioSituationMasculino;
-                stu.SetProblematicStudent();
-                stu.PayAttention();
-                stu.PlayDisruptiveAction(a.problematicsAnimation.name, clip);
-                if (a.pos == Positions.FrontSide) stu.MoveTo(frontSide.position);
-                //ia.GetComponent<Action>().SetParameters(stu, a);
-                //ia.SetActive(true);
-                nStu++;
-                if (nStu >= _students.Count)
-                {
-                    nStu -= 2;
-                }
-                list.Add(stu);
+                student = students.ElementAt(randomStudentIndex).Value;
+                AudioClip clip = student.GetGender() == Gender.Women ? action.situationAudioFeminine : action.situationAudioMasculine;
+                student.SetProblematicStudent();
+                student.PayAttention();
+                student.PlayDisruptiveAction(action.problematicsAnimation.name, clip);
+                if (action.position == Positions.FrontSide)
+                    student.MoveTo(frontSide.position);
+                randomStudentIndex++;
+                if (randomStudentIndex >= students.Count)
+                    randomStudentIndex -= 2;
+                studentList.Add(student);
             }
-            if (stu != null)
+            if (student != null)
             {
-                actionObject = Instantiate(a.bh);
-                actionObject.GetComponent<Action>().SetParameters(list, a);
+                actionObject = Instantiate(action.behaviorHolder);
+                actionObject.GetComponent<Action>().SetParameters(studentList, action);
             }
             GameManager.Instance.GetClassManager().DisruptiveSituation = true;
-            //AÑADIR VARIOS ALUMNOS Y ACCIONES QUE SIGNIFICAN UN METODO 
         }
 
         private void Update()
         {
-            int i = 0;
-            while (i < actions.Length && !GameManager.Instance.GetClassManager().DisruptiveSituation)
+            int index = 0;
+            while (index < actions.Length && !GameManager.Instance.GetClassManager().DisruptiveSituation)
             {
-                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                if (Input.GetKeyDown(KeyCode.Alpha1 + index))
                 {
-                    DoSomethingDisruptive(i);
+                    DoSomethingDisruptive(index);
                 }
-                i++;
+                index++;
             }
-
-
         }
-
-        
     }
+}
 
-
-    public static class StringExtensions
+public static class StringExtensions
+{
+    public static string SinTildes(this string texto)
     {
-        public static string SinTildes(this string texto) =>
-    new String(
-       texto.Normalize(NormalizationForm.FormD)
-       .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-       .ToArray()
-    )
-    .Normalize(NormalizationForm.FormC);
+        string normalized = texto.Normalize(NormalizationForm.FormD);
+        StringBuilder stringBuilder = new StringBuilder();
+        foreach (char c in normalized)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                stringBuilder.Append(c);
+        }
+        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
 }

@@ -1,47 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ClassRoomVR
 {
     public class StudentAttentionCalculator : MonoBehaviour
     {
-        [SerializeField] float media;
-        private float mediaActual;
-        Student[] students_;
-        private int cont;
+        [SerializeField] private float attentionAverage;
+        private float currentAttentionAverage;
+        private Student[] students;
+        private int count;
         private void Start()
         {
-          cont = 0;
-          students_= GetComponent<ClassManager>().GetStudents();
-          InvokeRepeating("CalculateMedia",2.5f, 2.5f);
+            count = 0;
+            students = GetComponent<ClassManager>().GetStudents();
+            InvokeRepeating("CalculateAttentionAverage", 2.5f, 2.5f);
         }
-        public void CalculateMedia()
+
+        public void CalculateAttentionAverage()
         {
-            mediaActual = 0;
-            for (int i = 0; i < students_.Length; i++)
+            currentAttentionAverage = 0;
+
+            for (int i = 0; i < students.Length; i++)
             {
-                float mediaStudent = students_[i].GetBehavior().NivelAtencion;
-                students_[i].GetBehavior().CalculateMedia();
+                float studentAttention = students[i].GetBehavior().AttentionLevel;
+                students[i].GetBehavior().CalculateAttentionAverage();
 
-                mediaActual += mediaStudent;
-                
+                currentAttentionAverage += studentAttention;
             }
-            mediaActual /= students_.Length;
 
-            float sum = media * cont + mediaActual;
-            cont++;
-            media = sum / cont;
-            //Debug.Log("Media actual: " + mediaActual);
+            currentAttentionAverage /= students.Length;
 
+            float sum = attentionAverage * count + currentAttentionAverage;
+            count++;
+            attentionAverage = sum / count;
+            //Debug.Log("Current attention average: " + currentAttentionAverage);
         }
-       
+
         private void OnApplicationQuit()
         {
-            Debug.Log("Media final de atencion: "+media);
-
+            Debug.Log("Final attention average: " + attentionAverage);
         }
-
     }
-
 }

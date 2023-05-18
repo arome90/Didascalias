@@ -1,129 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ClassRoomVR
 {
     public class StudentBehavior : MonoBehaviour
     {
-        public float nivelAtencion = 50.0f;// a>50 atento   a<50 despistado
-        public float NivelAtencion => nivelAtencion;
+        private float attentionLevel = 50.0f; // a>50 attentive a<50 distracted
+        public float AttentionLevel => attentionLevel;
 
-        [SerializeField] bool disruptiveBehavior;
-        [SerializeField] float timeOfDecision  = 2.5f;
-        public float TimeOfDecision => timeOfDecision;
+        [SerializeField] private bool disruptiveBehavior;
+        [SerializeField] private float decisionTime = 2.5f;
+        public float DecisionTime => decisionTime;
 
-        [SerializeField] float addAttention=30;
-        [SerializeField] float subAttention=20;
+        [SerializeField] private float attentionAddition = 30;
+        [SerializeField] private float attentionSubtraction = 20;
 
-        [SerializeField] float contAdd=0.2f;
-        [SerializeField] float contSub=0.1f;
+        [SerializeField] private float additionMultiplier = 0.2f;
+        [SerializeField] private float subtractionMultiplier = 0.1f;
 
+        [SerializeField] private float distanceFactorAddition = 2.0f;
+        [SerializeField] private float distanceFactorSubtraction = 2.0f;
 
-        [SerializeField] float distanceFactorAdd=2.0f;
-        [SerializeField] float distanceFactorSub=2.0f;
+        private Student student;
+        private float averageAttentionLevel;
+        private int count;
+        private Transform player;
+        private float additionMultiplierAux;
+        private float subtractionMultiplierAux;
 
-        Student st;
-
-        private float nivelAtencionMedia;
-        private int cont;
-
-        Transform player;
-
-        float contAddAux;
-        float contSubAux;
-        // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
-            st = GetComponent<Student>();
+            student = GetComponent<Student>();
             player = Camera.main.transform;
-            contAddAux = contAdd;
-            contSubAux = contSub;
-            InvokeRepeating("DecidirComportamiento", timeOfDecision, timeOfDecision);
+            additionMultiplierAux = additionMultiplier;
+            subtractionMultiplierAux = subtractionMultiplier;
+            InvokeRepeating("MakeDecision", decisionTime, decisionTime);
         }
 
-        
-     
         public void AddAttention()
         {
-
-
-            float dis = distanceFactorAdd * (1 - Vector3.Distance(transform.position, player.transform.position)/10) ;
-            nivelAtencion += addAttention*(1+contAdd)*(1+dis);
-            if (nivelAtencion > 100) { nivelAtencion = 100; }
-            contAdd += contAddAux;
-            contSub = contSubAux;
-            
+            float distance = distanceFactorAddition * (1 - Vector3.Distance(transform.position, player.transform.position) / 10);
+            attentionLevel += attentionAddition * (1 + additionMultiplier) * (1 + distance);
+            if (attentionLevel > 100) { attentionLevel = 100; }
+            additionMultiplier += additionMultiplierAux;
+            subtractionMultiplier = subtractionMultiplierAux;
         }
 
-        public void SubAttention()
+        public void SubtractAttention()
         {
-            float dis = distanceFactorSub * (1 + Vector3.Distance(transform.position, player.transform.position) / 10);
-            nivelAtencion -= subAttention * (1 + contSub)*(1+dis);
-            if (nivelAtencion <= 0) { nivelAtencion = 0; }
-            contSub += contSubAux;
-            contAdd = contAddAux;
-            Debug.Log(nivelAtencion+name);
+            float distance = distanceFactorSubtraction * (1 + Vector3.Distance(transform.position, player.transform.position) / 10);
+            attentionLevel -= attentionSubtraction * (1 + subtractionMultiplier) * (1 + distance);
+            if (attentionLevel <= 0) { attentionLevel = 0; }
+            subtractionMultiplier += subtractionMultiplierAux;
+            additionMultiplier = additionMultiplierAux;
+            Debug.Log(attentionLevel + name);
         }
 
-
-        public void SetDisruptive(bool value) { disruptiveBehavior = value; }
-
-
-
-        //Método de toma de decisiones
-        private void DecidirComportamiento()
+        public void SetDisruptive(bool value)
         {
+            disruptiveBehavior = value;
+        }
 
-            if (st.IsStudentOnVision())
+        private void MakeDecision()
+        {
+            if (student.IsStudentInFieldOfVision())
                 AddAttention();
-            else SubAttention();
-            //Debug.Log(nivelAtencion + name);
-            ////float v = nivelAtencion / 100.0f;
-            ////if (Random.Range(0.0f, 1.0f) <= v)
-            ////{
-
-            //if (nivelAtencion > 70)
-            //{
-            //    // El personaje está atento
-            //    st.PayAttention();
-
-            //}
-            //else
-            //{
-            //    // El personaje está despistado
-            //    st.GetDistracted();
-            //}
-
-
-            //float v=nivelAtencion / 100.0f ;
-
-
-
-            //if ()
-            //{
-            //    El personaje está realizando acciones disruptivas
-            //     Implementa aquí el comportamiento correspondiente
-            //}
+            else
+                SubtractAttention();
         }
 
-        /// <summary>
-        /// Calcula la media de la atencion 
-        /// </summary>
-        public float CalculateMedia() 
+        public float CalculateAttentionAverage()
         {
-           
-            float sum = nivelAtencionMedia * cont + nivelAtencion;
-            cont++;
-            nivelAtencionMedia = sum/cont;
-            return nivelAtencionMedia;
+            float sum = averageAttentionLevel * count + attentionLevel;
+            count++;
+            averageAttentionLevel = sum / count;
+            return averageAttentionLevel;
         }
 
-        public float GetNivelAtencionMedia()
+        public float GetAttentionAverage()
         {
-            return nivelAtencionMedia;
+            return averageAttentionLevel;
         }
-
-
     }
 }

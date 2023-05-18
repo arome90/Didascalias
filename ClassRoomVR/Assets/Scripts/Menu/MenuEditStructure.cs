@@ -1,54 +1,49 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClassRoomVR
 {
     public class MenuEditStructure : MonoBehaviour
     {
-        ClassSettings settings;
+        private ClassSettings settings;
 
-        [SerializeField] Button volver;
-        [SerializeField] Button aplicar;
-        [SerializeField] GameObject nextScreen;
-        [SerializeField] Structure circular;
-        [SerializeField] Structure fila;
+        [SerializeField] private Button backButton;
+        [SerializeField] private Button applyButton;
+        [SerializeField] private GameObject nextScreen;
+        [SerializeField] private Structure circularStructure;
+        [SerializeField] private Structure filaStructure;
 
-        Structure struActual;
-        // Use this for initialization
-        void Awake()
+        private Structure currentStructure;
+
+        private void Awake()
         {
-            settings = GameManager.Instance.Settings;
-            volver.onClick.AddListener(GoNextScreen);
-            
+            settings = GameManager.Instance.GetCurrentSettings();
+            backButton.onClick.AddListener(GoBackScreen);
         }
 
-
-        void GoNextScreen()
+        private void GoBackScreen()
         {
             nextScreen.SetActive(true);
             gameObject.SetActive(false);
         }
 
-
-
-        //Momentaneo
+        // Temporary
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.O)) 
+            if (Input.GetKeyDown(KeyCode.O))
             {
                 GameManager.Instance.LoadMainScene();
             }
         }
+
         private void OnEnable()
         {
-            bool circu = settings.StructureClass == StructureMode.Circular
-                || settings.StructureClass == StructureMode.U;
-            circular.gameObject.SetActive(circu);
-            fila.gameObject.SetActive(!circu);
-            struActual = circu ? circular : fila;
-            aplicar.onClick.AddListener(GoNextScreen);
+            bool isCircular = settings.StructureMode == StructureMode.Circular
+                || settings.StructureMode == StructureMode.U;
+            circularStructure.gameObject.SetActive(isCircular);
+            filaStructure.gameObject.SetActive(!isCircular);
+            currentStructure = isCircular ? circularStructure : filaStructure;
+            applyButton.onClick.AddListener(GoBackScreen);
         }
-
     }
 }

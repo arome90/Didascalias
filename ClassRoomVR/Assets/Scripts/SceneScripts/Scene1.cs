@@ -7,151 +7,128 @@ namespace ClassRoomVR
 {
     public class Scene1 : MonoBehaviour
     {
+        private BehaviorTree behaviorTree;
+        private Student problematicStudent;
+        private ClassManager classManager;
+        private ScenePackage sceneInfo;
+        private GameObject player;
+        private float initialDistance;
 
-        BehaviorTree bh;
-        Student problematic;
-        ClassManager classManager;
-        ScenePackage sceneInfo;
-        GameObject player;
-        float distanceInitial;
-       
-        [SerializeField] AudioClip ruido;
-        void Start()
+        [SerializeField] private AudioClip noiseClip;
+
+        private void Start()
         {
-            bh = GetComponent<BehaviorTree>();
-            sceneInfo = GameManager.Instance.GetScenePackage(0);
+            behaviorTree = GetComponent<BehaviorTree>();
+            sceneInfo = GameManager.Instance.GetPackageAtIndex(0);
             player = GameManager.Instance.GetPlayer();
             classManager = GameManager.Instance.GetClassManager();
-            classManager.GetComponent<AudioSource>().clip = sceneInfo.before_bell;
+            classManager.GetComponent<AudioSource>().clip = sceneInfo.beforeClassBell;
             classManager.GetComponent<AudioSource>().Play();
         }
 
-        /// <summary>
-        /// Invoca un metodo en x segundos y empieza una corrutina para controlar si el profesor deja de
-        /// observar al alumno durante unos segunos 
-        /// </summary>
-        /// <param name="time"></param>
-        public void Ignore(float time) 
+        public void Ignore(float time)
         {
             Invoke("IgnoreTime", time);
-            StartCoroutine(IgnoreStudent());            
+            StartCoroutine(IgnoreStudent());
         }
-        /// <summary>
-        /// Invocacion para elegir el camino de ignore si no
-        /// se ha elegido otro antes
-        /// </summary>
-        void IgnoreTime() 
+
+        private void IgnoreTime()
         {
-            if ((int)bh.GetVariable("Path").GetValue() < 0)
+            if ((int)behaviorTree.GetVariable("Path").GetValue() < 0)
             {
-                bh.GetVariable("Path").SetValue(3);
-                player.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                behaviorTree.GetVariable("Path").SetValue(3);
+                player.GetComponent<AudioSource>().clip = sceneInfo.classReactionAudio;
                 player.GetComponent<AudioSource>().Play();
             }
         }
-        /// <summary>
-        /// Corrutina para controlar si el profesor ignora al alumno
-        /// </summary>
-        /// <returns></returns>
+
         public IEnumerator IgnoreStudent()
         {
-            yield return new WaitUntil(() => !classManager.GetStudentsController().IsStudentOnVision(problematic));
+            yield return new WaitUntil(() => !classManager.GetStudentsController().IsStudentInFieldOfVision(problematicStudent));
             yield return new WaitForSecondsRealtime(3);
-            if (!classManager.GetStudentsController().IsStudentOnVision(problematic))
+            if (!classManager.GetStudentsController().IsStudentInFieldOfVision(problematicStudent))
             {
-                bh.GetVariable("Path").SetValue(3);
-                player.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                behaviorTree.GetVariable("Path").SetValue(3);
+                player.GetComponent<AudioSource>().clip = sceneInfo.classReactionAudio;
                 player.GetComponent<AudioSource>().Play();
             }
-            else if((int)bh.GetVariable("Path").GetValue() < 0)
+            else if ((int)behaviorTree.GetVariable("Path").GetValue() < 0)
             {
                 StartCoroutine(IgnoreStudent());
             }
         }
 
-
-
-        /// <summary>
-        /// Metodo para controlar el camino . Acercarse y hablar bien 
-        /// </summary>
         public void Near()
         {
-            if (classManager.GetStudentsController().GetMode()==StudentsController.TalkMode.Good && Vector3.Distance(problematic.transform.position,player.transform.position)<= distanceInitial/2)
+            if (classManager.GetStudentsController().GetMode() == TalkMode.Good &&
+                Vector3.Distance(problematicStudent.transform.position, player.transform.position) <= initialDistance / 2)
             {
-                bh.GetVariable("Path").SetValue(1);
+                behaviorTree.GetVariable("Path").SetValue(1);
                 Student[] students = classManager.GetStudents();
-                //Salen los demas alumnos de clase 
-                for (int i =0;i < students.Length; i++)
+                foreach (Student student in students)
                 {
-                    if(!students[i].GetProblematicStudent())StartCoroutine(WaitAndExit(students[i], i));
+                    if (!student.IsProblematicStudent())
+                        StartCoroutine(WaitAndExit(student, students.Length));
                 }
             }
         }
 
-        //Salida de un alumno de clase en x segundos 
-        IEnumerator WaitAndExit(Student st,float waitTime)
+        private IEnumerator WaitAndExit(Student student, float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            st.MoveTo(classManager.GetStudentsController().Door.position);
+            student.MoveTo(classManager.GetStudentsController().Door.position);
         }
 
-        /// <summary>
-        /// Metodo para controlar el camino  . Grito o falta de respeto
-        /// </summary>
-        public void Shout() 
+        public void Shout()
         {
-            if (classManager.GetStudentsController().GetMode()==StudentsController.TalkMode.Disrespect)
+            if (classManager.GetStudentsController().GetMode() == TalkMode.Disrespect)
             {
-                bh.GetVariable("Path").SetValue(2);
-                classManager.GetComponent<AudioSource>().clip = ruido;
+                behaviorTree.GetVariable("Path").SetValue(2);
+                classManager.GetComponent<AudioSource>().clip = noiseClip;
                 classManager.GetComponent<AudioSource>().volume = 0.1f;
                 classManager.GetComponent<AudioSource>().Play();
             }
         }
 
-        /// <summary>
-        /// Inicia la situacion 
-        /// </summary>
         public void InitSituation()
         {
-            Student[]students = classManager.GetStudents();
-            bool pro = false;
+            Student[] students = classManager.GetStudents();
+            bool problematicFound = false;
             int i = 0;
-            while (!pro && i < students.Length) 
+            while (!problematicFound && i < students.Length)
             {
-                pro = students[i].GetProblematicStudent();
+                problematicFound = students[i].IsProblematicStudent();
                 i++;
             }
-            problematic = students[i-1];
+
+            problematicStudent = students[i - 1];
             if (sceneInfo.problematicsAnimation != null)
             {
-                problematic.PlayAnimation(sceneInfo.problematicsAnimation.name);
+                problematicStudent.PlayAnimation(sceneInfo.problematicsAnimation.name);
             }
-            problematic.GetComponent<AudioSource>().clip = problematic.GetSex() == Student.Gender.Men
-                ? sceneInfo.audioSituationMasculino : sceneInfo.audioSituationFemenino;
-            problematic.GetComponent<AudioSource>().Play();
-            Invoke("Risas", 2f);
+            problematicStudent.GetComponent<AudioSource>().clip = problematicStudent.GetGender() == Gender.Men
+                ? sceneInfo.situationAudioMasculine : sceneInfo.situationAudioFeminine;
+            problematicStudent.GetComponent<AudioSource>().Play();
+            Invoke("Laugh", 2f);
 
-            bh.GetVariable("AccionAlumno").SetValue(true);
-            distanceInitial = Vector3.Distance(problematic.transform.position,player.transform.position);
-            
+            behaviorTree.GetVariable("AccionAlumno").SetValue(true);
+            initialDistance = Vector3.Distance(problematicStudent.transform.position, player.transform.position);
         }
 
-        //Suena el clip de sonrisas 
-        void Risas() 
+        private void Laugh()
         {
-            if (sceneInfo.audioReaccionClase != null)
+            if (sceneInfo.classReactionAudio != null)
             {
-                classManager.GetComponent<AudioSource>().clip = sceneInfo.audioReaccionClase;
+                classManager.GetComponent<AudioSource>().clip = sceneInfo.classReactionAudio;
                 classManager.GetComponent<AudioSource>().Play();
             }
         }
 
-        //Termina la clase
-        public void Termina() 
+        public void Finish()
         {
-            classManager.GetComponent<AudioSource>().clip = sceneInfo.after_bell;
+            classManager.GetComponent<AudioSource>().clip = sceneInfo.afterClassBell;
             classManager.GetComponent<AudioSource>().Play();
         }
     }
+
 }

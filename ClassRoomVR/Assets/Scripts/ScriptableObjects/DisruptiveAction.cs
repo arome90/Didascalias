@@ -4,38 +4,39 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
- namespace ClassRoomVR
+namespace ClassRoomVR
 {
-    //Actualizar siempre respecto a la lista de posiciones que pueden moverse los alumnos
-    public enum Positions 
+    // Always update according to the list of positions where students can move
+    public enum Positions
     {
-        None=-1,FrontSide,BackCorner,Doors
+        None = -1,
+        FrontSide,
+        BackCorner,
+        Doors
     }
+
     [CreateAssetMenu(fileName = "DisruptiveAction", menuName = "ScriptableObject/DisruptiveAction", order = 5)]
     public class DisruptiveAction : ScriptableObject
     {
-
         public AnimationClip problematicsAnimation;
-        public AudioClip audioSituationMasculino;
-        public AudioClip audioSituationFemenino;
+        public AudioClip situationAudioMasculine;
+        public AudioClip situationAudioFeminine;
 
-        public AudioClip reaccionClase;
-        public AudioClip ruido;
-        public bool risas;
+        public AudioClip classLaughter;
+        public AudioClip noise;
+        public bool laughter;
 
-        [Tooltip("Numero de personas que participan en la accion disruptiva")]
-        public int numStudents=1;
+        [Tooltip("Number of people involved in the disruptive action")]
+        public int numStudents = 1;
 
-        [Tooltip("Posicion a la que se desplaza ")]
-        public  Positions pos;
+        [Tooltip("Position to move to")]
+        public Positions position;
 
-        public float timeToReact;
+        public float reactionTime;
 
-        public  GameObject  bh;
+        public GameObject behaviorHolder;
 
-        //[Tooltip("Comportamiento especial de la escena en cualquier momento de ejecucion durante la eleccion del camino")]
-        //public UnityEngine.Events.UnityEvent especificBehaviour;
+        //[Tooltip("Special behavior of the scene at any time during the path selection")]
+        //public UnityEngine.Events.UnityEvent specificBehavior;
     }
-
-
 }
