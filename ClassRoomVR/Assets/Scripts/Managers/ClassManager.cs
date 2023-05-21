@@ -100,16 +100,18 @@ namespace ClassRoomVR
             Student pickedStudent = Instantiate(prefabStudent, transform);
             pickedStudent.SetParameters(name, gender);
             pickedStudent.CreateBody(body);
-            pickedStudent.SetTargets(targetsHead);
             students.Add(name, pickedStudent);
             return pickedStudent;
         }
         private void PlaceStudent(ref int deskPos, Student pickedStudent, int nGruops)
         {
             DeskManager.Instance.GetFreeDesk(ref deskPos, nGruops);
-            Transform pos = studentsPositions.GetChild(deskPos).GetChild(0);
+            Desk desk = studentsPositions.GetChild(deskPos).GetComponent<Desk>();
+            Transform pos = desk.transform.GetChild(0);
             pickedStudent.transform.SetPositionAndRotation(pos.position, pos.rotation);
-            pickedStudent.SetDesk(pos.position);
+            pickedStudent.SetDesk(desk);
+            pickedStudent.SetTargets(targetsHead);
+
             asientosOcupados[deskPos] = true;
         }
 

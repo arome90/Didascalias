@@ -15,13 +15,14 @@ namespace ClassRoomVR
         public FieldOfVision distracted;
         private FieldOfVision[] distractedArray;
 
-        private State state;
+        private State state ;
+
 
         [SerializeField] private Gender gender;
         [SerializeField] private string studentName;
         [SerializeField] private bool problematic = false;
         [SerializeField] private TextMesh studentNameText;
-        private Vector3 deskPosition;
+        private Desk desk;
 
         [SerializeField]
         private RuntimeAnimatorController animatorController;
@@ -30,7 +31,7 @@ namespace ClassRoomVR
         private AudioSource audioSource;
         private NavMeshAgent navMeshAgent;
         private Collider collider;
-        private Vector3 destination;
+       // private Vector3 destination;
 
         [SerializeField] private Transform target;
         private Vector3 actualTargetPosition;
@@ -48,7 +49,7 @@ namespace ClassRoomVR
 
 
         #region Getters
-        public Vector3 GetDesk() { return deskPosition; }
+        public Desk GetDesk() { return desk; }
         public Gender GetGender() { return gender; }
         public string GetStudentName() { return studentName; }
         public Collider GetCollider() { return collider; }
@@ -106,9 +107,9 @@ namespace ClassRoomVR
             problematic = true;
         }
 
-        public void SetDesk(Vector3 position)
+        public void SetDesk(Desk d)
         {
-            deskPosition = position;
+            desk = d;
         }
 
 
@@ -116,10 +117,10 @@ namespace ClassRoomVR
         public void SetTargets(Transform[] transforms)
         {
             targets = new Dictionary<FieldOfVision, Vector3>();
-            targets.Add(FieldOfVision.Up, new Vector3(0, 3, 1));
-            targets.Add(FieldOfVision.Right, Vector3.right);
-            targets.Add(FieldOfVision.Down, new Vector3(0, -1, 1));
-            targets.Add(FieldOfVision.Left, Vector3.left);
+            targets.Add(FieldOfVision.Up, transform.up * 2f );
+            targets.Add(FieldOfVision.Right,transform.right);
+            targets.Add(FieldOfVision.Down, transform.up/-2);
+            targets.Add(FieldOfVision.Left, -transform.right);
             targets.Add(FieldOfVision.Window, transforms[0].position);
             targets.Add(FieldOfVision.Door, transforms[1].position);
             targets.Add(FieldOfVision.Teacher, Vector3.zero);
@@ -135,6 +136,9 @@ namespace ClassRoomVR
             SetDirection(distractedArray[Random.Range(0, distractedArray.Length)]);
         }
 
+        private float smoothTime = 0.2f;
+        private float maxSpeed = 1f;
+        private Vector3 currentVelocity;
         private void Update()
         {
             for (int i = 0; i < 8; i++)
@@ -164,27 +168,43 @@ namespace ClassRoomVR
             {
                 StartCoroutine(ShakeHead());
             }
-
+            //lerp
             if (vision != FieldOfVision.Teacher)
             {
-                target.position = Vector2.MoveTowards(target.position, actualTargetPosition, 5.0f * Time.deltaTime);
+                // target.position = Vector3.MoveTowards(target.position, actualTargetPosition, 5.0f * Time.deltaTime);
+                target.position = Vector3.SmoothDamp(target.position, actualTargetPosition, ref currentVelocity, smoothTime, maxSpeed,Time.deltaTime);
+                
             }
             else
             {
-                target.position = Vector2.MoveTowards(target.position, teacher.position, 5.0f * Time.deltaTime);
+                target.position = Vector3.MoveTowards(target.position, teacher.position, 5.0f * Time.deltaTime);
             }
             attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
+
+
+        //IEnumerator LerpPosition(Vector3 targetPosition, float duration)
+        //{
+        //    float time = 0;
+        //    Vector3 startPosition = target.position;
+        //    while (time < duration)
+        //    {
+        //        target.position = Vector3.LerpUnclamped(startPosition, targetPosition, time / duration);
+        //        time += Time.deltaTime;
+        //        yield return null;
+        //    }
+        //    target.position = targetPosition;
+        //}
 
         IEnumerator Nod()
         {
             for (int i = 0; i < 2; i++)
             {
                 SetDirection(FieldOfVision.Up);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.5f)
                     yield return null;
                 SetDirection(FieldOfVision.Down);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.5f)
                     yield return null;
             }
         }
@@ -194,25 +214,26 @@ namespace ClassRoomVR
             for (int i = 0; i < 2; i++)
             {
                 SetDirection(FieldOfVision.Right);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.2f)
                     yield return null;
                 SetDirection(FieldOfVision.Left);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.05f)
+                while (Vector2.Distance(target.position, actualTargetPosition) > 0.2f)
                     yield return null;
             }
         }
 
         private void SetDirection(FieldOfVision fieldOfVision)
         {
-            vision = fieldOfVision;
+            vision = fieldOfVision;            
             switch (vision)
             {
+               
                 case FieldOfVision.Up:
                 case FieldOfVision.Down:
                 case FieldOfVision.Right:
                 case FieldOfVision.Left:
-                    actualTargetPosition = transform.position + targets[vision];
-                    break;
+                    actualTargetPosition = transform.position + targets[vision]+ transform.forward;
+                    break; 
                 case FieldOfVision.Door:
                 case FieldOfVision.Window:
                     actualTargetPosition = targets[vision];
@@ -251,37 +272,37 @@ namespace ClassRoomVR
 
         #region Movement
 
-        IEnumerator OnCompleteMove()
+        IEnumerator OnCompleteMove(Vector3 destination)
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
+            state = State.Standing;
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             navMeshAgent.SetDestination(destination);
             while (Vector3.Distance(transform.position, destination) > 0.5f)
                 yield return null;
             animator.Play("Standing");
             transform.rotation = Quaternion.Euler(0, 90, 0);
-            navMeshAgent.enabled = false;
-            state = State.Standing;
         }
 
         IEnumerator OnCompleteSitBack()
         {
-            while (Vector3.Distance(transform.position, deskPosition) > 0.1f)
+            while (Vector3.Distance(transform.position, desk.GetPositionStudent()) > 0.1f)
+            {
                 yield return null;
+            }
             animator.SetBool("onFoot", false);
-            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Sitting Down"))
-                yield return null;
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
-            transform.rotation = Quaternion.Euler(Vector3.zero);
             navMeshAgent.enabled = false;
+            transform.rotation = desk.transform.rotation;
             state = State.Sitting;
         }
 
         public void SitBack()
         {
+            StopCoroutine("OnCompleteMove"); // Detiene la corutina OnCompleteMove
             navMeshAgent.enabled = true;
-            navMeshAgent.SetDestination(deskPosition);
+            navMeshAgent.SetDestination(desk.GetPositionStudent());
             animator.Play("Walking");
             StartCoroutine(OnCompleteSitBack());
         }
@@ -289,7 +310,6 @@ namespace ClassRoomVR
         public void MoveTo(Vector3 destination)
         {
             navMeshAgent.enabled = true;
-            this.destination = destination;
             if (state == State.Sitting)
             {
                 animator.SetBool("onFoot", true);
@@ -298,12 +318,12 @@ namespace ClassRoomVR
             {
                 animator.Play("Walking");
             }
-            StartCoroutine(OnCompleteMove());
+            StartCoroutine(OnCompleteMove(destination));
         }
 
-        public void ChangeDesk(Vector3 position)
+        public void ChangeDesk(Desk d)
         {
-            deskPosition = position;
+            desk = d;
             if (state == State.Standing)
             {
                 SitBack();
@@ -322,6 +342,7 @@ namespace ClassRoomVR
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             SitBack();
         }
+
 
         #endregion
 

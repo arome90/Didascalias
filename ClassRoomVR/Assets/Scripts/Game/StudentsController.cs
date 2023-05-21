@@ -39,8 +39,8 @@ namespace ClassRoomVR
 
         private void ChangeDesk(Student student1, Student student2)
         {
-            Vector3 position1 = student1.GetDesk();
-            Vector3 position2 = student2.GetDesk();
+            var position1 = student1.GetDesk();
+            var position2 = student2.GetDesk();
             student1.ChangeDesk(position2);
             student2.ChangeDesk(position1);
         }

@@ -60,7 +60,7 @@ namespace ClassRoomVR
         
         public IEnumerator IgnoreStudent(Student s)
         {
-            yield return new WaitUntil(() => s.IsStudentInFieldOfVision());
+            yield return new WaitWhile(() => s.IsStudentInFieldOfVision() );
             yield return new WaitForSecondsRealtime(3);
             if (!s.IsStudentInFieldOfVision())
             {

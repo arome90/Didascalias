@@ -52,7 +52,6 @@ namespace ClassRoomVR
             if (attentionLevel <= 0) { attentionLevel = 0; }
             subtractionMultiplier += subtractionMultiplierAux;
             additionMultiplier = additionMultiplierAux;
-            Debug.Log(attentionLevel + name);
         }
 
         public void SetDisruptive(bool value)
