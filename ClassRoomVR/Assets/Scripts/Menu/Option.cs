@@ -11,12 +11,12 @@ public class Option : MonoBehaviour
     [SerializeField] private Button subButton;
 
     // Variables
-    [SerializeField] private float value;
-    [SerializeField] private float minValue;
-    [SerializeField] private float maxValue;
-    [SerializeField] private float step;
+    [SerializeField] private double value;
+    [SerializeField] private double minValue;
+    [SerializeField] private double maxValue;
+    [SerializeField] private double step;
 
-    [HideInInspector] public UnityEvent<float> onValueChanged;
+    [HideInInspector] public UnityEvent<double> onValueChanged;
 
     private void Start()
     {
@@ -32,8 +32,9 @@ public class Option : MonoBehaviour
             value = maxValue;
         else
         {
-            optionValue.text = value.ToString("0.##");
             onValueChanged.Invoke(value);
+            optionValue.text = value.ToString("0.##");
+
         }
     }
 
@@ -44,24 +45,36 @@ public class Option : MonoBehaviour
             value = minValue;
         else
         {
-            optionValue.text = value.ToString("0.##");
             onValueChanged.Invoke(value);
+            optionValue.text = value.ToString("0.##");
         }
     }
 
-    public void SetMax(float value)
+    //void SetText()
+    //{ optionValue.text = value.ToString("0.##"); }
+
+    public void SetMax(double v)
     {
-        maxValue = value;
+        maxValue = v;
+        
     }
 
-    public void SetMin(float value)
+    public void SetMin(double v)
     {
-        minValue = value;
+        minValue = v;
+        
     }
-
-    public void SetValue(float v)
+   
+    public void SetValue(double v)
     {
         value = v;
+        if (value < minValue)
+            value = minValue;
+        else if (value > maxValue)
+            value = maxValue;
         optionValue.text = value.ToString("0.##");
     }
+
+
+    public double GetMax() { return maxValue; }
 }

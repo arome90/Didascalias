@@ -7,12 +7,12 @@ namespace ClassRoomVR
     {
         [SerializeField] Option radiusOpt;
         [SerializeField] Option gradesOpt;
-
+        bool Ubool = false;
         public override void Set()
         {
-            float radius = settings.Radius;
+            float radius = (float)settings.Radius;
             int numObjects = settings.NumDesks;
-            float degrees = settings.Degrees;
+            float degrees = (float)settings.Degrees;
 
             if (parent != null) { Destroy(parent); }
             parent = new GameObject("Toggles");
@@ -23,7 +23,7 @@ namespace ClassRoomVR
                 Destroy(child.gameObject);
             }
 
-            float angle = degrees / numObjects; // Angle between objects
+            float angle = degrees / (numObjects - (Ubool ? 1.0f : 0.0f)); // Angle between objects
             for (int i = 0; i < numObjects; i++)
             {
                 var v = GetVector(angle, i, radius);
@@ -35,10 +35,74 @@ namespace ClassRoomVR
                 position += parentDesk.transform.position;
                 var d = Instantiate(desk, position, Quaternion.identity, parentDesk.transform);
                 d.transform.LookAt(parentDesk.transform);
-
+                d.onCollisionChanged.AddListener(CollisionWithOtherDesk);
+               
                 toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
                 list_.Add(toggle, d);
             }
+            
+        }
+
+
+        void CollisionWithOtherDesk()
+        {
+            foreach (Desk d in list_.Values)
+            {
+                d.onCollisionChanged.RemoveListener(CollisionWithOtherDesk);
+            }
+
+            switch (lastOptionClicked)
+            {
+                case 0:
+                    if (settings.Radius < radiusOpt.GetMax())
+                    {
+                        settings.Radius += 0.1d;
+                        Set();
+                        radiusOpt.SetValue(settings.Radius);
+                    }
+                    else if( !Ubool &&  settings.Degrees<=360f)
+                    {
+                        settings.Degrees += 10;
+                        Set();
+                        gradesOpt.SetValue(settings.Degrees);
+                    }
+                  
+                    break;
+                case 1:
+                    if (settings.NumDesks > settings.NumStudents)
+                    {
+                        settings.NumDesks -= 1;
+                        Set();
+                        numDesks.SetValue(settings.NumDesks);
+                    }
+                    else 
+                    {
+                        settings.Radius += 0.1d;
+                        Set();
+                       // radiusOpt.SetMin(settings.Radius);
+                        radiusOpt.SetValue(settings.Radius);
+
+                    }
+                    break;
+                case 2:
+                    if (settings.NumDesks > settings.NumStudents)
+                    {
+                        settings.NumDesks -= 1;
+                        Set();
+                        numDesks.SetValue(settings.NumDesks);
+                    }
+                    else
+                    {
+                        settings.Degrees += 10;
+                        Set();
+                        //gradesOpt.SetMin(settings.Degrees);
+                        gradesOpt.SetValue(settings.Degrees);
+
+                    }
+                    break;
+            }
+
+
         }
 
         void ChangeDesk(Toggle toggle)
@@ -48,9 +112,9 @@ namespace ClassRoomVR
 
         System.Tuple<float, float> GetVector(float angle, int i, float radius)
         {
-            float x = Mathf.Cos(Mathf.Deg2Rad * angle * i) * radius; // X coordinate
-            float z = Mathf.Sin(Mathf.Deg2Rad * angle * i) * radius; // Z coordinate
-            return new System.Tuple<float, float>(x, z);
+            float cos = Mathf.Cos(Mathf.Deg2Rad * (angle * i));
+            float sin = Mathf.Sin(Mathf.Deg2Rad * (angle * i));            
+            return new System.Tuple<float, float>((float)System.Math.Round(cos, 3) * radius, (float)System.Math.Round(sin, 3) * radius);
         }
 
         private void OnEnable()
@@ -61,13 +125,16 @@ namespace ClassRoomVR
 
             if (settings.StructureMode == StructureMode.U)
             {
+                numDesks.SetMax(1 + (numDesks.GetMax() / 2));
                 gradesOpt.gameObject.SetActive(false);
                 settings.Degrees = 180f;
+                Ubool = true;
             }
             else
             {
                 gradesOpt.gameObject.SetActive(true);
-                settings.Degrees = settings.Degrees == 180f ? 360f : settings.Degrees;
+                settings.Degrees = 360f;
+                Ubool = false;
             }
 
             gradesOpt.SetValue(settings.Degrees);
@@ -82,18 +149,23 @@ namespace ClassRoomVR
             gradesOpt.onValueChanged.AddListener(ChangeGrades);
         }
 
-        void ChangeRadius(float value)
+        void ChangeRadius(double value)
         {
+            lastOptionClicked = 1;
             settings.Radius = value;
             Set();
+
         }
 
-        void ChangeGrades(float value)
+
+
+        void ChangeGrades(double value)
         {
+            lastOptionClicked = 2;
             settings.Degrees = value;
             Set();
         }
 
-        //setmaxdesks
+       
     }
 }

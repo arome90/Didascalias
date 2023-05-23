@@ -11,4 +11,28 @@ public class Desk : MonoBehaviour
 
     public Vector3 GetPositionStudent() { return transform.GetChild(0).position; }
 
+
+    //Collisiones arreglo
+
+
+
+    [HideInInspector] public UnityEngine.Events.UnityEvent onCollisionChanged;
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.gameObject.CompareTag("Desk"))
+    //    {
+    //        toca = true;
+    //        Debug.Log("toca");
+    //    }
+    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Desk"))
+        {
+            onCollisionChanged.Invoke();
+            
+        }
+    }
+
 }

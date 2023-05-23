@@ -15,6 +15,7 @@ namespace ClassRoomVR
         protected ClassSettings settings;
         protected GameObject parent;
 
+        protected int lastOptionClicked=0;
         public abstract void Set();
 
         private void Awake()
@@ -23,7 +24,6 @@ namespace ClassRoomVR
             settings = GameManager.Instance.GetCurrentSettings();
             numDesks.onValueChanged.AddListener(ChangeObjects);
             DontDestroyOnLoad(parentDesk);
-            Debug.Log("hello");
         }
 
         private void OnDisable()
@@ -37,8 +37,9 @@ namespace ClassRoomVR
             }
         }
 
-        protected void ChangeObjects(float value)
+        protected void ChangeObjects(double value)
         {
+            lastOptionClicked = 0;
             settings.NumDesks = (int)value;
             Set();
         }

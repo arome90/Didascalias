@@ -55,13 +55,13 @@ namespace ClassRoomVR
             settings.StructureMode = (StructureMode)value;
         }
 
-        private void ChangeBoys(float value)
+        private void ChangeBoys(double value)
         {
             settings.NumMen = (int)value;
             SetMaxStudents();
         }
 
-        private void ChangeGirls(float value)
+        private void ChangeGirls(double value)
         {
             settings.NumWomen = (int)value;
             SetMaxStudents();

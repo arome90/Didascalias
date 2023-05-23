@@ -57,8 +57,8 @@ namespace ClassRoomVR
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
 
             int numDesks = settings.NumDesks;
-            float degrees = settings.Degrees;
-            float radius = settings.Radius;
+            float degrees = (float)settings.Degrees;
+            float radius = (float)settings.Radius;
 
             float angle = degrees / numDesks;
 
@@ -78,17 +78,20 @@ namespace ClassRoomVR
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
 
             int numDesks = settings.NumDesks;
-            float radius = settings.Radius;
+            float radius = (float)settings.Radius;
 
-            float angle = 180f / numDesks;
+            float angle = 360 / (numDesks-1);
+            float currentAngle = 0f;
 
             for (int i = 0; i < numDesks; i++)
             {
-                float x = Mathf.Cos(Mathf.Deg2Rad * angle * i) * radius;
-                float z = Mathf.Sin(Mathf.Deg2Rad * angle * i) * radius;
+                float x = Mathf.Cos(Mathf.Deg2Rad/2 * currentAngle ) * radius;
+                float z = Mathf.Sin(Mathf.Deg2Rad/2* currentAngle ) * radius;
                 Vector3 position = new Vector3(x, 0, -z) + transform.position;
+
                 Desk desk = Instantiate(deskPrefab, position, Quaternion.identity, transform);
                 desk.Position = new Vector2(i, 0);
+                currentAngle += angle;
             }
         }
     }

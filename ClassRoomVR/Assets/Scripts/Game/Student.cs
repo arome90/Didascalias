@@ -136,8 +136,8 @@ namespace ClassRoomVR
             SetDirection(distractedArray[Random.Range(0, distractedArray.Length)]);
         }
 
-        private float smoothTime = 0.2f;
-        private float maxSpeed = 1f;
+        private float smoothTime = 0.15f;
+        private float maxSpeed = 2f;
         private Vector3 currentVelocity;
         private void Update()
         {
