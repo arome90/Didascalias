@@ -589,10 +589,19 @@ MonoBehaviour:
     OnRequestCompleted:
       m_PersistentCalls:
         m_Calls: []
+    OnCanceled:
+      m_PersistentCalls:
+        m_Calls: []
+    OnComplete:
+      m_PersistentCalls:
+        m_Calls: []
     OnMicLevelChanged:
       m_PersistentCalls:
         m_Calls: []
     OnRequestOptionSetup:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRequestInitialized:
       m_PersistentCalls:
         m_Calls: []
     OnRequestCreated:
@@ -633,11 +642,11 @@ MonoBehaviour:
         m_Calls: []
   witRuntimeConfiguration:
     witConfiguration: {fileID: 11400000, guid: 19f6b0532c21147468ac16b4dedcb031, type: 2}
-    minKeepAliveVolume: 1.11
+    minKeepAliveVolume: 0.1
     minKeepAliveTimeInSeconds: 2
     minTranscriptionKeepAliveTimeInSeconds: 1
-    maxRecordingTime: 5
-    soundWakeThreshold: 0.005
+    maxRecordingTime: 20
+    soundWakeThreshold: 0.0005
     sampleLengthInMs: 10
     micBufferLengthInSeconds: 1
     maxConcurrentRequests: 1
@@ -2581,6 +2590,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DrawCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3961991358968874649, guid: f88feed529822a84c8d230f3d6732aaf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3961991358968874651, guid: f88feed529822a84c8d230f3d6732aaf,
         type: 3}
       propertyPath: m_Enabled
@@ -2708,7 +2722,7 @@ PrefabInstance:
     - target: {fileID: 1403025452530235520, guid: d9eb0447aa6d0e14b992cf2912b11a07,
         type: 3}
       propertyPath: m_EnableStrafe
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1403025452530235524, guid: d9eb0447aa6d0e14b992cf2912b11a07,
         type: 3}

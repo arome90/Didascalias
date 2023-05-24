@@ -60,10 +60,8 @@ namespace ClassRoomVR
         
         public IEnumerator IgnoreStudent(Student s)
         {
-            Debug.Log("1");
             yield return new WaitWhile(() => s.IsStudentInFieldOfVision() );
             yield return new WaitForSecondsRealtime(3);
-            Debug.Log("2");
             if (!s.IsStudentInFieldOfVision())
             {
                 bh.GetVariable("Path").SetValue(3);

@@ -125,6 +125,7 @@ namespace ClassRoomVR
 
             if (settings.StructureMode == StructureMode.U)
             {
+                Debug.Log(numDesks.GetMax());
                 numDesks.SetMax(1 + (numDesks.GetMax() / 2));
                 gradesOpt.gameObject.SetActive(false);
                 settings.Degrees = 180f;
@@ -166,6 +167,15 @@ namespace ClassRoomVR
             Set();
         }
 
-       
+        private void OnDisable()
+        {
+
+            if (settings.StructureMode == StructureMode.U)
+            {
+                numDesks.SetMax((numDesks.GetMax()-1) * 2 );
+                Debug.Log(numDesks.GetMax());
+                Ubool = false;
+            }
+        }
     }
 }

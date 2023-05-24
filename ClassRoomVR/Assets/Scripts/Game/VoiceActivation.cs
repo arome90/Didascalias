@@ -7,8 +7,7 @@ namespace ClassRoomVR
     public class VoiceActivation : MonoBehaviour
     {
         bool shout;
-
-        [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
+       [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
 
         [SerializeField] TextMeshProUGUI fullTrascriptionText;
 
@@ -22,7 +21,8 @@ namespace ClassRoomVR
         {
             //GameManager.Instance.SetVoiceActivation(this);
             Activate();
-           
+            
+
 
         }
 
@@ -49,12 +49,12 @@ namespace ClassRoomVR
             GameManager.Instance.SetVoiceActivation(this);
             fullTrascriptionText.text = partialTrascriptionText.text = string.Empty;
 
-            appVoiceExperience.events.onFullTranscription.AddListener((transcription) =>
+            appVoiceExperience.VoiceEvents.onFullTranscription.AddListener((transcription) =>
             {
                 fullTrascriptionText.text = transcription;
             });
 
-            appVoiceExperience.events.OnPartialTranscription.AddListener((transcription) =>
+            appVoiceExperience.VoiceEvents.OnPartialTranscription.AddListener((transcription) =>
             {
                 partialTrascriptionText.text = transcription;
             });
@@ -66,7 +66,7 @@ namespace ClassRoomVR
             //});
             
 
-            appVoiceExperience.events.OnRequestCompleted.AddListener(() =>
+            appVoiceExperience.VoiceEvents.OnRequestCompleted.AddListener(() =>
             {
                 Activate();
 
@@ -79,12 +79,12 @@ namespace ClassRoomVR
 
             //});
 
-            appVoiceExperience.events.OnResponse.AddListener((response) =>
+            appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
                 UpdateClass(response);
             });
 
-            appVoiceExperience.events.OnMicLevelChanged.AddListener((value) =>
+            appVoiceExperience.VoiceEvents.OnMicLevelChanged.AddListener((value) =>
             {
                 OnMicLevelChanged(value);
             });
@@ -121,8 +121,10 @@ namespace ClassRoomVR
         }
         public void OnMicLevelChanged(float a)
         {
+            //Debug.Log(Mathf.Round(a);
             if (!shout && a > 0.05f )
             {
+               
                 shout = true;
                 st.SetMode(TalkMode.Disrespect);
                 Debug.Log("Gritando");
