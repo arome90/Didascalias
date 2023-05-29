@@ -19,7 +19,8 @@ namespace ClassRoomVR
         [SerializeField] private GameObject backScreen;
         [SerializeField] private GameObject editScreen;
 
-
+        private int maxStudents;
+        
         private void Start()
         {
             settings = GameManager.Instance.GetCurrentSettings();
@@ -31,7 +32,11 @@ namespace ClassRoomVR
             startButton.onClick.AddListener(GameManager.Instance.LoadMainScene);
             backButton.onClick.AddListener(GoBackScreen);
             editDeskPositionButton.onClick.AddListener(GoEditScreen);
+            SetOptions(typeof(StructureMode));
             structureDropdown.SetValueWithoutNotify((int)settings.StructureMode);
+            SetMaxValue();
+            SetMaxStudents();
+
         }
 
 
@@ -53,15 +58,42 @@ namespace ClassRoomVR
         private void ChangeStructure(int value)
         {
             settings.StructureMode = (StructureMode)value;
+            SetMaxValue();
+            if (settings.NumMen + settings.NumWomen > maxStudents) 
+            {
+                settings.NumMen = maxStudents/2;
+                settings.NumWomen = maxStudents/2;
+                boysOption.SetValue(maxStudents / 2);
+                girlsOption.SetValue(maxStudents / 2);
+            }
+            SetMaxStudents();
+
+
         }
 
-        private void ChangeBoys(double value)
+        private void SetMaxValue() 
+        {
+            switch (settings.StructureMode)
+            {
+                case StructureMode.Fila:
+                    maxStudents = 30;
+                    break;
+                case StructureMode.Circular:
+                    maxStudents = 22;
+                    break;
+                case StructureMode.U:
+                    maxStudents = 12;
+                    break;
+
+            }
+        }
+        private void ChangeBoys(float value)
         {
             settings.NumMen = (int)value;
             SetMaxStudents();
         }
 
-        private void ChangeGirls(double value)
+        private void ChangeGirls(float value)
         {
             settings.NumWomen = (int)value;
             SetMaxStudents();
@@ -71,9 +103,17 @@ namespace ClassRoomVR
         private void SetMaxStudents()
         {
             settings.NumStudents = settings.NumMen + settings.NumWomen;
-            boysOption.SetMax(30 - settings.NumWomen);
-            girlsOption.SetMax(30 - settings.NumMen);
+            boysOption.SetMax(maxStudents - settings.NumWomen);
+            girlsOption.SetMax(maxStudents - settings.NumMen);
         }
+
+
+        public void SetOptions(Type type)
+        {
+            var valores = Enum.GetNames(type);
+            structureDropdown.AddOptions(new List<string>(valores));
+        }
+
     }
 
 }

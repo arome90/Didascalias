@@ -37,7 +37,7 @@ namespace ClassRoomVR
             }
         }
 
-        protected void ChangeObjects(double value)
+        protected void ChangeObjects(float value)
         {
             lastOptionClicked = 0;
             settings.NumDesks = (int)value;

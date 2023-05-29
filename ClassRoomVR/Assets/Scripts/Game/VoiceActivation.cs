@@ -121,7 +121,6 @@ namespace ClassRoomVR
         }
         public void OnMicLevelChanged(float a)
         {
-            //Debug.Log(Mathf.Round(a);
             if (!shout && a > 0.05f )
             {
                
@@ -143,7 +142,7 @@ namespace ClassRoomVR
             var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");
            
             var insulto =  WitResultUtilities.GetFirstEntityValue(response, "Insultos:Insultos");
-
+            Debug.Log(intent + response.GetTranscription());
             
 
             switch (intent)
@@ -173,7 +172,6 @@ namespace ClassRoomVR
             {
                 st.HandleDisrespect();
             }
-
         }
 
 

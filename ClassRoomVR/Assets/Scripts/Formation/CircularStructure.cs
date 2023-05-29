@@ -56,17 +56,17 @@ namespace ClassRoomVR
                 case 0:
                     if (settings.Radius < radiusOpt.GetMax())
                     {
-                        settings.Radius += 0.1d;
+                        settings.Radius += 0.1f;
                         Set();
                         radiusOpt.SetValue(settings.Radius);
                     }
-                    else if( !Ubool &&  settings.Degrees<=360f)
+                    else if (!Ubool && settings.Degrees <= 360f)
                     {
                         settings.Degrees += 10;
                         Set();
                         gradesOpt.SetValue(settings.Degrees);
                     }
-                  
+
                     break;
                 case 1:
                     if (settings.NumDesks > settings.NumStudents)
@@ -75,11 +75,11 @@ namespace ClassRoomVR
                         Set();
                         numDesks.SetValue(settings.NumDesks);
                     }
-                    else 
+                    else
                     {
-                        settings.Radius += 0.1d;
+                        settings.Radius += 0.1f;
                         Set();
-                       // radiusOpt.SetMin(settings.Radius);
+                        // radiusOpt.SetMin(settings.Radius);
                         radiusOpt.SetValue(settings.Radius);
 
                     }
@@ -93,7 +93,7 @@ namespace ClassRoomVR
                     }
                     else
                     {
-                        settings.Degrees += 10;
+                        settings.Degrees += 10f;
                         Set();
                         //gradesOpt.SetMin(settings.Degrees);
                         gradesOpt.SetValue(settings.Degrees);
@@ -150,7 +150,7 @@ namespace ClassRoomVR
             gradesOpt.onValueChanged.AddListener(ChangeGrades);
         }
 
-        void ChangeRadius(double value)
+        void ChangeRadius(float value)
         {
             lastOptionClicked = 1;
             settings.Radius = value;
@@ -160,7 +160,7 @@ namespace ClassRoomVR
 
 
 
-        void ChangeGrades(double value)
+        void ChangeGrades(float value)
         {
             lastOptionClicked = 2;
             settings.Degrees = value;

@@ -68,13 +68,13 @@ namespace ClassRoomVR
             Set();
         }
 
-        void ChangeRows(double value)
+        void ChangeRows(float value)
         {
             settings.Rows = (int)value;
             Set();
         }
 
-        void ChangeColumns(double value)
+        void ChangeColumns(float value)
         {
             settings.Columns = (int)value;
             Set();

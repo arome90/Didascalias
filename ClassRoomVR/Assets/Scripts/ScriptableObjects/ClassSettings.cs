@@ -89,8 +89,8 @@ namespace ClassRoomVR
 
         [Range(1.0f, 3.4f)]
         [SerializeField]
-        private double radius;
-        public double Radius
+        private float radius;
+        public float Radius
         {
             get { return radius; }
             set { radius = value; }
@@ -98,8 +98,8 @@ namespace ClassRoomVR
 
         [Range(-180f, 360f)]
         [SerializeField]
-        private double degrees;
-        public double Degrees
+        private float degrees;
+        public float Degrees
         {
             get { return degrees; }
             set { degrees = value; }

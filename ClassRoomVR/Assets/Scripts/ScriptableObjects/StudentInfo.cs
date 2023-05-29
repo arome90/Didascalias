@@ -20,6 +20,8 @@ namespace ClassRoomVR
         public OriginInfo Origin => origin;
         public BodyInfo Body => body;
 
+#if UNITY_EDITOR
+
         [CustomEditor(typeof(StudentInfo))]
         public class StudentInfoEditor : Editor
         {
@@ -56,7 +58,9 @@ namespace ClassRoomVR
                 serializedObject.ApplyModifiedProperties();
             }
         }
+#endif
     }
+
 }
 
 

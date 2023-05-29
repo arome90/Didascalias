@@ -65,7 +65,6 @@ namespace ClassRoomVR
         private void GenerateChilds()
         {
             int deskPos = 0;
-
             if (settings.Mode == GenerateMode.Gender)
             {
                 GeneratePersonalizedChildWithGender(ref deskPos, (int)Gender.Women, settings.NumWomen);

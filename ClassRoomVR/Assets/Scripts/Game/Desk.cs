@@ -30,9 +30,18 @@ public class Desk : MonoBehaviour
     {
         if (other.CompareTag("Desk"))
         {
+            
             onCollisionChanged.Invoke();
             
         }
     }
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if (other.CompareTag("Desk"))
+    //    {
+
+    //        Debug.Log("sigo");
+    //    }
+    //}
 
 }

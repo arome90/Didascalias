@@ -287,7 +287,7 @@ namespace ClassRoomVR
 
         IEnumerator OnCompleteSitBack()
         {
-            while (Vector3.Distance(transform.position, desk.GetPositionStudent()) > 0.1f)
+            while (Vector3.Distance(transform.position, desk.GetPositionStudent()) > 0.3f)
             {
                 yield return null;
             }
@@ -300,7 +300,6 @@ namespace ClassRoomVR
 
         public void SitBack()
         {
-            StopCoroutine("OnCompleteMove"); // Detiene la corutina OnCompleteMove
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(desk.GetPositionStudent());
             animator.Play("Walking");

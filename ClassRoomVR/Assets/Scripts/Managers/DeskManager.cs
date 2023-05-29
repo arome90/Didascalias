@@ -25,13 +25,21 @@ namespace ClassRoomVR
         public void GetFreeDesk(ref int deskPosition, int numGroups)
         {
             // Ordenamiento por grupos
-            if (numGroups > 1)
-            {
-                if (deskPosition == 2 || deskPosition == 7 || deskPosition == 12 || deskPosition == 17 || deskPosition == 22 || deskPosition == 27)
-                    deskPosition++;
-                if (deskPosition == 10 || deskPosition == 11 || deskPosition == 12 || deskPosition == 13 || deskPosition == 14)
-                    deskPosition = 15;
-            }
+            //if (numGroups > 1)
+            //{
+            //    if (deskPosition == 2 || deskPosition == 7 || deskPosition == 12 || deskPosition == 17 || deskPosition == 22 || deskPosition == 27)
+            //        deskPosition++;
+            //    if (deskPosition == 10 || deskPosition == 11 || deskPosition == 12 || deskPosition == 13 || deskPosition == 14)
+            //        deskPosition = 15;
+            //}
+           for(int i = deskPosition; i < transform.childCount; i++) 
+           {
+                if (transform.GetChild(i).gameObject.activeSelf) 
+                {
+                    deskPosition = i;
+                    return;
+                }
+           }
         }
 
         public void CreateDesks()
