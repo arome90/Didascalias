@@ -19,7 +19,10 @@ namespace ClassRoomVR
         private Vector3 velocity;
 
 
-
+        private void OnEnable()
+        {
+            GameManager.Instance.SetPlayer(this.gameObject);
+        }
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;

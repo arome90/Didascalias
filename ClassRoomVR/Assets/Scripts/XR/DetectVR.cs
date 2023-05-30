@@ -11,7 +11,7 @@ namespace ClassRoomVR
         [SerializeField] GameObject player;
 
         // If VR glasses can be initialized correctly, choose the player in VR mode
-        private void Start()
+        private void Awake()
         {
             if (GameManager.Instance.IsUsingVRHardware())
             {
@@ -45,10 +45,10 @@ namespace ClassRoomVR
 
         private void SetPlayerVR(bool vr)
         {
-            player.SetActive(!vr);
-            playerVR.SetActive(vr);
             GameObject selectedPlayer = vr ? playerVR : player;
             GameManager.Instance.SetPlayer(selectedPlayer.transform.GetChild(0).gameObject);
+            player.SetActive(!vr);
+            playerVR.SetActive(vr);
         }
     }
 }

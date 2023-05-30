@@ -64,7 +64,7 @@ namespace ClassRoomVR
             navMeshAgent = GetComponent<NavMeshAgent>();
             behavior = GetComponent<StudentBehavior>();
             state = State.Sitting;
-            teacher = Camera.main.transform;
+            teacher = GameManager.Instance.GetPlayer().transform;
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
                    .Where(c => (distracted & c) == c)
                    .ToArray();

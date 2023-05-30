@@ -430,7 +430,9 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
+  m_DisableVisualsWhenBlockedInGroup: 1
   m_StartingSelectedInteractable: {fileID: 0}
+  m_StartingTargetFilter: {fileID: 0}
   m_HoverEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -443,6 +445,8 @@ MonoBehaviour:
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
   m_OnHoverEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -458,6 +462,7 @@ MonoBehaviour:
   m_SelectActionTrigger: 0
   m_HideControllerOnSelect: 0
   m_AllowHoveredActivate: 0
+  m_TargetPriorityMode: 0
   m_PlayAudioClipOnSelectEntered: 0
   m_AudioClipForOnSelectEntered: {fileID: 0}
   m_PlayAudioClipOnSelectExited: 0
@@ -470,6 +475,7 @@ MonoBehaviour:
   m_AudioClipForOnHoverExited: {fileID: 0}
   m_PlayAudioClipOnHoverCanceled: 0
   m_AudioClipForOnHoverCanceled: {fileID: 0}
+  m_AllowHoverAudioWhileSelecting: 1
   m_PlayHapticsOnSelectEntered: 0
   m_HapticSelectEnterIntensity: 0
   m_HapticSelectEnterDuration: 0
@@ -488,6 +494,7 @@ MonoBehaviour:
   m_PlayHapticsOnHoverCanceled: 0
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
+  m_AllowHoverHapticsWhileSelecting: 1
 --- !u!114 &662756079 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4527603365912313667, guid: d9eb0447aa6d0e14b992cf2912b11a07,
@@ -868,7 +875,9 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
+  m_DisableVisualsWhenBlockedInGroup: 1
   m_StartingSelectedInteractable: {fileID: 0}
+  m_StartingTargetFilter: {fileID: 0}
   m_HoverEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -881,6 +890,8 @@ MonoBehaviour:
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
   m_OnHoverEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -896,6 +907,7 @@ MonoBehaviour:
   m_SelectActionTrigger: 0
   m_HideControllerOnSelect: 0
   m_AllowHoveredActivate: 0
+  m_TargetPriorityMode: 0
   m_PlayAudioClipOnSelectEntered: 0
   m_AudioClipForOnSelectEntered: {fileID: 0}
   m_PlayAudioClipOnSelectExited: 0
@@ -908,6 +920,7 @@ MonoBehaviour:
   m_AudioClipForOnHoverExited: {fileID: 0}
   m_PlayAudioClipOnHoverCanceled: 0
   m_AudioClipForOnHoverCanceled: {fileID: 0}
+  m_AllowHoverAudioWhileSelecting: 1
   m_PlayHapticsOnSelectEntered: 0
   m_HapticSelectEnterIntensity: 0
   m_HapticSelectEnterDuration: 0
@@ -926,6 +939,7 @@ MonoBehaviour:
   m_PlayHapticsOnHoverCanceled: 0
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
+  m_AllowHoverHapticsWhileSelecting: 1
 --- !u!1 &1556124177 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000011959209820, guid: 30026254a41da3f4eb202264ab31261c,
@@ -2074,75 +2088,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: save
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: voice
-      value: 
-      objectReference: {fileID: 904727588}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: settings
-      value: 
-      objectReference: {fileID: 11400000, guid: f1b0306497f6d324389e73110b931ad9,
-        type: 2}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: VRHardware
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: _classInfo
-      value: 
-      objectReference: {fileID: 11400000, guid: 50f7bbf0ad099714ba00d15980c2c0eb,
-        type: 2}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: classManager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: _sceneManager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: _sceneManeger
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: currentSettings
-      value: 
-      objectReference: {fileID: 11400000, guid: f1b0306497f6d324389e73110b931ad9,
-        type: 2}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: isUsingVRHardware
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: _packeges.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      propertyPath: _packeges.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: b4898579cf1b6e54c868b37e9904c093,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}
 --- !u!1 &2007305466
@@ -2211,10 +2156,20 @@ MonoBehaviour:
   m_RepeatDelay: 0.5
   m_RepeatRate: 0.1
   m_TrackedDeviceDragThresholdMultiplier: 1.4
+  m_ActiveInputMode: 0
   m_MaxTrackedDeviceRaycastDistance: 1000
   m_EnableXRInput: 1
   m_EnableMouseInput: 1
   m_EnableTouchInput: 1
+  m_PointAction: {fileID: 0}
+  m_LeftClickAction: {fileID: 0}
+  m_MiddleClickAction: {fileID: 0}
+  m_RightClickAction: {fileID: 0}
+  m_ScrollWheelAction: {fileID: 0}
+  m_NavigateAction: {fileID: 0}
+  m_SubmitAction: {fileID: 0}
+  m_CancelAction: {fileID: 0}
+  m_EnableBuiltinActionsAsFallback: 1
   m_EnableGamepadInput: 1
   m_EnableJoystickInput: 1
   m_HorizontalAxis: Horizontal
@@ -2744,6 +2699,41 @@ PrefabInstance:
       propertyPath: m_LeftHandTurnAction.m_UseReference
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1403025452530235534, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452530235534, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452530235534, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452530235534, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_SkinWidth
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452530235534, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_SlopeLimit
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452530235534, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_StepOffset
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452530235534, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_MinMoveDistance
+      value: 0.001
+      objectReference: {fileID: 0}
     - target: {fileID: 1403025452704113784, guid: d9eb0447aa6d0e14b992cf2912b11a07,
         type: 3}
       propertyPath: m_IsActive
@@ -2763,6 +2753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: showButtonAction.m_Action.m_Name
       value: Show Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025452930767428, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1403025453014272871, guid: d9eb0447aa6d0e14b992cf2912b11a07,
         type: 3}
@@ -2828,6 +2823,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403025453598942447, guid: d9eb0447aa6d0e14b992cf2912b11a07,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4527603365912313665, guid: d9eb0447aa6d0e14b992cf2912b11a07,
         type: 3}
