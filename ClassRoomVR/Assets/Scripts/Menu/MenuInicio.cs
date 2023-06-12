@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClassRoomVR
@@ -60,6 +61,22 @@ namespace ClassRoomVR
         private void OnEnable()
         {
             ReturnButton();
+        }
+        //TO DO ANIMACION
+         IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
+        {
+            Vector3 originalScale = button.transform.localScale;
+            Vector3 destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+
+            float currentTime = 0.0f;
+
+            do
+            {
+                button.transform.localScale = Vector3.Lerp(originalScale, destinationScale, currentTime / 0.5f);
+                currentTime += Time.deltaTime;
+                yield return null;
+            }
+            while (currentTime <= 1f);
         }
     }
 }

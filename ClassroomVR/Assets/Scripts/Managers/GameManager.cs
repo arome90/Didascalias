@@ -62,12 +62,16 @@ namespace ClassRoomVR
 
         public void LoadMainMenu()
         {
-            SceneManager.LoadScene("Menu");
+            //SceneManager.LoadScene("Menu");
+            SceneTransitionManager.singleton.GoToSceneAsync(0);
+
         }
 
         public void LoadMainScene()
         {
-            SceneManager.LoadScene("Class_GameScene");
+            //SceneManager.LoadScene("Class_GameScene");
+            SceneTransitionManager.singleton.GoToSceneAsync(1);
+
         }
 
         public void SetChosenPackage(int index)

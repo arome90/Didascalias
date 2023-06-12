@@ -7,6 +7,7 @@ namespace ClassRoomVR
     public class VoiceActivation : MonoBehaviour
     {
         bool shout;
+
        [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
 
         [SerializeField] TextMeshProUGUI fullTrascriptionText;
@@ -46,11 +47,13 @@ namespace ClassRoomVR
         private void Awake()
         {
 
+            
             GameManager.Instance.SetVoiceActivation(this);
             fullTrascriptionText.text = partialTrascriptionText.text = string.Empty;
 
             appVoiceExperience.VoiceEvents.onFullTranscription.AddListener((transcription) =>
             {
+                
                 fullTrascriptionText.text = transcription;
             });
 
@@ -78,6 +81,7 @@ namespace ClassRoomVR
             //    Activate();
 
             //});
+           
 
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {

@@ -60,6 +60,12 @@ namespace ClassRoomVR
 
             GetComponent<AudioSource>().clip = beforeClassBell;
             GetComponent<AudioSource>().Play();
+            AudioRecorder.StartRecording();
+        }
+
+        private void OnApplicationQuit()
+        {
+            AudioRecorder.SaveRecording();
         }
 
         private void GenerateChilds()

@@ -37,17 +37,14 @@ public class PauseMenu : MonoBehaviour
         else ResumeGame();
     }
 
-   
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Escape))
-    //    {
-    //        if (isPaused)
-    //            ResumeGame();
-    //        else
-    //            PauseGame();
-    //    }
-    //}
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ThinkPause();
+        }
+    }
 
     public void ResumeGame()
     {
@@ -77,8 +74,29 @@ public class PauseMenu : MonoBehaviour
 
     private void ThinkPause(InputAction.CallbackContext context)
     {
-        Time.timeScale = Time.timeScale!=0f ? 0f:1f;
+       // Time.timeScale = Time.timeScale!=0f ? 0f:1f;
         //pauseMenuUI.enabled = !pauseMenuUI.enabled;
+        TimeSelect();
 
+    }
+    private void ThinkPause() 
+    {
+        TimeSelect();
+            //pauseMenuUI.enabled = !pauseMenuUI.enabled;
+    }
+
+    void TimeSelect() 
+    {
+        if (Time.timeScale != 0)
+        {
+            //AudioRecorder.PauseRecording();
+            Time.timeScale = 0f;
+
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            //AudioRecorder.ResumeRecording();
+        }
     }
 }
