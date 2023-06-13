@@ -66,7 +66,7 @@ public static class AudioRecorder
         if (isRecording)
         {
 
-            while (!(Microphone.GetPosition(null) > 0)) { }
+            while (!(Microphone.GetPosition(Microphone.devices[0]) > 0)) { }
             samplesData = new float[recording.samples * recording.channels];
             recording.GetData(samplesData, 0);
 
