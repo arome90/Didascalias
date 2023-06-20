@@ -21,8 +21,12 @@ namespace ClassRoomVR
         [SerializeField] private ClassInfo currentClassInfo;
         [SerializeField] private bool isUsingVRHardware = false;
         [SerializeField] private bool isAutoSavingEnabled = false;
+        [SerializeField] private bool saveAudio = false;
 
         public static GameManager Instance;
+
+        [SerializeField] bool firebaseAnalytics = true;
+        [SerializeField] bool unityAnalytics = true;
 
         private void Awake()
         {
@@ -36,7 +40,7 @@ namespace ClassRoomVR
                     savedData = SaveSystem.LoadData();
                     InitData();
                 }
-
+                AnalyticsManager.Start(firebaseAnalytics, unityAnalytics);
                 DontDestroyOnLoad(this);
             }
             else
@@ -176,6 +180,11 @@ namespace ClassRoomVR
             {
                 Application.Quit();
             }
+        }
+
+        public bool GetSaveAudio()
+        {
+            return saveAudio;
         }
     }
 }

@@ -60,14 +60,15 @@ namespace ClassRoomVR
 
             GetComponent<AudioSource>().clip = beforeClassBell;
             GetComponent<AudioSource>().Play();
-            AudioRecorder.StartRecording();
+            if (GameManager.Instance.GetSaveAudio()) AudioRecorder.StartRecording();
         }
 
         private void OnApplicationQuit()
         {
-            AudioRecorder.SaveRecording();
-        }
+            if (GameManager.Instance.GetSaveAudio()) AudioRecorder.SaveRecording();
 
+        }
+    
         private void GenerateChilds()
         {
             int deskPos = 0;

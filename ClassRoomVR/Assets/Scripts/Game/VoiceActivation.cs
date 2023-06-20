@@ -120,6 +120,7 @@ namespace ClassRoomVR
             {
                 shout = true;
                 st.SetMode(TalkMode.Disrespect);
+                AnalyticsManager.CustomEvent("Gritar");
                 Debug.Log("Gritando");
             }
         }
