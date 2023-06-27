@@ -120,22 +120,36 @@ namespace ClassRoomVR
             {
                 shout = true;
                 st.SetMode(TalkMode.Disrespect);
-                AnalyticsManager.CustomEvent("Gritar");
                 Debug.Log("Gritando");
             }
+
         }
+        float miclevel;
         public void OnMicLevelChanged(float a)
         {
-            if (!shout && a > 0.05f )
+            miclevel = a;
+            Debug.Log(a +" "+ Time.time);
+            if (!shout && a > 0.8f /*0.8f*/)
             {
-               
                 shout = true;
+                StartCoroutine(Wait());
+                AnalyticsManager.CustomEvent("Gritar");
                 st.SetMode(TalkMode.Disrespect);
                 Debug.Log("Gritando");
             }
-            
-
+           
         }
+
+        
+        System.Collections.IEnumerator Wait() 
+        {
+            float startTime = Time.time; // Guarda el tiempo inicial
+            yield return new WaitUntil(() => miclevel < 0.8f && miclevel> 0.2f );
+            float elapsedTime = Time.time - startTime; // Calcula el tiempo transcurrido
+            Debug.Log("Tiempo transcurrido: " + elapsedTime + " segundos");
+            shout = false;
+        }
+
 
         //Gestion de las ordenes del profesor
         //TO DO : CAMBIAR PARA QUE SEA GENERICO

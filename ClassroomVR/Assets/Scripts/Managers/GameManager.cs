@@ -75,6 +75,8 @@ namespace ClassRoomVR
         {
             //SceneManager.LoadScene("Class_GameScene");
             SceneTransitionManager.singleton.GoToSceneAsync(1);
+            //AnalyticsManager.CustomEvent("Gritar");
+
 
         }
 
