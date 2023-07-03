@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "com.google.external-dependency-manager": "file:../FirebaseAssets/com.google.external-dependency-manager-1.2.176.tgz",
+    "com.google.firebase.analytics": "file:../FirebaseAssets/com.google.firebase.analytics-11.2.0.tgz",
+    "com.google.firebase.app": "file:../FirebaseAssets/com.google.firebase.app-11.2.0.tgz",
+    "com.rest.elevenlabs": "https://github.com/RageAgainstThePixel/com.rest.elevenlabs.git#upm",
     "com.unity.ai.navigation": "1.1.4",
     "com.unity.animation.rigging": "1.2.1",
     "com.unity.collab-proxy": "2.0.4",
@@ -52,9 +56,16 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.google.external-dependency-manager": "file:../FirebaseAssets/com.google.external-dependency-manager-1.2.176.tgz",
-    "com.google.firebase.app": "file:../FirebaseAssets/com.google.firebase.app-11.2.0.tgz",
-    "com.google.firebase.analytics": "file:../FirebaseAssets/com.google.firebase.analytics-11.2.0.tgz"
-  }
+    "com.unity.modules.xr": "1.0.0"
+  },
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.rest.elevenlabs",
+        "com.utilities"
+      ]
+    }
+  ]
 }

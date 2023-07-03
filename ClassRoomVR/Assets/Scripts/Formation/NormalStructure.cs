@@ -11,7 +11,8 @@ namespace ClassRoomVR
 
         public override void Set()
         {
-            if (parent != null) { Destroy(parent); }
+            //ifnull
+            Destroy(parent);
             parent = new GameObject("Toggles");
             parent.transform.SetParent(transform, false);
 
@@ -20,15 +21,21 @@ namespace ClassRoomVR
                 Destroy(child.gameObject);
             }
 
-            int n = settings.NumDesks;
-            for (int i = 0; i < settings.Rows; i++)
-            {
-                for (int j = 0; j < settings.Columns; j++)
-                {
-                    if (n == 0) return;
+            int numDesks = settings.NumDesks;
+            int numRows = settings.Rows;
+            int numColumns = settings.Columns;
 
-                    float xPos = j - (settings.Columns - 1) / 2f;
-                    float zPos = -i + (settings.Rows - 1) / 2f;
+            for (int i = 0; i < numRows; i++)
+            {
+                for (int j = 0; j < numColumns; j++)
+                {
+                    if (numDesks == 0)
+                    {
+                        return;
+                    }
+
+                    float xPos = j - (numColumns - 1) / 2f;
+                    float zPos = -i + (numRows - 1) / 2f;
 
                     Vector3 position = new Vector3(xPos / 5f, zPos / 5f);
                     position += parent.transform.position;
@@ -39,16 +46,16 @@ namespace ClassRoomVR
                     var d = Instantiate(desk, position, Quaternion.identity, parentDesk.transform);
 
                     toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
-                    list_.Add(toggle, d);
+                    toggleToDeskMap.Add(toggle, d);
 
-                    n--;
+                    numDesks--;
                 }
             }
         }
 
         void ChangeDesk(Toggle toggle)
         {
-            list_[toggle].gameObject.SetActive(toggle.isOn);
+            toggleToDeskMap[toggle].gameObject.SetActive(toggle.isOn);
         }
 
         private void Start()

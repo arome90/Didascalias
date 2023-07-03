@@ -15,7 +15,7 @@ C:/Users/Borja/Documents/GitHub/Didascalias/ClassRoomVR
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-52420
+58428
 Successfully changed project path to: C:/Users/Borja/Documents/GitHub/Didascalias/ClassRoomVR
 C:/Users/Borja/Documents/GitHub/Didascalias/ClassRoomVR
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -49,12 +49,12 @@ C:/Users/Borja/Documents/GitHub/Didascalias/ClassRoomVR
     "memorysetup-temp-allocator-size-cloud-worker=32768"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [51576] Host "[IP] 192.168.1.130 [Port] 0 [Flags] 2 [Guid] 3415932936 [EditorId] 3415932936 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KD9J2I8) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+Player connection [19784] Host "[IP] 192.168.1.133 [Port] 0 [Flags] 2 [Guid] 1095679612 [EditorId] 1095679612 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KD9J2I8) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
 
-Player connection [51576] Host "[IP] 192.168.1.130 [Port] 0 [Flags] 2 [Guid] 3415932936 [EditorId] 3415932936 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KD9J2I8) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [19784] Host "[IP] 192.168.1.133 [Port] 0 [Flags] 2 [Guid] 1095679612 [EditorId] 1095679612 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KD9J2I8) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
 
-Refreshing native plugins compatible for Editor in 1198.99 ms, found 15 plugins.
-Preloading 1 native plugins for Editor in 0.95 ms.
+Refreshing native plugins compatible for Editor in 60.45 ms, found 15 plugins.
+Preloading 1 native plugins for Editor in 0.90 ms.
 Initialize engine version: 2022.3.1f1 (f18e0c1b5784)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Data/Resources/UnitySubsystems
 [Subsystems] Discovering subsystems at path C:/Users/Borja/Documents/GitHub/Didascalias/ClassRoomVR/Assets
@@ -69,47 +69,51 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56636
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56912
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.011130 seconds.
-- Loaded All Assemblies, in  0.467 seconds
+Registered in 0.011835 seconds.
+- Loaded All Assemblies, in  0.600 seconds
 Native extension for WindowsStandalone target not found
+[usbmuxd] Start listen thread
+[usbmuxd] Listen thread started
+Native extension for iOS target not found
 Native extension for Android target not found
-Android Extension - Scanning For ADB Devices 323 ms
+Android Extension - Scanning For ADB Devices 326 ms
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.698 seconds
-Domain Reload Profiling: 1163ms
-	BeginReloadAssembly (117ms)
+- Finished resetting the current domain, in  0.759 seconds
+Domain Reload Profiling: 1357ms
+	BeginReloadAssembly (185ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (50ms)
-	RebuildNativeTypeToScriptingClass (14ms)
-	initialDomainReloadingComplete (84ms)
-	LoadAllAssembliesAndSetupDomain (199ms)
-		LoadAssemblies (115ms)
+	RebuildCommonClasses (68ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (86ms)
+	LoadAllAssembliesAndSetupDomain (237ms)
+		LoadAssemblies (183ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (192ms)
-			TypeCache.Refresh (191ms)
-				TypeCache.ScanAssembly (177ms)
+		AnalyzeDomain (229ms)
+			TypeCache.Refresh (227ms)
+				TypeCache.ScanAssembly (200ms)
 			ScanForSourceGeneratedMonoScriptInfo (1ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (698ms)
+	FinalizeReload (760ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (623ms)
+		SetupLoadedEditorAssemblies (681ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (460ms)
+			InitializePlatformSupportModulesInManaged (484ms)
 			SetLoadedEditorAssemblies (4ms)
 			RefreshPlugins (0ms)
-			BeforeProcessingInitializeOnLoad (2ms)
-			ProcessInitializeOnLoadAttributes (102ms)
-			ProcessInitializeOnLoadMethodAttributes (55ms)
+			BeforeProcessingInitializeOnLoad (3ms)
+			ProcessInitializeOnLoadAttributes (127ms)
+			ProcessInitializeOnLoadMethodAttributes (63ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -119,16 +123,11 @@ Worker process is ready to serve import requests
 Begin MonoManager ReloadAssembly
 Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
 Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
-Assembly 'Packages/com.google.external-dependency-manager/ExternalDependencyManager/Editor/1.2.176/Google.IOSResolver.dll' will not be loaded due to errors:
-Unable to resolve reference 'UnityEditor.iOS.Extensions.Xcode'. Is the assembly missing or incompatible with the current platform?
-Reference validation can be disabled in the Plugin Inspector.
 Symbol file LoadedFromMemory is not a mono symbol file
-Assembly 'Packages/com.google.firebase.app/Firebase/Editor/Firebase.Editor.dll' will not be loaded due to errors:
-Unable to resolve reference 'UnityEditor.iOS.Extensions.Xcode'. Is the assembly missing or incompatible with the current platform?
-Reference validation can be disabled in the Plugin Inspector.
-- Loaded All Assemblies, in  2.004 seconds
-Refreshing native plugins compatible for Editor in 47.96 ms, found 15 plugins.
+- Loaded All Assemblies, in  2.012 seconds
+Refreshing native plugins compatible for Editor in 42.28 ms, found 15 plugins.
 Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
 Native extension for Android target not found
 Package Manager log level set to [2]
 [Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
@@ -154,157 +153,27 @@ UnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.Type[])
 [MODES] ModeService[none].Initialize
 [MODES] ModeService[none].LoadModes
 [MODES] Loading mode Default (0) for mode-current-id-Classroom
-System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation. ---> System.NullReferenceException: Object reference not set to an instance of an object
-  at Unity.XR.Oculus.OculusLoader.AssetPathToAbsolutePath (System.String assetPath) [0x00044] in .\Library\PackageCache\com.unity.xr.oculus@4.0.0\Runtime\OculusLoader.cs:282 
-  at Unity.XR.Oculus.OculusLoader.EditorLoadOVRPlugin () [0x000b0] in .\Library\PackageCache\com.unity.xr.oculus@4.0.0\Runtime\OculusLoader.cs:267 
-  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
-  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
-   --- End of inner exception stack trace ---
-  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00083] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
-  at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
-  at UnityEditor.EditorAssemblies.ProcessInitializeOnLoadMethodAttributes () [0x000a5] in <582c35e8f45345d395e99f8e72e3c16d>:0 
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:LogError (object)
-UnityEditor.EditorAssemblies:ProcessInitializeOnLoadMethodAttributes ()
-
-Mono: successfully reloaded assembly
-[Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-- Finished resetting the current domain, in  2.832 seconds
-Domain Reload Profiling: 4829ms
-	BeginReloadAssembly (203ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (8ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (38ms)
-	RebuildCommonClasses (55ms)
-	RebuildNativeTypeToScriptingClass (16ms)
-	initialDomainReloadingComplete (53ms)
-	LoadAllAssembliesAndSetupDomain (1670ms)
-		LoadAssemblies (859ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (893ms)
-			TypeCache.Refresh (771ms)
-				TypeCache.ScanAssembly (737ms)
-			ScanForSourceGeneratedMonoScriptInfo (86ms)
-			ResolveRequiredComponents (36ms)
-	FinalizeReload (2833ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (2449ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (38ms)
-			SetLoadedEditorAssemblies (8ms)
-			RefreshPlugins (0ms)
-			BeforeProcessingInitializeOnLoad (258ms)
-			ProcessInitializeOnLoadAttributes (1964ms)
-			ProcessInitializeOnLoadMethodAttributes (172ms)
-			AfterProcessingInitializeOnLoad (8ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (13ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.11 seconds
-Refreshing native plugins compatible for Editor in 45.18 ms, found 15 plugins.
-Preloading 1 native plugins for Editor in 0.10 ms.
-Unloading 8435 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 201 unused Assets / (96.4 KB). Loaded Objects now: 8886.
-Memory consumption went from 310.4 MB to 310.3 MB.
-Total: 21.880300 ms (FindLiveObjects: 0.894100 ms CreateObjectMapping: 0.943300 ms MarkObjects: 19.668700 ms  DeleteObjects: 0.372400 ms)
-
-AssetImportParameters requested are different than current active one (requested -> active):
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:AudioImporter_EditorPlatform: d09bf68614088b80899f8185d706f6e7 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-========================================================================
-Received Import Request.
-  Time since last request: 1023097.501821 seconds.
-  path: Assets/google-services (1).json
-  artifactKey: Guid(38672548a8785aa4281b53f44e43ba32) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/google-services (1).json using Guid(38672548a8785aa4281b53f44e43ba32) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '61a7574fc8f0c16467b541b15db652d7') in 0.017043 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 1
-========================================================================
-Received Import Request.
-  Time since last request: 30.258802 seconds.
-  path: Assets/google-services.json
-  artifactKey: Guid(38672548a8785aa4281b53f44e43ba32) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/google-services.json using Guid(38672548a8785aa4281b53f44e43ba32) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8d25c9adc04150045a53015c6332e369') in 0.001199 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 1
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 45.45 ms, found 15 plugins.
-Preloading 1 native plugins for Editor in 0.10 ms.
-Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 2 unused Assets / (7.7 KB). Loaded Objects now: 8888.
-Memory consumption went from 151.1 MB to 151.1 MB.
-Total: 21.111500 ms (FindLiveObjects: 0.707200 ms CreateObjectMapping: 0.745100 ms MarkObjects: 19.613200 ms  DeleteObjects: 0.044300 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-AssetImportParameters requested are different than current active one (requested -> active):
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:AudioImporter_EditorPlatform: d09bf68614088b80899f8185d706f6e7 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
-Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
-Assembly 'Packages/com.google.external-dependency-manager/ExternalDependencyManager/Editor/1.2.176/Google.IOSResolver.dll' will not be loaded due to errors:
-Unable to resolve reference 'UnityEditor.iOS.Extensions.Xcode'. Is the assembly missing or incompatible with the current platform?
-Reference validation can be disabled in the Plugin Inspector.
-Symbol file LoadedFromMemory is not a mono symbol file
-Assembly 'Packages/com.google.firebase.app/Firebase/Editor/Firebase.Editor.dll' will not be loaded due to errors:
-Unable to resolve reference 'UnityEditor.iOS.Extensions.Xcode'. Is the assembly missing or incompatible with the current platform?
-Reference validation can be disabled in the Plugin Inspector.
-- Loaded All Assemblies, in  1.578 seconds
-Refreshing native plugins compatible for Editor in 46.74 ms, found 15 plugins.
-Native extension for WindowsStandalone target not found
-Native extension for Android target not found
-[Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-System.Exception: Error! Visual Scripting: couldn't find visual scripting package
-  at Unity.VisualScripting.PackageVersionUtility.get_version () [0x00025] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\PackageVersionUtility.cs:22 
-  at Unity.VisualScripting.BoltCoreManifest.get_version () [0x00000] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugin\BoltCoreManifest.cs:11 
-  at Unity.VisualScripting.PluginManifest.get_currentVersion () [0x00000] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginManifest.cs:33 
-  at Unity.VisualScripting.PluginManifest.get_versionMismatch () [0x00000] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginManifest.cs:48 
-  at Unity.VisualScripting.PluginContainer.Initialize () [0x0057d] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginContainer.cs:208 
-  at Unity.VisualScripting.PluginContainer.InitializeOnLoad () [0x00012] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginContainer.cs:32 
-  at Unity.VisualScripting.VSUsageUtility.DoInitializeOnLoadCalls () [0x00044] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:76 
-  at Unity.VisualScripting.VSUsageUtility.set_isVisualScriptingUsed (System.Boolean value) [0x00037] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:114 
-  at Unity.VisualScripting.VSUsageUtility.CheckAndSetIsVisualScriptingUsed () [0x00013] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:33 
-  at Unity.VisualScripting.VSUsageUtility..cctor () [0x0000d] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:22 
+System.IO.IOException: Sharing violation on path C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\ProjectSettings\GvhProjectSettings.xml
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Boolean detectEncodingFromByteOrderMarks) [0x00007] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+  at System.IO.StreamReader..ctor (System.String path) [0x00000] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string)
+  at Google.XmlUtilities.ParseXmlTextFileElements (System.String filename, Google.Logger logger, Google.XmlUtilities+ParseElement parseElement) [0x0000f] in Z:\tmp\tmp.HxZ6GJgqcA\third_party\unity\unity_jar_resolver\source\VersionHandlerImpl\src\XmlUtilities.cs:104 
+  at Google.ProjectSettings.Load () [0x00012] in Z:\tmp\tmp.HxZ6GJgqcA\third_party\unity\unity_jar_resolver\source\VersionHandlerImpl\src\ProjectSettings.cs:777 
+  at Google.ProjectSettings.LoadIfEmpty () [0x0001b] in Z:\tmp\tmp.HxZ6GJgqcA\third_party\unity\unity_jar_resolver\source\VersionHandlerImpl\src\ProjectSettings.cs:558 
+  at Google.ProjectSettings.GetBool (System.String name, System.Boolean defaultValue, Google.SettingsLocation location) [0x0002b] in Z:\tmp\tmp.HxZ6GJgqcA\third_party\unity\unity_jar_resolver\source\VersionHandlerImpl\src\ProjectSettings.cs:606 
+  at Google.ProjectSettings.GetBool (System.String name, System.Boolean defaultValue) [0x00000] in Z:\tmp\tmp.HxZ6GJgqcA\third_party\unity\unity_jar_resolver\source\VersionHandlerImpl\src\ProjectSettings.cs:619 
+  at Google.IOSResolver.get_VerboseLoggingEnabled () [0x00000] in Z:\tmp\tmp.RhUKClS88p\third_party\unity\unity_jar_resolver\source\IOSResolver\src\IOSResolver.cs:1038 
+  at Google.IOSResolver..cctor () [0x00215] in Z:\tmp\tmp.RhUKClS88p\third_party\unity\unity_jar_resolver\source\IOSResolver\src\IOSResolver.cs:726 
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:LogError (object)
 UnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.Type[])
 
-[MODES] ModeService[none].Initialize
-[MODES] ModeService[none].LoadModes
-[MODES] Loading mode Default (0) for mode-current-id-Classroom
 System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation. ---> System.NullReferenceException: Object reference not set to an instance of an object
   at Unity.XR.Oculus.OculusLoader.AssetPathToAbsolutePath (System.String assetPath) [0x00044] in .\Library\PackageCache\com.unity.xr.oculus@4.0.0\Runtime\OculusLoader.cs:282 
   at Unity.XR.Oculus.OculusLoader.EditorLoadOVRPlugin () [0x000b0] in .\Library\PackageCache\com.unity.xr.oculus@4.0.0\Runtime\OculusLoader.cs:267 
@@ -324,69 +193,51 @@ Mono: successfully reloaded assembly
 [Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
 [Package Manager] Cannot connect to Unity Package Manager local server
-- Finished resetting the current domain, in  3.373 seconds
-Domain Reload Profiling: 4946ms
-	BeginReloadAssembly (266ms)
+[Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+- Finished resetting the current domain, in  3.228 seconds
+Domain Reload Profiling: 5233ms
+	BeginReloadAssembly (200ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (7ms)
+		DisableScriptedObjects (10ms)
 		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (99ms)
-	RebuildCommonClasses (56ms)
-	RebuildNativeTypeToScriptingClass (20ms)
-	initialDomainReloadingComplete (45ms)
-	LoadAllAssembliesAndSetupDomain (1186ms)
-		LoadAssemblies (605ms)
+		ReleaseScriptingObjects (1ms)
+		CreateAndSetChildDomain (32ms)
+	RebuildCommonClasses (52ms)
+	RebuildNativeTypeToScriptingClass (18ms)
+	initialDomainReloadingComplete (56ms)
+	LoadAllAssembliesAndSetupDomain (1678ms)
+		LoadAssemblies (851ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (657ms)
-			TypeCache.Refresh (611ms)
-				TypeCache.ScanAssembly (574ms)
-			ScanForSourceGeneratedMonoScriptInfo (1ms)
-			ResolveRequiredComponents (45ms)
-	FinalizeReload (3374ms)
+		AnalyzeDomain (896ms)
+			TypeCache.Refresh (780ms)
+				TypeCache.ScanAssembly (743ms)
+			ScanForSourceGeneratedMonoScriptInfo (80ms)
+			ResolveRequiredComponents (36ms)
+	FinalizeReload (3229ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1651ms)
+		SetupLoadedEditorAssemblies (2834ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (36ms)
+			InitializePlatformSupportModulesInManaged (69ms)
 			SetLoadedEditorAssemblies (11ms)
 			RefreshPlugins (0ms)
-			BeforeProcessingInitializeOnLoad (292ms)
-			ProcessInitializeOnLoadAttributes (1119ms)
-			ProcessInitializeOnLoadMethodAttributes (183ms)
-			AfterProcessingInitializeOnLoad (10ms)
+			BeforeProcessingInitializeOnLoad (385ms)
+			ProcessInitializeOnLoadAttributes (2186ms)
+			ProcessInitializeOnLoadMethodAttributes (170ms)
+			AfterProcessingInitializeOnLoad (12ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (21ms)
-Refreshing native plugins compatible for Editor in 44.56 ms, found 15 plugins.
-Preloading 1 native plugins for Editor in 0.12 ms.
-Unloading 8296 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 163 unused Assets / (95.5 KB). Loaded Objects now: 8894.
-Memory consumption went from 280.5 MB to 280.4 MB.
-Total: 16.100600 ms (FindLiveObjects: 0.665700 ms CreateObjectMapping: 0.707100 ms MarkObjects: 14.524800 ms  DeleteObjects: 0.201800 ms)
+		AwakeInstancesAfterBackupRestoration (14ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.08 seconds
+Refreshing native plugins compatible for Editor in 44.65 ms, found 15 plugins.
+Preloading 1 native plugins for Editor in 0.11 ms.
+Unloading 8608 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 204 unused Assets / (99.0 KB). Loaded Objects now: 9055.
+Memory consumption went from 314.8 MB to 314.7 MB.
+Total: 25.373100 ms (FindLiveObjects: 0.796400 ms CreateObjectMapping: 0.788300 ms MarkObjects: 23.512400 ms  DeleteObjects: 0.274700 ms)
 
-Prepare: number of updated asset objects reloaded= 0
-AssetImportParameters requested are different than current active one (requested -> active):
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:AudioImporter_EditorPlatform: d09bf68614088b80899f8185d706f6e7 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 63.81 ms, found 15 plugins.
-Preloading 1 native plugins for Editor in 0.12 ms.
-Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 2 unused Assets / (7.7 KB). Loaded Objects now: 8895.
-Memory consumption went from 152.2 MB to 152.2 MB.
-Total: 68.510900 ms (FindLiveObjects: 0.996800 ms CreateObjectMapping: 1.256400 ms MarkObjects: 66.177200 ms  DeleteObjects: 0.078000 ms)
-
-Prepare: number of updated asset objects reloaded= 0
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
   custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
@@ -403,16 +254,11 @@ Received Prepare
 Begin MonoManager ReloadAssembly
 Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
 Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
-Assembly 'Packages/com.google.external-dependency-manager/ExternalDependencyManager/Editor/1.2.176/Google.IOSResolver.dll' will not be loaded due to errors:
-Unable to resolve reference 'UnityEditor.iOS.Extensions.Xcode'. Is the assembly missing or incompatible with the current platform?
-Reference validation can be disabled in the Plugin Inspector.
 Symbol file LoadedFromMemory is not a mono symbol file
-Assembly 'Packages/com.google.firebase.app/Firebase/Editor/Firebase.Editor.dll' will not be loaded due to errors:
-Unable to resolve reference 'UnityEditor.iOS.Extensions.Xcode'. Is the assembly missing or incompatible with the current platform?
-Reference validation can be disabled in the Plugin Inspector.
-- Loaded All Assemblies, in  1.585 seconds
-Refreshing native plugins compatible for Editor in 36.48 ms, found 15 plugins.
+- Loaded All Assemblies, in  2.076 seconds
+Refreshing native plugins compatible for Editor in 61.95 ms, found 15 plugins.
 Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
 Native extension for Android target not found
 [Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
@@ -456,46 +302,46 @@ Mono: successfully reloaded assembly
 [Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
 [Package Manager] Cannot connect to Unity Package Manager local server
-- Finished resetting the current domain, in 21.041 seconds
-Domain Reload Profiling: 22617ms
-	BeginReloadAssembly (278ms)
+- Finished resetting the current domain, in  5.830 seconds
+Domain Reload Profiling: 7896ms
+	BeginReloadAssembly (282ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (9ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (105ms)
-	RebuildCommonClasses (54ms)
-	RebuildNativeTypeToScriptingClass (16ms)
-	initialDomainReloadingComplete (57ms)
-	LoadAllAssembliesAndSetupDomain (1170ms)
-		LoadAssemblies (671ms)
+		CreateAndSetChildDomain (95ms)
+	RebuildCommonClasses (61ms)
+	RebuildNativeTypeToScriptingClass (19ms)
+	initialDomainReloadingComplete (65ms)
+	LoadAllAssembliesAndSetupDomain (1638ms)
+		LoadAssemblies (996ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (586ms)
-			TypeCache.Refresh (549ms)
-				TypeCache.ScanAssembly (515ms)
-			ScanForSourceGeneratedMonoScriptInfo (0ms)
-			ResolveRequiredComponents (37ms)
-	FinalizeReload (21042ms)
+		AnalyzeDomain (728ms)
+			TypeCache.Refresh (665ms)
+				TypeCache.ScanAssembly (635ms)
+			ScanForSourceGeneratedMonoScriptInfo (23ms)
+			ResolveRequiredComponents (40ms)
+	FinalizeReload (5832ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1306ms)
+		SetupLoadedEditorAssemblies (3482ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (34ms)
+			InitializePlatformSupportModulesInManaged (49ms)
 			SetLoadedEditorAssemblies (8ms)
 			RefreshPlugins (0ms)
-			BeforeProcessingInitializeOnLoad (215ms)
-			ProcessInitializeOnLoadAttributes (937ms)
-			ProcessInitializeOnLoadMethodAttributes (106ms)
-			AfterProcessingInitializeOnLoad (6ms)
-			EditorAssembliesLoaded (0ms)
+			BeforeProcessingInitializeOnLoad (275ms)
+			ProcessInitializeOnLoadAttributes (2746ms)
+			ProcessInitializeOnLoadMethodAttributes (387ms)
+			AfterProcessingInitializeOnLoad (17ms)
+			EditorAssembliesLoaded (2ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (12ms)
-Refreshing native plugins compatible for Editor in 87.29 ms, found 15 plugins.
-Preloading 1 native plugins for Editor in 0.12 ms.
-Unloading 8296 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 163 unused Assets / (95.5 KB). Loaded Objects now: 8901.
-Memory consumption went from 280.5 MB to 280.4 MB.
-Total: 24.311700 ms (FindLiveObjects: 0.873800 ms CreateObjectMapping: 1.512700 ms MarkObjects: 21.675200 ms  DeleteObjects: 0.248400 ms)
+		AwakeInstancesAfterBackupRestoration (32ms)
+Refreshing native plugins compatible for Editor in 100.52 ms, found 15 plugins.
+Preloading 1 native plugins for Editor in 0.20 ms.
+Unloading 8469 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 166 unused Assets / (97.4 KB). Loaded Objects now: 9060.
+Memory consumption went from 284.9 MB to 284.8 MB.
+Total: 28.615700 ms (FindLiveObjects: 1.814700 ms CreateObjectMapping: 1.510700 ms MarkObjects: 24.913800 ms  DeleteObjects: 0.374600 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 AssetImportParameters requested are different than current active one (requested -> active):
@@ -510,42 +356,108 @@ AssetImportParameters requested are different than current active one (requested
   custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
   custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
 ========================================================================
-Received Import Request.
-  Time since last request: 1101.902641 seconds.
-  path: Packages/com.google.firebase.app/Firebase/Editor/Firebase.Editor.dll
-  artifactKey: Guid(9f2edbf81053418f879076c05f816dc2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Packages/com.google.firebase.app/Firebase/Editor/Firebase.Editor.dll using Guid(9f2edbf81053418f879076c05f816dc2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bfdbf0b719b5c3b8f5c9ca6a57bf94f6') in 0.011719 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 0
-========================================================================
-Received Import Request.
-  Time since last request: 22.611851 seconds.
-  path: Packages/com.google.firebase.app/Firebase/Editor/generate_xml_from_google_services_json.exe
-  artifactKey: Guid(ae88c0972b7448b5b36def1716f1d711) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Packages/com.google.firebase.app/Firebase/Editor/generate_xml_from_google_services_json.exe using Guid(ae88c0972b7448b5b36def1716f1d711) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd73509dd42b1ef9643eba4bc56d39173') in 0.004522 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 1
-========================================================================
-Received Import Request.
-  Time since last request: 38.200292 seconds.
-  path: Packages/com.google.firebase.app/Plugins
-  artifactKey: Guid(52e850f2b42f4a94bf2cd75867563307) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Packages/com.google.firebase.app/Plugins using Guid(52e850f2b42f4a94bf2cd75867563307) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9b902bb2bf8dfb8e70c82561bd04876e') in 0.000956 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 0
-========================================================================
-Received Import Request.
-  Time since last request: 1.091662 seconds.
-  path: Packages/com.google.firebase.app/Plugins/iOS
-  artifactKey: Guid(925099624d63409087e7d6b8cd72b77d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Packages/com.google.firebase.app/Plugins/iOS using Guid(925099624d63409087e7d6b8cd72b77d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0e8000bb4126f900b256ceb87e657757') in 0.000770 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 0
-========================================================================
-Received Import Request.
-  Time since last request: 1.015731 seconds.
-  path: Packages/com.google.firebase.app/Plugins/iOS/Firebase
-  artifactKey: Guid(4089aa0234ee467e8f6a30e19422dac9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Packages/com.google.firebase.app/Plugins/iOS/Firebase using Guid(4089aa0234ee467e8f6a30e19422dac9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a2ca23ce147713a05ec124d49bc7520e') in 0.001843 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 0
+Received Prepare
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\Borja\Documents\GitHub\Didascalias\ClassRoomVR\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  2.607 seconds
+Refreshing native plugins compatible for Editor in 124.18 ms, found 15 plugins.
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+[Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+System.Exception: Error! Visual Scripting: couldn't find visual scripting package
+  at Unity.VisualScripting.PackageVersionUtility.get_version () [0x00025] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\PackageVersionUtility.cs:22 
+  at Unity.VisualScripting.BoltCoreManifest.get_version () [0x00000] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugin\BoltCoreManifest.cs:11 
+  at Unity.VisualScripting.PluginManifest.get_currentVersion () [0x00000] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginManifest.cs:33 
+  at Unity.VisualScripting.PluginManifest.get_versionMismatch () [0x00000] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginManifest.cs:48 
+  at Unity.VisualScripting.PluginContainer.Initialize () [0x0057d] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginContainer.cs:208 
+  at Unity.VisualScripting.PluginContainer.InitializeOnLoad () [0x00012] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Plugins\PluginContainer.cs:32 
+  at Unity.VisualScripting.VSUsageUtility.DoInitializeOnLoadCalls () [0x00044] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:76 
+  at Unity.VisualScripting.VSUsageUtility.set_isVisualScriptingUsed (System.Boolean value) [0x00037] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:114 
+  at Unity.VisualScripting.VSUsageUtility.CheckAndSetIsVisualScriptingUsed () [0x00013] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:33 
+  at Unity.VisualScripting.VSUsageUtility..cctor () [0x0000d] in .\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Utilities\VSUsageUtility.cs:22 
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+UnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.Type[])
+
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-Classroom
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation. ---> System.NullReferenceException: Object reference not set to an instance of an object
+  at Unity.XR.Oculus.OculusLoader.AssetPathToAbsolutePath (System.String assetPath) [0x00044] in .\Library\PackageCache\com.unity.xr.oculus@4.0.0\Runtime\OculusLoader.cs:282 
+  at Unity.XR.Oculus.OculusLoader.EditorLoadOVRPlugin () [0x000b0] in .\Library\PackageCache\com.unity.xr.oculus@4.0.0\Runtime\OculusLoader.cs:267 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+   --- End of inner exception stack trace ---
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00083] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+  at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <6aa56e57ab504395b555cf3ed50fa53d>:0 
+  at UnityEditor.EditorAssemblies.ProcessInitializeOnLoadMethodAttributes () [0x000a5] in <582c35e8f45345d395e99f8e72e3c16d>:0 
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+UnityEditor.EditorAssemblies:ProcessInitializeOnLoadMethodAttributes ()
+
+Mono: successfully reloaded assembly
+[Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+- Finished resetting the current domain, in  4.309 seconds
+Domain Reload Profiling: 6903ms
+	BeginReloadAssembly (453ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (11ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (225ms)
+	RebuildCommonClasses (56ms)
+	RebuildNativeTypeToScriptingClass (18ms)
+	initialDomainReloadingComplete (78ms)
+	LoadAllAssembliesAndSetupDomain (1990ms)
+		LoadAssemblies (1085ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (998ms)
+			TypeCache.Refresh (929ms)
+				TypeCache.ScanAssembly (862ms)
+			ScanForSourceGeneratedMonoScriptInfo (32ms)
+			ResolveRequiredComponents (38ms)
+	FinalizeReload (4309ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1941ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (77ms)
+			SetLoadedEditorAssemblies (14ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (382ms)
+			ProcessInitializeOnLoadAttributes (1329ms)
+			ProcessInitializeOnLoadMethodAttributes (133ms)
+			AfterProcessingInitializeOnLoad (6ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (12ms)
+Refreshing native plugins compatible for Editor in 44.03 ms, found 15 plugins.
+Preloading 1 native plugins for Editor in 0.08 ms.
+Unloading 8469 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 166 unused Assets / (97.6 KB). Loaded Objects now: 9065.
+Memory consumption went from 284.9 MB to 284.8 MB.
+Total: 23.265700 ms (FindLiveObjects: 0.826400 ms CreateObjectMapping: 1.067000 ms MarkObjects: 20.945700 ms  DeleteObjects: 0.424600 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:AudioImporter_EditorPlatform: d09bf68614088b80899f8185d706f6e7 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 

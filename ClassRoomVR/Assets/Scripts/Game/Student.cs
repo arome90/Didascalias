@@ -68,6 +68,7 @@ namespace ClassRoomVR
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
                    .Where(c => (distracted & c) == c)
                    .ToArray();
+            voiceGenerator = GetComponent<VoiceGenerator>();
         }
 
         public void SetParameters(string name, Gender gender)
@@ -136,65 +137,74 @@ namespace ClassRoomVR
             SetDirection(distractedArray[Random.Range(0, distractedArray.Length)]);
         }
 
-        private float smoothTime = 0.15f;
-        private float maxSpeed = 2f;
-        private Vector3 currentVelocity;
+       
         private void Update()
+        {
+            HandleInput();
+            UpdateTargetPosition();
+            attentionText.text = behavior.AttentionLevel.ToString("0.##");
+        }
+
+       
+        private void HandleInput()
         {
             for (int i = 0; i < 8; i++)
             {
-                if (Input.GetKeyDown(KeyCode.Keypad0 + i))
+                KeyCode keyCode = KeyCode.Keypad0 + i;
+
+                if (Input.GetKeyDown(keyCode))
                 {
                     FieldOfVision fieldOfVision = targets.ElementAt(i).Key;
                     Debug.Log(i + " " + fieldOfVision);
-
                     SetDirection(fieldOfVision);
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha7))
+            KeyCode[] actionKeys = { KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha6, KeyCode.Alpha5 };
+
+            foreach (KeyCode key in actionKeys)
             {
-                PayAttention();
+                if (Input.GetKeyDown(key))
+                {
+                    HandleActionInput(key);
+                }
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha8))
+        }
+
+        private void HandleActionInput(KeyCode key)
+        {
+            switch (key)
             {
-                GetDistracted();
+                case KeyCode.Alpha7:
+                    PayAttention();
+                    break;
+                case KeyCode.Alpha8:
+                    GetDistracted();
+                    break;
+                case KeyCode.Alpha6:
+                    StartCoroutine(Nod());
+                    break;
+                case KeyCode.Alpha5:
+                    StartCoroutine(ShakeHead());
+                    break;
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                StartCoroutine(Nod());
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                StartCoroutine(ShakeHead());
-            }
-            //lerp
+        }
+
+        private float smoothTime = 0.15f;
+        private float maxSpeed = 2f;
+        private Vector3 currentVelocity;
+        private void UpdateTargetPosition()
+        {
             if (vision != FieldOfVision.Teacher)
             {
-                // target.position = Vector3.MoveTowards(target.position, actualTargetPosition, 5.0f * Time.deltaTime);
-                target.position = Vector3.SmoothDamp(target.position, actualTargetPosition, ref currentVelocity, smoothTime, maxSpeed,Time.deltaTime);
-                
+                target.position = Vector3.SmoothDamp(target.position, actualTargetPosition, ref currentVelocity, smoothTime, maxSpeed, Time.deltaTime);
             }
             else
             {
                 target.position = Vector3.MoveTowards(target.position, teacher.position, 5.0f * Time.deltaTime);
             }
-            attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
-
-
-        //IEnumerator LerpPosition(Vector3 targetPosition, float duration)
-        //{
-        //    float time = 0;
-        //    Vector3 startPosition = target.position;
-        //    while (time < duration)
-        //    {
-        //        target.position = Vector3.LerpUnclamped(startPosition, targetPosition, time / duration);
-        //        time += Time.deltaTime;
-        //        yield return null;
-        //    }
-        //    target.position = targetPosition;
-        //}
+       
 
         IEnumerator Nod()
         {
@@ -353,6 +363,15 @@ namespace ClassRoomVR
         }
 
         #endregion
+
+
+        VoiceGenerator voiceGenerator;
+        public void GenerateText() 
+        {
+             voiceGenerator.GenerateVoiceClipAsync("hola");
+        }
+
+        
     }
 }
 

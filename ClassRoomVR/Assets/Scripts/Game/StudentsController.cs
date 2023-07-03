@@ -240,6 +240,11 @@ namespace ClassRoomVR
                 }
                 index++;
             }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                students.First().Value.GenerateText();
+            }
         }
     }
 }

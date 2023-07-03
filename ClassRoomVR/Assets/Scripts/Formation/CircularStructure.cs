@@ -14,7 +14,7 @@ namespace ClassRoomVR
             int numObjects = settings.NumDesks;
             float degrees = (float)settings.Degrees;
 
-            if (parent != null) { Destroy(parent); }
+            Destroy(parent); 
             parent = new GameObject("Toggles");
             parent.transform.SetParent(transform, false);
 
@@ -38,7 +38,7 @@ namespace ClassRoomVR
                 d.onCollisionChanged.AddListener(CollisionWithOtherDesk);
                
                 toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
-                list_.Add(toggle, d);
+                toggleToDeskMap.Add(toggle, d);
             }
             
         }
@@ -46,7 +46,7 @@ namespace ClassRoomVR
 
         void CollisionWithOtherDesk()
         {
-            foreach (Desk d in list_.Values)
+            foreach (Desk d in toggleToDeskMap.Values)
             {
                 d.onCollisionChanged.RemoveListener(CollisionWithOtherDesk);
             }
@@ -107,7 +107,7 @@ namespace ClassRoomVR
 
         void ChangeDesk(Toggle toggle)
         {
-            list_[toggle].gameObject.SetActive(toggle.isOn);
+            toggleToDeskMap[toggle].gameObject.SetActive(toggle.isOn);
         }
 
         System.Tuple<float, float> GetVector(float angle, int i, float radius)

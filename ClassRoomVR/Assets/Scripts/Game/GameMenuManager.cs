@@ -10,12 +10,12 @@ public class GameMenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (showButtonAction.action.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.Q))
+        if (showButtonAction != null && showButtonAction.action.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.Q))
         {
             ToggleMenu();
         }
 
-        if (menuObject.activeSelf)
+        if (menuObject != null && menuObject.activeSelf)
         {
             UpdateMenuPosition();
         }
@@ -23,21 +23,32 @@ public class GameMenuManager : MonoBehaviour
 
     private void ToggleMenu()
     {
-        menuObject.SetActive(!menuObject.activeSelf);
+        if (menuObject != null)
+        {
+            menuObject.SetActive(!menuObject.activeSelf);
+        }
     }
 
     private void UpdateMenuPosition()
     {
-        Vector3 menuPosition = CalculateMenuPosition();
-        menuObject.transform.position = menuPosition;
-        menuObject.transform.LookAt(new Vector3(headTransform.position.x, menuObject.transform.position.y, headTransform.position.z));
-        menuObject.transform.forward *= -1f;
+        if (menuObject != null && headTransform != null)
+        {
+            Vector3 menuPosition = CalculateMenuPosition();
+            menuObject.transform.position = menuPosition;
+            menuObject.transform.LookAt(new Vector3(headTransform.position.x, menuObject.transform.position.y, headTransform.position.z));
+            menuObject.transform.forward *= -1f;
+        }
     }
 
     private Vector3 CalculateMenuPosition()
     {
-        Vector3 spawnDirection = new Vector3(headTransform.forward.x, 0f, headTransform.forward.z).normalized;
-        Vector3 menuPosition = headTransform.position + spawnDirection * spawnDistance;
-        return menuPosition;
+        if (headTransform != null)
+        {
+            Vector3 spawnDirection = new Vector3(headTransform.forward.x, 0f, headTransform.forward.z).normalized;
+            Vector3 menuPosition = headTransform.position + spawnDirection * spawnDistance;
+            return menuPosition;
+        }
+
+        return Vector3.zero;
     }
 }
