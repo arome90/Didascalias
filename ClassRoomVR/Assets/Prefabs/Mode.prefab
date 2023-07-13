@@ -217,32 +217,6 @@ MonoBehaviour:
   resumeButton: {fileID: 1517021282}
   optionsButton: {fileID: 0}
   quitButton: {fileID: 1021814480}
-  showButtonAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: Show Button
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: cd5ad983-cb06-41cf-bcfa-1cec762d72f2
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: 5569733009155313275, guid: c348712bda248c246b8c49b3db54643f,
-      type: 3}
-  thinkAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: Think
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: a165ea13-e587-4214-9343-5707334435bb
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: -5222065484921057998, guid: c348712bda248c246b8c49b3db54643f,
-      type: 3}
 --- !u!1 &1021814478
 GameObject:
   m_ObjectHideFlags: 0
@@ -4275,7 +4249,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1403025453014272868}
-  - {fileID: 1455550983819573995}
   - {fileID: 6236870297709241903}
   - {fileID: 8075181212191649411}
   - {fileID: 1403025452363135540}
@@ -5577,7 +5550,7 @@ Transform:
   - {fileID: 1403025452704113787}
   - {fileID: 1403025452365219627}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1403025453598942447
 MonoBehaviour:
@@ -9262,63 +9235,6 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
---- !u!1 &6977982454953589784
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1455550983819573995}
-  - component: {fileID: 4159504500064941597}
-  m_Layer: 0
-  m_Name: Hand Visualizer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1455550983819573995
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6977982454953589784}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1403025452930767428}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4159504500064941597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6977982454953589784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e9813c68d7d6f44282ace8bd2d1fd46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UseOptimizedControls: 0
-  m_LeftHandMesh: {fileID: 919132149155446097, guid: bf7151579c38e2a44be94ba8773876c1,
-    type: 3}
-  m_RightHandMesh: {fileID: 919132149155446097, guid: 56186ccf27ad7864681108ed88349071,
-    type: 3}
-  m_HandMeshMaterial: {fileID: 0}
-  m_DrawMeshes: 1
-  m_DebugDrawPrefab: {fileID: 6507399986997092475, guid: 254b742d65a15d14b9df756ae77de868,
-    type: 3}
-  m_DebugDrawJoints: 0
-  m_VelocityPrefab: {fileID: 8538602047018081646, guid: 629fd7882ec6bfc499a5fcf20035282b,
-    type: 3}
-  m_VelocityType: 2
 --- !u!1 &7050213592959437227
 GameObject:
   m_ObjectHideFlags: 0
@@ -9599,32 +9515,6 @@ MonoBehaviour:
   resumeButton: {fileID: 8951954178183031959}
   optionsButton: {fileID: 0}
   quitButton: {fileID: 7743950890678309514}
-  showButtonAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: Show Button
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: cd5ad983-cb06-41cf-bcfa-1cec762d72f2
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: 5569733009155313275, guid: c348712bda248c246b8c49b3db54643f,
-      type: 3}
-  thinkAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: Think
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: a165ea13-e587-4214-9343-5707334435bb
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: -5222065484921057998, guid: c348712bda248c246b8c49b3db54643f,
-      type: 3}
 --- !u!1 &7322481551085800505
 GameObject:
   m_ObjectHideFlags: 0

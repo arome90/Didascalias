@@ -229,8 +229,19 @@ namespace ClassRoomVR
             GameManager.Instance.GetClassManager().DisruptiveSituation = true;
         }
 
+
+        float a = 0;
+
+        private void Start()
+        {
+            var b=gameObject.AddComponent<VariableMeasurement>();
+            b.del+=(()=>{ return a; });
+            b.Set(3f);
+            
+        }
         private void Update()
         {
+            if (GameManager.Instance.isPause) return;
             int index = 0;
             while (index < actions.Length && !GameManager.Instance.GetClassManager().DisruptiveSituation)
             {
@@ -243,7 +254,9 @@ namespace ClassRoomVR
 
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                students.First().Value.GenerateText();
+                // students.First().Value.GenerateText();
+                a++;
+                Debug.Log(a);
             }
         }
     }

@@ -121,6 +121,7 @@ namespace HurricaneVR.Framework.Core.Utils
             //    ToggleTime();
             //}
 
+            if (ControllerInput.HVRGlobalInputs.Instance.LeftPrimaryButtonState.JustActivated) { ToggleTime(); }
             var min = 1f / MaxTimeStep * Time.timeScale;
             var max = 1f / MinTimeStep * Time.timeScale;
 

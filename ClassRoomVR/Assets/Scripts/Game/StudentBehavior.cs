@@ -61,6 +61,9 @@ namespace ClassRoomVR
 
         private void MakeDecision()
         {
+            if (GameManager.Instance.isPause) return;
+
+
             if (student.IsStudentInFieldOfVision())
                 AddAttention();
             else

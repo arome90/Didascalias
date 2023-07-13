@@ -140,6 +140,7 @@ namespace ClassRoomVR
        
         private void Update()
         {
+            if (GameManager.Instance.isPause) return;
             HandleInput();
             UpdateTargetPosition();
             attentionText.text = behavior.AttentionLevel.ToString("0.##");

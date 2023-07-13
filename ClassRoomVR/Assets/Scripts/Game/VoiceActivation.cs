@@ -128,7 +128,7 @@ namespace ClassRoomVR
         public void OnMicLevelChanged(float a)
         {
             miclevel = a;
-            Debug.Log(a +" "+ Time.time);
+           // Debug.Log(a +" "+ Time.time);
             if (!shout && a > 0.8f /*0.8f*/)
             {
                 shout = true;

@@ -7,6 +7,7 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
+        public  bool isPause=false;
         private GameObject player;
         private DataSystem savedData;
         private ScenePackage chosenPackage;

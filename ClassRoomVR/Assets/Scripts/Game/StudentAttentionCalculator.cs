@@ -15,7 +15,7 @@ namespace ClassRoomVR
             InvokeRepeating("CalculateAttentionAverage", 2.5f, 2.5f);
         }
 
-        public void CalculateAttentionAverage()
+        private void CalculateAttentionAverage()
         {
             currentAttentionAverage = 0;
 
