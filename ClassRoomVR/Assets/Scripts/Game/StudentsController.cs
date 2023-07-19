@@ -230,15 +230,18 @@ namespace ClassRoomVR
         }
 
 
-        float a = 0;
-
+        int a = 0;
+        VariableMeasurementFloat b;
         private void Start()
         {
-            var b=gameObject.AddComponent<VariableMeasurement>();
-            b.del+=(()=>{ return a; });
-            b.Set(3f);
+            // b = gameObject.AddComponent<VariableMeasurementFloat>();
+          
+
+            //b.Set(3f);
+            //b.del = () => a;
             
         }
+
         private void Update()
         {
             if (GameManager.Instance.isPause) return;
