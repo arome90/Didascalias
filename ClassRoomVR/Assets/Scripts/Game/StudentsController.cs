@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace ClassRoomVR
 {
-    public class StudentsController : MonoBehaviour
+    public  class StudentsController : MonoBehaviour
     {
 
         TalkMode mode;
@@ -227,19 +227,7 @@ namespace ClassRoomVR
                 actionObject.GetComponent<Action>().SetParameters(studentList, action);
             }
             GameManager.Instance.GetClassManager().DisruptiveSituation = true;
-        }
 
-
-        int a = 0;
-        VariableMeasurementFloat b;
-        private void Start()
-        {
-            // b = gameObject.AddComponent<VariableMeasurementFloat>();
-          
-
-            //b.Set(3f);
-            //b.del = () => a;
-            
         }
 
         private void Update()
@@ -250,17 +238,13 @@ namespace ClassRoomVR
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + index))
                 {
+
                     DoSomethingDisruptive(index);
                 }
                 index++;
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                // students.First().Value.GenerateText();
-                a++;
-                Debug.Log(a);
-            }
+           
         }
     }
 }

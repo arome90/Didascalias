@@ -8,12 +8,12 @@ public class HeadVariables : MonoBehaviour
     private Vector3 miradaPoint;
     private Vector3 position;
     private Vector3 lastPosition;
-    private float velocidad;
     //private float aceleracion;
 
     private float distance;
 
-    private VariableMeasurementFloat velocidadMeasurement;
+       
+    private VariableMeasurementFloat velocidad;
 
     private void Start()
     {
@@ -21,9 +21,8 @@ public class HeadVariables : MonoBehaviour
 		Pose po;
         PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out po);
         position = po.position;
-        velocidadMeasurement = gameObject.AddComponent<VariableMeasurementFloat>();
-        velocidadMeasurement.Set(1f);
-        velocidadMeasurement.del = () => velocidad;
+        velocidad = gameObject.AddComponent<VariableMeasurementFloat>();
+		velocidad.Set();
         StartCoroutine(MeasureSpeed());
 
     }
@@ -48,7 +47,7 @@ public class HeadVariables : MonoBehaviour
             position = pose.position;
 
             distance = Vector3.Distance(position, lastPosition);
-            velocidad = distance / Time.deltaTime;
+            velocidad.Variable = distance / Time.deltaTime;
         }
 
         //PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Center, out pose);
