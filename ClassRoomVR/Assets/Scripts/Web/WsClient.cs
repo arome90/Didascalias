@@ -72,26 +72,43 @@ public class WsClient : MonoBehaviour
 {
     public static bool accion = false;
     static WebSocket ws;
-    void Start()
+    public string session;
+
+    public void StartConnection()
     {
-        Debug.Log("start");
         try
         {
-            WebSocket ws = new WebSocket("wss://cyclops.uab.cat/game/");
-            // WebSocket ws = new WebSocket("ws://127.0.0.1:8080/Echo");
-            ws.OnMessage += Ws_OnMessage;
-            
+            ws = new WebSocket("wss://cyclops.uab.cat/game/");
+            ws.OnOpen += Ws_OnOpen;
+            ws.OnMessage += Ws_OnSessionMessage;
             ws.Connect();
-
-            Ws_SendMessage(new MessageData { type = Type.CreateSession, value = 1 });
+            // Ws_SendMessage(new MessageData { type = Type.CreateSession, value = 1 });
         }
         catch { Debug.Log("Error en conexion"); }
     }
 
+    void Ws_OnOpen(object sender, EventArgs e)
+    {
+        Debug.Log("open");
+        string jsonData = JsonConvert.SerializeObject(new SessionInfo { type = "sessionRequest", session = "" }) ;
+        ws.Send(jsonData);
+    }
 
-    private static void Ws_OnMessage(object sender, MessageEventArgs e)
+    private void Ws_OnSessionMessage(object sender, MessageEventArgs e) 
+    {
+        Debug.Log("mensaje1");
+        SessionInfo mes = JsonConvert.DeserializeObject<SessionInfo>(e.Data);
+        session = mes.session; 
+        Debug.Log(session);
+        ws.OnMessage += Ws_OnMessage;
+        ws.OnMessage -= Ws_OnSessionMessage;
+
+    }
+
+    private void Ws_OnMessage(object sender, MessageEventArgs e)
     {
         accion = true;
+        Debug.Log("mensaje2");
         //int n = e.Data[0] - '0';
         //if (n >= 0)
         //{
@@ -121,18 +138,22 @@ public class WsClient : MonoBehaviour
         if (accion)
         {
             accion = false;
-            ClassRoomVR.GameManager.Instance.GetClassManager().GetStudentsController().DoSomethingDisruptive(0);
+           // ClassRoomVR.GameManager.Instance.GetClassManager().GetStudentsController().DoSomethingDisruptive(0);
 
         }
     }
 
-   
-
-    private void OnDestroy()
+    public void Disconnect()
     {
         if (ws != null) ws.Close();
     }
 
+    private void OnDestroy()
+    {
+        Disconnect();
+    }
+
+   
 
 
     [System.Serializable]
@@ -149,7 +170,8 @@ public class WsClient : MonoBehaviour
     [System.Serializable]
     public class SessionInfo
     {
-        //.. Añadir todos los datos que se tienen que enviar en una session 
+      public string type;
+      public string session;
     }
 
 

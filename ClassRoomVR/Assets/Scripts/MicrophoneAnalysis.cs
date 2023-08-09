@@ -117,3 +117,123 @@ public class MicrophoneAnalysis : MonoBehaviour
         return sum / samples.Length;
     }
 }
+
+
+//using UnityEngine;
+//using NAudio.Wave;
+//using NAudio.Wave.SampleProviders;
+//using NAudio.Dsp;
+
+//public class MicrophoneAnalysis : MonoBehaviour
+//{
+//    private int sampleRate = 44100;
+//    private int bufferSize = 1024;
+//    private WaveInEvent waveIn;
+//    private float previousPitch = 0f;
+//    private float frequencyVariability = 0f;
+
+//    private void Start()
+//    {
+//        waveIn = new WaveInEvent();
+//        waveIn.BufferMilliseconds = (int)((double)bufferSize / (double)sampleRate * 1000.0);
+//        waveIn.DataAvailable += WaveIn_DataAvailable;
+//        Debug.Log("hak");
+
+//        waveIn.StartRecording();
+//    }
+
+//    private void WaveIn_DataAvailable(object sender, WaveInEventArgs e)
+//    {
+//        Debug.Log("hik");
+//        float[] audioBuffer = new float[e.BytesRecorded / 4]; // 4 bytes per float
+//        for (int i = 0; i < audioBuffer.Length; i++)
+//        {
+//            audioBuffer[i] = System.BitConverter.ToSingle(e.Buffer, i * 4);
+//        }
+
+//        float pitch = DetectPitch(audioBuffer);
+//        float rms = CalculateRMS(audioBuffer);
+
+//        float db = 20f * Mathf.Log10(rms);
+//        Debug.Log("Microphone Detected Pitch: " + pitch.ToString("F2") + " Hz");
+//        Debug.Log("Microphone RMS Amplitude: " + rms.ToString("F2"));
+//        Debug.Log("Microphone Decibels: " + db.ToString("F2"));
+
+//        CalculateFrequencyVariability(pitch);
+//        Debug.Log("Microphone Frequency Variability: " + frequencyVariability.ToString("F2"));
+//    }
+
+//    private float DetectPitch(float[] audioBuffer)
+//    {
+//        // Implement pitch detection algorithm using FFT or other methods
+//        // Return the detected pitch frequency in Hz
+//        return YourPitchDetectionAlgorithm(audioBuffer);
+//    }
+
+//    private float CalculateRMS(float[] samples)
+//    {
+//        double sum = 0;
+//        foreach (var sample in samples)
+//        {
+//            sum += sample * sample;
+//        }
+//        double mean = sum / samples.Length;
+//        return Mathf.Sqrt((float)mean);
+//    }
+
+//    private void CalculateFrequencyVariability(float currentPitch)
+//    {
+//        frequencyVariability = Mathf.Abs(currentPitch - previousPitch);
+//        previousPitch = currentPitch;
+//    }
+
+//    private float YourPitchDetectionAlgorithm(float[] audioBuffer)
+//    {
+//        int maxSamples = audioBuffer.Length;
+
+//        Complex[] fftBuffer = new Complex[bufferSize];
+//        for (int i = 0; i < bufferSize; i++)
+//        {
+//            fftBuffer[i].X = audioBuffer[i];
+//            fftBuffer[i].Y = 0;
+
+//        }
+
+//        FastFourierTransform.FFT(true, (int)Mathf.Log(bufferSize, 2), fftBuffer);
+
+//        // Find the peak frequency index in the spectrum
+//        int peakIndex = FindPeakIndex(fftBuffer);
+
+//        // Convert the index to frequency in Hz
+//        float detectedFrequency = peakIndex * sampleRate / bufferSize;
+
+//        return detectedFrequency;
+//    }
+
+
+//    private int FindPeakIndex(Complex[] spectrum)
+//    {
+//        int peakIndex = 0;
+//        double maxMagnitude = 0;
+
+//        for (int i = 0; i < spectrum.Length; i++)
+//        {
+//            double magnitude = Mathf.Sqrt(spectrum[i].X * spectrum[i].X + spectrum[i].Y * spectrum[i].Y);
+//            if (magnitude > maxMagnitude)
+//            {
+//                maxMagnitude = magnitude;
+//                peakIndex = i;
+//            }
+//        }
+
+//        return peakIndex;
+//    }
+//    private void OnDisable()
+//    {
+//        if (waveIn != null)
+//        {
+//            waveIn.StopRecording();
+//            waveIn.Dispose();
+//        }
+//    }
+//}

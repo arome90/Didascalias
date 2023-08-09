@@ -21,8 +21,7 @@ public class HeadVariables : MonoBehaviour
 		Pose po;
         PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out po);
         position = po.position;
-        velocidad = gameObject.AddComponent<VariableMeasurementFloat>();
-		velocidad.Set();
+		velocidad = new VariableMeasurementFloat();
         StartCoroutine(MeasureSpeed());
 
     }
