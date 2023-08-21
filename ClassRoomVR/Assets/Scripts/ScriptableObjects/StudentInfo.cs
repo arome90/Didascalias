@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace ClassRoomVR
 {
+    
     [CreateAssetMenu(fileName = "Student", menuName = "ScriptableObject/StudentInfo", order = 4)]
     public class StudentInfo : ScriptableObject
     {
@@ -13,7 +14,6 @@ namespace ClassRoomVR
         [SerializeField] private bool hasDisability;
         [SerializeField] private OriginInfo origin;
         [SerializeField] private BodyInfo body;
-
         public string Name => nameStudent;
         public GenderInfo Gender => gender;
         public bool Disability => hasDisability;

@@ -226,7 +226,7 @@ namespace ClassRoomVR
                 actionObject = Instantiate(action.behaviorHolder);
                 actionObject.GetComponent<Action>().SetParameters(studentList, action);
             }
-            GameManager.Instance.GetClassManager().DisruptiveSituation = true;
+            ClassManager.Instance.DisruptiveSituation = true;
 
         }
 
@@ -234,7 +234,7 @@ namespace ClassRoomVR
         {
             if (GameManager.Instance.isPause) return;
             int index = 0;
-            while (index < actions.Length && !GameManager.Instance.GetClassManager().DisruptiveSituation)
+            while (index < actions.Length && !ClassManager.Instance.DisruptiveSituation)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + index))
                 {

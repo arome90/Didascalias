@@ -31,9 +31,9 @@ public class MicrophoneAnalysis : MonoBehaviour
 
         AnalyzeSound();
 
-        Debug.Log("RMS: " + rmsVal.ToString("F2"));
-        Debug.Log(dbVal.ToString("F1") + " dB");
-        Debug.Log(pitchVal.ToString("F0") + " Hz");
+        //Debug.Log("RMS: " + rmsVal.ToString("F2"));
+        //Debug.Log(dbVal.ToString("F1") + " dB");
+        //Debug.Log(pitchVal.ToString("F0") + " Hz");
         //// Obtener los datos de audio del micrófono
         //float[] samples = new float[audioClip.samples];
         //audioClip.GetData(samples, 0);

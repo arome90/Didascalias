@@ -17,7 +17,7 @@ namespace ClassRoomVR
         private void Start()
         {
             player = GameManager.Instance.GetPlayer();
-            controller = GameManager.Instance.GetClassManager().GetStudentsController();
+            controller = ClassManager.Instance.GetStudentsController();
             controller.SetMode(TalkMode.None);
         }
 
@@ -129,7 +129,7 @@ namespace ClassRoomVR
         public void Finish()
         {
             
-            GameManager.Instance.GetClassManager().DisruptiveSituation = false;
+            ClassManager.Instance.DisruptiveSituation = false;
             foreach (Student s in problematics)
             {
                 s.SetNotProblematicStudent();

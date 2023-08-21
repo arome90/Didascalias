@@ -51,7 +51,7 @@ using Newtonsoft.Json;
 //        if (accion) 
 //        {
 //            accion = false;
-//            ClassRoomVR.GameManager.Instance.GetClassManager().GetStudentsController().DoSomethingDisruptive(0);
+//            ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(0);
 
 //        }
 //    }
@@ -68,12 +68,18 @@ using Newtonsoft.Json;
 //}
 #endregion
 
-public class WsClient : MonoBehaviour
+public class WsClient : GenericSingleton<WsClient>
 {
     public static bool accion = false;
     static WebSocket ws;
     public string session;
 
+
+
+    private void Start()
+    {
+        StartConnection();
+    }
     public void StartConnection()
     {
         try
@@ -90,16 +96,16 @@ public class WsClient : MonoBehaviour
     void Ws_OnOpen(object sender, EventArgs e)
     {
         Debug.Log("open");
-        string jsonData = JsonConvert.SerializeObject(new SessionInfo { type = "sessionRequest", session = "" }) ;
+        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession,null)) ;
         ws.Send(jsonData);
     }
 
     private void Ws_OnSessionMessage(object sender, MessageEventArgs e) 
     {
-        Debug.Log("mensaje1");
-        SessionInfo mes = JsonConvert.DeserializeObject<SessionInfo>(e.Data);
-        session = mes.session; 
-        Debug.Log(session);
+        Debug.Log(e.Data);
+        ClassRoomVR.UnityMessage mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
+       // session = mes.data.ToString(); 
+        Debug.Log(mes.data.ToString());
         ws.OnMessage += Ws_OnMessage;
         ws.OnMessage -= Ws_OnSessionMessage;
 
@@ -108,7 +114,7 @@ public class WsClient : MonoBehaviour
     private void Ws_OnMessage(object sender, MessageEventArgs e)
     {
         accion = true;
-        Debug.Log("mensaje2");
+        Debug.Log(e.Data);
         //int n = e.Data[0] - '0';
         //if (n >= 0)
         //{
@@ -117,17 +123,18 @@ public class WsClient : MonoBehaviour
         //}
         try
         {
-            MessageData mes = JsonConvert.DeserializeObject<MessageData>(e.Data);
-            Debug.Log("Received message from Echo client: " + e.Data);
+            ClassRoomVR.UnityMessage mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
+            Debug.Log("Received message from Echo client: " + mes.data.ToString());
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
-            Debug.Log("Idk" + e.Data);
+            Debug.Log(ex.Message + e.Data);
         }
 
     }
 
-    private static void Ws_SendMessage(MessageData mes) 
+
+    public void Ws_SendMessage(ClassRoomVR.UnityMessage mes) 
     {
         string jsonData = JsonConvert.SerializeObject(mes);
         ws.Send(jsonData);
@@ -138,8 +145,13 @@ public class WsClient : MonoBehaviour
         if (accion)
         {
             accion = false;
-           // ClassRoomVR.GameManager.Instance.GetClassManager().GetStudentsController().DoSomethingDisruptive(0);
+           // ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(0);
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ClassRoomVR.Prueba.CreateInfoInitial();
         }
     }
 
@@ -153,29 +165,11 @@ public class WsClient : MonoBehaviour
         Disconnect();
     }
 
-   
-
-
-    [System.Serializable]
-    public class MessageData
-    {
-        public Type type;
-        public int value;
-    }
-
-
-    public enum Type{ NewSpectator,CreateSession,Action,SendSessionInfo }
-
-
-    [System.Serializable]
-    public class SessionInfo
-    {
-      public string type;
-      public string session;
-    }
 
 
 }
+
+
 
 //}
 //string getKey(int len)

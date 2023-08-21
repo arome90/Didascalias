@@ -21,7 +21,7 @@ namespace ClassRoomVR
             behaviorTree = GetComponent<BehaviorTree>();
             sceneInfo = GameManager.Instance.GetPackageAtIndex(0);
             player = GameManager.Instance.GetPlayer();
-            classManager = GameManager.Instance.GetClassManager();
+            classManager = ClassManager.Instance;
             classManager.GetComponent<AudioSource>().clip = sceneInfo.beforeClassBell;
             classManager.GetComponent<AudioSource>().Play();
         }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ClassRoomVR
 {
-    public class ClassManager : MonoBehaviour
+    public class ClassManager : GenericSingleton<ClassManager>
     {
         private Transform studentsPositions;
         [SerializeField] private Student prefabStudent;

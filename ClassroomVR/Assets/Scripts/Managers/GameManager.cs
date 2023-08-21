@@ -24,7 +24,7 @@ namespace ClassRoomVR
         [SerializeField] private bool isAutoSavingEnabled = false;
         [SerializeField] private bool saveAudio = false;
 
-        public static GameManager Instance;
+        public static GameManager Instance { get; private set; }
 
         [SerializeField] bool firebaseAnalytics = true;
         [SerializeField] bool unityAnalytics = true;
@@ -46,7 +46,7 @@ namespace ClassRoomVR
             }
             else
             {
-                DestroyImmediate(this);
+                Destroy(this);
             }
         }
 

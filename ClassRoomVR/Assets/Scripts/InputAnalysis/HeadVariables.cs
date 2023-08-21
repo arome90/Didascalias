@@ -5,7 +5,7 @@ using UnityEngine.SpatialTracking;
 public class HeadVariables : MonoBehaviour
 {
 
-    private Vector3 miradaPoint;
+    private Quaternion miradaPoint;
     private Vector3 position;
     private Vector3 lastPosition;
     //private float aceleracion;
@@ -13,27 +13,25 @@ public class HeadVariables : MonoBehaviour
     private float distance;
 
        
-    private VariableMeasurementFloat velocidad;
-
+    private VariableMeasurement velocidad;
+	float time = 1f;
     private void Start()
     {
 		InitMotions();
 		Pose po;
         PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out po);
         position = po.position;
-		velocidad = new VariableMeasurementFloat();
+		velocidad = new VariableMeasurement(5);
         StartCoroutine(MeasureSpeed());
 
     }
 
     private IEnumerator MeasureSpeed()
     {
-        float time = 1f;
         while (true)
         {
             yield return new WaitForSeconds(time);
             UpdateHead();
-
         }
     }
     private void UpdateHead()
@@ -44,9 +42,9 @@ public class HeadVariables : MonoBehaviour
         {
             lastPosition = position;
             position = pose.position;
-
-            distance = Vector3.Distance(position, lastPosition);
-            velocidad.Variable = distance / Time.deltaTime;
+			miradaPoint = pose.rotation;
+			distance = Vector3.Distance(position, lastPosition);
+            velocidad.Variable = distance / time;
         }
 
         //PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Center, out pose);

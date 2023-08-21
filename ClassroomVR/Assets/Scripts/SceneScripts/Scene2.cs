@@ -24,7 +24,7 @@ namespace ClassRoomVR
             sceneInfo = GameManager.Instance.GetPackageAtIndex(0);
             player = GameManager.Instance.GetPlayer();
             voice = GameManager.Instance.GetVoiceActivation();
-            classManager = GameManager.Instance.GetClassManager();
+            classManager = ClassManager.Instance;
             classManager.GetComponent<AudioSource>().clip = sceneInfo.beforeClassBell;
             classManager.GetComponent<AudioSource>().Play();
         }
