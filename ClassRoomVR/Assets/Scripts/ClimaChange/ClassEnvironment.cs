@@ -4,35 +4,31 @@ using UnityEngine;
 using MathNet.Numerics.Statistics;
 using Newtonsoft.Json;
 
+// Class that defines the class environment
 public class ClassEnvironment : MonoBehaviour
 {
     int disposicion;
-    //U
-    //factorcomunicasion 1.2
-    //O
-    //factorparticipacion 1.1
-
-    //Si el trabajo es grupal la participacion aumenta 
     bool trabajogrupal;
-
 }
 
+// Class that handles time information
 public class TimeClass : MonoBehaviour
 {
-    string horaInicial;
-    class TimeEntry
+    private string horaInicial;
+
+    private class TimeEntry
     {
-        public string hora;
-        public double participacion;
+        public string Hora { get; }
+        public double Participacion { get; }
 
         public TimeEntry(string hora, double participacion)
         {
-            this.hora = hora;
-            this.participacion = participacion;
+            Hora = hora;
+            Participacion = participacion;
         }
     }
 
-    TimeEntry[] horarios = new TimeEntry[]
+    private TimeEntry[] horarios = new TimeEntry[]
     {
         new TimeEntry("08:00", 0.8),
         new TimeEntry("8:55", 0.9),
@@ -45,21 +41,18 @@ public class TimeClass : MonoBehaviour
 
     private void Start()
     {
-        horaInicial = horarios[0].hora;
+        horaInicial = horarios[0].Hora;
     }
-
 }
 
-//la hora y el tipo de aula afectan al clima
+// Class that defines the class climate properties
 [System.Serializable]
 public class Clima
 {
-    //TO DO ? CAMBIAR LAS VARIABLES EN OTRA PARTE DEL CODIGO 
-    VariableMeasurement climaVariable;
-     float[] clima = new float[9];
+    // Variables defining different aspects of the class climate
+    float[] clima = new float[9];
     float relacionesInterpersonales;
     float comunicacion;
-    //?Comunicacion negativa entre alumnos ??
     float participacion;
     float apoyoEmocional;
     float gestionAula;
@@ -67,8 +60,8 @@ public class Clima
     float motivacion;
     float seguridad;
     float pertenencia;
-    //float atencion;
 
+    // Adjustment factors for each aspect of the climate
     [JsonIgnore] float factorRelacionesInterpersonales = 1.0f;
     [JsonIgnore] float factorComunicacion = 1.0f;
     [JsonIgnore] float factorParticipacion = 1.0f;
@@ -78,6 +71,8 @@ public class Clima
     [JsonIgnore] float factorMotivacion = 1.0f;
     [JsonIgnore] float factorSeguridad = 1.0f;
     [JsonIgnore] float factorPertenencia = 1.0f;
+
+    // Method to update the climate based on current factors and values
     public void UpdateClima()
     {
         clima[0] = relacionesInterpersonales * factorRelacionesInterpersonales;
@@ -89,12 +84,11 @@ public class Clima
         clima[6] = motivacion * factorMotivacion;
         clima[7] = seguridad * factorSeguridad;
         clima[8] = pertenencia * factorPertenencia;
-        climaVariable.Variable = (float)clima.Mean();
     }
 
-    public double getClima()
+    // Method to get the average value of the climate
+    public double GetClimaMean()
     {
         return clima.Mean();
     }
 }
-

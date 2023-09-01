@@ -67,11 +67,7 @@ public class Option : MonoBehaviour
    
     public void SetValue(float v)
     {
-        value = v;
-        if (value < minValue)
-            value = minValue;
-        else if (value > maxValue)
-            value = maxValue;
+        value = Mathf.Clamp(v, minValue, maxValue);
         optionValue.text = value.ToString("0.##");
     }
 

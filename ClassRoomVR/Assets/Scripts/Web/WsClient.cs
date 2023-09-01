@@ -96,7 +96,7 @@ public class WsClient : GenericSingleton<WsClient>
     void Ws_OnOpen(object sender, EventArgs e)
     {
         Debug.Log("open");
-        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession,null)) ;
+        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession, null));
         ws.Send(jsonData);
     }
 

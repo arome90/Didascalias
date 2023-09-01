@@ -54,14 +54,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b752a859fadbaec4db44765a112610d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resta: 0
   disruptiveBehavior: 0
   decisionTime: 2.5
-  attentionAddition: 6
+  attentionAddition: 7
   attentionSubtraction: 5
-  additionMultiplier: 0.23
-  subtractionMultiplier: 0.19
-  distanceFactorAddition: 1.7
-  distanceFactorSubtraction: 0.8
+  distanceFactorAddition: 1
+  distanceFactorSubtraction: 0.5
 --- !u!195 &7404835763489981494
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -288,6 +287,8 @@ MonoBehaviour:
   defaultVoiceSettings:
     stability: 0.57
     similarityBoost: 0.7
+    style: 0
+    speakerBoost: 0
 --- !u!1 &1176212719118746332
 GameObject:
   m_ObjectHideFlags: 0

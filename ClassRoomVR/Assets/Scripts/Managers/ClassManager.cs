@@ -49,11 +49,11 @@ namespace ClassRoomVR
             problematicStudents = new HashSet<string>();
             classInfo = GameManager.Instance.GetCurrentClassInfo();
             names = new List<List<string>>();
-            names.Add(classInfo.girlsNames.ToList());
-            names.Add(classInfo.boysNames.ToList());
+            names.Add(classInfo.femaleStudentNames.ToList());
+            names.Add(classInfo.maleStudentNames.ToList());
             prefabBodys = new List<GameObject[]>();
-            prefabBodys.Add(classInfo.girlsPrefabs);
-            prefabBodys.Add(classInfo.boysPrefabs);
+            prefabBodys.Add(classInfo.femaleStudentPrefabs);
+            prefabBodys.Add(classInfo.maleStudentPrefabs);
             GenerateChilds();
 
             studentsController.SetParameters(students);
@@ -71,7 +71,14 @@ namespace ClassRoomVR
     
         private void GenerateChilds()
         {
+            GenerateStudents();
+            PlayAnimationsAtDifferentTimeClass(classInfo.idleAnimation.name);
+        }
+
+        private void GenerateStudents()
+        {
             int deskPos = 0;
+
             if (settings.Mode == GenerateMode.Gender)
             {
                 GeneratePersonalizedChildWithGender(ref deskPos, (int)Gender.Women, settings.NumWomen);
@@ -89,17 +96,23 @@ namespace ClassRoomVR
 
                 for (int i = 0; i < randomStudents && deskPos < 30; i++)
                 {
-                    int gender = Random.Range(0, 2);
-                    int indexName = Random.Range(0, names[gender].Count);
-                    Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
-                    names[gender].RemoveAt(indexName);
-                    PlaceStudent(ref deskPos, pickedStudent, 1);
-                    deskPos++;
+                    GenerateRandomChild(ref deskPos);
                 }
             }
-
-            PlayAnimationsAtDifferentTimeClass(classInfo.idleAnim.name);
         }
+
+
+        private void GenerateRandomChild(ref int deskPos)
+        {
+            int gender = Random.Range(0, 2);
+            int indexName = Random.Range(0, names[gender].Count);
+            Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
+            names[gender].RemoveAt(indexName);
+            PlaceStudent(ref deskPos, pickedStudent, 1);
+            deskPos++;
+        }
+
+
 
         private Student CreateStudent(GameObject body, string name, Gender gender)
         {
@@ -142,7 +155,7 @@ namespace ClassRoomVR
                 StudentInfo info = list[i];
                 Gender gen = (Gender)GetEnumValue<GenderInfo>((int)info.Gender);
                 int nBody = GetEnumValue<BodyInfo>((int)info.Body);
-                GameObject body = gen == Gender.Men ? classInfo.boysPrefabs[nBody] : classInfo.girlsPrefabs[nBody];
+                GameObject body = gen == Gender.Men ? classInfo.maleStudentPrefabs[nBody] : classInfo.femaleStudentPrefabs[nBody];
                 Student pickedStudent = CreateStudent(body, info.Name, gen);
                 PlaceStudent(ref deskPos, pickedStudent, 1);
                 deskPos++;

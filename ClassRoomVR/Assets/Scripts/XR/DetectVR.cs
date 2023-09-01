@@ -13,37 +13,54 @@ namespace ClassRoomVR
         // If VR glasses can be initialized correctly, choose the player in VR mode
         private void Awake()
         {
-            if (GameManager.Instance.IsUsingVRHardware())
+            CheckAndSetPlayerMode();
+        }
+        private void CheckAndSetPlayerMode()
+        {
+            bool usingVR = GameManager.Instance.IsUsingVRHardware();
+
+            if (usingVR)
             {
-                var xrSettings = XRGeneralSettings.Instance;
-                if (xrSettings == null)
-                {
-                    Debug.Log("XRGeneralSettings is null");
-                    return;
-                }
-                var xrManager = xrSettings.Manager;
-                if (xrManager == null)
-                {
-                    Debug.Log("XRManagerSettings is null");
-                    return;
-                }
-                var xrLoader = xrManager.activeLoader;
-                if (xrLoader == null)
-                {
-                    Debug.Log("XRLoader is null");
-                    SetPlayerVR(false);
-                    return;
-                }
-                Debug.Log("XRLoader is okay");
-                SetPlayerVR(true);
+                SetupVRPlayer();
             }
             else
             {
-                SetPlayerVR(false);
+                SetupNonVRPlayer();
             }
         }
 
-        private void SetPlayerVR(bool vr)
+        private void SetupVRPlayer()
+        {
+            var xrSettings = XRGeneralSettings.Instance;
+
+            if (xrSettings != null)
+            {
+                var xrManager = xrSettings.Manager;
+
+                if (xrManager != null)
+                {
+                    var xrLoader = xrManager.activeLoader;
+
+                    if (xrLoader != null)
+                    {
+                        Debug.Log("XRLoader is okay");
+                        SetPlayerMode(true);
+                        return;
+                    }
+                }
+            }
+
+            Debug.Log("Failed to set up VR player");
+            SetPlayerMode(false);
+        }
+
+        private void SetupNonVRPlayer()
+        {
+            Debug.Log("Using non-VR mode");
+            SetPlayerMode(false);
+        }
+
+        private void SetPlayerMode(bool vr)
         {
             GameObject selectedPlayer = vr ? playerVR : player;
             GameManager.Instance.SetPlayer(selectedPlayer.transform.GetChild(0).gameObject);

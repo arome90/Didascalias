@@ -8,6 +8,13 @@ public class VariableMeasurement
 {
     //media,moda,rango,desviacion estandar,variaza,cuartiles,asimetria,curtosis,boxplot
     private float variable;
+    
+    // private float variableAverage;
+    RunningStatistics runStats;
+    MovingStatistics movStats;
+    public RunningStatistics Run => runStats;
+    public MovingStatistics Mov => movStats;
+
     public float Variable
     {
         get => variable;
@@ -18,21 +25,15 @@ public class VariableMeasurement
         }
     }
 
-    // private float variableAverage;
-    RunningStatistics run;
-    MovingStatistics mov;
-
-    public RunningStatistics Run => run;
-    public MovingStatistics Mov => mov;
-
+   
     public VariableMeasurement(int windowSize)
     {
         
         //list = new List<float>();
         //StreamingStatistics.Mean(list);
         // Statistics.Mean(list);
-        mov = new MovingStatistics(windowSize);
-        run = new RunningStatistics();
+        movStats = new MovingStatistics(windowSize);
+        runStats = new RunningStatistics();
         
         //TO DO ? 1: usar streamingstatistics en vez de running
         //TO DO ? 2: Usar moving statistics solo cuando se pide y no cuando se agrega una variable 
@@ -45,8 +46,8 @@ public class VariableMeasurement
 
     private void UpdateStats()
     {
-        run.Push(variable);
-        mov.Push(variable);
+        runStats.Push(variable);
+        movStats.Push(variable);
     }
 
 

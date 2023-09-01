@@ -61,7 +61,7 @@ namespace ClassRoomVR
             //Time.timeScale = 1f; // Reanudar el tiempo normal
             pauseMenuUI.enabled = false; // Ocultar el menú de pausa
 
-            GameManager.Instance.isPause = false;
+            GameManager.Instance.IsPause = false;
         }
 
         public void OpenOptions()
@@ -82,7 +82,7 @@ namespace ClassRoomVR
         {
             //Time.timeScale = 0f; // Pausar el tiempo (detener todas las actualizaciones)
             pauseMenuUI.enabled = true; // Mostrar el menú de pausa
-            GameManager.Instance.isPause = true;
+            GameManager.Instance.IsPause = true;
 
         }
 
@@ -101,17 +101,21 @@ namespace ClassRoomVR
 
         void TimeSelect()
         {
-            if (Time.timeScale != 0)
-            {
-                //AudioRecorder.PauseRecording();
-                Time.timeScale = 0f;
 
-            }
-            else
-            {
-                Time.timeScale = 1f;
-                //AudioRecorder.ResumeRecording();
-            }
+            Time.timeScale = (Time.timeScale != 0) ? 0f : 1f;
+
+
+            //if (Time.timeScale != 0)
+            //{
+            //    //AudioRecorder.PauseRecording();
+            //    Time.timeScale = 0f;
+
+            //}
+            //else
+            //{
+            //    Time.timeScale = 1f;
+            //    //AudioRecorder.ResumeRecording();
+            //}
         }
     }
 

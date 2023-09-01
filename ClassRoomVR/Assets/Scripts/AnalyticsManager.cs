@@ -7,35 +7,39 @@ using Unity.Services.Core;
 
 public delegate void CustomEventDelegate(string eventName); 
 public delegate void CustomEventDelegateWithParameters(string eventName, Dictionary<string, object> parameterDictionary);
-public static class AnalyticsManager 
+public static class AnalyticsManager
 {
-    
+
 
     static CustomEventDelegate custom;
     static CustomEventDelegateWithParameters customWithParameter;
-    public static void Start(bool firebase,bool unity)
+    public static void Start(bool useFirebase, bool useUnity)
     {
-        if (firebase)
+        InitializeServices(useFirebase, useUnity);
+    }
+    private static void InitializeServices(bool useFirebase, bool useUnity)
+    {
+        if (useFirebase)
         {
             CustomEventFirebase.Initialization();
-                custom += CustomEventFirebase.RecordCustomEvent;
+            custom += CustomEventFirebase.RecordCustomEvent;
             customWithParameter += CustomEventFirebase.RecordCustomEventWithParameters;
         }
-        if (unity)
+        if (useUnity)
         {
-            
             CustomEventUnity.Initialization();
             custom += CustomEventUnity.RecordCustomEvent;
             customWithParameter += CustomEventUnity.RecordCustomEventWithParameters;
         }
-        
-        //Delegate[] InvocationList = custom.GetInvocationList();
-        //foreach (var item in InvocationList)
-        //{
-        //    Debug.Log($"  {item}");
-        //}
-
     }
+
+    //Delegate[] InvocationList = custom.GetInvocationList();
+    //foreach (var item in InvocationList)
+    //{
+    //    Debug.Log($"  {item}");
+    //}
+
+
 
 
     public static void CustomEvent(string eventName)

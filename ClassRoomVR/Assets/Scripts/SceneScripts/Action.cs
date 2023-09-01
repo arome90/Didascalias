@@ -27,7 +27,7 @@ namespace ClassRoomVR
             a = dis;
             if (a.laughter)
             {
-                Invoke("Laughter", 3.0f);
+                Invoke(nameof(Laughter), 3.0f);
             }
             bh = GetComponent<BehaviorTree>();
             bh.EnableBehavior();
@@ -57,11 +57,25 @@ namespace ClassRoomVR
                 Laughter();
             }
         }
-        
+
         public IEnumerator IgnoreStudent(Student s)
         {
-            yield return new WaitWhile(() => s.IsStudentInFieldOfVision() );
+            float maxWaitTime = 5.0f; // Maximum wait time for optimization
+
+            float startTime = Time.realtimeSinceStartup;
+            while (s.IsStudentInFieldOfVision())
+            {
+                yield return null;
+
+                if (Time.realtimeSinceStartup - startTime > maxWaitTime)
+                {
+                    // Break the loop if the maximum wait time is exceeded
+                    break;
+                }
+            }
+
             yield return new WaitForSecondsRealtime(3);
+
             if (!s.IsStudentInFieldOfVision())
             {
                 bh.GetVariable("Path").SetValue(3);
@@ -75,6 +89,27 @@ namespace ClassRoomVR
                 StartCoroutine(IgnoreStudent(s));
             }
         }
+
+
+
+        //public IEnumerator IgnoreStudent(Student s)
+        //{
+        //    yield return new WaitWhile(() => s.IsStudentInFieldOfVision());
+        //    yield return new WaitForSecondsRealtime(3);
+        //    if (!s.IsStudentInFieldOfVision())
+        //    {
+        //        bh.GetVariable("Path").SetValue(3);
+        //        if (a.classLaughter != null)
+        //        {
+        //            Laughter();
+        //        }
+        //    }
+        //    else if ((int)bh.GetVariable("Path").GetValue() < 0)
+        //    {
+        //        StartCoroutine(IgnoreStudent(s));
+        //    }
+        //}
+
 
         //private void OnEnable()
         //{

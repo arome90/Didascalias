@@ -74,11 +74,27 @@ namespace ClassRoomVR
 
         void LookAround()
         {
-            Vector2 current_Mouse_Look = new Vector2(
+            Vector2 currentMouseLook = new Vector2(
                 Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            xRot -= current_Mouse_Look.y * sensivity;
+
+            UpdateXRotation(currentMouseLook.y);
+            RotatePlayer(currentMouseLook.x);
+            UpdateLookRootRotation();
+        }
+
+        void UpdateXRotation(float mouseYInput)
+        {
+            xRot -= mouseYInput * sensivity;
             xRot = Mathf.Clamp(xRot, default_Look_Limits.x, default_Look_Limits.y);
-            transform.Rotate(0f, current_Mouse_Look.x * sensivity, 0f);
+        }
+
+        void RotatePlayer(float mouseXInput)
+        {
+            transform.Rotate(0f, mouseXInput * sensivity, 0f);
+        }
+
+        void UpdateLookRootRotation()
+        {
             lookRoot.transform.localRotation = Quaternion.Euler(xRot, 0f, 0f);
         }
 

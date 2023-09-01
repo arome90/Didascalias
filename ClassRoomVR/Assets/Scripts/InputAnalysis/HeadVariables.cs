@@ -47,6 +47,8 @@ public class HeadVariables : MonoBehaviour
             velocidad.Variable = distance / time;
         }
 
+		//Debug.Log(velocidad.Run.Mean);
+		//Debug.Log(velocidad.Mov.Mean);
         //PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Center, out pose);
         //miradaPoint = pose.position;
 
@@ -135,16 +137,17 @@ public class HeadVariables : MonoBehaviour
 		return false;
 	}
 
-
-    private float GetShakeAngle(Quaternion rot)
+	// Obtiene el ángulo de sacudida a partir de la rotación
+	private float GetShakeAngle(Quaternion rot)
     {
         return  rot.eulerAngles.y;
     }
-    private float GetNodAngle(Quaternion rot)
+
+	// Obtiene el ángulo de asentimiento a partir de la rotación
+	private float GetNodAngle(Quaternion rot)
     {
         Vector3 forward = rot * Vector3.forward;
         forward = Vector3.Normalize(forward);
-
         float forwardY = forward.y;
         return  Mathf.Asin(forwardY) * Mathf.Rad2Deg;
     }

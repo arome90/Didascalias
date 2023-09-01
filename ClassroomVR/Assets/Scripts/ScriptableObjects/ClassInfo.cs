@@ -7,22 +7,23 @@ namespace ClassRoomVR
     {
         [Header("Class information used to generate scenes")]
 
-        [Tooltip("Male student names")]
-        public string[] boysNames;
+        [Tooltip("Names of male students")]
+        public string[] maleStudentNames;
 
-        [Tooltip("Female student names")]
-        public string[] girlsNames;
+        [Tooltip("Names of female students")]
+        public string[] femaleStudentNames;
 
-        [Tooltip("Male student prefabs")]
-        public GameObject[] boysPrefabs;
+        [Tooltip("Prefabs for male students")]
+        public GameObject[] maleStudentPrefabs;
 
-        [Tooltip("Female student prefabs")]
-        public GameObject[] girlsPrefabs;
+        [Tooltip("Prefabs for female students")]
+        public GameObject[] femaleStudentPrefabs;
+
 
         [Tooltip("Animator controller for students")]
-        public RuntimeAnimatorController studentAnimator;
+        public RuntimeAnimatorController studentAnimatorController;
 
         [Tooltip("Idle animation (sitting) for students")]
-        public AnimationClip idleAnim;
+        public AnimationClip idleAnimation;
     }
 }

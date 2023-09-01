@@ -8,27 +8,31 @@ using System.Collections;
 
 namespace ClassRoomVR
 {
-    public  class StudentsController : MonoBehaviour
+    public class StudentsController : MonoBehaviour
     {
-
         TalkMode mode;
         Dictionary<string, Student> students;
 
+        // Serialized fields for defining positions in the classroom
         [SerializeField] Transform frontSide;
         [SerializeField] Transform backCorner;
         [SerializeField] Transform door;
 
+        // Serialized array of disruptive actions
         [SerializeField] DisruptiveAction[] actions;
 
+        // Getter properties for classroom positions
         public Transform FrontSide => frontSide;
         public Transform BackCorner => backCorner;
         public Transform Door => door;
 
+        // Method to set the dictionary of students
         public void SetParameters(Dictionary<string, Student> students)
         {
             this.students = students;
         }
 
+        // Method to handle changing desks for students
         public void SendChangeDesk(string[] values)
         {
             Student student1 = SearchName(values[0]);
@@ -45,39 +49,41 @@ namespace ClassRoomVR
             student2.ChangeDesk(position1);
         }
 
-        private Student SearchName(string name)
+        // Remove diacritics (accent marks) from a string
+        private string RemoveDiacritics(string text)
         {
-            string normalized = name.Normalize(NormalizationForm.FormD);
+            string normalized = text.Normalize(NormalizationForm.FormD);
             StringBuilder stringBuilder = new StringBuilder();
             foreach (char c in normalized)
             {
                 if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
                     stringBuilder.Append(c);
             }
-            string noTildesName = stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        // Search for a student by name, handling diacritics
+        private Student SearchName(string name)
+        {
+            string noTildesName = RemoveDiacritics(name);
             if (students.ContainsKey(noTildesName))
                 return students[noTildesName];
             return null;
         }
 
+        // Get a list of student names that are in the camera's field of vision
         public List<string> StudentsOnVision()
         {
-            Plane[] cameraFrustum;
-            List<string> names = new List<string>();
-            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-
-            foreach (Student student in students.Values)
+            Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+            return students.Values.Where(student =>
             {
                 Bounds bounds = student.GetCollider().bounds;
                 bounds.center += new Vector3(0, 1f, 0);
-                if (GeometryUtility.TestPlanesAABB(cameraFrustum, bounds))
-                {
-                    names.Add(student.GetStudentName());
-                }
-            }
-            return names;
+                return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
+            }).Select(student => student.GetStudentName()).ToList();
         }
 
+        // Check if a specific student is in the camera's field of vision
         public bool IsStudentInFieldOfVision(Student student)
         {
             Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
@@ -86,14 +92,14 @@ namespace ClassRoomVR
             return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
         }
 
+        // Make non-problematic students exit the classroom
         public void GoOut()
         {
             int i = 0;
-            foreach (Student student in students.Values)
+            foreach (Student student in students.Values.Where(s => !s.IsProblematicStudent()))
             {
                 i++;
-                if (!student.IsProblematicStudent())
-                    StartCoroutine(WaitAndExit(student, i));
+                StartCoroutine(WaitAndExit(student, i));
             }
         }
 
@@ -103,6 +109,7 @@ namespace ClassRoomVR
             student.MoveTo(door.position);
         }
 
+        // Handle sitting actions for students
         public void HandleSit(string[] students)
         {
             if (students.Length == 1)
@@ -113,6 +120,7 @@ namespace ClassRoomVR
             }
         }
 
+        // Handle moving actions for students
         public void HandleMove(string[] students, string place)
         {
             if (students.Length > 1)
@@ -130,12 +138,15 @@ namespace ClassRoomVR
                 }
             }
         }
+
+        // Handle postponing situations
         public void HandlePostpone()
         {
-            Debug.Log("Posponer situación");
+            Debug.Log("Postpone situation");
             mode = TalkMode.Good;
         }
 
+        // Handle expelling students
         public void HandleExpel(string[] students)
         {
             if (students.Length == 1)
@@ -146,18 +157,21 @@ namespace ClassRoomVR
             }
         }
 
+        // Handle disrespectful behavior
         public void HandleDisrespect()
         {
-            Debug.Log("Has faltado el respeto");
+            Debug.Log("You have shown disrespect");
             mode = TalkMode.Disrespect;
         }
 
+        // Handle calming situations
         public void HandleCalm()
         {
-            Debug.Log("Has hablado bien");
+            Debug.Log("You have spoken well");
             mode = TalkMode.Good;
         }
 
+        // Handle calling a student's attention
         public void HandleCall(string[] students)
         {
             if (students.Length == 1)
@@ -168,6 +182,7 @@ namespace ClassRoomVR
             }
         }
 
+        // Determine a position based on a string description
         public Transform Place(string place)
         {
             Transform position = null;
@@ -189,11 +204,13 @@ namespace ClassRoomVR
             return position;
         }
 
+        // Get the current talk mode
         public TalkMode GetMode()
         {
             return mode;
         }
 
+        // Set the current talk mode
         public void SetMode(TalkMode value)
         {
             mode = value;
@@ -201,6 +218,7 @@ namespace ClassRoomVR
 
         private GameObject actionObject;
 
+        // Perform a disruptive action on students
         public void DoSomethingDisruptive(int index)
         {
             DisruptiveAction action = actions[index];
@@ -227,28 +245,25 @@ namespace ClassRoomVR
                 actionObject.GetComponent<Action>().SetParameters(studentList, action);
             }
             ClassManager.Instance.DisruptiveSituation = true;
-
         }
 
         private void Update()
         {
-            if (GameManager.Instance.isPause) return;
+            if (GameManager.Instance.IsPause) return;
             int index = 0;
             while (index < actions.Length && !ClassManager.Instance.DisruptiveSituation)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + index))
                 {
-
                     DoSomethingDisruptive(index);
                 }
                 index++;
             }
-
-           
         }
     }
 }
 
+// Extension method to remove diacritics from strings
 public static class StringExtensions
 {
     public static string SinTildes(this string texto)

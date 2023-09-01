@@ -10,67 +10,55 @@ namespace ClassRoomVR
     [System.Serializable]
     public class Student : MonoBehaviour
     {
-       
         private FieldOfVision vision;
         public FieldOfVision distracted;
         private FieldOfVision[] distractedArray;
+        private State state;
 
-        private State state ;
-
-
+        // Serialized fields for customization in the Inspector
         [SerializeField] private Gender gender;
         [SerializeField] private string studentName;
         [SerializeField] private bool problematic = false;
         [SerializeField] private TextMesh studentNameText;
         private Desk desk;
-
-        [SerializeField]
-        private RuntimeAnimatorController animatorController;
-
+        [SerializeField] private RuntimeAnimatorController animatorController;
         private Animator animator;
         private AudioSource audioSource;
         private NavMeshAgent navMeshAgent;
         private Collider collider;
-       // private Vector3 destination;
-
         [SerializeField] private Transform target;
         private Vector3 actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> targets;
-
         [SerializeField] private MultiAimConstraint headConstraint;
-
-        // Temporarily
-        [SerializeField]
-        private TextMesh attentionText;
-
+        [SerializeField] private TextMesh attentionText;
         private StudentBehavior behavior;
-
         private Transform teacher;
 
-
         #region Getters
-        public Desk GetDesk() { return desk; }
-        public Gender GetGender() { return gender; }
-        public string GetStudentName() { return studentName; }
-        public Collider GetCollider() { return collider; }
-        public bool IsProblematicStudent() { return problematic; }
-        public AudioSource GetAudioSource() { return audioSource; }
+        // Getter methods for accessing properties
+        public Desk GetDesk() => desk;
+        public Gender GetGender() => gender;
+        public string GetStudentName() => studentName;
+        public Collider GetCollider() => collider;
+        public bool IsProblematicStudent() => problematic;
+        public AudioSource GetAudioSource() => audioSource;
         #endregion
-
 
         private void Start()
         {
+            // Initialize references and components
             audioSource = GetComponent<AudioSource>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             behavior = GetComponent<StudentBehavior>();
             state = State.Sitting;
             teacher = GameManager.Instance.GetPlayer().transform;
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
-                   .Where(c => (distracted & c) == c)
-                   .ToArray();
+                .Where(c => (distracted & c) == c)
+                .ToArray();
             voiceGenerator = GetComponent<VoiceGenerator>();
         }
 
+        // Methods to set student's parameters and create their body
         public void SetParameters(string name, Gender gender)
         {
             studentName = name;
@@ -81,17 +69,36 @@ namespace ClassRoomVR
 
         public void CreateBody(GameObject prefab)
         {
+            GameObject body = InstantiateAndAddCollider(prefab);
+            ConfigureAnimator(body);
+            SetupHeadConstraint();
+            BuildRig();
+        }
+
+        private GameObject InstantiateAndAddCollider(GameObject prefab)
+        {
             GameObject body = Instantiate(prefab, transform);
             body.AddComponent<MeshCollider>();
+            return body;
+        }
 
+        private void ConfigureAnimator(GameObject body)
+        {
             animator = body.GetComponent<Animator>();
             if (animator != null)
             {
                 animator.runtimeAnimatorController = animatorController;
             }
-            collider = transform.GetChild(transform.childCount - 1).GetComponent<Collider>();
+        }
 
+        private void SetupHeadConstraint()
+        {
+            collider = transform.GetChild(transform.childCount - 1).GetComponent<Collider>();
             headConstraint.data.constrainedObject = GetHeadBone();
+        }
+
+        private void BuildRig()
+        {
             transform.GetComponent<RigBuilder>().Build();
         }
 
@@ -102,6 +109,7 @@ namespace ClassRoomVR
             return body.GetChild(index).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0);
         }
 
+        // Methods to set and manage the student's behavior and actions
         public void SetProblematicStudent()
         {
             studentNameText.color = Color.red;
@@ -113,14 +121,13 @@ namespace ClassRoomVR
             desk = d;
         }
 
-
-
         public void SetTargets(Transform[] transforms)
         {
+            // Set target positions for different field of vision options
             targets = new Dictionary<FieldOfVision, Vector3>();
-            targets.Add(FieldOfVision.Up, transform.up * 2f );
-            targets.Add(FieldOfVision.Right,transform.right);
-            targets.Add(FieldOfVision.Down, transform.up/-2);
+            targets.Add(FieldOfVision.Up, transform.up * 2f);
+            targets.Add(FieldOfVision.Right, transform.right);
+            targets.Add(FieldOfVision.Down, transform.up / -2);
             targets.Add(FieldOfVision.Left, -transform.right);
             targets.Add(FieldOfVision.Window, transforms[0].position);
             targets.Add(FieldOfVision.Door, transforms[1].position);
@@ -137,18 +144,19 @@ namespace ClassRoomVR
             SetDirection(distractedArray[Random.Range(0, distractedArray.Length)]);
         }
 
-       
+        // Update method to handle student's behavior and animations
         private void Update()
         {
-            if (GameManager.Instance.isPause) return;
+            if (GameManager.Instance.IsPause) return;
             HandleInput();
             UpdateTargetPosition();
             attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
 
-       
+        // Methods to handle user input and trigger actions
         private void HandleInput()
         {
+            // Check numeric keypad input for different field of vision options
             for (int i = 0; i < 8; i++)
             {
                 KeyCode keyCode = KeyCode.Keypad0 + i;
@@ -161,6 +169,7 @@ namespace ClassRoomVR
                 }
             }
 
+            // Check specific keys for different actions
             KeyCode[] actionKeys = { KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha6, KeyCode.Alpha5 };
 
             foreach (KeyCode key in actionKeys)
@@ -191,6 +200,7 @@ namespace ClassRoomVR
             }
         }
 
+        // Coroutine methods for nodding and shaking head animations
         private float smoothTime = 0.15f;
         private float maxSpeed = 2f;
         private Vector3 currentVelocity;
@@ -205,7 +215,6 @@ namespace ClassRoomVR
                 target.position = Vector3.MoveTowards(target.position, teacher.position, 5.0f * Time.deltaTime);
             }
         }
-       
 
         IEnumerator Nod()
         {
@@ -233,18 +242,18 @@ namespace ClassRoomVR
             }
         }
 
+        // Method to set the direction of student's attention
         private void SetDirection(FieldOfVision fieldOfVision)
         {
-            vision = fieldOfVision;            
+            vision = fieldOfVision;
             switch (vision)
             {
-               
                 case FieldOfVision.Up:
                 case FieldOfVision.Down:
                 case FieldOfVision.Right:
                 case FieldOfVision.Left:
-                    actualTargetPosition = transform.position + targets[vision]+ transform.forward;
-                    break; 
+                    actualTargetPosition = transform.position + targets[vision] + transform.forward;
+                    break;
                 case FieldOfVision.Door:
                 case FieldOfVision.Window:
                     actualTargetPosition = targets[vision];
@@ -252,6 +261,7 @@ namespace ClassRoomVR
             }
         }
 
+        // Methods to play animations and actions
         public void PlayAnimation(string stateName)
         {
             animator.Play(stateName);
@@ -264,6 +274,7 @@ namespace ClassRoomVR
             audioSource.Play();
         }
 
+        // Method to set the student as not problematic
         public void SetNotProblematicStudent()
         {
             studentNameText.color = Color.black;
@@ -272,6 +283,7 @@ namespace ClassRoomVR
                 SitBack();
         }
 
+        // Method to check if the student is in the player's field of vision
         public bool IsStudentInFieldOfVision()
         {
             Plane[] cameraFrustum;
@@ -281,8 +293,10 @@ namespace ClassRoomVR
             return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
         }
 
+        // Methods to handle movement and behavior
         #region Movement
 
+        // Coroutine to complete the move to a destination
         IEnumerator OnCompleteMove(Vector3 destination)
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
@@ -296,6 +310,7 @@ namespace ClassRoomVR
             transform.rotation = Quaternion.Euler(0, 90, 0);
         }
 
+        // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
             while (Vector3.Distance(transform.position, desk.GetPositionStudent()) > 0.3f)
@@ -309,6 +324,7 @@ namespace ClassRoomVR
             state = State.Sitting;
         }
 
+        // Method to make the student sit back in their desk
         public void SitBack()
         {
             navMeshAgent.enabled = true;
@@ -317,6 +333,7 @@ namespace ClassRoomVR
             StartCoroutine(OnCompleteSitBack());
         }
 
+        // Method to move the student to a specific destination
         public void MoveTo(Vector3 destination)
         {
             navMeshAgent.enabled = true;
@@ -331,6 +348,7 @@ namespace ClassRoomVR
             StartCoroutine(OnCompleteMove(destination));
         }
 
+        // Method to change the student's desk
         public void ChangeDesk(Desk d)
         {
             desk = d;
@@ -345,6 +363,7 @@ namespace ClassRoomVR
             }
         }
 
+        // Coroutine to complete the stand change action
         IEnumerator OnCompleteStandChange()
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
@@ -353,26 +372,18 @@ namespace ClassRoomVR
             SitBack();
         }
 
-
         #endregion
 
+        // Method to get the student's behavior
         #region Behavior
 
-        public StudentBehavior GetBehavior()
-        {
-            return behavior;
-        }
-
+        public StudentBehavior GetBehavior()=> behavior;
         #endregion
 
-
         VoiceGenerator voiceGenerator;
-        public void GenerateText() 
+        public void GenerateText()
         {
-             voiceGenerator.GenerateVoiceClipAsync("hola");
+            voiceGenerator.GenerateVoiceClipAsync("hola");
         }
-
-        
     }
 }
-

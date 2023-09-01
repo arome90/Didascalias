@@ -38,12 +38,26 @@ namespace ClassRoomVR
 
         private void OnEnable()
         {
+            UpdateStructureVisibility();
+            applyButton.onClick.AddListener(GoBackScreen);
+        }
+
+        private void UpdateStructureVisibility()
+        {
             bool isCircular = settings.StructureMode == StructureMode.Circular
                 || settings.StructureMode == StructureMode.U;
-            circularStructure.gameObject.SetActive(isCircular);
-            filaStructure.gameObject.SetActive(!isCircular);
+
+            SetStructureVisibility(circularStructure, isCircular);
+            SetStructureVisibility(filaStructure, !isCircular);
+
             currentStructure = isCircular ? circularStructure : filaStructure;
-            applyButton.onClick.AddListener(GoBackScreen);
+        }
+        private void SetStructureVisibility(Structure structure, bool isVisible)
+        {
+            if (structure != null)
+            {
+                structure.gameObject.SetActive(isVisible);
+            }
         }
     }
 }

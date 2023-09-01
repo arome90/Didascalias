@@ -10,7 +10,7 @@ public class HandsManager : MonoBehaviour
 	HandVariable handDer;
 	float time = 1f;
 
-
+	[SerializeField] TMPro.TextMeshProUGUI text;
 	private void Start()
 	{
 		InitHands();
@@ -19,7 +19,7 @@ public class HandsManager : MonoBehaviour
 
 	private void InitHands()
 	{
-		handIzq = new HandVariable(TrackedPoseDriver.TrackedPose.LeftPose,  time);
+		handIzq = new HandVariable(TrackedPoseDriver.TrackedPose.LeftPose, time);
 		handDer = new HandVariable(TrackedPoseDriver.TrackedPose.RightPose, time);
 	}
 
@@ -37,6 +37,11 @@ public class HandsManager : MonoBehaviour
 	{
 		handDer.UpdateHand();
 		handIzq.UpdateHand();
+
+		if (text)
+		{
+			text.text = handIzq.posicion.ToString() + "\n" + handDer.posicion.ToString();
+		}
 	}
 
 }
@@ -44,7 +49,7 @@ public class HandsManager : MonoBehaviour
 
 public class HandVariable
 {
-	Vector3 posicion;
+	public Vector3 posicion;
 	VariableMeasurement posicionMagnitude;
 	VariableMeasurementVector3 posicionVector;
 	//la amplitud es la distancia entre la mano y una eje central 
@@ -78,7 +83,12 @@ public class HandVariable
 		Pose po;
 		PoseDataSource.TryGetDataFromSource(hand, out po);
 		posicion = po.position;
-		velocidad = new VariableMeasurement(5);
+		lastPosicion = posicion;
+		velocidad = new VariableMeasurement(5); 
+		posicionMagnitude = new VariableMeasurement(5); 
+		posicionVector = new VariableMeasurementVector3(5); 
+		distanciaRecorrida = new VariableMeasurement(5); 
+		aceleracion = new VariableMeasurement(5); 
 
 	}
 

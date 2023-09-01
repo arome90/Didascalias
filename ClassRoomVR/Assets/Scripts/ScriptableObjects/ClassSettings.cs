@@ -170,24 +170,7 @@ namespace ClassRoomVR
 
                 structureClassProp.enumValueIndex = (int)(StructureMode)EditorGUILayout.EnumPopup("Structure", (StructureMode)structureClassProp.enumValueIndex);
 
-                switch ((StructureMode)structureClassProp.enumValueIndex)
-                {
-                    case StructureMode.Fila:
-                        EditorGUILayout.PropertyField(columnsProp);
-                        EditorGUILayout.PropertyField(rowsProp);
-                        break;
-                    case StructureMode.U:
-                        EditorGUILayout.PropertyField(radiusProp);
-                        break;
-                    case StructureMode.Circular:
-                        EditorGUILayout.PropertyField(radiusProp);
-                        EditorGUILayout.PropertyField(degreesProp);
-                        break;
-                    case StructureMode.UnPasillo:
-                    case StructureMode.DosPasillos:
-                        EditorGUILayout.PropertyField(rowsProp);
-                        break;
-                }
+                DrawStructureProperties();
 
                 modeProp.enumValueIndex = (int)(GenerateMode)EditorGUILayout.EnumPopup("Mode", (GenerateMode)modeProp.enumValueIndex);
 
@@ -213,6 +196,35 @@ namespace ClassRoomVR
                 EditorGUI.EndChangeCheck();
                 serializedObject.ApplyModifiedProperties();
             }
+
+            private void DrawStructureProperties()
+            {
+                switch ((StructureMode)structureClassProp.enumValueIndex)
+                {
+                    case StructureMode.Fila:
+                        DrawProperty(columnsProp, "Columns");
+                        DrawProperty(rowsProp, "Rows");
+                        break;
+                    case StructureMode.U:
+                    case StructureMode.Circular:
+                        DrawProperty(radiusProp, "Radius");
+                        if ((StructureMode)structureClassProp.enumValueIndex == StructureMode.Circular)
+                        {
+                            DrawProperty(degreesProp, "Degrees");
+                        }
+                        break;
+                    case StructureMode.UnPasillo:
+                    case StructureMode.DosPasillos:
+                        DrawProperty(rowsProp, "Rows");
+                        break;
+                }
+            }
+
+            private void DrawProperty(SerializedProperty prop, string label)
+            {
+                EditorGUILayout.PropertyField(prop, new GUIContent(label));
+            }
+
         }
 #endif
     }

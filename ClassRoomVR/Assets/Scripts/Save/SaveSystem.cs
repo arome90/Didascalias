@@ -8,7 +8,7 @@ public class DataSystem
 {
     public string Hash { get; set; } = string.Empty;
 
-    public int numStudents { get; set; }
+    public int NumStudents { get; set; }
 
     public Age Age { get; set; }
 
@@ -31,10 +31,6 @@ public class SaveSystem
 
         string json = JsonUtility.ToJson(data, true);
         string path = Path.Combine(Application.persistentDataPath, "save.json");
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
         File.WriteAllText(path, json);
     }
 
@@ -52,15 +48,10 @@ public class SaveSystem
             {
                 return data;
             }
-            else
-            {
-                return null;
-            }
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
+
     }
 
     public static string CalculateHash(string data)

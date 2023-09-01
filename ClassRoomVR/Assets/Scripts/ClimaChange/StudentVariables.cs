@@ -1,64 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-public class StudentVariables
+﻿public class StudentVariables
 {
-    // Variables de comportamiento del alumno en clase
-    public float attentionLevel;
-    public float mood;
-    public float participation;
-    public float socialInteraction;
-    public float understandingLevel;
-    public float interestLevel;
-    public float activityParticipation;
-    public float confidenceLevel;
-    public float motivation;
-    public float preparationLevel;
-    public float shynessLevel;
-    public float teacherRelationship;
-    public float sustainedAttentionTime;
-    public float questionParticipation;
-    public float disruptiveBehavior;
-    public float teamworkLevel;
-    public float effortLevel;
+    // Behavioral variables of the student in class
+    public float AttentionLevel { get; set; }
+    public float Mood { get; set; }
+    public float Participation { get; set; }
+    public float SocialInteraction { get; set; }
+    public float UnderstandingLevel { get; set; }
+    public float InterestLevel { get; set; }
+    public float ActivityParticipation { get; set; }
+    public float ConfidenceLevel { get; set; }
+    public float Motivation { get; set; }
+    public float PreparationLevel { get; set; }
+    public float ShynessLevel { get; set; }
+    public float TeacherRelationship { get; set; }
+    public float SustainedAttentionTime { get; set; }
+    public float QuestionParticipation { get; set; }
+    public float DisruptiveBehavior { get; set; }
+    public float TeamworkLevel { get; set; }
+    public float EffortLevel { get; set; }
 
-    // Constructor
+    // Default constructor
     public StudentVariables()
     {
-        attentionLevel = 50.0f;
-        mood = 50.0f;
-        participation = 25.0f;
-        socialInteraction = 50.0f;
-        understandingLevel = 30.0f;
-        interestLevel = 60.0f;
-        activityParticipation = 0.0f;
-        confidenceLevel = 50.0f;
-        motivation = 50.0f;
-        preparationLevel = 30.0f;
-        shynessLevel = 50.0f;
-        teacherRelationship = 50.0f;
-        sustainedAttentionTime = 60.0f;
-        questionParticipation = 0.0f;
-        disruptiveBehavior = 0.0f;
-        teamworkLevel = 50.0f;
-        effortLevel = 50.0f;
+        // Initialize default values for the student variables
+        AttentionLevel = 50.0f;
+        Mood = 50.0f;
+        Participation = 25.0f;
+        SocialInteraction = 50.0f;
+        UnderstandingLevel = 30.0f;
+        InterestLevel = 60.0f;
+        ActivityParticipation = 0.0f;
+        ConfidenceLevel = 50.0f;
+        Motivation = 50.0f;
+        PreparationLevel = 30.0f;
+        ShynessLevel = 50.0f;
+        TeacherRelationship = 50.0f;
+        SustainedAttentionTime = 60.0f;
+        QuestionParticipation = 0.0f;
+        DisruptiveBehavior = 0.0f;
+        TeamworkLevel = 50.0f;
+        EffortLevel = 50.0f;
     }
 
-
-    enum Aptitudes 
+    // Enumeration that defines student aptitudes
+    public enum Aptitudes
     {
-        OrigenExtranjero,
-        AprendizajeRapido,
-        Empatia,
-        ResolucionCreativa,
-        Liderazgo,
-        GestionEmociones,
-        ComunicacionAsertiva,
-        PersonaConDiscapacidad,
-        PadresSeparados,
-        PadresSobreProtectores,
-        HijxUnico,
+        ForeignOrigin,
+        QuickLearner,
+        Empathy,
+        CreativeProblemSolving,
+        Leadership,
+        EmotionalManagement,
+        AssertiveCommunication,
+        PersonWithDisability,
+        SeparatedParents,
+        OverprotectiveParents,
+        OnlyChild,
     }
 }

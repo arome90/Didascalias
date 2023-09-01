@@ -22,17 +22,6 @@ namespace ClassRoomVR
             SetOptions(GameManager.Instance.GetAvailableSettings());
         }
 
-        public void SetOptions(ClassSettings[] classes)
-        {
-            List<string> dropdownOptions = new List<string>();
-            foreach (ClassSettings cl in classes)
-            {
-                dropdownOptions.Add(cl.name);
-            }
-
-            structureDropdown.AddOptions(dropdownOptions);
-        }
-
         private void GoBackScreen()
         {
             backScreen.SetActive(true);
@@ -55,14 +44,19 @@ namespace ClassRoomVR
         private void ChangeSetting(int value)
         {
             GameManager.Instance.SetCurrentSettings(value);
-            if (value == 0)
+            startText.text = (value == 0) ? "Editar" : "Empezar";
+
+        }
+
+        public void SetOptions(ClassSettings[] classes)
+        {
+            List<string> dropdownOptions = new List<string>();
+            foreach (ClassSettings cl in classes)
             {
-                startText.text = "Editar";
+                dropdownOptions.Add(cl.name);
             }
-            else
-            {
-                startText.text = "Empezar";
-            }
+
+            structureDropdown.AddOptions(dropdownOptions);
         }
     }
 }

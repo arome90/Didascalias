@@ -46,7 +46,6 @@ public class HandPresence : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!targetDevice.isValid)

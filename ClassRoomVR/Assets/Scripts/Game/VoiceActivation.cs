@@ -7,24 +7,15 @@ namespace ClassRoomVR
     public class VoiceActivation : MonoBehaviour
     {
         bool shout;
-
-       [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
-
-        [SerializeField] TextMeshProUGUI fullTrascriptionText;
-
-        [SerializeField] TextMeshProUGUI partialTrascriptionText;
-
+        [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
+        [SerializeField] TextMeshProUGUI fullTranscriptionText;
+        [SerializeField] TextMeshProUGUI partialTranscriptionText;
         bool appVoiceActive;
-
-
         [SerializeField] StudentsController st;
+
         private void Start()
-        {
-            //GameManager.Instance.SetVoiceActivation(this);
+        { 
             Activate();
-            
-
-
         }
 
 
@@ -46,42 +37,23 @@ namespace ClassRoomVR
 
         private void Awake()
         {
-
-            
             GameManager.Instance.SetVoiceActivation(this);
-            fullTrascriptionText.text = partialTrascriptionText.text = string.Empty;
+            fullTranscriptionText.text = partialTranscriptionText.text = string.Empty;
 
             appVoiceExperience.VoiceEvents.onFullTranscription.AddListener((transcription) =>
             {
-                
-                fullTrascriptionText.text = transcription;
+                fullTranscriptionText.text = transcription;
             });
 
             appVoiceExperience.VoiceEvents.OnPartialTranscription.AddListener((transcription) =>
             {
-                partialTrascriptionText.text = transcription;
+                partialTranscriptionText.text = transcription;
             });
-
-            //appVoiceExperience.events.OnRequestCreated.AddListener((request) =>
-            //{
-                
-            //    Activate();
-            //});
-            
 
             appVoiceExperience.VoiceEvents.OnRequestCompleted.AddListener(() =>
             {
                 Activate();
-
             });
-
-
-            //appVoiceExperience.events.OnStoppedListening.AddListener(() =>
-            //{
-            //    Activate();
-
-            //});
-           
 
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
@@ -92,11 +64,8 @@ namespace ClassRoomVR
             {
                 OnMicLevelChanged(value);
             });
-
-
         }
 
-      
 
 
         //private static void DisplayValues(string prefix, string[] info) 

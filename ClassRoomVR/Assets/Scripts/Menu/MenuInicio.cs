@@ -51,19 +51,27 @@ namespace ClassRoomVR
 
         public void ReturnButton()
         {
-            if (player != null)
-            {
-                player.position = playerInitialPosition;
-                player.rotation = Quaternion.Euler(Vector3.down * 90.0f);
-            }
+            SetPlayerPositionAndRotation(playerInitialPosition, Quaternion.Euler(Vector3.down * 90.0f));
         }
 
         private void OnEnable()
         {
             ReturnButton();
         }
+
+        private void SetPlayerPositionAndRotation(Vector3 position, Quaternion rotation)
+        {
+            if (player != null)
+            {
+                player.position = position;
+                player.rotation = rotation;
+            }
+        }
+
+
+
         //TO DO ANIMACION
-         IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
+        IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
         {
             Vector3 originalScale = button.transform.localScale;
             Vector3 destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);

@@ -7,12 +7,11 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
-        public  bool isPause=false;
+        public bool IsPause { get; set; } = false;
+
         private GameObject player;
         private DataSystem savedData;
         private ScenePackage chosenPackage;
-        //Managers
-        //private UIManager uiManager;
         private ClassManager classManager;
         private VoiceActivation voiceActivation;
 
@@ -23,25 +22,27 @@ namespace ClassRoomVR
         [SerializeField] private bool isUsingVRHardware = false;
         [SerializeField] private bool isAutoSavingEnabled = false;
         [SerializeField] private bool saveAudio = false;
+        [SerializeField] private bool firebaseAnalytics = true;
+        [SerializeField] private bool unityAnalytics = true;
 
         public static GameManager Instance { get; private set; }
 
-        [SerializeField] bool firebaseAnalytics = true;
-        [SerializeField] bool unityAnalytics = true;
+     
 
         private void Awake()
+        {
+            InitializeSingleton();
+            InitializeData();
+        }
+
+        private void InitializeSingleton()
         {
             if (Instance == null)
             {
                 Instance = this;
                 chosenPackage = availablePackages[0];
-
-                if (isAutoSavingEnabled)
-                {
-                    savedData = SaveSystem.LoadData();
-                    InitData();
-                }
-                AnalyticsManager.Start(firebaseAnalytics, unityAnalytics);
+                InitializeData();
+                InitializeAnalytics();
                 DontDestroyOnLoad(this);
             }
             else
@@ -50,20 +51,40 @@ namespace ClassRoomVR
             }
         }
 
-        public ScenePackage GetChosenPackage()
+        private void InitializeData()
         {
-            return chosenPackage;
+            if (isAutoSavingEnabled)
+            {
+                savedData = SaveSystem.LoadData();
+                InitializeSettings();
+            }
+            else
+            {
+                savedData = new DataSystem();
+            }
         }
 
-        public ClassInfo GetCurrentClassInfo()
+        private void InitializeSettings()
         {
-            return currentClassInfo;
+            if (savedData != null)
+            {
+                currentSettings.NumStudents = savedData.NumStudents;
+                currentSettings.Age = savedData.Age;
+                currentSettings.StructureMode = savedData.StructureMode;
+                currentSettings.Mode = savedData.Mode;
+                currentSettings.NumMen = savedData.MenCount;
+                currentSettings.NumWomen = savedData.WomenCount;
+            }
         }
 
-        public bool IsUsingVRHardware()
+        private void InitializeAnalytics()
         {
-            return isUsingVRHardware;
+            AnalyticsManager.Start(firebaseAnalytics, unityAnalytics);
         }
+
+        public ScenePackage GetChosenPackage() => chosenPackage;
+        public ClassInfo GetCurrentClassInfo() => currentClassInfo;
+        public bool IsUsingVRHardware() => isUsingVRHardware;
 
         public void LoadMainMenu()
         {
@@ -80,62 +101,21 @@ namespace ClassRoomVR
 
 
         }
-
-        public void SetChosenPackage(int index)
-        {
-            chosenPackage = availablePackages[index];
-        }
-
-        public ScenePackage GetPackageAtIndex(int index)
-        {
-            return availablePackages[index];
-        }
-
-        //public void SetUIManager(UIManager ui)
-        //{
-        //    uiManager = ui;
-        //}
-
-        public void SetPlayer(GameObject playerObj)
-        {
-            player = playerObj;
-        }
-
-        public GameObject GetPlayer()
-        {
-            return player;
-        }
-
-        public ClassManager GetClassManager()
-        {
-            return classManager;
-        }
-
-        public void SetClassManager(ClassManager classMgr)
-        {
-            classManager = classMgr;
-        }
-
-        public VoiceActivation GetVoiceActivation()
-        {
-            return voiceActivation;
-        }
-
-        public void SetVoiceActivation(VoiceActivation voice)
-        {
-            voiceActivation = voice;
-        }
-
-        public void SetCurrentSettings(int index)
-        {
-            currentSettings = availableSettings[index];
-        }
+        public void SetChosenPackage(int index) => chosenPackage = availablePackages[index];
+        public ScenePackage GetPackageAtIndex(int index) => availablePackages[index];
+        public void SetPlayer(GameObject playerObj) => player = playerObj;
+        public GameObject GetPlayer() => player;
+        public ClassManager GetClassManager() => classManager;
+        public void SetClassManager(ClassManager classMgr) => classManager = classMgr;
+        public VoiceActivation GetVoiceActivation() => voiceActivation;
+        public void SetVoiceActivation(VoiceActivation voice) => voiceActivation = voice;
+        public void SetCurrentSettings(int index) => currentSettings = availableSettings[index];
 
         private void InitData()
         {
             if (savedData != null)
             {
-                currentSettings.NumStudents = savedData.numStudents;
+                currentSettings.NumStudents = savedData.NumStudents;
                 currentSettings.Age = savedData.Age;
                 currentSettings.StructureMode = savedData.StructureMode;
                 currentSettings.Mode = savedData.Mode;
@@ -157,7 +137,7 @@ namespace ClassRoomVR
         }
         public void SaveState()
         {
-            savedData.numStudents = currentSettings.NumStudents;
+            savedData.NumStudents = currentSettings.NumStudents;
             savedData.Age = currentSettings.Age;
             savedData.StructureMode = currentSettings.StructureMode;
             savedData.Mode = currentSettings.Mode;
@@ -185,10 +165,8 @@ namespace ClassRoomVR
             }
         }
 
-        public bool GetSaveAudio()
-        {
-            return saveAudio;
-        }
+        public bool GetSaveAudio() => saveAudio;
+
 
     }
 }
