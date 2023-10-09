@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace ClassRoomVR
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/PathPackage", order = 1)]
+    [CreateAssetMenu(fileName = "Path", menuName = "ScriptableObject/PathPackage", order = 3)]
     public class PathPackage : ScriptableObject
     {
         [Header("Required path information")]

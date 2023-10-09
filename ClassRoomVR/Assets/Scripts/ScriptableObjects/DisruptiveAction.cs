@@ -15,7 +15,7 @@ namespace ClassRoomVR
         Doors
     }
 
-    [CreateAssetMenu(fileName = "DisruptiveAction", menuName = "ScriptableObject/DisruptiveAction", order = 5)]
+    [CreateAssetMenu(fileName = "DisruptiveAction", menuName = "ScriptableObject/DisruptiveAction", order = 2)]
     public class DisruptiveAction : ScriptableObject
     {
         public AnimationClip problematicsAnimation;

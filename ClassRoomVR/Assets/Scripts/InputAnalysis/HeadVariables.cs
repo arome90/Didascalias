@@ -13,7 +13,7 @@ public class HeadVariables : MonoBehaviour
     private float distance;
 
        
-    private VariableMeasurement velocidad;
+    public VariableMeasurement velocidad;
 	float time = 1f;
     private void Start()
     {
@@ -46,18 +46,6 @@ public class HeadVariables : MonoBehaviour
 			distance = Vector3.Distance(position, lastPosition);
             velocidad.Variable = distance / time;
         }
-
-		//Debug.Log(velocidad.Run.Mean);
-		//Debug.Log(velocidad.Mov.Mean);
-        //PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Center, out pose);
-        //miradaPoint = pose.position;
-
-       // Debug.Log(position + "H");
-
-        //PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.RightEye, out pose);
-        //Debug.Log(pose.position +"R");
-        //PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.LeftEye, out pose);
-        //Debug.Log(pose.position + "L");
 
     }
 

@@ -6,11 +6,10 @@ using UnityEngine.SpatialTracking;
 
 public class HandsManager : MonoBehaviour
 {
-	HandVariable handIzq;
-	HandVariable handDer;
+	public HandVariable handIzq;
+	public HandVariable handDer;
 	float time = 1f;
 
-	[SerializeField] TMPro.TextMeshProUGUI text;
 	private void Start()
 	{
 		InitHands();
@@ -38,10 +37,6 @@ public class HandsManager : MonoBehaviour
 		handDer.UpdateHand();
 		handIzq.UpdateHand();
 
-		if (text)
-		{
-			text.text = handIzq.posicion.ToString() + "\n" + handDer.posicion.ToString();
-		}
 	}
 
 }
@@ -55,10 +50,10 @@ public class HandVariable
 	//la amplitud es la distancia entre la mano y una eje central 
 	float amplitud ;
 	VariableMeasurement distanciaRecorrida;
-	float riesgo;
+	//float riesgo;
 
 	//Nivel inquietud
-	VariableMeasurement velocidad;
+	public VariableMeasurement velocidad;
 	VariableMeasurement aceleracion;
 
 	//aux

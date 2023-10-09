@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,20 +30,26 @@ namespace ClassRoomVR
             Vector3 startDeskPos = parentDesk.transform.position;
 
             float deskSpacing = 1.0f / 5.0f; // Spacing between desks
-
             for (int i = 0; i < numRows; i++)
             {
+                var queue = new Queue<int>(hallways);
                 for (int j = 0; j < numColumns; j++)
                 {
                     if (numDesks == 0)
                     {
                         return; // If there are no more desks to place, exit the loop
                     }
+                    if (queue.Count > 0 && queue.Peek() == j)
+                    {
+                        queue.Dequeue();
+                        continue;
+                    }
+
 
                     float xPos = j - (numColumns - 1) / 2f;
                     float zPos = -i + (numRows - 1) / 2f;
 
-                    Vector3 position = startPos + new Vector3(xPos * deskSpacing, 0, zPos * deskSpacing);
+                    Vector3 position = startPos + new Vector3(xPos * deskSpacing, zPos * deskSpacing, 0);
                     var toggle = Instantiate(prefab, position, Quaternion.identity, parent.transform);
 
                     position = startDeskPos + new Vector3(xPos, 0, zPos);
@@ -77,6 +84,7 @@ namespace ClassRoomVR
 
             rowsOpt.SetValue(settings.Rows);
             coluOpt.SetValue(settings.Columns);
+            GetHole();
             Set();
         }
 
@@ -92,6 +100,21 @@ namespace ClassRoomVR
         {
             settings.Columns = (int)value;
             Set();
+        }
+        List<int> hallways;
+        void GetHole()
+        {
+            hallways = new List<int>();
+            switch (GameManager.Instance.GetCurrentSettings().StructureMode)
+            {
+                case StructureMode.UnPasillo:
+                    hallways.Add(2);
+                    break;
+                case StructureMode.DosPasillos:
+                    hallways.AddRange(new int[] { 1, 3 });
+                    break;
+            }
+
         }
     }
 }

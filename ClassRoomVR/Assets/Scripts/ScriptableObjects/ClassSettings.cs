@@ -10,7 +10,7 @@ using UnityEditor;
 namespace ClassRoomVR
 {
 
-    [CreateAssetMenu(fileName = "NewClassSettings", menuName = "ScriptableObject/ClassSettings", order = 5)]
+    [CreateAssetMenu(fileName = "NewClassSettings", menuName = "ScriptableObject/ClassSettings", order = 1)]
     public class ClassSettings : ScriptableObject
     {
 

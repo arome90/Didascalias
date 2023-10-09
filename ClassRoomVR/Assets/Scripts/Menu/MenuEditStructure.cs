@@ -13,7 +13,6 @@ namespace ClassRoomVR
         [SerializeField] private Structure circularStructure;
         [SerializeField] private Structure filaStructure;
 
-        private Structure currentStructure;
 
         private void Awake()
         {
@@ -50,7 +49,7 @@ namespace ClassRoomVR
             SetStructureVisibility(circularStructure, isCircular);
             SetStructureVisibility(filaStructure, !isCircular);
 
-            currentStructure = isCircular ? circularStructure : filaStructure;
+           // currentStructure = isCircular ? circularStructure : filaStructure;
         }
         private void SetStructureVisibility(Structure structure, bool isVisible)
         {

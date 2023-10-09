@@ -78,6 +78,12 @@ namespace ClassRoomVR
                 case StructureMode.Fila:
                     maxStudents = 30;
                     break;
+                case StructureMode.UnPasillo:
+                    maxStudents = 25;
+                    break;
+                case StructureMode.DosPasillos:
+                    maxStudents = 20;
+                    break;
                 case StructureMode.Circular:
                     maxStudents = 22;
                     break;

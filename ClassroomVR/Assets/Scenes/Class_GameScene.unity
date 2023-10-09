@@ -2645,7 +2645,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55cb5c193e9cf7f45a06883a49a3b1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
 --- !u!114 &762205103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3959,7 +3958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1371613816
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5494,7 +5493,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 47.53, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 263.6, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1726290140
 MonoBehaviour:
@@ -5516,7 +5515,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 0.111111111111111
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6278,6 +6277,7 @@ GameObject:
   - component: {fileID: 1817273518}
   - component: {fileID: 1817273517}
   - component: {fileID: 1817273519}
+  - component: {fileID: 1817273520}
   m_Layer: 0
   m_Name: AnalysisVariable
   m_TagString: Untagged
@@ -6324,6 +6324,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55cb5c193e9cf7f45a06883a49a3b1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1817273520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817273516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c615f2e75443a04d8296b94bd861af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input:
+    typeMax: 0
+    velHead: 0
+    velHandIzq: 0
+    velHandDer: 0
+  head: {fileID: 1817273517}
+  hands: {fileID: 1817273519}
+  valores:
+  - min: 0
+    max: 0
+  - min: 0
+    max: 0
+  - min: 0
+    max: 0
   text: {fileID: 1726290140}
 --- !u!1 &1892024204 stripped
 GameObject:

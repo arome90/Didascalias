@@ -29,7 +29,7 @@ namespace ClassRoomVR
 
     // Clases para mensajes específicos
 
-    
+
 
 
     [System.Serializable]
@@ -46,12 +46,22 @@ namespace ClassRoomVR
     }
 
     [System.Serializable]
-    public struct AlumnoPosicion
+    public struct AlumnoInit
+    {
+        public string nombre;
+        public int id;
+        public VectorJson posicion;
+        //Añadir caracteristicas que no se modifican
+    }
+
+    [System.Serializable]
+    public struct AlumnoFeatures
     {
         public string nombre;
         public VectorJson posicion;
-        //Añadir caracteristicas
+        StudentVariables var;
     }
+
 
     [System.Serializable]
     public struct CatalogoOpciones
@@ -66,12 +76,12 @@ namespace ClassRoomVR
     [System.Serializable]
     public struct InitialMessageData
     {
-        public AlumnoPosicion[] alumnosPosiciones;
+        public AlumnoInit[] alumnosPosiciones;
         public string horaClase;
         public long tiempoSesion;
         public CatalogoOpciones catalogo;
 
-        public InitialMessageData(AlumnoPosicion[] posiciones, string hora, long sesion, CatalogoOpciones cat)
+        public InitialMessageData(AlumnoInit[] posiciones, string hora, long sesion, CatalogoOpciones cat)
         {
             alumnosPosiciones = posiciones;
             horaClase = hora;
@@ -82,27 +92,30 @@ namespace ClassRoomVR
 
 
 
-    
+
 
 
     [System.Serializable]
     public struct MessageData
     {
-        public InputManager input; 
-        public Clima clima;
-        public StudentVariables[] students;
+        public InputVariables input;
+        //public Clima clima;
+      //  public AlumnoFeatures[] students;
+        public MessageData(InputVariables input)
+        {
+            this.input = input;
+        }
+
     }
-
-
-    public static class Prueba 
+    public static class Prueba
     {
-        
+
         public static void CreateInfoInitial()
         {
-            AlumnoPosicion[] posiciones = new AlumnoPosicion[]
+            AlumnoInit[] posiciones = new AlumnoInit[]
             {
-                new AlumnoPosicion { nombre = "Alumno1", posicion = new VectorJson(1.0f, 0.0f) },
-                new AlumnoPosicion { nombre = "Alumno2", posicion = new VectorJson(0.5f, 1.0f) }
+                new AlumnoInit { nombre = "Alumno1", posicion = new VectorJson(1.0f, 0.0f) },
+                new AlumnoInit { nombre = "Alumno2", posicion = new VectorJson(0.5f, 1.0f) }
             };
             string hora = "9:00 AM";
             long sesion = new System.DateTimeOffset(System.DateTime.Now).ToUnixTimeSeconds();
@@ -113,8 +126,13 @@ namespace ClassRoomVR
             WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Init, initData));
         }
 
-       
+
+        public static void CreateInfo()
+        {
+            MessageData initData = new MessageData(InputManager.Instance.input);
+            WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Info, initData));
+        }
+
 
     }
-
 }

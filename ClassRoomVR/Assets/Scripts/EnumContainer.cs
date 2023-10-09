@@ -9,9 +9,25 @@ public enum Allign { None, Centro, Frente };
 public enum GenerateMode { Random, Personalizado, Gender }
 public enum Age { Primero, Segundo, Tercero }
 public enum StructureMode { Fila, U, Circular, UnPasillo, DosPasillos }
+
 [System.Flags]
 public enum FieldOfVision
 {
     Up = 1, Right = 2,
     Down = 4, Left = 8, Window = 16, Door = 32, Teacher = 64
+}
+
+[System.Flags]
+public enum HandSelector
+{
+    Posicion = 1, Amplitud = 2,
+    DistanciaRecorrida = 4, Velocidad = 8, Aceleracion = 16
+}
+
+
+[System.Flags]
+public enum HeadSelector
+{
+    Posicion = 1,
+    DistanciaRecorrida = 2, Velocidad = 4
 }

@@ -73,12 +73,13 @@ public class WsClient : GenericSingleton<WsClient>
     public static bool accion = false;
     static WebSocket ws;
     public string session;
-
+    ClassRoomVR.UnityMessage mes;
 
 
     private void Start()
     {
         StartConnection();
+        InvokeRepeating(nameof(sEnd), 1f,1f);
     }
     public void StartConnection()
     {
@@ -103,7 +104,7 @@ public class WsClient : GenericSingleton<WsClient>
     private void Ws_OnSessionMessage(object sender, MessageEventArgs e) 
     {
         Debug.Log(e.Data);
-        ClassRoomVR.UnityMessage mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
+        mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
        // session = mes.data.ToString(); 
         Debug.Log(mes.data.ToString());
         ws.OnMessage += Ws_OnMessage;
@@ -111,25 +112,27 @@ public class WsClient : GenericSingleton<WsClient>
 
     }
 
+    [Serializable]
+    struct A { public string type;public string id; }
     private void Ws_OnMessage(object sender, MessageEventArgs e)
     {
         accion = true;
-        Debug.Log(e.Data);
+        mes.data = JsonConvert.DeserializeObject<A>(e.Data).id;
         //int n = e.Data[0] - '0';
         //if (n >= 0)
         //{
         //    accion = true;
         //    //ClassRoomVR.WebActions.ProcessMessage(n);
         //}
-        try
-        {
-            ClassRoomVR.UnityMessage mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
-            Debug.Log("Received message from Echo client: " + mes.data.ToString());
-        }
-        catch (Exception ex)
-        {
-            Debug.Log(ex.Message + e.Data);
-        }
+        //try
+        //{
+        //    mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
+        //    Debug.Log("Received message from Echo client: " + mes.data.ToString());
+        //}
+        //catch (Exception ex)
+        //{
+        //    Debug.Log(ex.Message + e.Data);
+        //}
 
     }
 
@@ -145,7 +148,12 @@ public class WsClient : GenericSingleton<WsClient>
         if (accion)
         {
             accion = false;
-           // ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(0);
+            // if (mes.type == ClassRoomVR.MessageType.Action)
+            //{
+            // ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(0);
+            Debug.Log(Convert.ToInt32(mes.data));
+            ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(mes.data));
+            //}
 
         }
 
@@ -154,6 +162,12 @@ public class WsClient : GenericSingleton<WsClient>
             ClassRoomVR.Prueba.CreateInfoInitial();
         }
     }
+
+    void sEnd() 
+    {
+        ClassRoomVR.Prueba.CreateInfo();
+    }
+   
 
     public void Disconnect()
     {

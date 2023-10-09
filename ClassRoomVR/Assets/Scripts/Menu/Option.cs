@@ -14,6 +14,8 @@ public class Option : MonoBehaviour
 
     // Variables
     [SerializeField] private float value;
+    public float GetValue() => value;
+
     [SerializeField] private float minValue;
     [SerializeField] private float maxValue;
     [SerializeField] private float step;

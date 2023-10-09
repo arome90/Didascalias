@@ -5,7 +5,7 @@ using UnityEngine.Events;
 // ScriptableObjects can be created in Resources
 namespace ClassRoomVR
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/ScenePackage", order = 1)]
+    [CreateAssetMenu(fileName = "Scene", menuName = "ScriptableObject/ScenePackage", order = 4)]
     public class ScenePackage : ScriptableObject
     {
         //-----

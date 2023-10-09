@@ -2,7 +2,7 @@
 
 namespace ClassRoomVR
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/ClassInfo", order = 1)]
+    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObject/ClassInfo", order = 0)]
     public class ClassInfo : ScriptableObject
     {
         [Header("Class information used to generate scenes")]
