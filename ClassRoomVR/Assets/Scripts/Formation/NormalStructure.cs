@@ -10,6 +10,10 @@ namespace ClassRoomVR
         [SerializeField] Option rowsOpt; // UI option for setting the number of rows
         [SerializeField] Option coluOpt; // UI option for setting the number of columns
 
+        public float espacioEntreSillas = 1.4f;  // Espacio entre sillas
+        public float espacioEntreParedYSilla = 0.2f;  // Espacio entre sillas y paredes
+                                                      // public float espacioPrimeraFila = 3f;
+
         public override void Set()
         {
             // Destroy previous parent objects
@@ -52,7 +56,7 @@ namespace ClassRoomVR
                     Vector3 position = startPos + new Vector3(xPos * deskSpacing, zPos * deskSpacing, 0);
                     var toggle = Instantiate(prefab, position, Quaternion.identity, parent.transform);
 
-                    position = startDeskPos + new Vector3(xPos, 0, zPos);
+                    position = startDeskPos + new Vector3(xPos * 1.4f, 0, zPos);
                     var d = Instantiate(desk, position, Quaternion.identity, parentDesk.transform);
 
                     toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
@@ -114,6 +118,22 @@ namespace ClassRoomVR
                     hallways.AddRange(new int[] { 1, 3 });
                     break;
             }
+
+        }
+
+
+        public override void MaxDesk()
+        {   // Obtener el BoxCollider del prefab
+            BoxCollider boxCollider = desk.GetComponent<BoxCollider>();
+
+            Vector3 sillaDimensions = Vector3.Scale(boxCollider.size, desk.transform.lossyScale);
+            Vector3 aulaDimensions = aula.size;
+            float anchoDisponible = aulaDimensions.x - 2 * espacioEntreParedYSilla;
+            // float profundidadDisponible = aulaDimensions.z - espacioPrimeraFila;
+            int numColumnas = Mathf.FloorToInt((anchoDisponible - sillaDimensions.x) / (sillaDimensions.x + espacioEntreSillas)) + 1;
+            int numFilas = Mathf.FloorToInt((aulaDimensions.z - sillaDimensions.z) / (sillaDimensions.z + espacioEntreSillas)) + 1;
+            coluOpt.SetMax(numColumnas);
+            rowsOpt.SetMax(numFilas);
 
         }
     }

@@ -105,8 +105,6 @@ namespace ClassRoomVR
         public ScenePackage GetPackageAtIndex(int index) => availablePackages[index];
         public void SetPlayer(GameObject playerObj) => player = playerObj;
         public GameObject GetPlayer() => player;
-        public ClassManager GetClassManager() => classManager;
-        public void SetClassManager(ClassManager classMgr) => classManager = classMgr;
         public VoiceActivation GetVoiceActivation() => voiceActivation;
         public void SetVoiceActivation(VoiceActivation voice) => voiceActivation = voice;
         public void SetCurrentSettings(int index) => currentSettings = availableSettings[index];

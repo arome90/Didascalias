@@ -44,7 +44,7 @@ public class Option : MonoBehaviour
 
     private void Sub()
     {
-        value -= step;
+        value -= step;       
         if (value < minValue)
             value = minValue;
         else
