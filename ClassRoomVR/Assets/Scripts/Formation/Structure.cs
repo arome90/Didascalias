@@ -17,13 +17,16 @@ namespace ClassRoomVR
         protected GameObject parent; // Parent object for toggles
 
         protected int lastOptionClicked = 0; // Identifier for the last UI option clicked
-
+        //protected bool max
         public abstract void Set(); // Abstract method to be implemented by derived classes
         public abstract void MaxDesk();
         private void Awake()
         {
             InitializeComponents();
-            numDesks.onValueChanged.AddListener(ChangeObjects);
+            if (numDesks != null)
+            {
+                numDesks.onValueChanged.AddListener(ChangeObjects);
+            }
             DontDestroyOnLoad(parentDesk); // Prevent parentDesk from being destroyed on scene load
             MaxDesk();
         }

@@ -10,9 +10,9 @@ namespace ClassRoomVR
         [SerializeField] Option rowsOpt; // UI option for setting the number of rows
         [SerializeField] Option coluOpt; // UI option for setting the number of columns
 
-        public float espacioEntreSillas = 1.4f;  // Espacio entre sillas
-        public float espacioEntreParedYSilla = 0.2f;  // Espacio entre sillas y paredes
-                                                      // public float espacioPrimeraFila = 3f;
+        public float espacioEntreCol = 1.4f;  // Espacio entre sillas
+        public float espacioEntreRow = 1.4f;  // Espacio entre sillas
+                                                  // public float espacioPrimeraFila = 3f;
 
         public override void Set()
         {
@@ -36,6 +36,7 @@ namespace ClassRoomVR
             float deskSpacing = 1.0f / 5.0f; // Spacing between desks
             for (int i = 0; i < numRows; i++)
             {
+
                 var queue = new Queue<int>(hallways);
                 for (int j = 0; j < numColumns; j++)
                 {
@@ -54,13 +55,25 @@ namespace ClassRoomVR
                     float zPos = -i + (numRows - 1) / 2f;
 
                     Vector3 position = startPos + new Vector3(xPos * deskSpacing, zPos * deskSpacing, 0);
-                    var toggle = Instantiate(prefab, position, Quaternion.identity, parent.transform);
+                    Toggle toggle = null;
+                    if (prefab != null)
+                    {
+                         toggle = Instantiate(prefab, position, Quaternion.identity, parent.transform);
+                    }
 
-                    position = startDeskPos + new Vector3(xPos * 1.4f, 0, zPos);
-                    var d = Instantiate(desk, position, Quaternion.identity, parentDesk.transform);
+                    position = startDeskPos + new Vector3(xPos * espacioEntreCol, 0, zPos * espacioEntreRow );
+                    var d = Instantiate(desk, parentDesk.transform);
+                    d.transform.position = position;
+                    
+                    //position = startDeskPos + new Vector3(xPos * espacioEntreCol, 0, zPos * espacioEntreRow );
+                    //var d = Instantiate(desk, parentDesk.transform);
+                    //d.transform.position = position;
 
-                    toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
-                    toggleToDeskMap.Add(toggle, d);
+                    if (toggle != null)
+                    {
+                        toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
+                        toggleToDeskMap.Add(toggle, d);
+                    }
 
                     numDesks--;
                 }
@@ -75,19 +88,30 @@ namespace ClassRoomVR
 
         private void Start()
         {
-            rowsOpt.onValueChanged.AddListener(ChangeRows);
-            coluOpt.onValueChanged.AddListener(ChangeColumns);
+            if (rowsOpt != null && coluOpt != null)
+            {
+                rowsOpt.onValueChanged.AddListener(ChangeRows);
+                coluOpt.onValueChanged.AddListener(ChangeColumns);
+            }
         }
 
         private void OnEnable()
         {
             // Initialize UI options and settings
-            settings.NumDesks = settings.NumStudents;
-            numDesks.SetValue(settings.NumStudents);
-            numDesks.SetMin(settings.NumStudents);
-
-            rowsOpt.SetValue(settings.Rows);
-            coluOpt.SetValue(settings.Columns);
+            settings.NumDesks = Mathf.Max(settings.NumStudents,settings.NumDesks);
+            if (numDesks != null)
+            {
+                numDesks.SetValue(settings.NumStudents);
+                numDesks.SetMin(settings.NumStudents);
+            }
+            if (rowsOpt)
+            {
+                rowsOpt.SetValue(settings.Rows);
+            }
+            if (coluOpt)
+            {
+                coluOpt.SetValue(settings.Columns);
+            }
             GetHole();
             Set();
         }
@@ -122,19 +146,22 @@ namespace ClassRoomVR
         }
 
 
-        public override void MaxDesk()
-        {   // Obtener el BoxCollider del prefab
+        public override void MaxDesk() 
+        { 
+            // Obtener el BoxCollider del prefab de la silla (o escritorio)
             BoxCollider boxCollider = desk.GetComponent<BoxCollider>();
-
+            // Calcular las dimensiones reales de la silla teniendo en cuenta la escala
             Vector3 sillaDimensions = Vector3.Scale(boxCollider.size, desk.transform.lossyScale);
             Vector3 aulaDimensions = aula.size;
-            float anchoDisponible = aulaDimensions.x - 2 * espacioEntreParedYSilla;
-            // float profundidadDisponible = aulaDimensions.z - espacioPrimeraFila;
-            int numColumnas = Mathf.FloorToInt((anchoDisponible - sillaDimensions.x) / (sillaDimensions.x + espacioEntreSillas)) + 1;
-            int numFilas = Mathf.FloorToInt((aulaDimensions.z - sillaDimensions.z) / (sillaDimensions.z + espacioEntreSillas)) + 1;
-            coluOpt.SetMax(numColumnas);
-            rowsOpt.SetMax(numFilas);
+            int numColumnas = Mathf.FloorToInt(aulaDimensions.x  / (sillaDimensions.x * espacioEntreCol)) ;
+            int numFilas = Mathf.FloorToInt(aulaDimensions.z / (sillaDimensions.z * espacioEntreRow));
+            if (coluOpt != null) coluOpt.SetMax(numColumnas);
+            else settings.Columns = numColumnas;
+            if (rowsOpt != null) rowsOpt.SetMax(numFilas);
+            else settings.Rows = numFilas;
 
+            Debug.Log("F " + numFilas + " C " + numColumnas);
+        
         }
     }
 }
