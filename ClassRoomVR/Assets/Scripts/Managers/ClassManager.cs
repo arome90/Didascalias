@@ -29,7 +29,6 @@ namespace ClassRoomVR
 
         private void Awake()
         {
-            GameManager.Instance.SetClassManager(this);
             settings = GameManager.Instance.GetCurrentSettings();
             studentsController = GetComponent<StudentsController>();
             studentsPositions = DeskManager.Instance.gameObject.transform;

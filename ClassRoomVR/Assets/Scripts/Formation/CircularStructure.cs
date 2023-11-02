@@ -188,5 +188,14 @@ namespace ClassRoomVR
                 isUStructure = false;
             }
         }
+        [SerializeField] float espacioEntreParedYSilla=0.3f;
+        public override void MaxDesk()
+        {
+            float anchoDisponible = aula.size.x - 2 * espacioEntreParedYSilla;
+            float largoDisponible = aula.size.z - 2 * espacioEntreParedYSilla;
+            float radioMaximo = Mathf.Min(anchoDisponible, largoDisponible) / 2f;
+            radiusOpt.SetMax(radioMaximo);
+            Debug.Log(radioMaximo);
+        }
     }
 }

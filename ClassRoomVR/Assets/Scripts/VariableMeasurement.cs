@@ -34,7 +34,7 @@ public class VariableMeasurement
         // Statistics.Mean(list);
         movStats = new MovingStatistics(windowSize);
         runStats = new RunningStatistics();
-        
+       
         //TO DO ? 1: usar streamingstatistics en vez de running
         //TO DO ? 2: Usar moving statistics solo cuando se pide y no cuando se agrega una variable 
         //asi se le pasa una lista y coge
