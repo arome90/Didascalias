@@ -32,7 +32,7 @@ namespace ClassRoomVR
         private void SetupVRPlayer()
         {
             var xrSettings = XRGeneralSettings.Instance;
-
+            
             if (xrSettings != null)
             {
                 var xrManager = xrSettings.Manager;

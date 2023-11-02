@@ -1,6 +1,8 @@
 ﻿using Meta.WitAi;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace ClassRoomVR
@@ -163,9 +165,38 @@ namespace ClassRoomVR
             {
                 Application.Quit();
             }
+            Debug.Log(UnityEngine.XR.XRDevice.refreshRate);
+            //UnityEngine.XR.InputTracking.trackingLost
+           // if(xe)
         }
 
         public bool GetSaveAudio() => saveAudio;
+
+        private void OnApplicationPause(bool pause)
+        {
+            Debug.Log(pause + " Puasa");
+           
+        }
+
+      
+        private void OnApplicationFocus(bool focus)
+        {
+            Debug.Log(focus + " focus");
+           
+        }
+
+       
+        void Pause() 
+        {
+            AudioListener.pause = true;
+            Time.timeScale = 0f;
+        }
+
+        void Continue()
+        {
+            AudioListener.pause = false;
+            Time.timeScale = 1f;
+        }
 
 
     }

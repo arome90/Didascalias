@@ -19,6 +19,7 @@ namespace Unity.Template.VR
 
         private void Start()
         {
+            
 #if UNITY_EDITOR
             var loaders = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(BuildTargetGroup.Standalone).Manager.activeLoaders;
 #else
