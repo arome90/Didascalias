@@ -15,7 +15,7 @@ namespace ClassRoomVR
         protected Dictionary<Toggle, Desk> toggleToDeskMap; // Map to associate toggles with desks
         protected ClassSettings settings; // Settings for the classroom
         protected GameObject parent; // Parent object for toggles
-
+        [SerializeField] protected GameObject parent2;
         protected int lastOptionClicked = 0; // Identifier for the last UI option clicked
         //protected bool max
         public abstract void Set(); // Abstract method to be implemented by derived classes
@@ -51,11 +51,14 @@ namespace ClassRoomVR
 
         private void DestroyInactiveChildObjects()
         {
-            foreach (Transform child in parentDesk.transform)
+            if (parentDesk != null)
             {
-                if (!child.gameObject.activeSelf)
+                foreach (Transform child in parentDesk.transform)
                 {
-                    Destroy(child.gameObject); // Destroy inactive child objects under parentDesk
+                    if (!child.gameObject.activeSelf)
+                    {
+                        Destroy(child.gameObject); // Destroy inactive child objects under parentDesk
+                    }
                 }
             }
         }

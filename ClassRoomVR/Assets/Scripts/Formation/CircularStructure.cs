@@ -22,7 +22,8 @@ namespace ClassRoomVR
             // Destroy previous parent GameObject
             Destroy(parent);
             parent = new GameObject("Toggles");
-            parent.transform.SetParent(transform, false);
+            parent.transform.SetParent(parent2.transform, false);
+           
 
             // Destroy existing desk objects within the parentDesk
             foreach (Transform child in parentDesk.transform)

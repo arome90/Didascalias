@@ -8,44 +8,43 @@ namespace ClassRoomVR
     public class MenuType : MonoBehaviour
     {
         [SerializeField] private TMP_Dropdown structureDropdown;
-        [SerializeField] private Button startButton;
-        [SerializeField] private Button backButton;
-        [SerializeField] private GameObject backScreen;
-        [SerializeField] private GameObject editScreen;
-        [SerializeField] private TMP_Text startText;
+        //[SerializeField] private Button startButton;
+        //[SerializeField] private Button backButton;
+        [SerializeField] private Button editButton;
+        //[SerializeField] private GameObject backScreen;
+        //[SerializeField] private GameObject editScreen;
+        [SerializeField] private GameObject editText;
 
         private void Start()
         {
             structureDropdown.onValueChanged.AddListener(ChangeSetting);
-            startButton.onClick.AddListener(GoNextScreen);
-            backButton.onClick.AddListener(GoBackScreen);
+           // startButton.onClick.AddListener(GoNextScreen);
+            editButton.onClick.AddListener(GoEditScreen);
+            //backButton.onClick.AddListener(GoBackScreen);
             SetOptions(GameManager.Instance.GetAvailableSettings());
         }
 
-        private void GoBackScreen()
-        {
-            backScreen.SetActive(true);
-            gameObject.SetActive(false);
-        }
+        //private void GoBackScreen()
+        //{
+        //    backScreen.SetActive(true);
+        //    gameObject.SetActive(false);
+        //}
 
-        private void GoNextScreen()
+        //private void GoNextScreen()
+        //{
+        //    GameManager.Instance.LoadMainScene();
+        //}
+
+        private void GoEditScreen()
         {
-            if (structureDropdown.value == 0)
-            {
-                editScreen.SetActive(true);
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                GameManager.Instance.LoadMainScene();
-            }
+            MenuTransition.Instance.GoNextScreen();
         }
+    
 
         private void ChangeSetting(int value)
         {
             GameManager.Instance.SetCurrentSettings(value);
-            startText.text = (value == 0) ? "Editar" : "Empezar";
-
+            editText.SetActive((value == 0));
         }
 
         public void SetOptions(ClassSettings[] classes)

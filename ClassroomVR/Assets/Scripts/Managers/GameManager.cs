@@ -26,7 +26,7 @@ namespace ClassRoomVR
         [SerializeField] private bool saveAudio = false;
         [SerializeField] private bool firebaseAnalytics = true;
         [SerializeField] private bool unityAnalytics = true;
-
+        private int indexScene;
         public static GameManager Instance { get; private set; }
 
      
@@ -98,7 +98,7 @@ namespace ClassRoomVR
         public void LoadMainScene()
         {
             //SceneManager.LoadScene("Class_GameScene");
-            SceneTransitionManager.singleton.GoToSceneAsync(1);
+            SceneTransitionManager.singleton.GoToSceneAsync(indexScene);
             //AnalyticsManager.CustomEvent("Gritar");
 
 
@@ -111,6 +111,7 @@ namespace ClassRoomVR
         public void SetVoiceActivation(VoiceActivation voice) => voiceActivation = voice;
         public void SetCurrentSettings(int index) => currentSettings = availableSettings[index];
 
+        public void SetScene(int i) => indexScene = i;
         private void InitData()
         {
             if (savedData != null)
@@ -163,7 +164,7 @@ namespace ClassRoomVR
             {
                 Application.Quit();
             }
-            Debug.Log(UnityEngine.XR.XRDevice.refreshRate);
+           // Debug.Log(UnityEngine.XR.XRDevice.refreshRate);
             //UnityEngine.XR.InputTracking.trackingLost
            // if(xe)
         }

@@ -321,6 +321,7 @@ namespace ClassRoomVR
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
             navMeshAgent.enabled = false;
             transform.rotation = desk.transform.rotation;
+            transform.position = desk.transform.position;
             state = State.Sitting;
         }
 

@@ -7,9 +7,9 @@ namespace ClassRoomVR
     {
         private ClassSettings settings;
 
-        [SerializeField] private Button backButton;
+        //[SerializeField] private Button backButton;
         [SerializeField] private Button applyButton;
-        [SerializeField] private GameObject nextScreen;
+        //[SerializeField] private GameObject nextScreen;
         [SerializeField] private Structure circularStructure;
         [SerializeField] private Structure filaStructure;
 
@@ -17,28 +17,21 @@ namespace ClassRoomVR
         private void Awake()
         {
             settings = GameManager.Instance.GetCurrentSettings();
-            backButton.onClick.AddListener(GoBackScreen);
+            applyButton.onClick.AddListener(GoBackScreen);
+
+            //  backButton.onClick.AddListener(GoBackScreen);
         }
 
         private void GoBackScreen()
         {
-            nextScreen.SetActive(true);
-            gameObject.SetActive(false);
+            MenuTransition.Instance.GoBackScreen();
+            MenuTransition.Instance.MovePizarra();
         }
 
-        // Temporary
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                GameManager.Instance.LoadMainScene();
-            }
-        }
 
         private void OnEnable()
         {
             UpdateStructureVisibility();
-            applyButton.onClick.AddListener(GoBackScreen);
         }
 
         private void UpdateStructureVisibility()

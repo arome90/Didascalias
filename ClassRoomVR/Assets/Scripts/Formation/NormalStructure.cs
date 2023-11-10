@@ -19,7 +19,7 @@ namespace ClassRoomVR
             // Destroy previous parent objects
             Destroy(parent);
             parent = new GameObject("Toggles");
-            parent.transform.SetParent(transform, false);
+            parent.transform.SetParent(parent2.transform, false);
 
             foreach (Transform child in parentDesk.transform)
             {
@@ -156,9 +156,9 @@ namespace ClassRoomVR
             int numColumnas = Mathf.FloorToInt(aulaDimensions.x  / (sillaDimensions.x * espacioEntreCol)) ;
             int numFilas = Mathf.FloorToInt(aulaDimensions.z / (sillaDimensions.z * espacioEntreRow));
             if (coluOpt != null) coluOpt.SetMax(numColumnas);
-            else settings.Columns = numColumnas;
+            //else settings.Columns = numColumnas;
             if (rowsOpt != null) rowsOpt.SetMax(numFilas);
-            else settings.Rows = numFilas;
+            //else settings.Rows = numFilas;
 
             Debug.Log("F " + numFilas + " C " + numColumnas);
         

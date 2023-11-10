@@ -31,6 +31,7 @@ public class Option : MonoBehaviour
 
     private void Add()
     {
+        Debug.Log("click");
         value += step;
         if (value > maxValue)
             value = maxValue;
@@ -58,7 +59,7 @@ public class Option : MonoBehaviour
     public void SetMax(float v)
     {
         maxValue = v;
-        optionMaxValue.text = "(Máximo: " + v.ToString() + ")";
+        optionMaxValue.text = "(Max: " + v.ToString() + ")";
     }
 
     public void SetMin(float v)

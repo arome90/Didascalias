@@ -11,13 +11,13 @@ namespace ClassRoomVR
     {
         private ClassSettings settings;
         [SerializeField] private TMP_Dropdown structureDropdown;
-        [SerializeField] private Button startButton;
-        [SerializeField] private Button backButton;
+        //[SerializeField] private Button startButton;
+      //[SerializeField] private Button backButton;
         [SerializeField] private Button editDeskPositionButton;
         [SerializeField] private Option boysOption;
         [SerializeField] private Option girlsOption;
-        [SerializeField] private GameObject backScreen;
-        [SerializeField] private GameObject editScreen;
+       // [SerializeField] private GameObject backScreen;
+       // [SerializeField] private GameObject editScreen;
 
         private int maxStudents;
         
@@ -29,8 +29,8 @@ namespace ClassRoomVR
             structureDropdown.onValueChanged.AddListener(ChangeStructure);
             boysOption.onValueChanged.AddListener(ChangeBoys);
             girlsOption.onValueChanged.AddListener(ChangeGirls);
-            startButton.onClick.AddListener(GameManager.Instance.LoadMainScene);
-            backButton.onClick.AddListener(GoBackScreen);
+           // startButton.onClick.AddListener(GameManager.Instance.LoadMainScene);
+           // backButton.onClick.AddListener(GoBackScreen);
             editDeskPositionButton.onClick.AddListener(GoEditScreen);
             SetOptions(typeof(StructureMode));
             structureDropdown.SetValueWithoutNotify((int)settings.StructureMode);
@@ -42,16 +42,17 @@ namespace ClassRoomVR
 
 
 
-        private void GoBackScreen()
-        {
-            backScreen.SetActive(true);
-            gameObject.SetActive(false);
-        }
+        //private void GoBackScreen()
+        //{
+        //    backScreen.SetActive(true);
+        //    gameObject.SetActive(false);
+        //}
 
         private void GoEditScreen()
         {
-            editScreen.SetActive(true);
-            gameObject.SetActive(false);
+            MenuTransition.Instance.GoNextScreen();
+            MenuTransition.Instance.MoveClase();
+            
         }
 
 
