@@ -14,20 +14,20 @@ namespace ClassRoomVR
         public Button optionsButton;
         public Button quitButton;
 
-        //private bool isPaused = false;
-        //[SerializeField] private InputActionProperty showButtonAction;
-        //[SerializeField] private InputActionProperty thinkAction;
+        [SerializeField] private InputActionProperty showButtonAction;
+        [SerializeField] private InputActionProperty thinkAction;
         private void Start()
         {
+            GameManager.Instance.IsPause = false;
             resumeButton.onClick.AddListener(ResumeGame);
             // optionsButton.onClick.AddListener(OpenOptions);
             quitButton.onClick.AddListener(QuitGame);
             pauseMenuUI = GetComponent<Canvas>();
-            //showButtonAction.action.performed += ToggleMenu;
-            //thinkAction.action.performed += ThinkPause;
-            HVRInputSystemController.Init();
-            HVRInputSystemController.InputActions.LeftHand.Menu.performed += ToggleMenu;
-            HVRInputSystemController.InputActions.RightHand.PrimaryButton.performed += ThinkPause;
+            showButtonAction.action.performed += ToggleMenu;
+            thinkAction.action.performed += ThinkPause;
+            //HVRInputSystemController.Init();
+            //HVRInputSystemController.InputActions.LeftHand.Menu.performed += ToggleMenu;
+            //HVRInputSystemController.InputActions.RightHand.PrimaryButton.performed += ThinkPause;
 
 
         }
@@ -35,8 +35,8 @@ namespace ClassRoomVR
 
         private void OnDestroy()
         {
-            // showButtonAction.action.performed -= ToggleMenu;
-            HVRInputSystemController.InputActions.LeftHand.Menu.performed -= ToggleMenu;
+            showButtonAction.action.performed -= ToggleMenu;
+            //HVRInputSystemController.InputActions.LeftHand.Menu.performed -= ToggleMenu;
 
         }
 
@@ -71,11 +71,7 @@ namespace ClassRoomVR
 
         public void QuitGame()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            GameManager.Instance.LoadMainMenu();
         }
 
         private void PauseGame()

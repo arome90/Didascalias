@@ -120,7 +120,7 @@ namespace ClassRoomVR
             string hora = "9:00 AM";
             long sesion = new System.DateTimeOffset(System.DateTime.Now).ToUnixTimeSeconds();
             CatalogoOpciones cat = new CatalogoOpciones();
-            cat.opcionesGlobales = new string[] { "Hacer ruido", "Tirar papeles" };
+            cat.opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos","Levantarse" };
             cat.opcionesIndividuales = new string[] { "Pelear", "Insultar" };
             InitialMessageData initData = new InitialMessageData(posiciones, hora, sesion, cat);
             WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Init, initData));
@@ -129,6 +129,7 @@ namespace ClassRoomVR
 
         public static void CreateInfo()
         {
+            Debug.Log("MandarInfo");
             MessageData initData = new MessageData(InputManager.Instance.input);
             WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Info, initData));
         }

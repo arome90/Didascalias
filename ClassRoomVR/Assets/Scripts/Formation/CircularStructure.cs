@@ -26,7 +26,7 @@ namespace ClassRoomVR
            
 
             // Destroy existing desk objects within the parentDesk
-            foreach (Transform child in parentDesk.transform)
+            foreach (Transform child in parentDesk)
             {
                 Destroy(child.gameObject);
             }
@@ -34,7 +34,7 @@ namespace ClassRoomVR
             // Calculate angle between objects
             float angle = degrees / (numObjects - (isUStructure ? 1.0f : 0.0f));
             var parentTransform = parent.transform;
-            var parentDeskTransform = parentDesk.transform;
+            var parentDeskTransform = parentDesk;
             for (int i = 0; i < numObjects; i++)
             {
                 // Calculate position of the toggle object

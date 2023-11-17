@@ -8,35 +8,18 @@ namespace ClassRoomVR
     public class MenuType : MonoBehaviour
     {
         [SerializeField] private TMP_Dropdown structureDropdown;
-        //[SerializeField] private Button startButton;
-        //[SerializeField] private Button backButton;
         [SerializeField] private Button editButton;
-        //[SerializeField] private GameObject backScreen;
-        //[SerializeField] private GameObject editScreen;
         [SerializeField] private GameObject editText;
 
         private void Start()
         {
             structureDropdown.onValueChanged.AddListener(ChangeSetting);
-           // startButton.onClick.AddListener(GoNextScreen);
             editButton.onClick.AddListener(GoEditScreen);
-            //backButton.onClick.AddListener(GoBackScreen);
             SetOptions(GameManager.Instance.GetAvailableSettings());
         }
-
-        //private void GoBackScreen()
-        //{
-        //    backScreen.SetActive(true);
-        //    gameObject.SetActive(false);
-        //}
-
-        //private void GoNextScreen()
-        //{
-        //    GameManager.Instance.LoadMainScene();
-        //}
-
         private void GoEditScreen()
         {
+            GameManager.Instance.SetCurrentSettings(0);
             MenuTransition.Instance.GoNextScreen();
         }
     

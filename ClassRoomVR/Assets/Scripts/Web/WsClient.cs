@@ -71,20 +71,16 @@ using Newtonsoft.Json;
 public class WsClient : GenericSingleton<WsClient>
 {
     public static bool accion = false;
-    static WebSocket ws;
+    public static WebSocket ws;
     public string session;
     ClassRoomVR.UnityMessage mes;
+    public bool conected = false;
 
-
-    private void Start()
-    {
-        StartConnection();
-        InvokeRepeating(nameof(sEnd), 1f,1f);
-    }
     public void StartConnection()
     {
         try
         {
+            conected = true;
             ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws.OnOpen += Ws_OnOpen;
             ws.OnMessage += Ws_OnSessionMessage;
@@ -103,13 +99,11 @@ public class WsClient : GenericSingleton<WsClient>
 
     private void Ws_OnSessionMessage(object sender, MessageEventArgs e) 
     {
-        Debug.Log(e.Data);
+        Debug.Log("SessionMes"+e.Data);
         mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
-       // session = mes.data.ToString(); 
-        Debug.Log(mes.data.ToString());
+        session = mes.data.ToString(); 
         ws.OnMessage += Ws_OnMessage;
         ws.OnMessage -= Ws_OnSessionMessage;
-
     }
 
     [Serializable]
@@ -118,6 +112,8 @@ public class WsClient : GenericSingleton<WsClient>
     {
         accion = true;
         mes.data = JsonConvert.DeserializeObject<A>(e.Data).id;
+        Debug.Log("Mes"+ DateTime.Now+" "+mes.data.ToString());
+
         //int n = e.Data[0] - '0';
         //if (n >= 0)
         //{
@@ -137,10 +133,19 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
 
-    public void Ws_SendMessage(ClassRoomVR.UnityMessage mes) 
+    public void Ws_SendMessage(ClassRoomVR.UnityMessage mes)
     {
-        string jsonData = JsonConvert.SerializeObject(mes);
-        ws.Send(jsonData);
+        
+        if (ws != null && ws.IsAlive)
+        {
+            string jsonData = JsonConvert.SerializeObject(mes);
+            ws.Send(jsonData);
+        }
+        else
+        {
+            Debug.LogWarning("La conexión WebSocket no está activa.");
+        }
+
     }
 
     private void Update()
@@ -156,29 +161,27 @@ public class WsClient : GenericSingleton<WsClient>
             //}
 
         }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            ClassRoomVR.Prueba.CreateInfoInitial();
-        }
     }
 
-    void sEnd() 
+    public void ToggleCon() 
     {
-        ClassRoomVR.Prueba.CreateInfo();
+        if (!conected) StartConnection();
+        else Disconnect();
     }
    
 
     public void Disconnect()
     {
+        conected = false;
         if (ws != null) ws.Close();
     }
 
-    private void OnDestroy()
+    public bool isAlive() { return ws != null ? ws.IsAlive : false; }
+
+    private void OnApplicationQuit()
     {
         Disconnect();
     }
-
 
 
 }

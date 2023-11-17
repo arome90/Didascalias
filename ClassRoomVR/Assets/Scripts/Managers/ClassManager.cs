@@ -27,7 +27,7 @@ namespace ClassRoomVR
         [SerializeField] private AudioClip beforeClassBell;
         [SerializeField] private AudioClip afterClassBell;
 
-        private void Awake()
+        public override void Awake()
         {
             settings = GameManager.Instance.GetCurrentSettings();
             studentsController = GetComponent<StudentsController>();

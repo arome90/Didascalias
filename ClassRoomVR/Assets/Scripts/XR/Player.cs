@@ -8,7 +8,7 @@ namespace ClassRoomVR
     {
         private void Awake()
         {
-            GameManager.Instance.SetPlayer(transform.GetChild(0).gameObject);
+            GameManager.Instance.SetPlayer(transform.gameObject);
 
         }
     }

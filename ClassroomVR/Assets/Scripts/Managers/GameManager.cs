@@ -14,7 +14,6 @@ namespace ClassRoomVR
         private GameObject player;
         private DataSystem savedData;
         private ScenePackage chosenPackage;
-        private ClassManager classManager;
         private VoiceActivation voiceActivation;
 
         [SerializeField] private ClassSettings currentSettings;
@@ -99,8 +98,8 @@ namespace ClassRoomVR
         {
             //SceneManager.LoadScene("Class_GameScene");
             SceneTransitionManager.singleton.GoToSceneAsync(indexScene);
-            //AnalyticsManager.CustomEvent("Gritar");
 
+            //AnalyticsManager.CustomEvent("Gritar");
 
         }
         public void SetChosenPackage(int index) => chosenPackage = availablePackages[index];
@@ -171,20 +170,6 @@ namespace ClassRoomVR
 
         public bool GetSaveAudio() => saveAudio;
 
-        private void OnApplicationPause(bool pause)
-        {
-            Debug.Log(pause + " Puasa");
-           
-        }
-
-      
-        private void OnApplicationFocus(bool focus)
-        {
-            Debug.Log(focus + " focus");
-           
-        }
-
-       
         void Pause() 
         {
             AudioListener.pause = true;

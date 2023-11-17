@@ -10,12 +10,13 @@ namespace ClassRoomVR
         [SerializeField] Option rowsOpt; // UI option for setting the number of rows
         [SerializeField] Option coluOpt; // UI option for setting the number of columns
 
-        public float espacioEntreCol = 1.4f;  // Espacio entre sillas
-        public float espacioEntreRow = 1.4f;  // Espacio entre sillas
+        public float espacioEntreCol = 1.3f;  // Espacio entre sillas
+        public float espacioEntreRow = 1.3f;  // Espacio entre sillas
                                                   // public float espacioPrimeraFila = 3f;
 
         public override void Set()
         {
+            ControlMatrix();    
             // Destroy previous parent objects
             Destroy(parent);
             parent = new GameObject("Toggles");
@@ -31,25 +32,18 @@ namespace ClassRoomVR
             int numColumns = settings.Columns;
 
             Vector3 startPos = parent.transform.position;
-            Vector3 startDeskPos = parentDesk.transform.position;
+            Vector3 startDeskPos = parentDesk.position;
 
             float deskSpacing = 1.0f / 5.0f; // Spacing between desks
             for (int i = 0; i < numRows; i++)
             {
 
-                var queue = new Queue<int>(hallways);
                 for (int j = 0; j < numColumns; j++)
                 {
                     if (numDesks == 0)
                     {
                         return; // If there are no more desks to place, exit the loop
                     }
-                    if (queue.Count > 0 && queue.Peek() == j)
-                    {
-                        queue.Dequeue();
-                        continue;
-                    }
-
 
                     float xPos = j - (numColumns - 1) / 2f;
                     float zPos = -i + (numRows - 1) / 2f;
@@ -62,13 +56,9 @@ namespace ClassRoomVR
                     }
 
                     position = startDeskPos + new Vector3(xPos * espacioEntreCol, 0, zPos * espacioEntreRow );
-                    var d = Instantiate(desk, parentDesk.transform);
+                    var d = Instantiate(desk, parentDesk);
                     d.transform.position = position;
                     
-                    //position = startDeskPos + new Vector3(xPos * espacioEntreCol, 0, zPos * espacioEntreRow );
-                    //var d = Instantiate(desk, parentDesk.transform);
-                    //d.transform.position = position;
-
                     if (toggle != null)
                     {
                         toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
@@ -95,10 +85,48 @@ namespace ClassRoomVR
             }
         }
 
+        private void ControlMatrix()
+        {
+            if (settings.NumDesks > settings.Columns * settings.Rows)
+            {
+                if (coluOpt.GetMax() == settings.Columns || settings.Columns > settings.Rows)
+                {
+                    settings.Rows++;
+                    rowsOpt.SetValue(settings.Rows);
+
+                }
+                else
+                {
+                    settings.Columns++;
+                    coluOpt.SetValue(settings.Columns);
+
+                }
+            }
+            else if (settings.NumDesks <= (settings.Columns - 1) * settings.Rows)
+            {
+                if (coluOpt.GetMin() == settings.Columns || settings.Columns < settings.Rows)
+                {
+                    settings.Rows--;
+                    rowsOpt.SetValue(settings.Rows);
+
+                }
+                else
+                {
+                    settings.Columns--;
+                    coluOpt.SetValue(settings.Columns);
+
+                }
+            }
+        }
+
         private void OnEnable()
         {
             // Initialize UI options and settings
-            settings.NumDesks = Mathf.Max(settings.NumStudents,settings.NumDesks);
+            settings.NumDesks = settings.NumStudents;
+            int numColumns = Mathf.Min((int)coluOpt.GetMax(), Mathf.CeilToInt(Mathf.Sqrt(settings.NumDesks)));
+            int numRows = Mathf.CeilToInt(settings.NumDesks / (float)numColumns);
+            settings.Columns = numColumns;
+            settings.Rows = numRows;
             if (numDesks != null)
             {
                 numDesks.SetValue(settings.NumStudents);
@@ -107,12 +135,13 @@ namespace ClassRoomVR
             if (rowsOpt)
             {
                 rowsOpt.SetValue(settings.Rows);
+                rowsOpt.SetMin(settings.Rows);
             }
             if (coluOpt)
             {
                 coluOpt.SetValue(settings.Columns);
+                coluOpt.SetMin(settings.Columns);
             }
-            GetHole();
             Set();
         }
 
@@ -120,6 +149,7 @@ namespace ClassRoomVR
         void ChangeRows(float value)
         {
             settings.Rows = (int)value;
+            ChangeControl();
             Set();
         }
 
@@ -127,24 +157,19 @@ namespace ClassRoomVR
         void ChangeColumns(float value)
         {
             settings.Columns = (int)value;
+            ChangeControl();
             Set();
         }
-        List<int> hallways;
-        void GetHole()
+       
+        void ChangeControl()
         {
-            hallways = new List<int>();
-            switch (GameManager.Instance.GetCurrentSettings().StructureMode)
+            int res = (settings.Columns * settings.Rows) - settings.NumDesks;
+            if (res != 0)
             {
-                case StructureMode.UnPasillo:
-                    hallways.Add(2);
-                    break;
-                case StructureMode.DosPasillos:
-                    hallways.AddRange(new int[] { 1, 3 });
-                    break;
+                settings.NumDesks += res;
+                numDesks.SetValue(settings.NumDesks);
             }
-
         }
-
 
         public override void MaxDesk() 
         { 

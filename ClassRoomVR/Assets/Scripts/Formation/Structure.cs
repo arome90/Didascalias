@@ -7,7 +7,7 @@ namespace ClassRoomVR
     public abstract class Structure : MonoBehaviour
     {
         [SerializeField] protected Desk desk; // Prefab of a desk
-        [SerializeField] protected GameObject parentDesk; // Parent object for desks
+         protected Transform parentDesk; // Parent object for desks
         [SerializeField] protected Option numDesks; // UI option for setting the number of desks
         [SerializeField] protected Toggle prefab; // Toggle prefab for controlling desk visibility
         [SerializeField] protected BoxCollider aula;
@@ -27,7 +27,6 @@ namespace ClassRoomVR
             {
                 numDesks.onValueChanged.AddListener(ChangeObjects);
             }
-            DontDestroyOnLoad(parentDesk); // Prevent parentDesk from being destroyed on scene load
             MaxDesk();
         }
 
@@ -47,13 +46,14 @@ namespace ClassRoomVR
         {
             toggleToDeskMap = new Dictionary<Toggle, Desk>(); // Initialize the dictionary
             settings = GameManager.Instance.GetCurrentSettings(); // Get the current classroom settings
+            parentDesk = DeskManager.Instance.transform;
         }
 
         private void DestroyInactiveChildObjects()
         {
             if (parentDesk != null)
             {
-                foreach (Transform child in parentDesk.transform)
+                foreach (Transform child in parentDesk)
                 {
                     if (!child.gameObject.activeSelf)
                     {

@@ -43,6 +43,7 @@ namespace ClassRoomVR
             });
             quitButton.onClick.AddListener(QuitButton);
             // Remove in the future
+            DeskManager.Instance.DestroyChildren();
             DontDestroyOnLoad(GameObject.Find("DeskManager"));
         }
 
@@ -65,8 +66,6 @@ namespace ClassRoomVR
         {
             nextScreen.SetActive(true);
             gameObject.SetActive(false);
-
-
         }
 
         public void QuitButton()

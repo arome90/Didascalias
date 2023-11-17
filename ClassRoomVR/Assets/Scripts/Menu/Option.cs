@@ -24,7 +24,7 @@ public class Option : MonoBehaviour
 
     private void Start()
     {
-        optionValue.text = value.ToString("0.##");
+        optionValue.text = value.ToString("0.#");
         addButton.onClick.AddListener(Add);
         subButton.onClick.AddListener(Sub);
     }
@@ -38,7 +38,7 @@ public class Option : MonoBehaviour
         else
         {
             onValueChanged.Invoke(value);
-            optionValue.text = value.ToString("0.##");
+            optionValue.text = value.ToString("0.#");
 
         }
     }
@@ -51,7 +51,7 @@ public class Option : MonoBehaviour
         else
         {
             onValueChanged.Invoke(value);
-            optionValue.text = value.ToString("0.##");
+            optionValue.text = value.ToString("0.#");
         }
     }
 
@@ -71,9 +71,10 @@ public class Option : MonoBehaviour
     public void SetValue(float v)
     {
         value = Mathf.Clamp(v, minValue, maxValue);
-        optionValue.text = value.ToString("0.##");
+        optionValue.text = value.ToString("0.#");
     }
 
 
     public float GetMax() { return maxValue; }
+    public float GetMin() { return minValue; }
 }

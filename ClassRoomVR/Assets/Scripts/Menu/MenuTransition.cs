@@ -47,17 +47,13 @@ namespace ClassRoomVR {
             index++;
             menus[index].SetActive(true);
         }
-        //private void GoEditScreen()
-        //{
-        //    menus[index].SetActive(false);
-        //    menus[index].SetActive(true);
-
-
-        //}
-
+    
         private void GoStart()
         {
+            //Temporal
+            if (GameManager.Instance.GetCurrentSettings().name != "Personalizado") { DeskManager.Instance.DestroyChildren(); }
             GameManager.Instance.LoadMainScene();
+            start.gameObject.SetActive(false);
         }
 
         public void MovePizarra() 

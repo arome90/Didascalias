@@ -213,10 +213,6 @@ namespace ClassRoomVR
                             DrawProperty(degreesProp, "Degrees");
                         }
                         break;
-                    case StructureMode.UnPasillo:
-                    case StructureMode.DosPasillos:
-                        DrawProperty(rowsProp, "Rows");
-                        break;
                 }
             }
 

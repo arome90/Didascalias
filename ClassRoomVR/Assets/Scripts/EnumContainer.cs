@@ -8,7 +8,7 @@ public enum TalkMode { None, Disrespect, Good };
 public enum Allign { None, Centro, Frente };
 public enum GenerateMode { Random, Personalizado, Gender }
 public enum Age { Primero, Segundo, Tercero }
-public enum StructureMode { Fila, U, Circular, UnPasillo, DosPasillos }
+public enum StructureMode { Fila, U, Circular }
 
 [System.Flags]
 public enum FieldOfVision

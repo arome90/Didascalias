@@ -16,7 +16,7 @@ namespace ClassRoomVR
         DisruptiveAction a;
         private void Start()
         {
-            player = GameManager.Instance.GetPlayer().transform.parent.gameObject;
+            player = GameManager.Instance.GetPlayer();
             controller = ClassManager.Instance.GetStudentsController();
             controller.SetMode(TalkMode.None);
         }

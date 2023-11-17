@@ -63,7 +63,7 @@ namespace ClassRoomVR
         private void SetPlayerMode(bool vr)
         {
             GameObject selectedPlayer = vr ? playerVR : player;
-            GameManager.Instance.SetPlayer(selectedPlayer.transform.GetChild(0).gameObject);
+            GameManager.Instance.SetPlayer(selectedPlayer.transform.gameObject);
             player.SetActive(!vr);
             playerVR.SetActive(vr);
         }

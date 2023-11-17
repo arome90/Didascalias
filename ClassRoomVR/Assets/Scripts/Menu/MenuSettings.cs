@@ -11,13 +11,9 @@ namespace ClassRoomVR
     {
         private ClassSettings settings;
         [SerializeField] private TMP_Dropdown structureDropdown;
-        //[SerializeField] private Button startButton;
-      //[SerializeField] private Button backButton;
         [SerializeField] private Button editDeskPositionButton;
         [SerializeField] private Option boysOption;
         [SerializeField] private Option girlsOption;
-       // [SerializeField] private GameObject backScreen;
-       // [SerializeField] private GameObject editScreen;
 
         private int maxStudents;
         
@@ -29,8 +25,6 @@ namespace ClassRoomVR
             structureDropdown.onValueChanged.AddListener(ChangeStructure);
             boysOption.onValueChanged.AddListener(ChangeBoys);
             girlsOption.onValueChanged.AddListener(ChangeGirls);
-           // startButton.onClick.AddListener(GameManager.Instance.LoadMainScene);
-           // backButton.onClick.AddListener(GoBackScreen);
             editDeskPositionButton.onClick.AddListener(GoEditScreen);
             SetOptions(typeof(StructureMode));
             structureDropdown.SetValueWithoutNotify((int)settings.StructureMode);
@@ -39,15 +33,6 @@ namespace ClassRoomVR
 
         }
 
-
-
-
-        //private void GoBackScreen()
-        //{
-        //    backScreen.SetActive(true);
-        //    gameObject.SetActive(false);
-        //}
-
         private void GoEditScreen()
         {
             MenuTransition.Instance.GoNextScreen();
@@ -55,10 +40,10 @@ namespace ClassRoomVR
             
         }
 
-
         private void ChangeStructure(int value)
         {
             settings.StructureMode = (StructureMode)value;
+            DeskManager.Instance.DestroyChildren();
             SetMaxValue();
             if (settings.NumMen + settings.NumWomen > maxStudents) 
             {
@@ -79,12 +64,6 @@ namespace ClassRoomVR
                 case StructureMode.Fila:
                     maxStudents = 30;
                     break;
-                case StructureMode.UnPasillo:
-                    maxStudents = 25;
-                    break;
-                case StructureMode.DosPasillos:
-                    maxStudents = 20;
-                    break;
                 case StructureMode.Circular:
                     maxStudents = 22;
                     break;
@@ -98,12 +77,15 @@ namespace ClassRoomVR
         {
             settings.NumMen = (int)value;
             SetMaxStudents();
+            DeskManager.Instance.DestroyChildren();
+
         }
 
         private void ChangeGirls(float value)
         {
             settings.NumWomen = (int)value;
             SetMaxStudents();
+            DeskManager.Instance.DestroyChildren();
 
         }
 

@@ -29,7 +29,7 @@ namespace ClassRoomVR
         public void CreateDesks()
         {
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
-            CreateRegularLayout(settings, settings.Rows, settings.Columns, 1.4f, 2f);
+            CreateRegularLayout(settings, settings.Rows, settings.Columns, 1.3f, 1.5f);
         }
 
         private void CreateRegularLayout(ClassSettings settings, int numRows, int numColumns, float deskOffsetX, float deskOffsetZ)
@@ -48,10 +48,9 @@ namespace ClassRoomVR
         public void CreateCircle()
         {
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
-            int numDesks = settings.NumDesks;
-            float degrees = settings.Degrees;
-            float radius = settings.Radius;
-            float angle = degrees / numDesks;
+            int numDesks = settings.NumStudents;
+            float radius = 3.4f;
+            float angle = 360f / numDesks;
 
             for (int i = 0; i < numDesks; i++)
             {
@@ -67,9 +66,9 @@ namespace ClassRoomVR
         public void CreateUShape()
         {
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
-            int numDesks = settings.NumDesks;
-            float radius = settings.Radius;
-            float angle = 360f / numDesks;
+            int numDesks = settings.NumStudents;
+            float radius = 3;
+            float angle = 360f / (numDesks-1);
             float currentAngle = 0f;
 
             for (int i = 0; i < numDesks; i++)
@@ -81,6 +80,14 @@ namespace ClassRoomVR
                 Desk desk = Instantiate(deskPrefab, position, Quaternion.identity, transform);
                 desk.Position = new Vector2(i, 0);
                 currentAngle += angle;
+            }
+        }
+
+        public void DestroyChildren() 
+        {
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
             }
         }
     }
