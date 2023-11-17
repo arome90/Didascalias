@@ -1,81 +1,85 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using TMPro;
+
+[System.Serializable]
+public class TutorialStep
+{
+    public string stepText;
+    public UnityEvent action;
+    public bool conditionMet;
+}
 
 public class Tutorial : MonoBehaviour
 {
     
-    public GameObject tutorialCanvas;
-    public GameObject player;
-    public GameObject teleportTarget;
-    public GameObject blackboard;
-    public GameObject students;
+    private List<Toggle> tutorialToggles;
+    public int currentPhase = 0;
+    [SerializeField]
+    private Button nextButton;
 
-    private int currentPhase = 0;
-    private bool teleportationActivated = false;
-    private bool objectInteractionActivated = false;
-    private bool drawingActivated = false;
+    [SerializeField]
+    private TextMeshProUGUI tutorialText;
 
-    void Update()
+    [SerializeField]
+    private TutorialStep[] tutorialSteps;
+
+    private UnityEvent tutorialAction;
+
+    private void Start()
     {
-        // Lógica para avanzar al siguiente paso del tutorial cuando el usuario complete una fase
-        if (teleportationActivated && objectInteractionActivated && drawingActivated)
+        tutorialToggles = new List<Toggle>();
+        nextButton.onClick.AddListener(NextStep);
+        foreach(Transform t in transform) 
+        {
+            tutorialToggles.Add(t.GetComponent<Toggle>());
+            t.GetChild(0).GetComponent<TextMeshProUGUI>().text = t.name;
+        }
+
+        UpdateTutorial();
+    }
+    private async void UpdateTutorial()
+    {
+        for (int i = 0; i < tutorialToggles.Count; i++)
+        {
+            tutorialToggles[i].isOn = i < currentPhase;
+            tutorialToggles[i].interactable = i <= currentPhase;
+        }
+
+        if (currentPhase < tutorialSteps.Length)
+        {
+            tutorialText.text = tutorialSteps[currentPhase].stepText;
+            nextButton.interactable = false;
+            await CurrentState();
+            nextButton.interactable = true;
+
+        }
+    }
+
+    private async Task CurrentState() 
+    {
+        while (!Input.GetKeyDown(KeyCode.I))
+        {
+            // Espera un breve periodo de tiempo antes de verificar de nuevo
+            await Task.Delay(10);
+        }
+
+    }
+
+    public void NextStep()
+    {
+        if (currentPhase < tutorialToggles.Count - 1)
         {
             currentPhase++;
-            ActivatePhase(currentPhase);
+            UpdateTutorial();
         }
     }
 
-    public void ActivatePhase(int phase)
-    {
-        // Método para activar la fase actual del tutorial
-        switch (phase)
-        {
-            case 1:
-                // Fase 1: Controles y Movimientos
-                tutorialCanvas.SetActive(true);
-                break;
-            case 2:
-                // Fase 2: Teletransporte
-                teleportTarget.SetActive(true);
-                break;
-            case 3:
-                // Fase 3: Interacción con Objetos
-                tutorialCanvas.SetActive(false);
-                teleportTarget.SetActive(false);
-                objectInteractionActivated = true;
-                break;
-            case 4:
-                // Fase 4: Dibujar con Tiza en la Pizarra
-                blackboard.SetActive(true);
-                drawingActivated = true;
-                break;
-            case 5:
-                // Fase 5: Mantener la Disciplina en el Aula
-                students.SetActive(true);
-                break;
-            case 6:
-                // Fase 6: Resolver un Pequeño Conflicto
-                // Implementa lógica para resolver el conflicto entre estudiantes
-                break;
-            case 7:
-                // FIN: Tutorial completado
-                EndTutorial();
-                break;
-        }
-    }
-
-    public void EndTutorial()
-    {
-        // Método llamado cuando el usuario ha completado el tutorial
-        tutorialCanvas.SetActive(false);
-        teleportTarget.SetActive(false);
-        blackboard.SetActive(false);
-        students.SetActive(false);
-        // Puedes realizar acciones adicionales al completar el tutorial
-    }
-
-    // Implementa métodos adicionales para manejar las interacciones del usuario, como el teletransporte y la interacción con objetos.
 }
 
 

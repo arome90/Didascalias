@@ -3,6 +3,7 @@ using WebSocketSharp.Server;
 using UnityEngine;
 using System;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 #region Server
 //public class WsServer : MonoBehaviour
 //{
@@ -84,68 +85,61 @@ public class WsClient : GenericSingleton<WsClient>
             ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws.OnOpen += Ws_OnOpen;
             ws.OnMessage += Ws_OnSessionMessage;
-            ws.Connect();
-            // Ws_SendMessage(new MessageData { type = Type.CreateSession, value = 1 });
+            ws.ConnectAsync();
         }
-        catch { Debug.Log("Error en conexion"); }
+        catch (Exception ex) { Debug.LogError("Error en la conexión: " + ex.Message); }
     }
 
     void Ws_OnOpen(object sender, EventArgs e)
     {
         Debug.Log("open");
         string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession, null));
-        ws.Send(jsonData);
+        ws.SendAsync(jsonData, null);
     }
 
-    private void Ws_OnSessionMessage(object sender, MessageEventArgs e) 
+    void Ws_OnSessionMessage(object sender, MessageEventArgs e)
     {
-        Debug.Log("SessionMes"+e.Data);
-        mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
-        session = mes.data.ToString(); 
-        ws.OnMessage += Ws_OnMessage;
-        ws.OnMessage -= Ws_OnSessionMessage;
+        try
+        {
+            mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
+            session = mes.data.ToString();
+            ws.OnMessage += Ws_OnMessage;
+            ws.OnMessage -= Ws_OnSessionMessage;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex.Message + e.Data);
+        }
     }
 
     [Serializable]
-    struct A { public string type;public string id; }
+    struct A { public string type; public string id; }
     private void Ws_OnMessage(object sender, MessageEventArgs e)
     {
-        accion = true;
-        mes.data = JsonConvert.DeserializeObject<A>(e.Data).id;
-        Debug.Log("Mes"+ DateTime.Now+" "+mes.data.ToString());
-
-        //int n = e.Data[0] - '0';
-        //if (n >= 0)
-        //{
-        //    accion = true;
-        //    //ClassRoomVR.WebActions.ProcessMessage(n);
-        //}
-        //try
-        //{
-        //    mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
-        //    Debug.Log("Received message from Echo client: " + mes.data.ToString());
-        //}
-        //catch (Exception ex)
-        //{
-        //    Debug.Log(ex.Message + e.Data);
-        //}
-
+        try
+        {
+            accion = true;
+            mes.data = JsonConvert.DeserializeObject<A>(e.Data).id;
+            Debug.Log("Mes" + " " + mes.data.ToString());
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex.Message + e.Data);
+        }
     }
 
 
     public void Ws_SendMessage(ClassRoomVR.UnityMessage mes)
     {
-        
         if (ws != null && ws.IsAlive)
         {
             string jsonData = JsonConvert.SerializeObject(mes);
-            ws.Send(jsonData);
+            ws.SendAsync(jsonData, null);
         }
         else
         {
             Debug.LogWarning("La conexión WebSocket no está activa.");
         }
-
     }
 
     private void Update()
@@ -153,27 +147,22 @@ public class WsClient : GenericSingleton<WsClient>
         if (accion)
         {
             accion = false;
-            // if (mes.type == ClassRoomVR.MessageType.Action)
-            //{
-            // ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(0);
             Debug.Log(Convert.ToInt32(mes.data));
             ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(mes.data));
-            //}
-
         }
     }
 
-    public void ToggleCon() 
+    public void ToggleCon()
     {
         if (!conected) StartConnection();
         else Disconnect();
     }
-   
+
 
     public void Disconnect()
     {
         conected = false;
-        if (ws != null) ws.Close();
+        if (ws != null) ws.CloseAsync();
     }
 
     public bool isAlive() { return ws != null ? ws.IsAlive : false; }

@@ -35,13 +35,13 @@ namespace ClassRoomVR
         private void Start()
         {
             lista = new float[3];
-            Prueba.CreateInfoInitial();
+            ServerMessage.SendInfoInitial();
             StartCoroutine(Measure());
-            InvokeRepeating(nameof(sEnd), 1f, 1f);
+            InvokeRepeating(nameof(SendInfo), 1f, 1f);
         }
-        private void sEnd() 
+        private void SendInfo() 
         {
-            Prueba.CreateInfo();
+            ServerMessage.SendInfo();
         }
 
         private IEnumerator Measure()

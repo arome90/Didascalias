@@ -107,10 +107,10 @@ namespace ClassRoomVR
         }
 
     }
-    public static class Prueba
+    public static class ServerMessage
     {
 
-        public static void CreateInfoInitial()
+        public static void SendInfoInitial()
         {
             AlumnoInit[] posiciones = new AlumnoInit[]
             {
@@ -127,11 +127,12 @@ namespace ClassRoomVR
         }
 
 
-        public static void CreateInfo()
+        public static void SendInfo()
         {
             Debug.Log("MandarInfo");
             MessageData initData = new MessageData(InputManager.Instance.input);
-            WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Info, initData));
+            WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Info, null));
+            
         }
 
 
