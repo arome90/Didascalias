@@ -181,7 +181,6 @@ namespace ClassRoomVR
                     student.PayAttention();
             }
         }
-
         // Determine a position based on a string description
         public Transform Place(string place)
         {
@@ -260,6 +259,7 @@ namespace ClassRoomVR
                 index++;
             }
         }
+        
     }
 }
 

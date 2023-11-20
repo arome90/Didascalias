@@ -151,7 +151,7 @@ namespace ClassRoomVR
                     st.HandleCall(alumnos);
                     break;
                 default:
-                    Debug.LogError($"Intent no reconocido: {intent}");
+                    Debug.Log($"Intent no reconocido: {intent}");
                     break;
 
             }

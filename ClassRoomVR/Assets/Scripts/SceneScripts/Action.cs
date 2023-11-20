@@ -27,7 +27,7 @@ namespace ClassRoomVR
             a = dis;
             if (a.laughter)
             {
-                Invoke(nameof(Laughter), 3.0f);
+                Invoke(nameof(Laughter), 2.0f);
             }
             bh = GetComponent<BehaviorTree>();
             bh.EnableBehavior();
@@ -60,7 +60,7 @@ namespace ClassRoomVR
 
         public IEnumerator IgnoreStudent(Student s)
         {
-            float maxWaitTime = 5.0f; // Maximum wait time for optimization
+            float maxWaitTime = 10.0f; // Maximum wait time for optimization
 
             float startTime = Time.realtimeSinceStartup;
             while (s.IsStudentInFieldOfVision())
