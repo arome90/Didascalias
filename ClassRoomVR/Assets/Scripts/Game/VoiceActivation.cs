@@ -8,8 +8,8 @@ namespace ClassRoomVR
     {
         bool shout;
         [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
-        [SerializeField] TextMeshProUGUI fullTranscriptionText;
-        [SerializeField] TextMeshProUGUI partialTranscriptionText;
+        //[SerializeField] TextMeshProUGUI fullTranscriptionText;
+        //[SerializeField] TextMeshProUGUI partialTranscriptionText;
         bool appVoiceActive;
         [SerializeField] StudentsController st;
 
@@ -38,17 +38,17 @@ namespace ClassRoomVR
         private void Awake()
         {
             GameManager.Instance.SetVoiceActivation(this);
-            fullTranscriptionText.text = partialTranscriptionText.text = string.Empty;
+            //fullTranscriptionText.text = partialTranscriptionText.text = string.Empty;
 
-            appVoiceExperience.VoiceEvents.onFullTranscription.AddListener((transcription) =>
-            {
-                fullTranscriptionText.text = transcription;
-            });
+            //appVoiceExperience.VoiceEvents.onFullTranscription.AddListener((transcription) =>
+            //{
+            //    fullTranscriptionText.text = transcription;
+            //});
 
-            appVoiceExperience.VoiceEvents.OnPartialTranscription.AddListener((transcription) =>
-            {
-                partialTranscriptionText.text = transcription;
-            });
+            //appVoiceExperience.VoiceEvents.OnPartialTranscription.AddListener((transcription) =>
+            //{
+            //    partialTranscriptionText.text = transcription;
+            //});
 
             appVoiceExperience.VoiceEvents.OnRequestCompleted.AddListener(() =>
             {
