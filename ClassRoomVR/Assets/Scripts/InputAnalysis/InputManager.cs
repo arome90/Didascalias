@@ -35,6 +35,7 @@ namespace ClassRoomVR
         private void Start()
         {
             lista = new float[3];
+            Debug.Log("hola");
             ServerMessage.SendInfoInitial();
             StartCoroutine(Measure());
             InvokeRepeating(nameof(SendInfo), 1f, 1f);

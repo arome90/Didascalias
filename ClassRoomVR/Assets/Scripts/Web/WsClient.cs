@@ -76,7 +76,10 @@ public class WsClient : GenericSingleton<WsClient>
     public string session;
     ClassRoomVR.UnityMessage mes;
     public bool conected = false;
-
+    //private void Start()
+    //{
+    //    StartConnection();
+    //}
     public void StartConnection()
     {
         try
@@ -93,7 +96,7 @@ public class WsClient : GenericSingleton<WsClient>
     void Ws_OnOpen(object sender, EventArgs e)
     {
         Debug.Log("open");
-        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession, null));
+        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession,null,null));
         ws.SendAsync(jsonData, null);
     }
 

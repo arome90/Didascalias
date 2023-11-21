@@ -9,9 +9,11 @@ namespace ClassRoomVR
     public class UnityMessage
     {
         public MessageType type;
+        public string session;
         public object data;
-        public UnityMessage(MessageType messageType, object dat)
+        public UnityMessage(MessageType messageType,string sessionid ,object dat)
         {
+            session = sessionid;
             type = messageType;
             data = dat;
         }
@@ -83,6 +85,7 @@ namespace ClassRoomVR
 
         public InitialMessageData(AlumnoInit[] posiciones, string hora, long sesion, CatalogoOpciones cat)
         {
+            
             alumnosPosiciones = posiciones;
             horaClase = hora;
             tiempoSesion = sesion;
@@ -100,8 +103,8 @@ namespace ClassRoomVR
     {
         public InputVariables input;
         //public Clima clima;
-      //  public AlumnoFeatures[] students;
-        public MessageData(InputVariables input)
+        //  public AlumnoFeatures[] students;
+        public MessageData( InputVariables input)
         {
             this.input = input;
         }
@@ -123,7 +126,7 @@ namespace ClassRoomVR
             cat.opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos","Levantarse" };
             cat.opcionesIndividuales = new string[] { "Pelear", "Insultar" };
             InitialMessageData initData = new InitialMessageData(posiciones, hora, sesion, cat);
-            WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Init, initData));
+            WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Init, WsClient.Instance.session, initData));
         }
 
 
@@ -131,7 +134,7 @@ namespace ClassRoomVR
         {
             Debug.Log("MandarInfo");
             MessageData initData = new MessageData(InputManager.Instance.input);
-            WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Info, null));
+            WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Info, WsClient.Instance.session, initData));
             
         }
 

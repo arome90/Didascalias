@@ -128,7 +128,7 @@ namespace ClassRoomVR
                 if (controller.GetMode() == TalkMode.Good && Vector3.Distance(s.transform.position, player.transform.position) <= distanceNear && s.IsStudentInFieldOfVision())
                 {
                     bh.GetVariable("Path").SetValue(1);
-                    controller.GoOut();
+                  //  controller.GoOut();
                 }
             }
         }
