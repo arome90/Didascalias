@@ -230,7 +230,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 25366134}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b570e15a0eb350468bad9e9bfad1c27, type: 3}
   m_Name: 
@@ -1704,76 +1704,79 @@ MonoBehaviour:
     - OnStartListening
     - OnRequestCompleted
     - OnStoppedListening
-    OnResponse:
+    _onRequestOptionSetup:
       m_PersistentCalls:
         m_Calls: []
-    OnPartialResponse:
+    _onRequestInitialized:
       m_PersistentCalls:
         m_Calls: []
-    OnValidatePartialResponse:
+    _onRequestCreated:
       m_PersistentCalls:
         m_Calls: []
-    OnError:
+    _onSend:
       m_PersistentCalls:
         m_Calls: []
-    OnAborting:
+    _onMinimumWakeThresholdHit:
       m_PersistentCalls:
         m_Calls: []
-    OnAborted:
+    _onMicDataSent:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestCompleted:
+    _onStoppedListeningDueToDeactivation:
       m_PersistentCalls:
         m_Calls: []
-    OnCanceled:
+    _onStoppedListeningDueToInactivity:
       m_PersistentCalls:
         m_Calls: []
-    OnComplete:
+    _onStoppedListeningDueToTimeout:
       m_PersistentCalls:
         m_Calls: []
-    OnMicLevelChanged:
+    _onAborting:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestOptionSetup:
+    _onAborted:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestInitialized:
+    _onCanceled:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestCreated:
+    _onPartialResponse:
       m_PersistentCalls:
         m_Calls: []
-    OnStartListening:
+    _onResponse:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListening:
+    _onError:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToInactivity:
+    _onRequestCompleted:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToTimeout:
+    _onComplete:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToDeactivation:
+    _onStartListening:
       m_PersistentCalls:
         m_Calls: []
-    OnMicDataSent:
+    _onStoppedListening:
       m_PersistentCalls:
         m_Calls: []
-    OnMinimumWakeThresholdHit:
+    _onMicLevelChanged:
       m_PersistentCalls:
         m_Calls: []
-    onPartialTranscription:
+    _onPartialTranscription:
       m_PersistentCalls:
         m_Calls: []
-    onFullTranscription:
+    _onFullTranscription:
       m_PersistentCalls:
         m_Calls: []
-    OnByteDataReady:
+    _onByteDataReady:
       m_PersistentCalls:
         m_Calls: []
-    OnByteDataSent:
+    _onByteDataSent:
+      m_PersistentCalls:
+        m_Calls: []
+    _onValidatePartialResponse:
       m_PersistentCalls:
         m_Calls: []
   witRuntimeConfiguration:
@@ -1792,6 +1795,7 @@ MonoBehaviour:
     preferredActivationOffset: -1
   usePlatformServices: 1
   enableConsoleLogging: 0
+  sendTranscriptionEventsForMessages: 0
 --- !u!114 &825419209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5145,8 +5149,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2101349845}
-  - component: {fileID: 2101349844}
-  - component: {fileID: 2101349843}
   - component: {fileID: 2101349842}
   m_Layer: 0
   m_Name: AnalysisVariable
@@ -5172,40 +5174,8 @@ MonoBehaviour:
     velHead: 0
     velHandIzq: 0
     velHandDer: 0
-  head: {fileID: 2101349844}
-  hands: {fileID: 2101349843}
-  valores:
-  - min: 0
-    max: 0
-  - min: 0
-    max: 0
-  - min: 0
-    max: 0
-  text: {fileID: 0}
---- !u!114 &2101349843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2101349841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55cb5c193e9cf7f45a06883a49a3b1e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2101349844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2101349841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d973c15a79570c7449e32ccc54ec10b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  timeUpdate: 1
+  windowSize: 5
 --- !u!4 &2101349845
 Transform:
   m_ObjectHideFlags: 0

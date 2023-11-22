@@ -2,55 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
-public class HeadVariables : MonoBehaviour
+public class HeadVariables
 {
-
     private Quaternion miradaPoint;
     private Vector3 position;
     private Vector3 lastPosition;
+    private float distance;
+    public VariableMeasurement velocidad;
     //private float aceleracion;
 
-    private float distance;
-
-       
-    public VariableMeasurement velocidad;
-	float time = 1f;
-    private void Start()
-    {
+	public HeadVariables(int windowSize) 
+	{
 		InitMotions();
 		Pose po;
-        PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out po);
-        position = po.position;
-		velocidad = new VariableMeasurement(5);
-        StartCoroutine(MeasureSpeed());
+		PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out po);
+		position = po.position;
+		velocidad = new VariableMeasurement(windowSize);
+	}
 
-    }
-
-    private IEnumerator MeasureSpeed()
+	
+	//Actualiza los datos de la cabeza
+    public void UpdateHead(float time)
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(time);
-            UpdateHead();
-        }
-    }
-    private void UpdateHead()
-    {
-
         Pose pose;
-        if (PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out pose))
-        {
-            lastPosition = position;
-            position = pose.position;
+		if (PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out pose))
+		{
+			lastPosition = position;
+			position = pose.position;
 			miradaPoint = pose.rotation;
 			distance = Vector3.Distance(position, lastPosition);
-            velocidad.Variable = distance / time;
-        }
-
+			velocidad.Variable = distance / time;
+		}
     }
 
-
-	struct Motion
+    #region HeadGesture
+    struct Motion
 	{
 		public float inProgress;
 		public float lastSignificantAngle;
@@ -75,13 +61,15 @@ public class HeadVariables : MonoBehaviour
 		nod.message = "SI";
 	}
 
-	private void Update()
+	public void UpdateMotionHead()
     {
 		Pose pose;
 		PoseDataSource.TryGetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out pose);
 		UpdateMotion(ref shake, GetShakeAngle(pose.rotation));
 		UpdateMotion(ref nod,GetNodAngle(pose.rotation));
 	}
+
+
 	
 	bool UpdateMotion(ref Motion mot, float angle)
 	{
@@ -139,5 +127,5 @@ public class HeadVariables : MonoBehaviour
         float forwardY = forward.y;
         return  Mathf.Asin(forwardY) * Mathf.Rad2Deg;
     }
-
+	#endregion
 }

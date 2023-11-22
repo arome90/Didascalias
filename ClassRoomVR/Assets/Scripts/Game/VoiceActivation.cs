@@ -102,7 +102,7 @@ namespace ClassRoomVR
             {
                 shout = true;
                 StartCoroutine(Wait());
-                AnalyticsManager.CustomEvent("Gritar");
+                //AnalyticsManager.CustomEvent("Gritar");
                 st.SetMode(TalkMode.Disrespect);
                 Debug.Log("Gritando");
             }

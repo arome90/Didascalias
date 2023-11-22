@@ -2,101 +2,86 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
-//using UnityEngine.InputSystem.XR;
-
-public class HandsManager : MonoBehaviour
+/// <summary>
+/// Clase que actualiza la informacion de cada mano según la variable time 
+/// Primero inicia la clase que gestiona cada mano y empieza una corrutina para medir las variables 
+/// </summary>
+public class HandsManager 
 {
-	public HandVariable handIzq;
-	public HandVariable handDer;
-	float time = 1f;
+	public HandVariables handIzq;
+	public HandVariables handDer;
 
-	private void Start()
+	public HandsManager(int windowSize)
 	{
-		InitHands();
-		StartCoroutine(MeasureSpeed());
+		handIzq = new HandVariables(TrackedPoseDriver.TrackedPose.LeftPose,windowSize);
+		handDer = new HandVariables(TrackedPoseDriver.TrackedPose.RightPose,windowSize);
 	}
 
-	private void InitHands()
+	//Actualiza los datos de las manos
+	public void UpdateHands(float time)
 	{
-		handIzq = new HandVariable(TrackedPoseDriver.TrackedPose.LeftPose, time);
-		handDer = new HandVariable(TrackedPoseDriver.TrackedPose.RightPose, time);
-	}
-
-
-	private IEnumerator MeasureSpeed()
-	{
-		while (true)
-		{
-			yield return new WaitForSeconds(time);
-			UpdateHands();
-
-		}
-	}
-	private void UpdateHands()
-	{
-		handDer.UpdateHand();
-		handIzq.UpdateHand();
-
+		handDer.UpdateHand(time);
+		handIzq.UpdateHand(time);
 	}
 
 }
 
 
-public class HandVariable
+public class HandVariables
 {
 	public Vector3 posicion;
 	VariableMeasurement posicionMagnitude;
 	VariableMeasurementVector3 posicionVector;
-	//la amplitud es la distancia entre la mano y una eje central 
-	float amplitud ;
 	VariableMeasurement distanciaRecorrida;
-	//float riesgo;
-
-	//Nivel inquietud
 	public VariableMeasurement velocidad;
 	VariableMeasurement aceleracion;
-
 	//aux
 	Vector3 lastPosicion ;
 
 
-
-	//gESTOS CON MANOS 
-	float time;
+	//gestos  
+	//float riesgo;
+	//Nivel inquietud
+	//la amplitud es la distancia entre la mano y un eje central 
+	//float amplitud ;
 
 	TrackedPoseDriver.TrackedPose hand;
-	public HandVariable(TrackedPoseDriver.TrackedPose handPose,float tim)
+	private int windowSize = 5;
+	public HandVariables(TrackedPoseDriver.TrackedPose handPose,int size)
 	{
+		windowSize = size;
 		hand = handPose;
-		time = tim;
 		InitVariables();
 	}
-
+	/// <summary>
+	/// Inicializa las variables
+	/// </summary>
 	private void InitVariables()
 	{
-
+		//El tamaño de ventana de las estadisticas dinamicas
 		Pose po;
 		PoseDataSource.TryGetDataFromSource(hand, out po);
 		posicion = po.position;
 		lastPosicion = posicion;
-		velocidad = new VariableMeasurement(5); 
-		posicionMagnitude = new VariableMeasurement(5); 
-		posicionVector = new VariableMeasurementVector3(5); 
-		distanciaRecorrida = new VariableMeasurement(5); 
-		aceleracion = new VariableMeasurement(5); 
+		velocidad = new VariableMeasurement(windowSize); 
+		posicionMagnitude = new VariableMeasurement(windowSize); 
+		posicionVector = new VariableMeasurementVector3(windowSize); 
+		distanciaRecorrida = new VariableMeasurement(windowSize); 
+		aceleracion = new VariableMeasurement(windowSize); 
 
 	}
 
 	
 
-	public void UpdateHand()
+	public void UpdateHand(float time)
 	{
 		Pose pose;
+		//Obtiene un struct con la posicion y rotacion de la mano 
 		if (PoseDataSource.TryGetDataFromSource(hand, out pose))
 		{
 			lastPosicion = posicion;
 			posicion = pose.position;
-			//Magnitud
+			//Magnitud del vector 
 			posicionMagnitude.Variable = posicion.magnitude;
 			//Vector3
 			posicionVector.Variable = posicion;

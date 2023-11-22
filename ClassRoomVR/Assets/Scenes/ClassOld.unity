@@ -2385,6 +2385,7 @@ GameObject:
   - component: {fileID: 629111102}
   - component: {fileID: 629111101}
   - component: {fileID: 629111100}
+  - component: {fileID: 629111105}
   m_Layer: 9
   m_Name: Main Camera VR
   m_TagString: MainCamera
@@ -2678,6 +2679,18 @@ Transform:
   - {fileID: 1032640547}
   m_Father: {fileID: 1933326385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &629111105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629111098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 540cde0599d53134e87f8d8bc533a73a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &638168664
 GameObject:
   m_ObjectHideFlags: 0
@@ -2985,47 +2998,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1906091840}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &762205096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762205095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5defd0489bb7ac640958e0dca765161b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &762205099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762205095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55cb5c193e9cf7f45a06883a49a3b1e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &762205106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762205095}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8884868c811aa03419fedbeff79ae600, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volumeThreshold: 0.1
-  pitchThreshold: 1000
-  rmsVal: 0
-  dbVal: 0
-  pitchVal: 0
 --- !u!114 &762205109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3033,7 +3005,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 762205095}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b570e15a0eb350468bad9e9bfad1c27, type: 3}
   m_Name: 
@@ -3515,76 +3487,79 @@ MonoBehaviour:
     - OnStartListening
     - OnRequestCompleted
     - OnStoppedListening
-    OnResponse:
+    _onRequestOptionSetup:
       m_PersistentCalls:
         m_Calls: []
-    OnPartialResponse:
+    _onRequestInitialized:
       m_PersistentCalls:
         m_Calls: []
-    OnValidatePartialResponse:
+    _onRequestCreated:
       m_PersistentCalls:
         m_Calls: []
-    OnError:
+    _onSend:
       m_PersistentCalls:
         m_Calls: []
-    OnAborting:
+    _onMinimumWakeThresholdHit:
       m_PersistentCalls:
         m_Calls: []
-    OnAborted:
+    _onMicDataSent:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestCompleted:
+    _onStoppedListeningDueToDeactivation:
       m_PersistentCalls:
         m_Calls: []
-    OnCanceled:
+    _onStoppedListeningDueToInactivity:
       m_PersistentCalls:
         m_Calls: []
-    OnComplete:
+    _onStoppedListeningDueToTimeout:
       m_PersistentCalls:
         m_Calls: []
-    OnMicLevelChanged:
+    _onAborting:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestOptionSetup:
+    _onAborted:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestInitialized:
+    _onCanceled:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestCreated:
+    _onPartialResponse:
       m_PersistentCalls:
         m_Calls: []
-    OnStartListening:
+    _onResponse:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListening:
+    _onError:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToInactivity:
+    _onRequestCompleted:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToTimeout:
+    _onComplete:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToDeactivation:
+    _onStartListening:
       m_PersistentCalls:
         m_Calls: []
-    OnMicDataSent:
+    _onStoppedListening:
       m_PersistentCalls:
         m_Calls: []
-    OnMinimumWakeThresholdHit:
+    _onMicLevelChanged:
       m_PersistentCalls:
         m_Calls: []
-    onPartialTranscription:
+    _onPartialTranscription:
       m_PersistentCalls:
         m_Calls: []
-    onFullTranscription:
+    _onFullTranscription:
       m_PersistentCalls:
         m_Calls: []
-    OnByteDataReady:
+    _onByteDataReady:
       m_PersistentCalls:
         m_Calls: []
-    OnByteDataSent:
+    _onByteDataSent:
+      m_PersistentCalls:
+        m_Calls: []
+    _onValidatePartialResponse:
       m_PersistentCalls:
         m_Calls: []
   witRuntimeConfiguration:
@@ -3603,6 +3578,7 @@ MonoBehaviour:
     preferredActivationOffset: -1
   usePlatformServices: 1
   enableConsoleLogging: 0
+  sendTranscriptionEventsForMessages: 0
 --- !u!1 &915587970
 GameObject:
   m_ObjectHideFlags: 0
@@ -9341,8 +9317,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1817273518}
-  - component: {fileID: 1817273517}
-  - component: {fileID: 1817273519}
   - component: {fileID: 1817273520}
   m_Layer: 0
   m_Name: AnalysisVariable
@@ -9351,18 +9325,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1817273517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1817273516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d973c15a79570c7449e32ccc54ec10b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1817273518
 Transform:
   m_ObjectHideFlags: 0
@@ -9378,18 +9340,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1817273519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1817273516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55cb5c193e9cf7f45a06883a49a3b1e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1817273520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9407,16 +9357,8 @@ MonoBehaviour:
     velHead: 0
     velHandIzq: 0
     velHandDer: 0
-  head: {fileID: 1817273517}
-  hands: {fileID: 1817273519}
-  valores:
-  - min: 0
-    max: 0
-  - min: 0
-    max: 0
-  - min: 0
-    max: 0
-  text: {fileID: 0}
+  timeUpdate: 1
+  windowSize: 5
 --- !u!1 &1837383866
 GameObject:
   m_ObjectHideFlags: 0
@@ -9937,18 +9879,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 762205096}
-    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 762205099}
-    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 762205106}
     - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
       insertIndex: -1

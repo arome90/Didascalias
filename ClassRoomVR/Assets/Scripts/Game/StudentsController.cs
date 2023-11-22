@@ -66,6 +66,7 @@ namespace ClassRoomVR
         private Student SearchName(string name)
         {
             string noTildesName = RemoveDiacritics(name);
+            Debug.Log(noTildesName);
             if (students.ContainsKey(noTildesName))
                 return students[noTildesName];
             return null;
