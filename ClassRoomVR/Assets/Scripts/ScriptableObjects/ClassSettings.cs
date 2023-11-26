@@ -87,7 +87,7 @@ namespace ClassRoomVR
         }
 
 
-        [Range(1.0f, 3.4f)]
+        [Range(1.0f, 3.8f)]
         [SerializeField]
         private float radius;
         public float Radius

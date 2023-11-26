@@ -2665,18 +2665,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5defd0489bb7ac640958e0dca765161b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &762205099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762205095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55cb5c193e9cf7f45a06883a49a3b1e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &762205106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2834,7 +2822,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &904727588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2883,76 +2871,79 @@ MonoBehaviour:
     - OnStartListening
     - OnRequestCompleted
     - OnStoppedListening
-    OnResponse:
+    _onRequestOptionSetup:
       m_PersistentCalls:
         m_Calls: []
-    OnPartialResponse:
+    _onRequestInitialized:
       m_PersistentCalls:
         m_Calls: []
-    OnValidatePartialResponse:
+    _onRequestCreated:
       m_PersistentCalls:
         m_Calls: []
-    OnError:
+    _onSend:
       m_PersistentCalls:
         m_Calls: []
-    OnAborting:
+    _onMinimumWakeThresholdHit:
       m_PersistentCalls:
         m_Calls: []
-    OnAborted:
+    _onMicDataSent:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestCompleted:
+    _onStoppedListeningDueToDeactivation:
       m_PersistentCalls:
         m_Calls: []
-    OnCanceled:
+    _onStoppedListeningDueToInactivity:
       m_PersistentCalls:
         m_Calls: []
-    OnComplete:
+    _onStoppedListeningDueToTimeout:
       m_PersistentCalls:
         m_Calls: []
-    OnMicLevelChanged:
+    _onAborting:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestOptionSetup:
+    _onAborted:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestInitialized:
+    _onCanceled:
       m_PersistentCalls:
         m_Calls: []
-    OnRequestCreated:
+    _onPartialResponse:
       m_PersistentCalls:
         m_Calls: []
-    OnStartListening:
+    _onResponse:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListening:
+    _onError:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToInactivity:
+    _onRequestCompleted:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToTimeout:
+    _onComplete:
       m_PersistentCalls:
         m_Calls: []
-    OnStoppedListeningDueToDeactivation:
+    _onStartListening:
       m_PersistentCalls:
         m_Calls: []
-    OnMicDataSent:
+    _onStoppedListening:
       m_PersistentCalls:
         m_Calls: []
-    OnMinimumWakeThresholdHit:
+    _onMicLevelChanged:
       m_PersistentCalls:
         m_Calls: []
-    onPartialTranscription:
+    _onPartialTranscription:
       m_PersistentCalls:
         m_Calls: []
-    onFullTranscription:
+    _onFullTranscription:
       m_PersistentCalls:
         m_Calls: []
-    OnByteDataReady:
+    _onByteDataReady:
       m_PersistentCalls:
         m_Calls: []
-    OnByteDataSent:
+    _onByteDataSent:
+      m_PersistentCalls:
+        m_Calls: []
+    _onValidatePartialResponse:
       m_PersistentCalls:
         m_Calls: []
   witRuntimeConfiguration:
@@ -2971,6 +2962,7 @@ MonoBehaviour:
     preferredActivationOffset: -1
   usePlatformServices: 1
   enableConsoleLogging: 0
+  sendTranscriptionEventsForMessages: 0
 --- !u!1 &914875843
 GameObject:
   m_ObjectHideFlags: 0
@@ -3699,9 +3691,9 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.016666668
+  m_VoxelSize: 0.06666667
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 6cbaf7d21755bb64e9f10626c3d1cce4, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 008a3fa9a62ea4946a03866fb9b7ca21, type: 2}
 --- !u!1 &1302075114 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000012212089150, guid: 30026254a41da3f4eb202264ab31261c,
@@ -4383,6 +4375,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 951083312138728944, guid: 30026254a41da3f4eb202264ab31261c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 951083312138728944, guid: 30026254a41da3f4eb202264ab31261c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1119772086186779444, guid: 30026254a41da3f4eb202264ab31261c,
         type: 3}
@@ -5636,8 +5638,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1817273518}
-  - component: {fileID: 1817273517}
-  - component: {fileID: 1817273519}
   - component: {fileID: 1817273520}
   m_Layer: 0
   m_Name: AnalysisVariable
@@ -5646,18 +5646,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1817273517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1817273516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d973c15a79570c7449e32ccc54ec10b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1817273518
 Transform:
   m_ObjectHideFlags: 0
@@ -5673,18 +5661,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1817273519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1817273516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55cb5c193e9cf7f45a06883a49a3b1e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1817273520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5702,16 +5678,8 @@ MonoBehaviour:
     velHead: 0
     velHandIzq: 0
     velHandDer: 0
-  head: {fileID: 1817273517}
-  hands: {fileID: 1817273519}
-  valores:
-  - min: 0
-    max: 0
-  - min: 0
-    max: 0
-  - min: 0
-    max: 0
-  text: {fileID: 0}
+  timeUpdate: 1
+  windowSize: 5
 --- !u!1 &1892024204 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000013933053302, guid: 30026254a41da3f4eb202264ab31261c,
@@ -5816,6 +5784,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
+      propertyPath: currentSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: f1b0306497f6d324389e73110b931ad9,
+        type: 2}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
       propertyPath: firebaseAnalytics
       value: 0
       objectReference: {fileID: 0}
@@ -5827,10 +5801,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 762205096}
-    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 762205099}
     - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
       insertIndex: -1

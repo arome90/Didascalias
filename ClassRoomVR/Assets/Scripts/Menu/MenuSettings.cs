@@ -65,7 +65,7 @@ namespace ClassRoomVR
                     maxStudents = 30;
                     break;
                 case StructureMode.Circular:
-                    maxStudents = 22;
+                    maxStudents = 20;
                     break;
                 case StructureMode.U:
                     maxStudents = 12;
@@ -94,6 +94,7 @@ namespace ClassRoomVR
             settings.NumStudents = settings.NumMen + settings.NumWomen;
             boysOption.SetMax(maxStudents - settings.NumWomen);
             girlsOption.SetMax(maxStudents - settings.NumMen);
+            settings.NumDesks = settings.NumStudents;
         }
 
 

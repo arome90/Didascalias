@@ -29,7 +29,7 @@ namespace ClassRoomVR
         public void CreateDesks()
         {
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
-            CreateRegularLayout(settings, settings.Rows, settings.Columns, 1.3f, 1.5f);
+            CreateRegularLayout(settings, settings.Rows, settings.Columns, 1.3f, 1.6f);
         }
 
         private void CreateRegularLayout(ClassSettings settings, int numRows, int numColumns, float deskOffsetX, float deskOffsetZ)
@@ -49,8 +49,8 @@ namespace ClassRoomVR
         {
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
             int numDesks = settings.NumStudents;
-            float radius = 3.4f;
-            float angle = 360f / numDesks;
+            float radius = settings.Radius;
+            float angle = settings.Degrees / numDesks;
 
             for (int i = 0; i < numDesks; i++)
             {
@@ -67,7 +67,7 @@ namespace ClassRoomVR
         {
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
             int numDesks = settings.NumStudents;
-            float radius = 3;
+            float radius = settings.Radius;
             float angle = 360f / (numDesks-1);
             float currentAngle = 0f;
 

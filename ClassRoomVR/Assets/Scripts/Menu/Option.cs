@@ -31,7 +31,6 @@ public class Option : MonoBehaviour
 
     private void Add()
     {
-        Debug.Log("click");
         value += step;
         if (value > maxValue)
             value = maxValue;

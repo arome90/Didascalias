@@ -49,7 +49,7 @@ namespace ClassRoomVR
 
                 // Instantiate a desk object and set its properties
                 var d = Instantiate(desk, position, Quaternion.identity, parentDeskTransform);
-                d.transform.LookAt(parentDeskTransform);
+                if(!isUStructure)d.transform.LookAt(parentDeskTransform);
                 d.onCollisionChanged.AddListener(CollisionWithOtherDesk);
 
                 // Add listeners to toggle events
@@ -132,25 +132,26 @@ namespace ClassRoomVR
         private void OnEnable()
         {
             // Set initial number of desks to match the number of students
-            settings.NumDesks = settings.NumStudents;
-            numDesks.SetValue(settings.NumStudents);
-            numDesks.SetMin(settings.NumStudents);
-
+            numDesks.SetMin(settings.NumDesks);
             // Check if the structure mode is U
             if (settings.StructureMode == StructureMode.U)
             {
-                numDesks.SetMax(1 + (numDesks.GetMax() / 2));
+                numDesks.SetMax(12);
                 gradesOpt.gameObject.SetActive(false);
+                //radiusOpt.gameObject.SetActive(false);
                 settings.Degrees = 180f;
                 isUStructure = true;
             }
             else
             {
+                numDesks.SetMax(20);
                 gradesOpt.gameObject.SetActive(true);
+               // radiusOpt.gameObject.SetActive(true);
                 settings.Degrees = 360f;
                 isUStructure = false;
             }
 
+            numDesks.SetValue(settings.NumDesks);
             gradesOpt.SetValue(settings.Degrees);
             radiusOpt.SetValue(settings.Radius);
 
@@ -185,7 +186,7 @@ namespace ClassRoomVR
         {
             if (settings.StructureMode == StructureMode.U)
             {
-                numDesks.SetMax((numDesks.GetMax() - 1) * 2);
+                numDesks.SetMax(20);
                 isUStructure = false;
             }
         }

@@ -206,11 +206,12 @@ namespace ClassRoomVR
         private Vector3 currentVelocity;
         private void UpdateTargetPosition()
         {
-            if (vision != FieldOfVision.Teacher)
+
+            if (vision != FieldOfVision.Teacher && state== State.Sitting)
             {
                 target.position = Vector3.SmoothDamp(target.position, actualTargetPosition, ref currentVelocity, smoothTime, maxSpeed, Time.deltaTime);
             }
-            else
+            else if (vision == FieldOfVision.Teacher)
             {
                 target.position = Vector3.MoveTowards(target.position, teacher.position, 5.0f * Time.deltaTime);
             }
@@ -302,6 +303,7 @@ namespace ClassRoomVR
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
             state = State.Standing;
+            target.position = transform.position + transform.forward+ targets[FieldOfVision.Up];
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             navMeshAgent.SetDestination(destination);
             while (Vector3.Distance(transform.position, destination) > 0.5f)
