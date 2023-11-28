@@ -303,7 +303,7 @@ namespace ClassRoomVR
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
             state = State.Standing;
-            target.position = transform.position + transform.forward+ targets[FieldOfVision.Up];
+            target.position = transform.position + transform.forward + targets[FieldOfVision.Up];
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             navMeshAgent.SetDestination(destination);
             while (Vector3.Distance(transform.position, destination) > 0.5f)

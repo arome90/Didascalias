@@ -146,15 +146,20 @@ namespace ClassRoomVR
             {
                 numDesks.SetMax(20);
                 gradesOpt.gameObject.SetActive(true);
-               // radiusOpt.gameObject.SetActive(true);
+                // radiusOpt.gameObject.SetActive(true);
                 settings.Degrees = 360f;
                 isUStructure = false;
             }
 
+            if (GameManager.Instance.GetScene() == 1)
+            {
+                settings.Radius = Mathf.Min(settings.Radius, radioMaximo);
+                radiusOpt.SetMax(3.1f);
+                numDesks.SetMax((settings.StructureMode == StructureMode.U) ? 9 : 17);
+            }
             numDesks.SetValue(settings.NumDesks);
             gradesOpt.SetValue(settings.Degrees);
             radiusOpt.SetValue(settings.Radius);
-
             Set();
         }
 
@@ -184,20 +189,15 @@ namespace ClassRoomVR
         // Method called when the script is disabled
         private void OnDisable()
         {
-            if (settings.StructureMode == StructureMode.U)
-            {
-                numDesks.SetMax(20);
-                isUStructure = false;
-            }
+            isUStructure = false;
         }
         [SerializeField] float espacioEntreParedYSilla=0.3f;
+        float radioMaximo;
         public override void MaxDesk()
         {
             float anchoDisponible = aula.size.x - 2 * espacioEntreParedYSilla;
             float largoDisponible = aula.size.z - 2 * espacioEntreParedYSilla;
-            float radioMaximo = Mathf.Min(anchoDisponible, largoDisponible) / 2f;
-            radiusOpt.SetMax(radioMaximo);
-            Debug.Log(radioMaximo);
+            radioMaximo = Mathf.Min(anchoDisponible, largoDisponible) / 2f;
         }
     }
 }

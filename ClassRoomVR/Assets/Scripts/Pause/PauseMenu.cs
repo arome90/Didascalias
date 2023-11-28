@@ -71,6 +71,7 @@ namespace ClassRoomVR
 
         public void QuitGame()
         {
+            quitButton.gameObject.SetActive(false);
             GameManager.Instance.LoadMainMenu();
         }
 

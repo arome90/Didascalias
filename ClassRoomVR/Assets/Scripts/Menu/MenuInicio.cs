@@ -9,6 +9,8 @@ namespace ClassRoomVR
     {
         [SerializeField] private Button enterButton;
         [SerializeField] private Button enter2Button;
+        [SerializeField] private Transform desk1;
+        [SerializeField] private Transform desk2;
         [SerializeField] private Button quitButton;
         [SerializeField] private GameObject nextScreen;
         [SerializeField] private Vector3 playerDestination;
@@ -18,28 +20,34 @@ namespace ClassRoomVR
         [SerializeField] RectTransform rect;
         [SerializeField] RectTransform rect2;
         [SerializeField] GameObject canvas;
+        
+
+       
 
         private void Start()
         {
             enterButton.onClick.AddListener(() =>
             {
+                GameManager.Instance.SetScene(1);
                 PlayButton();
                 GoNextScreen();
                 maps[0].SetActive(true);
                 maps[1].SetActive(false);
                 var a =canvas.GetComponent<RectTransform>();
                 MatchOther(a, rect);
-                GameManager.Instance.SetScene(1);
+                DeskManager.Instance.transform.position = desk1.position;
             });
             enter2Button.onClick.AddListener(() =>
             {
+                GameManager.Instance.SetScene(2);
                 PlayButton();
                 GoNextScreen();
                 maps[1].SetActive(true);
                 maps[0].SetActive(false);
                 var a = canvas.GetComponent<RectTransform>();
                 MatchOther(a, rect2);
-                GameManager.Instance.SetScene(2);
+                DeskManager.Instance.transform.position = desk2.position;
+
             });
             quitButton.onClick.AddListener(QuitButton);
             // Remove in the future
@@ -99,6 +107,7 @@ namespace ClassRoomVR
         private void OnEnable()
         {
             ReturnButton();
+            nextScreen.SetActive(false);
         }
 
         private void SetPlayerPositionAndRotation(Vector3 position, Quaternion rotation)

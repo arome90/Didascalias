@@ -50,8 +50,12 @@ namespace ClassRoomVR
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
             int numDesks = settings.NumStudents;
             float radius = settings.Radius;
+            //if (GameManager.Instance.GetScene() == 1) 
+            //{
+            //     radius = 3.3f;
+            //}
+            
             float angle = settings.Degrees / numDesks;
-
             for (int i = 0; i < numDesks; i++)
             {
                 float x = Mathf.Cos(Mathf.Deg2Rad * angle * i) * radius;
@@ -67,7 +71,8 @@ namespace ClassRoomVR
         {
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
             int numDesks = settings.NumStudents;
-            float radius = settings.Radius;
+          //  float radius = GameManager.Instance.GetScene() == 1 ? 3.3f : settings.Radius;
+            float radius =  settings.Radius;
             float angle = 360f / (numDesks-1);
             float currentAngle = 0f;
 

@@ -28,6 +28,7 @@ namespace ClassRoomVR
                 numDesks.onValueChanged.AddListener(ChangeObjects);
             }
             MaxDesk();
+
         }
 
         private void OnDisable()

@@ -25,6 +25,7 @@ namespace ClassRoomVR
         [SerializeField] private bool firebaseAnalytics = true;
         [SerializeField] private bool unityAnalytics = true;
         private int indexScene;
+        private int indexCurrentSett;
         public static GameManager Instance { get; private set; }
 
      
@@ -107,9 +108,15 @@ namespace ClassRoomVR
         public GameObject GetPlayer() => player;
         public VoiceActivation GetVoiceActivation() => voiceActivation;
         public void SetVoiceActivation(VoiceActivation voice) => voiceActivation = voice;
-        public void SetCurrentSettings(int index) => currentSettings = availableSettings[index];
 
         public void SetScene(int i) => indexScene = i;
+        public int GetScene() => indexScene;
+        public void SetCurrentSettings(int index) 
+        {
+            currentSettings = availableSettings[index];
+            indexCurrentSett = index;
+        }
+
         private void InitData()
         {
             if (savedData != null)
@@ -150,6 +157,10 @@ namespace ClassRoomVR
             return currentSettings;
         }
 
+        public int GetIndexCurrentSettings()
+        {
+            return indexCurrentSett;
+        }
         public ClassSettings[] GetAvailableSettings()
         {
             return availableSettings;

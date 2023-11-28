@@ -14,20 +14,29 @@ namespace ClassRoomVR {
         [SerializeField] int index;
         [SerializeField] MenuInicio menu;
         [SerializeField] GameObject player;
+
+
         private void Awake()
+        {
+            back.onClick.AddListener(GoBackScreen);
+            start.onClick.AddListener(GoStart);
+        }
+        private void OnEnable()
+        {
+            ActiveFirstPage();
+        }
+
+        private void ActiveFirstPage() 
         {
             for (int i = 0; i < menus.Count; i++)
             {
                 menus[i].SetActive(false);
             }
             menus[index].SetActive(true);
+            menus[index].transform.parent.gameObject.SetActive(true);
         }
 
-        private void Start()
-        {
-            back.onClick.AddListener(GoBackScreen);
-            start.onClick.AddListener(GoStart);
-        }
+       
 
         public void GoBackScreen()
         {
@@ -36,9 +45,12 @@ namespace ClassRoomVR {
             if (index < 0) 
             {
                 index = 0;
+                menus[index].transform.parent.gameObject.SetActive(false);
                 menu.ReturnButton();
+                return;
             }
             menus[index].SetActive(true);
+
         }
 
         public void GoNextScreen() 
