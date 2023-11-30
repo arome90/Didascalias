@@ -49,26 +49,24 @@ namespace ClassRoomVR
             student2.ChangeDesk(position1);
         }
 
-        // Remove diacritics (accent marks) from a string
-        private string RemoveDiacritics(string text)
-        {
-            string normalized = text.Normalize(NormalizationForm.FormD);
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (char c in normalized)
-            {
-                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                    stringBuilder.Append(c);
-            }
-            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-        }
+        //// Remove diacritics (accent marks) from a string
+        //private string RemoveDiacritics(string text)
+        //{
+        //    string normalized = text.Normalize(NormalizationForm.FormD);
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    foreach (char c in normalized)
+        //    {
+        //        if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+        //            stringBuilder.Append(c);
+        //    }
+        //    return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        //}
 
         // Search for a student by name, handling diacritics
         private Student SearchName(string name)
         {
-            string noTildesName = RemoveDiacritics(name);
-            Debug.Log(noTildesName);
-            if (students.ContainsKey(noTildesName))
-                return students[noTildesName];
+            if (students.ContainsKey(name))
+                return students[name];
             return null;
         }
 

@@ -55,7 +55,7 @@ namespace ClassRoomVR
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
                 .Where(c => (distracted & c) == c)
                 .ToArray();
-            voiceGenerator = GetComponent<VoiceGenerator>();
+            //voiceGenerator = GetComponent<VoiceGenerator>();
         }
 
         // Methods to set student's parameters and create their body
@@ -383,10 +383,10 @@ namespace ClassRoomVR
         public StudentBehavior GetBehavior()=> behavior;
         #endregion
 
-        VoiceGenerator voiceGenerator;
-        public void GenerateText()
-        {
-            voiceGenerator.GenerateVoiceClipAsync("hola");
-        }
+        //VoiceGenerator voiceGenerator;
+        //public void GenerateText()
+        //{
+        //    voiceGenerator.GenerateVoiceClipAsync("hola");
+        //}
     }
 }

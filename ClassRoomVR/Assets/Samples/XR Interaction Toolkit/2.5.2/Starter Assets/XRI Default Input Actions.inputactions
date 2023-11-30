@@ -783,9 +783,9 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Toggle Menu",
+                    "name": "Menu",
                     "type": "Button",
-                    "id": "eaaabedd-9144-464e-a711-eea94f27ed55",
+                    "id": "b0711f58-1074-4459-9a7e-8b6e1d138e91",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -960,23 +960,23 @@
                 },
                 {
                     "name": "",
-                    "id": "1b621af4-fa6b-4c43-9fb6-469cce6a7047",
-                    "path": "<OculusTouchController>{LeftHand}/{Menu}",
+                    "id": "eadc064b-4193-43d8-973c-1d5b41705adb",
+                    "path": "<OculusTouchController>{LeftHand}/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Toggle Menu",
+                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "d892395e-85b3-46af-b304-367e72860a40",
-                    "path": "<OculusTouchController>{LeftHand}/start",
+                    "id": "cb76d878-26d1-4be3-9866-cdfdcb88220c",
+                    "path": "<OculusTouchController>{LeftHand}/{MenuButton}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Toggle Menu",
+                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1610,9 +1610,9 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Primary Button",
+                    "name": "PrImary Button",
                     "type": "Button",
-                    "id": "16291fe7-9e5c-4092-bfdc-c77b774ad42c",
+                    "id": "8f4de5d9-384f-4c05-a7f1-51e7450a05e9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -1787,12 +1787,23 @@
                 },
                 {
                     "name": "",
-                    "id": "115e58eb-8add-4b23-ae64-38c470f20c70",
-                    "path": "<XRInputV1::Oculus::OculusTouchControllerRight>/{PrimaryButton}",
+                    "id": "103157b3-2270-4db5-af28-449d599ae753",
+                    "path": "<XRInputV1::Oculus::OculusTouchControllerRight>{RightHand}/primarybutton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Primary Button",
+                    "action": "PrImary Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6bb7c113-e5f9-43f7-add8-20487a62faaa",
+                    "path": "<OculusTouchController>/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrImary Button",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
