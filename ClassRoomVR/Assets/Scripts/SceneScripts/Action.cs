@@ -30,6 +30,7 @@ namespace ClassRoomVR
                 Invoke(nameof(Laughter), 2.0f);
             }
             bh = GetComponent<BehaviorTree>();
+            InputLogger.Instance.NewAction();
             bh.EnableBehavior();
 
         }
@@ -174,6 +175,7 @@ namespace ClassRoomVR
             //StopAllCoroutines();
             //gameObject.SetActive(false);
             Destroy(gameObject);
+            InputLogger.Instance.CompareVelocity();
         }
 
         

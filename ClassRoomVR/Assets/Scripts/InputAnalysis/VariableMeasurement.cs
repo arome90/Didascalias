@@ -14,9 +14,12 @@ public class VariableMeasurement
     
     // private float variableAverage;
     RunningStatistics runStats;
-    MovingStatistics movStats;
+    List<float> actionStats;
+   // MovingStatistics movStats;
     public RunningStatistics Run => runStats;
-    public MovingStatistics Mov => movStats;
+    //public MovingStatistics Mov => movStats;
+
+    public double ActionMean => actionStats.Mean();
 
     public float Variable
     {
@@ -29,20 +32,23 @@ public class VariableMeasurement
     }
 
    
-    //List<float> list;
     public VariableMeasurement(int windowSize)
     {
         
         //list = new List<float>();
         //StreamingStatistics.Mean(list);
         // Statistics.Mean(list);
-        movStats = new MovingStatistics(windowSize);
+      //  movStats = new MovingStatistics(windowSize);
         runStats = new RunningStatistics();
-       
+        actionStats = new List<float>();
         //TO DO ? 1: usar streamingstatistics en vez de running
         //TO DO ? 2: Usar moving statistics solo cuando se pide y no cuando se agrega una variable 
     }
 
+    public void NewAction() 
+    {
+        actionStats.Clear();
+    }
 
     /// <summary>
     /// Actualizar las stats agregando la variable a las diferentes estadisticas
@@ -50,7 +56,8 @@ public class VariableMeasurement
     private void UpdateStats()
     {
         runStats.Push(variable);
-        movStats.Push(variable);
+       // movStats.Push(variable);
+        actionStats.Add(variable);
     }
 
 

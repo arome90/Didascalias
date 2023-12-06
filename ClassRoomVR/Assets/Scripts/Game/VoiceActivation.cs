@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using Meta.WitAi;
+using Meta.WitAi.Data;
+using Meta.WitAi.Json;
 
 namespace ClassRoomVR
 {
@@ -38,24 +40,18 @@ namespace ClassRoomVR
         private void Awake()
         {
             GameManager.Instance.SetVoiceActivation(this);
-            //fullTranscriptionText.text = partialTranscriptionText.text = string.Empty;
-
-            //appVoiceExperience.VoiceEvents.onFullTranscription.AddListener((transcription) =>
-            //{
-            //    fullTranscriptionText.text = transcription;
-            //});
-
-            //appVoiceExperience.VoiceEvents.OnPartialTranscription.AddListener((transcription) =>
-            //{
-            //    partialTranscriptionText.text = transcription;
-            //});
 
             appVoiceExperience.VoiceEvents.OnRequestCompleted.AddListener(() =>
             {
                 Activate();
             });
 
-            appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
+            //appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
+            //{
+            //    UpdateClass(response);
+            //});
+
+            appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
             {
                 UpdateClass(response);
             });
@@ -80,7 +76,7 @@ namespace ClassRoomVR
         public void Activate()
         {
             Debug.Log("Habla");
-            appVoiceExperience.Activate();
+            appVoiceExperience.ActivateImmediately();
         }
 
         private void Update()
@@ -120,11 +116,46 @@ namespace ClassRoomVR
         }
 
 
+        // Validate & set color
+        public void OnValidateColorSet(VoiceSession sessionData, string color)
+        {
+            //Color c;
+            //if (TryGetColor(color, out c))
+            //{
+            //    SetColor(c);
+            //    sessionData.validResponse = true;
+            //}
+        }
+
+        Student studentSelected;
+        public void OnValidateStudent(VoiceSession sessionData, string student)
+        {
+            Student s;
+            if (TryGetStudent(student,out s)) 
+            {
+                studentSelected = s;
+                sessionData.validResponse = true;
+            }
+        }
+
+        private bool TryGetStudent(string studentName, out Student s)
+        {
+            // Checkea student name
+            if (ClassManager.Instance.GetStudentsController().TryGetStudent(studentName,out s))
+            {
+                return true;
+            }
+            // No existe
+            return false;
+        }
+
+
         //Gestion de las ordenes del profesor
         //TO DO : CAMBIAR PARA QUE SEA GENERICO
-        public void UpdateClass(Meta.WitAi.Json.WitResponseNode response)
+        public void UpdateClass(VoiceSession sessionData)
         {
-            
+
+            WitResponseNode response = sessionData.response;
             var intent = WitResultUtilities.GetIntentName(response);
 
             var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");

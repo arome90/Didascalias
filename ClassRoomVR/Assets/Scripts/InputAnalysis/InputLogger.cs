@@ -19,7 +19,7 @@ namespace ClassRoomVR
         //Datos estadisticos recopilados de la cabeza
         HeadVariables head;
         //Datos estadisticos recopilados de ambas manos
-        HandsManager hands;
+        public HandsManager hands;
         //Datos estadisticos recopilados de la voz
         VoiceVariables voice;
         private float[] list;
@@ -111,10 +111,45 @@ namespace ClassRoomVR
             return indexGreatestDistinction;
         }
 
-
         private void Update()
         {
             head.UpdateMotionHead();
+        }
+
+
+        public void NewAction() 
+        {
+            hands.handIzq.velocidad.NewAction();
+        }
+        public void CompareVelocity()
+        {
+            // las medias de velocidad general y durante el conflicto
+            double mediaRun = hands.handIzq.velocidad.Run.Mean;
+            //double mediaMov = hands.handIzq.velocidad.Mov.Mean;
+            double actionMov = hands.handIzq.velocidad.ActionMean;
+
+            // Compara las medias y registra los resultados con Debug.Log
+            //if (mediaRun > mediaMov)
+            //{
+            //    Debug.Log($"La media de Run ({mediaRun}) es mayor que la de Mov ({mediaMov}).");
+            //}
+            //else if (mediaRun < mediaMov)
+            //{
+            //    Debug.Log($"La media de Mov ({mediaMov}) es mayor que la de Run ({mediaRun}).");
+            //}
+
+
+
+            // Compara las medias y registra los resultados con Debug.Log
+            if (mediaRun > actionMov)
+            {
+                Debug.Log($"La media de Run ({mediaRun}) es mayor que la de Action ({actionMov}).");
+            }
+            else if (mediaRun < actionMov)
+            {
+                Debug.Log($"La media de Action ({actionMov}) es mayor que la de Run ({mediaRun}).");
+            }
+
         }
     }
 

@@ -136,6 +136,7 @@ namespace ClassRoomVR
 
         public void PayAttention()
         {
+            behavior.SetAttention();
             SetDirection(FieldOfVision.Teacher);
         }
 

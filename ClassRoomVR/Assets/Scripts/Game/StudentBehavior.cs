@@ -71,6 +71,10 @@ namespace ClassRoomVR
             ModifyAttention();
         }
 
+        public void SetAttention() 
+        {
+            attentionLevel = Mathf.Max(attentionLevel, 65f);
+        }
 
         public double CalculateAttentionAverage()
         {

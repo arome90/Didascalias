@@ -35,10 +35,9 @@ namespace ClassRoomVR
         // Method to handle changing desks for students
         public void SendChangeDesk(string[] values)
         {
-            Student student1 = SearchName(values[0]);
-            Student student2 = SearchName(values[1]);
-            if (student1 != null && student2 != null)
-                ChangeDesk(student1, student2);
+            Student s1, s2;
+            if (TryGetStudent(values[0], out s1) && TryGetStudent(values[1], out s2))
+                ChangeDesk(s1, s2);
         }
 
         private void ChangeDesk(Student student1, Student student2)
@@ -63,11 +62,15 @@ namespace ClassRoomVR
         //}
 
         // Search for a student by name, handling diacritics
-        private Student SearchName(string name)
+        public bool TryGetStudent(string name, out Student student)
         {
-            if (students.ContainsKey(name))
-                return students[name];
-            return null;
+            student = null;
+            if (students.ContainsKey(name)) 
+            {
+                student = students[name];
+                return true;
+            }
+            return false;
         }
 
         // Get a list of student names that are in the camera's field of vision
@@ -113,8 +116,8 @@ namespace ClassRoomVR
         {
             if (students.Length == 1)
             {
-                Student student = SearchName(students[0]);
-                if (student != null)
+                Student student;
+                if (TryGetStudent(students[0], out student))
                     student.SitBack();
             }
         }
@@ -131,8 +134,8 @@ namespace ClassRoomVR
                 Transform position = Place(place);
                 if (position != null)
                 {
-                    Student student = SearchName(students[0]);
-                    if (student != null)
+                    Student student;
+                    if (TryGetStudent(students[0], out student))
                         student.MoveTo(position.position);
                 }
             }
@@ -150,8 +153,8 @@ namespace ClassRoomVR
         {
             if (students.Length == 1)
             {
-                Student student = SearchName(students[0]);
-                if (student != null)
+                Student student;
+                if (TryGetStudent(students[0], out student))
                     student.MoveTo(door.position);
             }
         }
@@ -175,8 +178,8 @@ namespace ClassRoomVR
         {
             if (students.Length == 1)
             {
-                Student student = SearchName(students[0]);
-                if (student != null)
+                Student student;
+                if (TryGetStudent(students[0], out student))
                     student.PayAttention();
             }
         }
