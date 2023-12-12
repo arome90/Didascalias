@@ -17,7 +17,7 @@ public class VoiceVariables : MonoBehaviour
 
     void Start()
     {
-        //AnalyzeVoiceVolume();
+      //  InvokeRepeating(nameof(AnalyzeVoice), 10, 5);
     }
 
     public void initializeVariables()
@@ -38,9 +38,10 @@ public class VoiceVariables : MonoBehaviour
         // Calcula el nivel de intensidad en decibelios
         float volumeLevel = CalculateVolumeLevel(audioData);
 
-        AudioSource audioAux = new AudioSource();
-        audioAux.clip = audioClip;
-        float pitchLevel = AnalyzePitch(audioAux, sampleRate);
+        //Comentado de momento 
+        //AudioSource audioAux = new AudioSource();
+        //audioAux.clip = audioClip;
+        //float pitchLevel = AnalyzePitch(audioAux, sampleRate);
         
         // Detén la grabación del micrófono
         Microphone.End(null);

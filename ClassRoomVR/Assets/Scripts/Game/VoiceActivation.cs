@@ -2,7 +2,9 @@ using UnityEngine;
 using TMPro;
 using Meta.WitAi;
 using Meta.WitAi.Data;
-using Meta.WitAi.Json;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using MathNet.Numerics.Statistics;
 
 namespace ClassRoomVR
 {
@@ -16,7 +18,8 @@ namespace ClassRoomVR
         [SerializeField] StudentsController st;
 
         private void Start()
-        { 
+        {
+            volumeList = new List<float>();
             Activate();
         }
 
@@ -46,20 +49,47 @@ namespace ClassRoomVR
                 Activate();
             });
 
-            //appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
-            //{
-            //    UpdateClass(response);
-            //});
-
-            appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
+            appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
                 UpdateClass(response);
             });
 
-            appVoiceExperience.VoiceEvents.OnMicLevelChanged.AddListener((value) =>
+            appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
+            {
+                OnValidatePartialResponse(response);
+            });
+
+            appVoiceExperience.VoiceEvents.OnMicAudioLevelChanged.AddListener((value) =>
             {
                 OnMicLevelChanged(value);
             });
+
+
+
+
+            appVoiceExperience.VoiceEvents.OnMicStartedListening.AddListener(() =>
+            {
+                volumeList.Clear();
+            });
+
+            appVoiceExperience.VoiceEvents.OnMicStoppedListening.AddListener(() =>
+            {
+
+                double media = volumeList.Mean();
+                if (media > -25)
+                {
+                    Debug.Log("Gritando");
+                    st.SetMode(TalkMode.Disrespect);
+                }
+                else if(media < -54) 
+                {
+                    Debug.Log("Susurrando");
+                    st.SetMode(TalkMode.Good);
+
+                }
+                else { Debug.Log("Normal"); st.SetMode(TalkMode.Normal); }
+            });
+
         }
 
 
@@ -75,8 +105,7 @@ namespace ClassRoomVR
 
         public void Activate()
         {
-            Debug.Log("Habla");
-            appVoiceExperience.ActivateImmediately();
+            appVoiceExperience.Activate();
         }
 
         private void Update()
@@ -89,43 +118,38 @@ namespace ClassRoomVR
             }
 
         }
-        float miclevel;
+        List<float> volumeList;
         public void OnMicLevelChanged(float a)
         {
-            miclevel = a;
-           // Debug.Log(a +" "+ Time.time);
-            if (!shout && a > 0.8f /*0.8f*/)
+            float db = 20 * Mathf.Log10(a);
+            if (db > -65)
             {
-                shout = true;
-                StartCoroutine(Wait());
-                //AnalyticsManager.CustomEvent("Gritar");
-                st.SetMode(TalkMode.Disrespect);
-                Debug.Log("Gritando");
+                Debug.Log(db);
+               // Debug.Log("Nota" + Unity.Mathematics.math.remap(-60, -20, 0f, 1f, db));
+                volumeList.Add(db);              
             }
-           
         }
 
         
-        System.Collections.IEnumerator Wait() 
-        {
-            float startTime = Time.time; // Guarda el tiempo inicial
-            yield return new WaitUntil(() => miclevel < 0.8f && miclevel> 0.2f );
-            float elapsedTime = Time.time - startTime; // Calcula el tiempo transcurrido
-            Debug.Log("Tiempo transcurrido: " + elapsedTime + " segundos");
-            shout = false;
-        }
+        //System.Collections.IEnumerator Wait() 
+        //{
+        //    float startTime = Time.time; // Guarda el tiempo inicial
+        //    yield return new WaitUntil(() => miclevel < 0.8f && miclevel> 0.2f );
+        //    float elapsedTime = Time.time - startTime; // Calcula el tiempo transcurrido
+        //    Debug.Log("Tiempo transcurrido: " + elapsedTime + " segundos");
+        //    shout = false;
+        //}
 
 
-        // Validate & set color
-        public void OnValidateColorSet(VoiceSession sessionData, string color)
+        public void OnValidatePartialResponse(VoiceSession sessionData)
         {
-            //Color c;
-            //if (TryGetColor(color, out c))
-            //{
-            //    SetColor(c);
-            //    sessionData.validResponse = true;
-            //}
+            string[] names = sessionData.response.GetAllEntityValues("wit$contact:student");
+            if (names != null && names.Length > 0)
+            {
+                OnValidateStudent(sessionData, names[0]);
+            }
         }
+
 
         Student studentSelected;
         public void OnValidateStudent(VoiceSession sessionData, string student)
@@ -134,6 +158,7 @@ namespace ClassRoomVR
             if (TryGetStudent(student,out s)) 
             {
                 studentSelected = s;
+                st.HandleCall(s);
                 sessionData.validResponse = true;
             }
         }
@@ -152,45 +177,37 @@ namespace ClassRoomVR
 
         //Gestion de las ordenes del profesor
         //TO DO : CAMBIAR PARA QUE SEA GENERICO
-        public void UpdateClass(VoiceSession sessionData)
+      //  public void UpdateClass(VoiceSession sessionData) 
+        public void UpdateClass(Meta.WitAi.Json.WitResponseNode response)
         {
-
-            WitResponseNode response = sessionData.response;
-            var intent = WitResultUtilities.GetIntentName(response);
-
-            var alumnos = WitResultUtilities.GetAllEntityValues(response, "wit$contact:student");
-           
-            var insulto =  WitResultUtilities.GetFirstEntityValue(response, "Insultos:Insultos");
-            Debug.Log(intent + response.GetTranscription());
+           // var response = sessionData.response;
+            string intentName = response.GetIntentName();
+          //  var alumnos = response.GetAllEntityValues("wit$contact:student");
+            var insulto = response.GetFirstEntityValue("Insultos:Insultos");
+            Debug.Log(intentName + response.GetTranscription());
             
 
-            switch (intent)
+            switch (intentName)
             {
                 case "Sentarse":
-                    st.HandleSit(alumnos);
+                    st.HandleSit(studentSelected);
                     break;
-                case "CambiarSitio":
-                    st.HandleMove(alumnos, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
-                    break;
+                //case "CambiarSitio":
+                //    st.HandleMove(alumnos, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
+                //    break;
                 case "Postponer":
                     st.HandlePostpone();
                     break;
                 case "Expulsion":
-                    st.HandleExpel(alumnos);
+                    st.HandleExpel(studentSelected);
                     break;
-                case "LLamarAlumno":
-                    st.HandleCall(alumnos);
-                    break;
-                default:
-                    Debug.Log($"Intent no reconocido: {intent}");
-                    break;
-
             }
 
             if (insulto != "") 
             {
                 st.HandleDisrespect();
             }
+            else { st.HandleNormal(); }
         }
 
 

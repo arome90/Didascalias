@@ -65,7 +65,7 @@ namespace ClassRoomVR
         public bool TryGetStudent(string name, out Student student)
         {
             student = null;
-            if (students.ContainsKey(name)) 
+            if (students.ContainsKey(name))
             {
                 student = students[name];
                 return true;
@@ -112,14 +112,9 @@ namespace ClassRoomVR
         }
 
         // Handle sitting actions for students
-        public void HandleSit(string[] students)
+        public void HandleSit(Student student)
         {
-            if (students.Length == 1)
-            {
-                Student student;
-                if (TryGetStudent(students[0], out student))
-                    student.SitBack();
-            }
+            if (student != null) { student.SitBack(); }
         }
 
         // Handle moving actions for students
@@ -149,14 +144,9 @@ namespace ClassRoomVR
         }
 
         // Handle expelling students
-        public void HandleExpel(string[] students)
+        public void HandleExpel(Student student)
         {
-            if (students.Length == 1)
-            {
-                Student student;
-                if (TryGetStudent(students[0], out student))
-                    student.MoveTo(door.position);
-            }
+            student.MoveTo(door.position);
         }
 
         // Handle disrespectful behavior
@@ -173,15 +163,17 @@ namespace ClassRoomVR
             mode = TalkMode.Good;
         }
 
-        // Handle calling a student's attention
-        public void HandleCall(string[] students)
+        public void HandleNormal()
         {
-            if (students.Length == 1)
-            {
-                Student student;
-                if (TryGetStudent(students[0], out student))
-                    student.PayAttention();
-            }
+            Debug.Log("You have spoken");
+            mode = TalkMode.Normal;
+        }
+
+
+        // Handle calling a student's attention
+        public void HandleCall(Student student)
+        {
+            student.PayAttention();
         }
         // Determine a position based on a string description
         public Transform Place(string place)

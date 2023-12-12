@@ -4,7 +4,7 @@ public enum GenderInfo { Random, Women, Men }
 public enum Gender { Women, Men };
 public enum State { Sitting ,Standing };
 
-public enum TalkMode { None, Disrespect, Good };
+public enum TalkMode { None, Disrespect, Good, Normal };
 public enum Allign { None, Centro, Frente };
 public enum GenerateMode { Random, Personalizado, Gender }
 public enum Age { Primero, Segundo, Tercero }

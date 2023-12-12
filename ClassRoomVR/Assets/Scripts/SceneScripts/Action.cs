@@ -126,9 +126,21 @@ namespace ClassRoomVR
         {
             foreach (Student s in problematics)
             {
-                if (controller.GetMode() == TalkMode.Good && Vector3.Distance(s.transform.position, player.transform.position) <= distanceNear && s.IsStudentInFieldOfVision())
+                if (Vector3.Distance(s.transform.position, player.transform.position) <= distanceNear && s.IsStudentInFieldOfVision())
                 {
-                    bh.GetVariable("Path").SetValue(1);
+                    Debug.Log("Cerca"+ controller.GetMode());
+                    if (controller.GetMode() == TalkMode.Good)
+                    {
+                        Debug.Log("Genial");
+                        bh.GetVariable("Path").SetValue(1);
+
+                    }
+                    if (controller.GetMode() == TalkMode.Normal)
+                    {
+
+                        Debug.Log("Segundo camino");
+                        bh.GetVariable("Path").SetValue(1);
+                    }
                   //  controller.GoOut();
                 }
             }
