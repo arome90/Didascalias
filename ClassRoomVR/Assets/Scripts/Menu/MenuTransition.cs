@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,7 @@ namespace ClassRoomVR {
         [SerializeField] int index;
         [SerializeField] MenuInicio menu;
         [SerializeField] GameObject player;
+        [SerializeField] TextMeshProUGUI textSession; // Reference to the session text
 
 
         private void Awake()
@@ -66,6 +68,8 @@ namespace ClassRoomVR {
             if (GameManager.Instance.GetCurrentSettings().name != "Personalizado") { DeskManager.Instance.DestroyChildren(); }
             GameManager.Instance.LoadMainScene();
             start.gameObject.SetActive(false);
+            textSession.text = WsClient.Instance.session;
+
         }
 
         public void MovePizarra() 

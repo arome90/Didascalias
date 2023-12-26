@@ -1,6 +1,7 @@
 ﻿using BehaviorDesigner.Runtime;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace ClassRoomVR
@@ -14,15 +15,16 @@ namespace ClassRoomVR
         BehaviorTree bh;
         List<Student> problematics;
         DisruptiveAction a;
+        TextMeshProUGUI text;
         private void Start()
         {
-            player = GameManager.Instance.GetPlayer();
             controller = ClassManager.Instance.GetStudentsController();
             controller.SetMode(TalkMode.None);
         }
 
-        public void SetParameters(List<Student> st,DisruptiveAction dis) 
+        public void SetParameters(GameObject player,List<Student> st,DisruptiveAction dis, TextMeshProUGUI t) 
         {
+            this.player= player;
             problematics = st;
             a = dis;
             if (a.laughter)
@@ -32,6 +34,8 @@ namespace ClassRoomVR
             bh = GetComponent<BehaviorTree>();
             InputLogger.Instance.NewAction();
             bh.EnableBehavior();
+            text = t;
+            text.text = "-1";
 
         }
         /// <summary>
@@ -75,7 +79,7 @@ namespace ClassRoomVR
                 }
             }
 
-            yield return new WaitForSecondsRealtime(3);
+            yield return new WaitForSecondsRealtime(4);
 
             if (!s.IsStudentInFieldOfVision())
             {
@@ -176,7 +180,7 @@ namespace ClassRoomVR
         //Termina la clase
         public void Finish()
         {
-            
+            ChangeText();
             ClassManager.Instance.DisruptiveSituation = false;
             foreach (Student s in problematics)
             {
@@ -184,12 +188,20 @@ namespace ClassRoomVR
             }
             Debug.Log(bh.GetVariable("Path").GetValue());
             controller.SetMode(TalkMode.None);
-            //StopAllCoroutines();
-            //gameObject.SetActive(false);
-            Destroy(gameObject);
+            Destroy(gameObject,2f);
             InputLogger.Instance.CompareVelocity();
         }
 
-        
+
+        private void ChangeText()
+        {
+            text.text = bh.GetVariable("Path").GetValue().ToString();
+        }
+
+        private void OnDestroy()
+        {
+            text.text = string.Empty;
+        }
+
     }
 }

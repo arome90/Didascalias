@@ -10,7 +10,6 @@ public class ToggleConnection : MonoBehaviour
 {
     [SerializeField] Button button; // Reference to the toggle UI element
     [SerializeField] TextMeshProUGUI text; // Reference to the text of the toggle
-    [SerializeField] TextMeshProUGUI textSession; // Reference to the session text
     bool value;
     void Start()
     {
@@ -20,14 +19,12 @@ public class ToggleConnection : MonoBehaviour
         {
             // Start the WebSocket connection
             text.text = "Desconectarse"; // Update the text of the toggle
-            textSession.text = WsClient.Instance.session;
 
         }
         else
         {
             // Disconnect the WebSocket client
             text.text = "Conectarse"; // Update the text of the toggle
-            textSession.text = string.Empty; // Clear the session text
         }
     }
 
@@ -42,20 +39,13 @@ public class ToggleConnection : MonoBehaviour
             // Start the WebSocket connection
             text.text = "Desconectarse"; // Update the text of the toggle
             // Schedule a method to update the session text after a delay
-            Debug.Log(WsClient.Instance.session+"oooooooo");
-            Invoke("ChangeSession", 1f);
+           
         }
         else
         {
             // Disconnect the WebSocket client
             text.text = "Conectarse"; // Update the text of the toggle
-            textSession.text = string.Empty; // Clear the session text
         }
     }
 
-    // Update the session text based on the WebSocket client's session
-    private void ChangeSession()
-    {
-        textSession.text = WsClient.Instance.session;
-    }
 }

@@ -10,7 +10,6 @@ namespace ClassRoomVR
     {
         public bool IsPause { get; set; } = false;
 
-        private GameObject player;
         private DataSystem savedData;
         private ScenePackage chosenPackage;
         private VoiceActivation voiceActivation;
@@ -22,8 +21,8 @@ namespace ClassRoomVR
         [SerializeField] private bool isUsingVRHardware = false;
         [SerializeField] private bool isAutoSavingEnabled = false;
         [SerializeField] private bool saveAudio = false;
-        [SerializeField] private bool firebaseAnalytics = true;
-        [SerializeField] private bool unityAnalytics = true;
+       // [SerializeField] private bool firebaseAnalytics = true;
+       // [SerializeField] private bool unityAnalytics = true;
         private int indexScene;
         private int indexCurrentSett;
         public static GameManager Instance { get; private set; }
@@ -80,7 +79,7 @@ namespace ClassRoomVR
 
         private void InitializeAnalytics()
         {
-            AnalyticsManager.Start(firebaseAnalytics, unityAnalytics);
+           // AnalyticsManager.Start(firebaseAnalytics, unityAnalytics);
         }
 
         public ScenePackage GetChosenPackage() => chosenPackage;
@@ -97,17 +96,14 @@ namespace ClassRoomVR
         public void LoadMainScene()
         {
             //SceneManager.LoadScene("Class_GameScene");
-            SceneTransitionManager.singleton.GoToSceneAsync(indexScene);
 
+            ServerMessage.SendInfoInitial();
+            SceneTransitionManager.singleton.GoToSceneAsync(indexScene);
             //AnalyticsManager.CustomEvent("Gritar");
 
         }
         public void SetChosenPackage(int index) => chosenPackage = availablePackages[index];
         public ScenePackage GetPackageAtIndex(int index) => availablePackages[index];
-        public void SetPlayer(GameObject playerObj) => player = playerObj;
-        public GameObject GetPlayer() => player;
-        public VoiceActivation GetVoiceActivation() => voiceActivation;
-        public void SetVoiceActivation(VoiceActivation voice) => voiceActivation = voice;
 
         public void SetScene(int i) => indexScene = i;
         public int GetScene() => indexScene;

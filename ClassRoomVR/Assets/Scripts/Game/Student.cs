@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
 using System.Linq;
+using Oculus.Platform.Models;
 
 namespace ClassRoomVR
 {
@@ -25,21 +26,21 @@ namespace ClassRoomVR
         private Animator animator;
         private AudioSource audioSource;
         private NavMeshAgent navMeshAgent;
-        private Collider collider;
+        private Collider colliderr;
         [SerializeField] private Transform target;
         private Vector3 actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> targets;
         [SerializeField] private MultiAimConstraint headConstraint;
         [SerializeField] private TextMesh attentionText;
         private StudentBehavior behavior;
-        private Transform teacher;
+        private Transform player;
 
         #region Getters
         // Getter methods for accessing properties
         public Desk GetDesk() => desk;
         public Gender GetGender() => gender;
         public string GetStudentName() => studentName;
-        public Collider GetCollider() => collider;
+        public Collider GetCollider() => colliderr;
         public bool IsProblematicStudent() => problematic;
         public AudioSource GetAudioSource() => audioSource;
         #endregion
@@ -51,7 +52,6 @@ namespace ClassRoomVR
             navMeshAgent = GetComponent<NavMeshAgent>();
             behavior = GetComponent<StudentBehavior>();
             state = State.Sitting;
-            teacher = GameManager.Instance.GetPlayer().transform;
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
                 .Where(c => (distracted & c) == c)
                 .ToArray();
@@ -59,8 +59,9 @@ namespace ClassRoomVR
         }
 
         // Methods to set student's parameters and create their body
-        public void SetParameters(string name, Gender gender)
+        public void SetParameters(Transform player,string name, Gender gender)
         {
+            this.player = player;            
             studentName = name;
             transform.name = name;
             studentNameText.text = name;
@@ -93,7 +94,7 @@ namespace ClassRoomVR
 
         private void SetupHeadConstraint()
         {
-            collider = transform.GetChild(transform.childCount - 1).GetComponent<Collider>();
+            colliderr = transform.GetChild(transform.childCount - 1).GetComponent<Collider>();
             headConstraint.data.constrainedObject = GetHeadBone();
         }
 
@@ -207,6 +208,8 @@ namespace ClassRoomVR
         private Vector3 currentVelocity;
         private void UpdateTargetPosition()
         {
+            studentNameText.transform.LookAt(player);
+            studentNameText.transform.rotation = Quaternion.LookRotation(player.forward);
 
             if (vision != FieldOfVision.Teacher && state== State.Sitting)
             {
@@ -214,7 +217,7 @@ namespace ClassRoomVR
             }
             else if (vision == FieldOfVision.Teacher)
             {
-                target.position = Vector3.MoveTowards(target.position, teacher.position, 5.0f * Time.deltaTime);
+                target.position = Vector3.MoveTowards(target.position, player.position, 5.0f * Time.deltaTime);
             }
         }
 
@@ -307,12 +310,20 @@ namespace ClassRoomVR
             target.position = transform.position + transform.forward + targets[FieldOfVision.Up];
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             navMeshAgent.SetDestination(destination);
-            while (Vector3.Distance(transform.position, destination) > 0.5f)
+            while (Distance(transform.position, destination))
                 yield return null;
             animator.Play("Standing");
             transform.rotation = Quaternion.Euler(0, 90, 0);
         }
 
+        bool Distance(Vector3 tranform, Vector3 dest) 
+        {
+            Vector2 punto1Proyectado = new Vector2(tranform.x, tranform.z);
+            Vector2 punto2Proyectado = new Vector2(dest.x, dest.z);
+            return Vector2.Distance(punto1Proyectado, punto2Proyectado)>0.5f;
+
+
+        }
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {

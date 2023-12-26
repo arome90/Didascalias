@@ -32,7 +32,7 @@ namespace ClassRoomVR
             pageStudents = new List<GameObject>();
             currentPage = 0;
             currentIndex = 0;
-            nameText.text = customVariables[currentIndex].name;
+            nameText.text = customVariables[currentIndex].Name;
             model.SetList(customVariables[currentIndex].list);
 
             random.onClick.AddListener(() =>
@@ -59,7 +59,7 @@ namespace ClassRoomVR
                 }
                 Toggle toggle = Instantiate(togglePrefab, toggleContainer.transform);
                 toggle.group = toggleContainer;
-                toggle.transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText(customVariables[i].name);
+                toggle.transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText(customVariables[i].Name);
                 toggle.onValueChanged.AddListener(isOn => OnToggleValueChanged(isOn, toggle));
                 toggles.Add(toggle, i);
 
@@ -92,7 +92,6 @@ namespace ClassRoomVR
                 for (int i = 0; i < list.Count; i++)
                 {
                     customVariables[currentIndex].list[i] = list[i].GetIndex();
-                    Debug.Log(list[i].GetIndex());
                 }
             });
 
@@ -113,7 +112,7 @@ namespace ClassRoomVR
             if (isOn)
             {
                 currentIndex = toggles[toggle];
-                nameText.text = customVariables[currentIndex].name;
+                nameText.text = customVariables[currentIndex].Name;
                 model.SetList(customVariables[currentIndex].list);
 
             }

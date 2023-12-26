@@ -62,7 +62,7 @@ namespace ClassRoomVR
                 float z = Mathf.Sin(Mathf.Deg2Rad * angle * i) * radius;
                 Vector3 position = new Vector3(x, 0, -z) + transform.position;
                 Desk desk = Instantiate(deskPrefab, position, Quaternion.identity, transform);
-                desk.Position = new Vector2(i, 0);
+                //desk.Position = new Vector2(i, 0);
                 desk.transform.LookAt(transform.position);
             }
         }
@@ -81,9 +81,7 @@ namespace ClassRoomVR
                 float x = Mathf.Cos(Mathf.Deg2Rad / 2f * currentAngle) * radius;
                 float z = Mathf.Sin(Mathf.Deg2Rad / 2f * currentAngle) * radius;
                 Vector3 position = new Vector3(x, 0, -z) + transform.position;
-
                 Desk desk = Instantiate(deskPrefab, position, Quaternion.identity, transform);
-                desk.Position = new Vector2(i, 0);
                 currentAngle += angle;
             }
         }

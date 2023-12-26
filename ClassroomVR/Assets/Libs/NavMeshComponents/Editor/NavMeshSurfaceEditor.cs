@@ -108,6 +108,7 @@ namespace UnityEditor.AI
             AssetDatabase.CreateAsset(surface.navMeshData, combinedAssetPath);
         }
 
+        [System.Obsolete]
         static NavMeshData GetNavMeshAssetToDelete(NavMeshSurface navSurface)
         {
             var prefabType = PrefabUtility.GetPrefabType(navSurface);

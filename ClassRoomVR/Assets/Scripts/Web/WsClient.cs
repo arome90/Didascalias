@@ -141,7 +141,7 @@ public class WsClient : GenericSingleton<WsClient>
         }
         else
         {
-            Debug.LogWarning("La conexión WebSocket no está activa.");
+           // Debug.LogWarning("La conexión WebSocket no está activa.");
         }
     }
 

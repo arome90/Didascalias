@@ -132,7 +132,7 @@ namespace ClassRoomVR
 
         public static void SendInfo()
         {
-            Debug.Log("MandarInfo");
+            //Debug.Log("MandarInfo");
             MessageData initData = new MessageData(InputLogger.Instance.input);
             WsClient.Instance.Ws_SendMessage(new UnityMessage(MessageType.Info, WsClient.Instance.session, initData));
             

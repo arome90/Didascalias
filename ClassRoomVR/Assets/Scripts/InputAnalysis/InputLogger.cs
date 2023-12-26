@@ -14,6 +14,7 @@ namespace ClassRoomVR
     /// </summary>
     public class InputLogger : GenericSingleton<InputLogger>
     {
+        
         //Variable que se envia al servidor 
         public InputVariables input;
         //Datos estadisticos recopilados de la cabeza
@@ -45,11 +46,11 @@ namespace ClassRoomVR
             hands = new HandsManager(windowSize);
             
             list = new float[3];
-            ServerMessage.SendInfoInitial();
+           
             InvokeRepeating(nameof(SendInfo), 1f, 1f);
             StartCoroutine(UpdateInfo());
         }
-
+        
         /// <summary>
         /// Actualiza las estadisticas del input 
         /// </summary>
@@ -67,10 +68,12 @@ namespace ClassRoomVR
         //Manda las estadisticas deseadas en cada invoke
         private void SendInfo()
         {
-            List<float> actlist = new List<float>();
-            actlist.Add(head.velocidad.Variable);
-            actlist.Add(hands.handIzq.velocidad.Variable);
-            actlist.Add(hands.handDer.velocidad.Variable);
+            List<float> actlist = new List<float>
+            {
+                head.velocidad.Variable,
+                hands.handIzq.velocidad.Variable,
+                hands.handDer.velocidad.Variable
+            };
             int i = FindGreatestDistinction(actlist);
             input = new InputVariables(i, actlist[0], actlist[1], actlist[2]);
             actlist.CopyTo(list);

@@ -10,7 +10,7 @@ namespace ClassRoomVR
     [CreateAssetMenu(fileName = "Custom", menuName = "ScriptableObject/Custom", order = 6)]
    public class CustomVariables: ScriptableObject
     {
-       public string name;
+       public string Name;
        public List<int> list;
     }
 }

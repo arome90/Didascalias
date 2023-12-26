@@ -5,118 +5,88 @@ using Meta.WitAi.Data;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using MathNet.Numerics.Statistics;
+using UnityEngine.InputSystem;
+using MathNet.Numerics.Distributions;
+using Meta.WitAi.Composer.Integrations;
+using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
     public class VoiceActivation : MonoBehaviour
     {
-        bool shout;
         [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
-        //[SerializeField] TextMeshProUGUI fullTranscriptionText;
-        //[SerializeField] TextMeshProUGUI partialTranscriptionText;
-        bool appVoiceActive;
-        [SerializeField] StudentsController st;
+        
+         StudentsController st;
+
 
         private void Start()
         {
-            volumeList = new List<float>();
-            Activate();
+            appVoiceExperience.Activate();
+            st = ClassManager.Instance.GetStudentsController();
+            //Invoke(nameof(Act), 2f);
         }
-
-
-
-        //public void OnResponse(WitResponseNode response)
-        //{
-
-        //    if (!string.IsNullOrEmpty(response["text"]))
-        //    {
-        //        Debug.Log("I heard: " + response["text"]);
-        //    }
-        //    else
-        //    {
-        //        Debug.Log(
-        //             "I dont heard ");
-        //    }
-        //}
-
 
         private void Awake()
         {
-            GameManager.Instance.SetVoiceActivation(this);
-
-            appVoiceExperience.VoiceEvents.OnRequestCompleted.AddListener(() =>
+            //appVoiceExperience.TelemetryEvents.OnAudioTrackerFinished.AddListener((a, k)=>
+            //{
+                
+            //}); 
+            studentSelected = null;
+            appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
-                Activate();
+                if (Application.internetReachability == NetworkReachability.NotReachable)
+                {
+                    Debug.Log("Error. Check internet connection and press A!");
+                }
+                // Debug.Log("¡activarCom");
+                appVoiceExperience.Activate();
             });
 
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
+                // Debug.Log("¡update");
                 UpdateClass(response);
             });
 
-            appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
-            {
-                OnValidatePartialResponse(response);
-            });
+            //appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
+            //{
+            //    Debug.Log("¡validate");
+
+            //    OnValidatePartialResponse(response);
+            //});
 
             appVoiceExperience.VoiceEvents.OnMicAudioLevelChanged.AddListener((value) =>
             {
                 OnMicLevelChanged(value);
             });
 
-
-
-
             appVoiceExperience.VoiceEvents.OnMicStartedListening.AddListener(() =>
             {
                 volumeList.Clear();
             });
-
-            appVoiceExperience.VoiceEvents.OnMicStoppedListening.AddListener(() =>
-            {
-
-                double media = volumeList.Mean();
-                if (media > -25)
-                {
-                    Debug.Log("Gritando");
-                    st.SetMode(TalkMode.Disrespect);
-                }
-                else if(media < -54) 
-                {
-                    Debug.Log("Susurrando");
-                    st.SetMode(TalkMode.Good);
-
-                }
-                else { Debug.Log("Normal"); st.SetMode(TalkMode.Normal); }
-            });
+        
+            volumeList = new List<float>();
 
         }
 
 
-
-        //private static void DisplayValues(string prefix, string[] info) 
-        //{
-        //    foreach(var i in info) 
-        //    {
-        //        Logger A = new Logger();
-        //        A.Log()
-        //    }
-        //}
-
-        public void Activate()
+        private void SetLevelAudio() 
         {
-            appVoiceExperience.Activate();
-        }
-
-        private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.G)) 
+            double media = volumeList.Mean();
+            //  Debug.Log(media);
+            if (media > -30)
             {
-                shout = true;
+                Debug.Log("¡Gritando " + (int)media);
                 st.SetMode(TalkMode.Disrespect);
-                Debug.Log("Gritando");
             }
+            else if (media < -50)
+            {
+                Debug.Log("¡Susurrando " + (int)media);
+                st.SetMode(TalkMode.Good);
 
+            }
+            else { Debug.Log("¡Normal " + (int)media); st.SetMode(TalkMode.Normal); }
         }
         List<float> volumeList;
         public void OnMicLevelChanged(float a)
@@ -124,21 +94,18 @@ namespace ClassRoomVR
             float db = 20 * Mathf.Log10(a);
             if (db > -65)
             {
-                Debug.Log(db);
+               // Debug.Log(db);
                // Debug.Log("Nota" + Unity.Mathematics.math.remap(-60, -20, 0f, 1f, db));
                 volumeList.Add(db);              
             }
         }
-
-        
-        //System.Collections.IEnumerator Wait() 
-        //{
-        //    float startTime = Time.time; // Guarda el tiempo inicial
-        //    yield return new WaitUntil(() => miclevel < 0.8f && miclevel> 0.2f );
-        //    float elapsedTime = Time.time - startTime; // Calcula el tiempo transcurrido
-        //    Debug.Log("Tiempo transcurrido: " + elapsedTime + " segundos");
-        //    shout = false;
-        //}
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                appVoiceExperience.Activate();
+            }
+        }
 
 
         public void OnValidatePartialResponse(VoiceSession sessionData)
@@ -151,6 +118,21 @@ namespace ClassRoomVR
         }
 
 
+        //temporal
+        public void OnValidateResponse(Meta.WitAi.Json.WitResponseNode response)
+        {
+            string[] names = response.GetAllEntityValues("wit$contact:student");
+            if (names != null && names.Length > 0)
+            {
+                Student s;
+                if (TryGetStudent(names[0], out s))
+                {
+                    studentSelected = s;
+                    st.HandleCall(s);
+                }
+            }
+        }
+
         Student studentSelected;
         public void OnValidateStudent(VoiceSession sessionData, string student)
         {
@@ -162,6 +144,8 @@ namespace ClassRoomVR
                 sessionData.validResponse = true;
             }
         }
+
+     
 
         private bool TryGetStudent(string studentName, out Student s)
         {
@@ -177,41 +161,46 @@ namespace ClassRoomVR
 
         //Gestion de las ordenes del profesor
         //TO DO : CAMBIAR PARA QUE SEA GENERICO
-      //  public void UpdateClass(VoiceSession sessionData) 
+        //  public void UpdateClass(VoiceSession sessionData) 
         public void UpdateClass(Meta.WitAi.Json.WitResponseNode response)
         {
-           // var response = sessionData.response;
-            string intentName = response.GetIntentName();
-          //  var alumnos = response.GetAllEntityValues("wit$contact:student");
-            var insulto = response.GetFirstEntityValue("Insultos:Insultos");
-            Debug.Log(intentName + response.GetTranscription());
-            
-
-            switch (intentName)
+            if (response.GetText().Length > 0)
             {
-                case "Sentarse":
-                    st.HandleSit(studentSelected);
-                    break;
-                //case "CambiarSitio":
-                //    st.HandleMove(alumnos, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
-                //    break;
-                case "Postponer":
-                    st.HandlePostpone();
-                    break;
-                case "Expulsion":
-                    st.HandleExpel(studentSelected);
-                    break;
-            }
+                SetLevelAudio();
+                // var response = sessionData.response;
+                string intentName = response.GetIntentName();
+                //  var alumnos = response.GetAllEntityValues("wit$contact:student");
+                var insulto = response.GetFirstEntityValue("Insultos:Insultos");
+                OnValidateResponse(response);
 
-            if (insulto != "") 
-            {
-                st.HandleDisrespect();
+                switch (intentName)
+                {
+                    case "Sentarse":
+                        st.HandleSit(studentSelected);
+                        break;
+                    case "CambiarSitio":
+                        st.HandleMove(studentSelected, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
+                        break;
+                    case "Postponer":
+                        st.HandlePostpone();
+                        break;
+                    case "Expulsion":
+                        st.HandleExpel(studentSelected);
+                        break;
+                    default:
+                        intentName = "No hay intencion";
+                        break;
+                }
+
+                Debug.Log(intentName + "\n" + response.GetTranscription());
+
+                if (insulto != "")
+                {
+                    st.HandleDisrespect();
+                }
+
             }
-            else { st.HandleNormal(); }
         }
-
-
-
 
         //[MatchIntent("Move")]
         //public void OnHandleMoveIntentWithConduit(Meta.WitAi.Json.WitResponseNode response) 

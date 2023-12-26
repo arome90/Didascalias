@@ -26,7 +26,7 @@ namespace ClassRoomVR
 
         [SerializeField] private AudioClip beforeClassBell;
         [SerializeField] private AudioClip afterClassBell;
-
+        [SerializeField] GameObject player;
         public override void Awake()
         {
             settings = GameManager.Instance.GetCurrentSettings();
@@ -55,7 +55,7 @@ namespace ClassRoomVR
             prefabBodys.Add(classInfo.maleStudentPrefabs);
             GenerateChilds();
 
-            studentsController.SetParameters(students);
+            studentsController.SetParameters(player,students);
 
             GetComponent<AudioSource>().clip = beforeClassBell;
             GetComponent<AudioSource>().Play();
@@ -71,7 +71,7 @@ namespace ClassRoomVR
         private void GenerateChilds()
         {
             GenerateStudents();
-            PlayAnimationsAtDifferentTimeClass(classInfo.idleAnimation.name);
+           // PlayAnimationsAtDifferentTimeClass(classInfo.idleAnimation.name);
         }
 
         private void GenerateStudents()
@@ -116,7 +116,7 @@ namespace ClassRoomVR
         private Student CreateStudent(GameObject body, string name, Gender gender)
         {
             Student pickedStudent = Instantiate(prefabStudent, transform);
-            pickedStudent.SetParameters(name, gender);
+            pickedStudent.SetParameters(player.transform,name, gender);
             pickedStudent.CreateBody(body);
             students.Add(name, pickedStudent);
             return pickedStudent;
@@ -194,13 +194,12 @@ namespace ClassRoomVR
                     alumsName += ";";
             }
 
-            GameObject player = GameManager.Instance.GetPlayer();
             ScenePackage sceneInfo = GameManager.Instance.GetChosenPackage();
             player.GetComponent<AudioSource>().clip = sceneInfo.contextClip;
             player.GetComponent<AudioSource>().Play();
             string t = sceneInfo.initialMessage.Replace("alum", alumsName);
             Debug.Log(t);
-            studentsController.SetParameters(students);
+            studentsController.SetParameters(player,students);
         }
 
         public Student[] GetStudents()

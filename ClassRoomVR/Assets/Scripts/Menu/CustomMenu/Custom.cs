@@ -106,17 +106,17 @@ public interface ICustomizable
 public class Customization : ICustomizable
 {
     public string DisplayName;
-    public List<Renderer> Renderers;
-    public List<Material> Materials;
+   // public List<Renderer> Renderers;
+    //public List<Material> Materials;
     public List<GameObject> SubObjects;
-    public int _materialIndex; 
+   // public int _materialIndex; 
     int _subObjectIndex;
 
     public void Next()
     {
-        _materialIndex++;
-        if (_materialIndex >= Materials.Count)
-            _materialIndex = 0;
+        //_materialIndex++;
+        //if (_materialIndex >= Materials.Count)
+        //    _materialIndex = 0;
 
         _subObjectIndex++;
         if (_subObjectIndex >= SubObjects.Count)
@@ -127,9 +127,9 @@ public class Customization : ICustomizable
 
     public void Previous()
     {
-        _materialIndex--;
-        if (_materialIndex < 0)
-            _materialIndex = Materials.Count - 1;
+        //_materialIndex--;
+        //if (_materialIndex < 0)
+        //    _materialIndex = Materials.Count - 1;
 
         _subObjectIndex--;
         if (_subObjectIndex < 0)
@@ -144,14 +144,14 @@ public class Customization : ICustomizable
             if (SubObjects[i])
                 SubObjects[i].SetActive(i == _subObjectIndex);
 
-        foreach (var renderer in Renderers)
-            if (renderer)
-                renderer.material = Materials[_materialIndex];
+        //foreach (var renderer in Renderers)
+        //    if (renderer)
+        //        renderer.material = Materials[_materialIndex];
     }
     public void Randomize()
     {
         _subObjectIndex = Random.Range(0, SubObjects.Count);
-        _materialIndex = Random.Range(0, Materials.Count);
+        //_materialIndex = Random.Range(0, Materials.Count);
         UpdateCustom();
     }
 
@@ -159,12 +159,13 @@ public class Customization : ICustomizable
     public void SetIndex(int i)
     {
         _subObjectIndex = i;
-        _materialIndex = i;
+        //_materialIndex = i;
     }
 
     public int GetIndex() 
     {
-        return  Materials.Count==0? _subObjectIndex : _materialIndex ;
+        //return  Materials.Count==0? _subObjectIndex : _materialIndex ;
+        return _subObjectIndex;
     }
     //public List<SkinnedMeshRenderer> SkinnedMeshRenderers;
 
@@ -224,8 +225,10 @@ public class Skin: ICustomizable
 
     public void UpdateCustom()
     {
-
-        skin.mainTexture = textures[_textureIndex];
+        if (skin != null)
+        {
+            skin.mainTexture = textures[_textureIndex];
+        }
     }
 
 

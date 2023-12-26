@@ -185,7 +185,6 @@ namespace ClassRoomVR
             if (rowsOpt != null) rowsOpt.SetMax(numFilas);
             //else settings.Rows = numFilas;
 
-            Debug.Log("F " + numFilas + " C " + numColumnas);
         
         }
     }

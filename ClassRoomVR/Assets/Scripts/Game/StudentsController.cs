@@ -12,7 +12,7 @@ namespace ClassRoomVR
     {
         TalkMode mode;
         Dictionary<string, Student> students;
-
+        GameObject player;
         // Serialized fields for defining positions in the classroom
         [SerializeField] Transform frontSide;
         [SerializeField] Transform backCorner;
@@ -27,8 +27,9 @@ namespace ClassRoomVR
         public Transform Door => door;
 
         // Method to set the dictionary of students
-        public void SetParameters(Dictionary<string, Student> students)
+        public void SetParameters(GameObject player,Dictionary<string, Student> students)
         {
+            this.player = player;
             this.students = students;
         }
 
@@ -118,20 +119,14 @@ namespace ClassRoomVR
         }
 
         // Handle moving actions for students
-        public void HandleMove(string[] students, string place)
+        public void HandleMove(Student student, string place)
         {
-            if (students.Length > 1)
-            {
-                SendChangeDesk(students);
-            }
-            else if (students.Length == 1)
+            if (student != null)
             {
                 Transform position = Place(place);
                 if (position != null)
                 {
-                    Student student;
-                    if (TryGetStudent(students[0], out student))
-                        student.MoveTo(position.position);
+                    student.MoveTo(position.position);
                 }
             }
         }
@@ -146,7 +141,10 @@ namespace ClassRoomVR
         // Handle expelling students
         public void HandleExpel(Student student)
         {
-            student.MoveTo(door.position);
+            if (student != null)
+            {
+                student.MoveTo(door.position);
+            }
         }
 
         // Handle disrespectful behavior
@@ -191,7 +189,7 @@ namespace ClassRoomVR
                     position = door;
                     break;
                 case "Aquí":
-                    position = GameManager.Instance.GetPlayer().transform;
+                    position = player.transform;
                     break;
             }
             return position;
@@ -210,7 +208,8 @@ namespace ClassRoomVR
         }
 
         private GameObject actionObject;
-
+        [SerializeField]
+        TMPro.TextMeshProUGUI text;
         // Perform a disruptive action on students
         public void DoSomethingDisruptive(int index)
         {
@@ -235,7 +234,7 @@ namespace ClassRoomVR
             if (student != null)
             {
                 actionObject = Instantiate(action.behaviorHolder);
-                actionObject.GetComponent<Action>().SetParameters(studentList, action);
+                actionObject.GetComponent<Action>().SetParameters(player,studentList, action,text);
             }
             ClassManager.Instance.DisruptiveSituation = true;
         }
@@ -254,21 +253,5 @@ namespace ClassRoomVR
             }
         }
         
-    }
-}
-
-// Extension method to remove diacritics from strings
-public static class StringExtensions
-{
-    public static string SinTildes(this string texto)
-    {
-        string normalized = texto.Normalize(NormalizationForm.FormD);
-        StringBuilder stringBuilder = new StringBuilder();
-        foreach (char c in normalized)
-        {
-            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                stringBuilder.Append(c);
-        }
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
 }
