@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
-        public bool IsPause { get; set; } = false;
+        public bool IsPause { get; set; }
 
         private DataSystem savedData;
         private ScenePackage chosenPackage;
-        private VoiceActivation voiceActivation;
+        private VoiceActivation voice;
+        private ReconnectUI loadingBar;
 
         [SerializeField] private ClassSettings currentSettings;
         [SerializeField] private ClassSettings[] availableSettings;
@@ -25,6 +28,7 @@ namespace ClassRoomVR
        // [SerializeField] private bool unityAnalytics = true;
         private int indexScene;
         private int indexCurrentSett;
+        
         public static GameManager Instance { get; private set; }
 
      
@@ -33,6 +37,7 @@ namespace ClassRoomVR
         {
             InitializeSingleton();
             InitializeData();
+            IsPause = false;
         }
 
         private void InitializeSingleton()
@@ -163,31 +168,50 @@ namespace ClassRoomVR
         }
 
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape)) 
-            {
-                Application.Quit();
-            }
-           // Debug.Log(UnityEngine.XR.XRDevice.refreshRate);
-            //UnityEngine.XR.InputTracking.trackingLost
-           // if(xe)
-        }
-
         public bool GetSaveAudio() => saveAudio;
 
-        void Pause() 
+        public void Pause(bool lostConnection)
         {
-            AudioListener.pause = true;
-            Time.timeScale = 0f;
+            if (!IsPause)
+            {
+                if (lostConnection)
+                {
+                    Debug.Log("LOST");
+                    StartCoroutine(nameof(WaitConnection));
+                    loadingBar.SetActive(true);
+                }
+                AudioListener.pause = true;
+                //Time.timeScale = 0f;
+                IsPause = true;
+            }
         }
 
-        void Continue()
+        IEnumerator WaitConnection()
+        {
+            while (Application.internetReachability == NetworkReachability.NotReachable) { yield return null; }
+            Debug.Log("vuelve la coneccion");
+            voice.Activate();
+            WsClient.Instance.StartConnection();
+            loadingBar.SetActive(false);
+            Continue(); 
+        }
+
+
+
+        public void Continue()
         {
             AudioListener.pause = false;
-            Time.timeScale = 1f;
+          //  Time.timeScale = 1f;
+            IsPause = false;
         }
 
-
+        public void SetVoiceExperience(VoiceActivation voice) 
+        {
+            this.voice = voice;
+        }
+        public void SetLoadingBar(ReconnectUI bar) 
+        {
+            loadingBar = bar;
+        }
     }
 }

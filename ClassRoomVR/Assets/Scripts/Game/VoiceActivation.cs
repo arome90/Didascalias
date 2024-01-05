@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 using MathNet.Numerics.Distributions;
 using Meta.WitAi.Composer.Integrations;
 using Unity.VisualScripting;
+using System.Runtime.Remoting;
 
 namespace ClassRoomVR
 {
@@ -26,21 +27,30 @@ namespace ClassRoomVR
             //Invoke(nameof(Act), 2f);
         }
 
+        public void Activate()
+        {
+            if(appVoiceExperience!=null) appVoiceExperience.Activate();
+        }
         private void Awake()
         {
+            GameManager.Instance.SetVoiceExperience(this);
+            //INVESTIGAR TELEMETRIA
             //appVoiceExperience.TelemetryEvents.OnAudioTrackerFinished.AddListener((a, k)=>
-            //{
-                
-            //}); 
+             
             studentSelected = null;
             appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
-                if (Application.internetReachability == NetworkReachability.NotReachable)
-                {
-                    Debug.Log("Error. Check internet connection and press A!");
-                }
                 // Debug.Log("¡activarCom");
                 appVoiceExperience.Activate();
+            });
+
+            appVoiceExperience.VoiceEvents.OnError.AddListener((a,b) => 
+            {
+                if (Application.internetReachability == NetworkReachability.NotReachable)
+                {
+                    Debug.Log("nO HAY INTERNET");
+                    GameManager.Instance.Pause(true);
+                }
             });
 
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>

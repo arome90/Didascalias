@@ -4,11 +4,12 @@ using UnityEngine;
 using System;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using ClassRoomVR;
 #region Server
 //public class WsServer : MonoBehaviour
 //{
-//   public  static bool accion = false;
-//     public class Echo : WebSocketBehavior
+//    public static bool accion = false;
+//    public class Echo : WebSocketBehavior
 //    {
 //        protected override void OnMessage(MessageEventArgs e)
 //        {
@@ -31,16 +32,16 @@ using System.Threading.Tasks;
 
 //        // URL del servidor WebSocket
 //        // string serverURL = "ws://tu-servidor-websocket.com";
-//       // string serverURL = "ws://dear-booming-quill.glitch.me/";
+//        // string serverURL = "ws://dear-booming-quill.glitch.me/";
 
 
-//             wssv = new WebSocketServer("ws://127.0.0.1:8080");
+//        wssv = new WebSocketServer("ws://127.0.0.1:8080");
 
-//            wssv.AddWebSocketService<Echo>("/Echo");
+//        wssv.AddWebSocketService<Echo>("/Echo");
 
 
 //        wssv.Start();
-//            Debug.Log("WS server started on ws://127.0.0.1:7890/Echo");
+//        Debug.Log("WS server started on ws://127.0.0.1:7890/Echo");
 
 
 
@@ -49,7 +50,7 @@ using System.Threading.Tasks;
 
 //    private void Update()
 //    {
-//        if (accion) 
+//        if (accion)
 //        {
 //            accion = false;
 //            ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(0);
@@ -63,7 +64,7 @@ using System.Threading.Tasks;
 //        if (wssv != null)
 //        {
 //            wssv.Stop();
-
+            
 //        }
 //    }
 //}
@@ -76,10 +77,10 @@ public class WsClient : GenericSingleton<WsClient>
     public string session;
     ClassRoomVR.UnityMessage mes;
     public bool conected = false;
-    //private void Start()
-    //{
-    //    StartConnection();
-    //}
+    private void Start()
+    {
+        StartConnection();
+    }
     public void StartConnection()
     {
         try
@@ -88,15 +89,27 @@ public class WsClient : GenericSingleton<WsClient>
             ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws.OnOpen += Ws_OnOpen;
             ws.OnMessage += Ws_OnSessionMessage;
+            ws.OnClose += Ws_OnClose;
             ws.ConnectAsync();
         }
         catch (Exception ex) { Debug.LogError("Error en la conexión: " + ex.Message); }
     }
 
+    private void Ws_OnClose(object sender, CloseEventArgs e)
+    {
+        if (e.WasClean) { session = null; }
+        else
+        {
+            
+            Debug.Log("nO HAY INTERNET2");
+            GameManager.Instance.Pause(true);
+        }
+    }
+
     void Ws_OnOpen(object sender, EventArgs e)
     {
         Debug.Log("open");
-        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession,null,null));
+        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession, session, SystemInfo.deviceUniqueIdentifier));
         ws.SendAsync(jsonData, null);
     }
 
@@ -144,6 +157,7 @@ public class WsClient : GenericSingleton<WsClient>
            // Debug.LogWarning("La conexión WebSocket no está activa.");
         }
     }
+
 
     private void Update()
     {

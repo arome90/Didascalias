@@ -14,27 +14,17 @@ public class ToggleConnection : MonoBehaviour
     void Start()
     {
         button.onClick.AddListener(Click);
-        value = WsClient.Instance.isAlive();
-        if (value)
-        {
-            // Start the WebSocket connection
-            text.text = "Desconectarse"; // Update the text of the toggle
+        WsClient.Instance.Disconnect();
+        text.text = "Conectarse"; // Update the text of the toggle
 
-        }
-        else
-        {
-            // Disconnect the WebSocket client
-            text.text = "Conectarse"; // Update the text of the toggle
-        }
     }
 
     // Called when the toggle value changes (connection state changes)
     private void Click()
     {
-        Debug.Log("ahh");
         value = !value;
         WsClient.Instance.ToggleCon();
-        if (value)
+        if (value && WsClient.Instance.isAlive())
         {
             // Start the WebSocket connection
             text.text = "Desconectarse"; // Update the text of the toggle

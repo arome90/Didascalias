@@ -74,26 +74,6 @@ namespace ClassRoomVR
             return false;
         }
 
-        // Get a list of student names that are in the camera's field of vision
-        public List<string> StudentsOnVision()
-        {
-            Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-            return students.Values.Where(student =>
-            {
-                Bounds bounds = student.GetCollider().bounds;
-                bounds.center += new Vector3(0, 1f, 0);
-                return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
-            }).Select(student => student.GetStudentName()).ToList();
-        }
-
-        // Check if a specific student is in the camera's field of vision
-        public bool IsStudentInFieldOfVision(Student student)
-        {
-            Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-            Bounds bounds = student.GetCollider().bounds;
-            bounds.center += new Vector3(0, 1f, 0);
-            return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
-        }
 
         // Make non-problematic students exit the classroom
         public void GoOut()
@@ -109,7 +89,7 @@ namespace ClassRoomVR
         IEnumerator WaitAndExit(Student student, float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            student.MoveTo(door.position);
+            student.MoveTo(door.position,0.5f);
         }
 
         // Handle sitting actions for students
@@ -126,7 +106,7 @@ namespace ClassRoomVR
                 Transform position = Place(place);
                 if (position != null)
                 {
-                    student.MoveTo(position.position);
+                    student.MoveTo(position.position,1.5f);
                 }
             }
         }
@@ -143,7 +123,7 @@ namespace ClassRoomVR
         {
             if (student != null)
             {
-                student.MoveTo(door.position);
+                student.MoveTo(door.position, 0.5f);
             }
         }
 
@@ -225,7 +205,7 @@ namespace ClassRoomVR
                 student.PayAttention();
                 student.PlayDisruptiveAction(action.problematicsAnimation.name, clip);
                 if (action.position == Positions.FrontSide)
-                    student.MoveTo(frontSide.position);
+                    student.MoveTo(frontSide.position, 0f);
                 randomStudentIndex++;
                 if (randomStudentIndex >= students.Count)
                     randomStudentIndex -= 2;
@@ -255,3 +235,14 @@ namespace ClassRoomVR
         
     }
 }
+        // Get a list of student names that are in the camera's field of vision
+        //public List<string> StudentsOnVision()
+        //{
+        //    Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+        //    return students.Values.Where(student =>
+        //    {
+        //        Bounds bounds = student.GetCollider().bounds;
+        //        bounds.center += new Vector3(0, 1f, 0);
+        //        return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
+        //    }).Select(student => student.GetStudentName()).ToList();
+        //}

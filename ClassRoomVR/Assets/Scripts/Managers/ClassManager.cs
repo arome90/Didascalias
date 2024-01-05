@@ -10,7 +10,9 @@ namespace ClassRoomVR
         [SerializeField] private Student prefabStudent;
         private bool[] asientosOcupados;
         private HashSet<string> problematicStudents;
+       // private Dictionary<string, Student> students;
         private Dictionary<string, Student> students;
+
         private StudentsController studentsController;
 
         [SerializeField] private Transform[] targetsHead;
@@ -44,6 +46,7 @@ namespace ClassRoomVR
             }
 
             asientosOcupados = new bool[studentsPositions.childCount];
+           // students = new Dictionary<string, Student>();
             students = new Dictionary<string, Student>();
             problematicStudents = new HashSet<string>();
             classInfo = GameManager.Instance.GetCurrentClassInfo();
@@ -105,19 +108,28 @@ namespace ClassRoomVR
         {
             int gender = Random.Range(0, 2);
             int indexName = Random.Range(0, names[gender].Count);
-            Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
+            var pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
             names[gender].RemoveAt(indexName);
             PlaceStudent(ref deskPos, pickedStudent, 1);
             deskPos++;
         }
 
 
-
+        [SerializeField] Student bodyNew;
+        [SerializeField] bool newBody;
         private Student CreateStudent(GameObject body, string name, Gender gender)
         {
-            Student pickedStudent = Instantiate(prefabStudent, transform);
+            Student pickedStudent;
+            if (newBody)
+            {
+                pickedStudent = Instantiate(bodyNew, transform);
+            }
+            else
+            {
+                pickedStudent = Instantiate(prefabStudent, transform);
+                pickedStudent.CreateBody(body);
+            }
             pickedStudent.SetParameters(player.transform,name, gender);
-            pickedStudent.CreateBody(body);
             students.Add(name, pickedStudent);
             return pickedStudent;
         }
@@ -126,7 +138,9 @@ namespace ClassRoomVR
             DeskManager.Instance.GetFreeDesk(ref deskPos, nGruops);
             Desk desk = studentsPositions.GetChild(deskPos).GetComponent<Desk>();
             Transform pos = desk.transform.GetChild(0);
-            pickedStudent.transform.SetPositionAndRotation(pos.position, pos.rotation);
+            if (newBody)
+                pickedStudent.transform.SetPositionAndRotation(pos.position, Quaternion.Euler(-90, 0, 0));
+            else pickedStudent.transform.SetPositionAndRotation(pos.position, pos.rotation);
             pickedStudent.SetDesk(desk);
             pickedStudent.SetTargets(targetsHead);
 
@@ -138,7 +152,7 @@ namespace ClassRoomVR
             for (int i = 0; i < n; i++)
             {
                 int indexName = Random.Range(0, names[gender].Count);
-                Student pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
+                var pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
                 names[gender].RemoveAt(indexName);
                 PlaceStudent(ref deskPos, pickedStudent, 1);
                 deskPos++;
@@ -155,7 +169,7 @@ namespace ClassRoomVR
                 Gender gen = (Gender)GetEnumValue<GenderInfo>((int)info.Gender);
                 int nBody = GetEnumValue<BodyInfo>((int)info.Body);
                 GameObject body = gen == Gender.Men ? classInfo.maleStudentPrefabs[nBody] : classInfo.femaleStudentPrefabs[nBody];
-                Student pickedStudent = CreateStudent(body, info.Name, gen);
+                var pickedStudent = CreateStudent(body, info.Name, gen);
                 PlaceStudent(ref deskPos, pickedStudent, 1);
                 deskPos++;
             }
@@ -170,37 +184,36 @@ namespace ClassRoomVR
         private void PlayAnimationsAtDifferentTimeClass(string animName)
         {
             float time = 0.0f;
-            foreach (Student s in students.Values)
+            foreach (var s in students.Values)
             {
                 time = time + 1.0f / 8.0f;
                 s.transform.GetChild(s.transform.childCount - 1).GetComponent<Animator>().Play(animName, 0, time);
             }
         }
 
-        private void StartScene()
-        {
-            string alumsName = "";
+        //private void StartScene()
+        //{
+        //    string alumsName = "";
 
-            for (int i = 0; i < problematicStudents.Count; i++)
-            {
-                if (i > 0 && i != problematicStudents.Count - 1)
-                    alumsName += ", ";
-                else if (i > 0 && i == problematicStudents.Count - 1)
-                    alumsName += " y ";
+        //    for (int i = 0; i < problematicStudents.Count; i++)
+        //    {
+        //        if (i > 0 && i != problematicStudents.Count - 1)
+        //            alumsName += ", ";
+        //        else if (i > 0 && i == problematicStudents.Count - 1)
+        //            alumsName += " y ";
 
-                alumsName += problematicStudents.ElementAt(i);
+        //        alumsName += problematicStudents.ElementAt(i);
 
-                if (i > 1 && i == problematicStudents.Count - 1)
-                    alumsName += ";";
-            }
+        //        if (i > 1 && i == problematicStudents.Count - 1)
+        //            alumsName += ";";
+        //    }
 
-            ScenePackage sceneInfo = GameManager.Instance.GetChosenPackage();
-            player.GetComponent<AudioSource>().clip = sceneInfo.contextClip;
-            player.GetComponent<AudioSource>().Play();
-            string t = sceneInfo.initialMessage.Replace("alum", alumsName);
-            Debug.Log(t);
-            studentsController.SetParameters(player,students);
-        }
+        //    ScenePackage sceneInfo = GameManager.Instance.GetChosenPackage();
+        //    player.GetComponent<AudioSource>().clip = sceneInfo.contextClip;
+        //    player.GetComponent<AudioSource>().Play();
+        //    string t = sceneInfo.initialMessage.Replace("alum", alumsName);
+        //    Debug.Log(t);
+        //}
 
         public Student[] GetStudents()
         {

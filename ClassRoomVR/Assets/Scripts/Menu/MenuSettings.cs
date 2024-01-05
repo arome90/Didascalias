@@ -27,7 +27,7 @@ namespace ClassRoomVR
             girlsOption.onValueChanged.AddListener(ChangeGirls);
             editDeskPositionButton.onClick.AddListener(GoEditScreen);
             SetOptions(typeof(StructureMode));
-            structureDropdown.SetValueWithoutNotify((int)settings.StructureMode);
+            structureDropdown.value=(int)settings.StructureMode;
             SetMaxValue();
             SetMaxStudents();
 

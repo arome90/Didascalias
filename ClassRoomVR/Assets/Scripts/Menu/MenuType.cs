@@ -18,9 +18,9 @@ namespace ClassRoomVR
         }
         private void OnEnable()
         {
-            structureDropdown.options.Clear();
+            structureDropdown.ClearOptions();
             SetOptions(GameManager.Instance.GetAvailableSettings());
-            structureDropdown.SetValueWithoutNotify(GameManager.Instance.GetIndexCurrentSettings());
+            structureDropdown.value=GameManager.Instance.GetIndexCurrentSettings();
 
         }
         private void GoEditScreen()

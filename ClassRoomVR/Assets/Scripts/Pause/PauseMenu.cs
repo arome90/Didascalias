@@ -61,7 +61,7 @@ namespace ClassRoomVR
             //Time.timeScale = 1f; // Reanudar el tiempo normal
             pauseMenuUI.enabled = false; // Ocultar el menú de pausa
 
-            GameManager.Instance.IsPause = false;
+            GameManager.Instance.Continue();
         }
 
         public void OpenOptions()
@@ -79,7 +79,7 @@ namespace ClassRoomVR
         {
             //Time.timeScale = 0f; // Pausar el tiempo (detener todas las actualizaciones)
             pauseMenuUI.enabled = true; // Mostrar el menú de pausa
-            GameManager.Instance.IsPause = true;
+            GameManager.Instance.Pause(false);
 
         }
 

@@ -11,6 +11,7 @@ public class MyLog : MonoBehaviour
     private Queue<string> myLogQueue = new Queue<string>();
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] GameObject text2;
+    [SerializeField] GameObject text3;
     [SerializeField] private InputActionProperty logAction;
     private bool _isActive = false;
 
@@ -48,6 +49,7 @@ public class MyLog : MonoBehaviour
         {
             _isActive = true;
             text2.SetActive(true);
+            text3.SetActive(true);
             Application.logMessageReceivedThreaded += HandleLog;
 
         }
@@ -55,6 +57,7 @@ public class MyLog : MonoBehaviour
         {
             _isActive = false;
             text2.SetActive(false);
+            text3.SetActive(false);
             text.text = string.Empty;
             Application.logMessageReceivedThreaded -= HandleLog;
         }
