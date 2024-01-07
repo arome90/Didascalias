@@ -746,7 +746,6 @@ GameObject:
   m_Component:
   - component: {fileID: 63697799}
   - component: {fileID: 63697802}
-  - component: {fileID: 63697801}
   - component: {fileID: 63697800}
   m_Layer: 9
   m_Name: XR Origin
@@ -867,18 +866,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &63697801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 63697798}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a11e2b9ac9f4b058e4d5d1cdf05b499, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &63697802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4707,6 +4694,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a83bc4aa48d0da648b49d0fd56690b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AimFlagsAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: 
+      m_Type: 0
+      m_ExpectedControlType: Integer
+      m_Id: 77eb3298-1e10-4efb-b264-7c041545c06b
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_SystemGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SystemGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  m_MenuPressed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &700813388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4719,6 +4727,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbac611a2982409ab5f5e604f53bcad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Handedness: 0
+  m_PokeGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_PokeGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &700813389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4985,13 +5000,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28779cfed47441a42a6cd4fb49c8dc89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShouldWrap: 1
+  ShouldLog: 1
   events:
-    _overriddenCallbacks:
-    - OnResponse
-    - OnMicLevelChanged
-    - OnStartListening
-    - OnRequestCompleted
-    - OnStoppedListening
     _onRequestOptionSetup:
       m_PersistentCalls:
         m_Calls: []
@@ -5387,6 +5398,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e9813c68d7d6f44282ace8bd2d1fd46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_UseOptimizedControls: 0
+  m_LeftHandMesh: {fileID: 0}
+  m_RightHandMesh: {fileID: 0}
+  m_HandMeshMaterial: {fileID: 0}
+  m_DrawMeshes: 0
+  m_DebugDrawPrefab: {fileID: 0}
+  m_DebugDrawJoints: 0
+  m_VelocityPrefab: {fileID: 0}
+  m_VelocityType: 0
 --- !u!1 &862462283 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000010039496462, guid: 30026254a41da3f4eb202264ab31261c,
@@ -7708,6 +7728,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a83bc4aa48d0da648b49d0fd56690b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AimFlagsAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: 
+      m_Type: 0
+      m_ExpectedControlType: Integer
+      m_Id: 85062317-e6a9-42aa-9eff-06231f6bacf7
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_SystemGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SystemGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  m_MenuPressed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1163102088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7720,6 +7761,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbac611a2982409ab5f5e604f53bcad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Handedness: 0
+  m_PokeGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_PokeGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1163102089
 MonoBehaviour:
   m_ObjectHideFlags: 0

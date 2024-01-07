@@ -5,6 +5,8 @@ using System;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using ClassRoomVR;
+using UnityEngine.Events;
+
 #region Server
 //public class WsServer : MonoBehaviour
 //{
@@ -64,7 +66,7 @@ using ClassRoomVR;
 //        if (wssv != null)
 //        {
 //            wssv.Stop();
-            
+
 //        }
 //    }
 //}
@@ -76,16 +78,21 @@ public class WsClient : GenericSingleton<WsClient>
     public static WebSocket ws;
     public string session;
     ClassRoomVR.UnityMessage mes;
-    public bool conected = false;
+    public string idDevice;
+
+    public bool connected;
     private void Start()
     {
-        StartConnection();
+        // StartConnection();
+        connected = false;
+        idDevice= SystemInfo.deviceUniqueIdentifier;
+
     }
     public void StartConnection()
     {
         try
         {
-            conected = true;
+            Debug.Log("abir");
             ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws.OnOpen += Ws_OnOpen;
             ws.OnMessage += Ws_OnSessionMessage;
@@ -97,10 +104,10 @@ public class WsClient : GenericSingleton<WsClient>
 
     private void Ws_OnClose(object sender, CloseEventArgs e)
     {
+        connected = false;
         if (e.WasClean) { session = null; }
         else
         {
-            
             Debug.Log("nO HAY INTERNET2");
             GameManager.Instance.Pause(true);
         }
@@ -108,8 +115,8 @@ public class WsClient : GenericSingleton<WsClient>
 
     void Ws_OnOpen(object sender, EventArgs e)
     {
-        Debug.Log("open");
-        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession, session, SystemInfo.deviceUniqueIdentifier));
+        connected = true;
+        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession, session, idDevice));
         ws.SendAsync(jsonData, null);
     }
 
@@ -171,15 +178,17 @@ public class WsClient : GenericSingleton<WsClient>
 
     public void ToggleCon()
     {
-        if (!conected) StartConnection();
+        if (!connected) StartConnection();
         else Disconnect();
     }
 
 
     public void Disconnect()
     {
-        conected = false;
-        if (ws != null) ws.CloseAsync();
+        if (ws != null)
+        {
+            ws.CloseAsync();
+        }
     }
 
     public bool isAlive() { return ws != null ? ws.IsAlive : false; }

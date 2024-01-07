@@ -10,7 +10,6 @@ public class ToggleConnection : MonoBehaviour
 {
     [SerializeField] Button button; // Reference to the toggle UI element
     [SerializeField] TextMeshProUGUI text; // Reference to the text of the toggle
-    bool value;
     void Start()
     {
         button.onClick.AddListener(Click);
@@ -22,14 +21,21 @@ public class ToggleConnection : MonoBehaviour
     // Called when the toggle value changes (connection state changes)
     private void Click()
     {
-        value = !value;
+        bool before = WsClient.Instance.connected;
         WsClient.Instance.ToggleCon();
-        if (value && WsClient.Instance.isAlive())
+        StartCoroutine(SetText(!before));
+    }
+
+
+    IEnumerator SetText(bool connected)
+    {
+
+        yield return new WaitUntil(() => WsClient.Instance.isAlive() == connected);
+        if (connected)
         {
             // Start the WebSocket connection
             text.text = "Desconectarse"; // Update the text of the toggle
-            // Schedule a method to update the session text after a delay
-           
+                                    
         }
         else
         {
