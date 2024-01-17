@@ -44,7 +44,7 @@ public class Lienzo : MonoBehaviour
     }
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.collider.CompareTag("Drawer")) 
+        if (collision.collider.CompareTag("Marker")) 
         {
 
             if (Physics.Raycast(_camera.ScreenPointToRay(collision.transform.position), out _hit))

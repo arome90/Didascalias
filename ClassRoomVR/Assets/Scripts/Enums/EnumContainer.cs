@@ -31,3 +31,14 @@ public enum HeadSelector
     Posicion = 1,
     DistanciaRecorrida = 2, Velocidad = 4
 }
+
+public enum Animaciones
+{
+    Levantar, Empujar, SitGanas, SitSinGanas
+}
+
+
+public enum AnimacionesStudent
+{
+    Levantar, Empujar, SitGanas, SitSinGanas
+}

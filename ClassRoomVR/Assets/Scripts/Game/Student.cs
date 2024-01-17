@@ -5,6 +5,7 @@ using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
 using System.Linq;
 using Oculus.Platform.Models;
+using UnityEngine.UIElements;
 
 namespace ClassRoomVR
 {
@@ -48,6 +49,7 @@ namespace ClassRoomVR
         {
             // Initialize references and components
             collider = GetComponent<MeshCollider>();
+            animator= GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             behavior = GetComponent<StudentBehavior>();
@@ -73,13 +75,16 @@ namespace ClassRoomVR
         {
             GameObject body = InstantiateAndAddCollider(prefab);
             ConfigureAnimator(body);
-            SetupHeadConstraint();
-            BuildRig();
+            headConstraint.data.constrainedObject = GetHeadBone();
+            var rigbuilder = body.AddComponent<RigBuilder>();
+            rigbuilder.layers.Add(new RigLayer(body.transform.GetChild(body.transform.childCount-1).GetComponent<Rig>(), true));
+            rigbuilder.Build();
         }
 
         private GameObject InstantiateAndAddCollider(GameObject prefab)
         {
             GameObject body = Instantiate(prefab, transform);
+            transform.GetChild(1).parent = body.transform;
             collider = body.AddComponent<MeshCollider>();
             return body;
         }
@@ -92,21 +97,10 @@ namespace ClassRoomVR
                 animator.runtimeAnimatorController = animatorController;
             }
         }
-
-        private void SetupHeadConstraint()
-        {
-            headConstraint.data.constrainedObject = GetHeadBone();
-        }
-
-        private void BuildRig()
-        {
-            transform.GetComponent<RigBuilder>().Build();
-        }
-
         private Transform GetHeadBone()
         {
-            Transform body = transform.GetChild(2);
-            int index = body.childCount - 3;
+            Transform body = transform.GetChild(1);
+            int index = body.childCount - 4;
             return body.GetChild(index).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0);
         }
 
@@ -160,16 +154,16 @@ namespace ClassRoomVR
         // Methods to handle user input and trigger actions
         private void HandleInput()
         {
-            // Check numeric keypad input for different field of vision options
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i <= 6; i++)
             {
                 KeyCode keyCode = KeyCode.Keypad0 + i;
-
                 if (Input.GetKeyDown(keyCode))
                 {
-                    FieldOfVision fieldOfVision = targets.ElementAt(i).Key;
-                    Debug.Log(i + " " + fieldOfVision);
-                    SetDirection(fieldOfVision);
+                    animator.SetInteger("Accion", i);
+                    if (i == 1)
+                    {
+                        desk.Balancearse();
+                    }
                 }
             }
 
@@ -277,6 +271,7 @@ namespace ClassRoomVR
 
         public void PlayDisruptiveAction(string stateName, AudioClip clip)
         {
+           // int i =Animator.StringToHash("onFoot");
             animator.Play(stateName);
             audioSource.clip = clip;
             audioSource.Play();
@@ -309,6 +304,7 @@ namespace ClassRoomVR
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
+            
             state = State.Standing;
             visionTeacher = visionFromOnFoot;
             target.position = transform.position + transform.forward + targets[FieldOfVision.Up];
@@ -331,17 +327,23 @@ namespace ClassRoomVR
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
-            while (Vector3.Distance(transform.position, desk.GetPositionStudent()) > 0.3f)
+            while (Distance(transform.position, desk.GetPositionSitStudent(), 0.01f))
             {
                 yield return null;
             }
-            animator.SetBool("onFoot", false);
-            studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
             navMeshAgent.enabled = false;
             transform.rotation = desk.transform.rotation;
-            transform.position = desk.GetPositionStudent();
+            animator.SetBool("onFoot", false);
+            desk.PlayAnimacionMesa(Animaciones.SitGanas);
+            studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
             state = State.Sitting;
             visionTeacher = 0;
+            //while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Sitting"))
+            //    yield return null;
+            //transform.rotation = desk.transform.rotation;
+            //transform.position = desk.GetPositionStudent();
+
+
 
         }
 
@@ -350,7 +352,7 @@ namespace ClassRoomVR
         {
             navMeshAgent.enabled = true;
 
-            navMeshAgent.SetDestination(desk.GetPositionStudent());
+            navMeshAgent.SetDestination(desk.GetPositionSitStudent());
             animator.Play("Walking");
             StartCoroutine(OnCompleteSitBack());
         }
@@ -363,6 +365,7 @@ namespace ClassRoomVR
             if (state == State.Sitting)
             {
                 animator.SetBool("onFoot", true);
+                desk.PlayAnimacionMesa(Animaciones.Levantar);
             }
             else
             {

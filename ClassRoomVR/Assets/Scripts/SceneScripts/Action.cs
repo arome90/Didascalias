@@ -78,8 +78,8 @@ namespace ClassRoomVR
                     break;
                 }
             }
-
-            yield return new WaitForSecondsRealtime(4);
+            //cambiar a 4 
+            yield return new WaitForSecondsRealtime(1);
 
             if (!s.IsStudentInFieldOfVision())
             {

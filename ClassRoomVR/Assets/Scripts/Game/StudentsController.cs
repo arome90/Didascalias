@@ -205,7 +205,7 @@ namespace ClassRoomVR
                 student.PayAttention();
                 student.PlayDisruptiveAction(action.problematicsAnimation.name, clip);
                 if (action.position == Positions.FrontSide)
-                    student.MoveTo(frontSide.position, 0f);
+                    student.MoveTo(frontSide.position, 1f);
                 randomStudentIndex++;
                 if (randomStudentIndex >= students.Count)
                     randomStudentIndex -= 2;

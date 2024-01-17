@@ -138,9 +138,10 @@ namespace ClassRoomVR
             DeskManager.Instance.GetFreeDesk(ref deskPos, nGruops);
             Desk desk = studentsPositions.GetChild(deskPos).GetComponent<Desk>();
             Transform pos = desk.transform.GetChild(0);
-            if (newBody)
-                pickedStudent.transform.SetPositionAndRotation(pos.position, Quaternion.Euler(-90, 0, 0));
-            else pickedStudent.transform.SetPositionAndRotation(pos.position, pos.rotation);
+            //if (newBody)
+            //    pickedStudent.transform.SetPositionAndRotation(pos.position, Quaternion.Euler(-90, 0, 0));
+            //else
+            pickedStudent.transform.SetPositionAndRotation(pos.position, pos.rotation);
             pickedStudent.SetDesk(desk);
             pickedStudent.SetTargets(targetsHead);
 
