@@ -19,7 +19,6 @@ namespace ClassRoomVR
 
         // Serialized fields for customization in the Inspector
         [SerializeField] private Gender gender;
-        [SerializeField] private string studentName;
         [SerializeField] private bool problematic = false;
         [SerializeField] private TextMesh studentNameText;
         private Desk desk;
@@ -65,7 +64,6 @@ namespace ClassRoomVR
         public void SetParameters(Transform player,string name, Gender gender)
         {
             this.player = player;            
-            studentName = name;
             transform.name = name;
             studentNameText.text = name;
             this.gender = gender;
@@ -148,7 +146,7 @@ namespace ClassRoomVR
             if (GameManager.Instance.IsPause) return;
             HandleInput();
             UpdateTargetPosition();
-            attentionText.text = behavior.AttentionLevel.ToString("0.##");
+            if(attentionText!=null) attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
 
         // Methods to handle user input and trigger actions
@@ -327,7 +325,7 @@ namespace ClassRoomVR
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
-            while (Distance(transform.position, desk.GetPositionSitStudent(), 0.01f))
+            while (Distance(transform.position, desk.GetPositionSitStudent(), 0.3f))
             {
                 yield return null;
             }
@@ -341,7 +339,6 @@ namespace ClassRoomVR
             //while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Sitting"))
             //    yield return null;
             //transform.rotation = desk.transform.rotation;
-            //transform.position = desk.GetPositionStudent();
 
 
 

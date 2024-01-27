@@ -276,7 +276,8 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 99a598f4815d9ef4280572c1f0345700, type: 2}
+  m_Motion: {fileID: -203655887218126122, guid: 234d6302c1378944eabbf353205ce0b7,
+    type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -833,21 +834,69 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
-    m_Name: Base Layer
-    m_StateMachine: {fileID: 8635014807119323412}
+    m_Name: Mixamo
+    m_StateMachine: {fileID: 7981440908286346815}
     m_Mask: {fileID: 0}
-    m_Motions: []
+    m_Motions:
+    - serializedVersion: 2
+      m_State: {fileID: -5324206048162868810}
+      m_Motion: {fileID: -203655887218126122, guid: 829af7a763bd6374e9d92f42845d74d2,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: -7709166573447392992}
+      m_Motion: {fileID: -203655887218126122, guid: 234d6302c1378944eabbf353205ce0b7,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: 4760139842237766760}
+      m_Motion: {fileID: -203655887218126122, guid: cb2b1380d59207b4fbb573e593420afe,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: 1189421812059999942}
+      m_Motion: {fileID: -203655887218126122, guid: 6f808be8d39bf3e42932a31636b71e95,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: 3173585970774287453}
+      m_Motion: {fileID: -203655887218126122, guid: c6341f1df1cadc74eae8f3c6e98588d5,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: -2173467292069508017}
+      m_Motion: {fileID: 1827226128182048838, guid: e4ff84ee68f2c6747979baeb8539e127,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: -29557436686990072}
+      m_Motion: {fileID: 1827226128182048838, guid: 8227755e311e6824998f68d772ade55c,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: 4132369654212899649}
+      m_Motion: {fileID: 1827226128182048838, guid: 175f5ad09f66b384fa6d7a25ba84c8bd,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: 1432924511311705871}
+      m_Motion: {fileID: 1827226128182048838, guid: 6172ddcb920e57141be96c1cc5ec948e,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: 3835342983291762784}
+      m_Motion: {fileID: 1827226128182048838, guid: 1f058fef5bf613a4cb7bda78fe19569f,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: -2727824513646043061}
+      m_Motion: {fileID: 1827226128182048838, guid: f8290932c7402d345a0be074d4d7079f,
+        type: 3}
+    - serializedVersion: 2
+      m_State: {fileID: 5812653005743817152}
+      m_Motion: {fileID: 1827226128182048838, guid: 06e1a7f9a4e2c2e459a60f63c25961f6,
+        type: 3}
     m_Behaviours: []
     m_BlendingMode: 0
-    m_SyncedLayerIndex: -1
+    m_SyncedLayerIndex: 1
     m_DefaultWeight: 0
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: Arriba
-    m_StateMachine: {fileID: 7981440908286346815}
-    m_Mask: {fileID: 31900000, guid: d23e7232ad23e034aa2ff44ba392ea40, type: 2}
+    m_Name: Base Layer
+    m_StateMachine: {fileID: 8635014807119323412}
+    m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
@@ -1002,16 +1051,9 @@ BlendTree:
     m_DirectBlendParameter: Aburrimiento
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: ee1c332ba2817a446b9663dd5251fc4c, type: 2}
+    m_Motion: {fileID: 1827226128182048838, guid: 33563685595c2d8449f6b49599a06a8a,
+      type: 3}
     m_Threshold: 0.5
-    m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
-    m_CycleOffset: 0
-    m_DirectBlendParameter: Aburrimiento
-    m_Mirror: 0
-  - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: ec18a49aa0804c942a7a5f4a0025def7, type: 2}
-    m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -1020,7 +1062,7 @@ BlendTree:
   m_BlendParameter: Aburrimiento
   m_BlendParameterY: Blend
   m_MinThreshold: 0
-  m_MaxThreshold: 1
+  m_MaxThreshold: 0.5
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 0
@@ -1511,7 +1553,7 @@ AnimatorStateMachine:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Arriba
+  m_Name: Mixamo
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -5468168943376882318}

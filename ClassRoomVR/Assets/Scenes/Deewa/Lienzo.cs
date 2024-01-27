@@ -28,6 +28,7 @@ public class Lienzo : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
+            Debug.Log(_camera.ScreenPointToRay(Input.mousePosition));
             if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out _hit))
             {
                 Vector2 pixelUV = _hit.textureCoord;
@@ -42,11 +43,37 @@ public class Lienzo : MonoBehaviour
             }
         }
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Marker"))
+        {
+            Debug.Log("aaaaa");
+            
+            Ray ray = new Ray(other.transform.position, other.transform.localRotation.eulerAngles);
+            Debug.Log(ray);
+
+            if (Physics.Raycast(ray, out _hit))
+            {
+                Debug.Log("aaaaajjjj");
+                Vector2 pixelUV = _hit.textureCoord;
+
+                _drawMaterial.SetVector("_Coordinates", new Vector4(pixelUV.x, pixelUV.y, 0, 0));
+
+                // Pintar en la textura del material directamente
+                RenderTexture temp = RenderTexture.GetTemporary(_splatMap.width, _splatMap.height, 0, RenderTextureFormat.ARGBFloat);
+                Graphics.Blit(_splatMap, temp);
+                Graphics.Blit(temp, _splatMap, _drawMaterial); // Acumular el dibujo en la textura del material
+                RenderTexture.ReleaseTemporary(temp);
+            }
+
+        }
+    }
     private void OnCollisionStay(Collision collision)
     {
         if (collision.collider.CompareTag("Marker")) 
         {
-
+            Debug.Log("aaaaa");
+           
             if (Physics.Raycast(_camera.ScreenPointToRay(collision.transform.position), out _hit))
             {
                 Vector2 pixelUV = _hit.textureCoord;

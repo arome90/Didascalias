@@ -169,32 +169,73 @@ namespace ClassRoomVR
 
 
         public bool GetSaveAudio() => saveAudio;
+        private void Update()
+        {
+            if (IsPause && Application.internetReachability != NetworkReachability.NotReachable)
+            {
 
+                Debug.Log("vuelve la conexion");
+                voice.Activate();
+                WsClient.Instance.StartConnection();
+                loadingBar.SetActive(false);
+                Continue();
+
+            }
+        }
         public void Pause(bool lostConnection)
         {
+            Debug.Log("pause");
             if (!IsPause)
             {
-                if (lostConnection)
-                {
-                    Debug.Log("LOST");
-                    StartCoroutine(nameof(WaitConnection));
-                    loadingBar.SetActive(true);
-                }
-                AudioListener.pause = true;
-                //Time.timeScale = 0f;
                 IsPause = true;
+             
+                if (lostConnection)
+                {                    
+                    if (loadingBar != null)
+                    {
+                        loadingBar.SetActive(true);
+                    }
+                    
+                }
+                //Time.timeScale = 0f;
+                AudioListener.pause = true;
+            }
+        }
+      
+        void WaitConnection()
+        {
+            Debug.Log("que pasa");
+            if (Application.internetReachability != NetworkReachability.NotReachable)
+            {
+                Debug.Log("vuelve la coneccion");
+                voice.Activate();
+                WsClient.Instance.StartConnection();
+                loadingBar.SetActive(false);
+                Continue();
+            }
+            else
+            {
+                Invoke(nameof(WaitConnection), 3.0f);
             }
         }
 
-        IEnumerator WaitConnection()
-        {
-            while (Application.internetReachability == NetworkReachability.NotReachable) { yield return null; }
-            Debug.Log("vuelve la coneccion");
-            voice.Activate();
-            WsClient.Instance.StartConnection();
-            loadingBar.SetActive(false);
-            Continue(); 
-        }
+
+
+
+        //void WaitConnection()
+        //{
+        //    Debug.Log("espera la coneccion");
+        //    if (Application.internetReachability != NetworkReachability.NotReachable)
+        //    {
+        //        voice.Activate();
+        //        Debug.Log("vpñoo");
+        //        WsClient.Instance.StartConnection();
+        //        ServerMessage.SendInfoInitial();
+        //        loadingBar.SetActive(false);
+        //        Continue();
+        //        //CancelInvoke(nameof(WaitConnection));
+        //    }
+        //}
 
 
 

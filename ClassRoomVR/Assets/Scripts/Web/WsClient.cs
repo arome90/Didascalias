@@ -83,16 +83,15 @@ public class WsClient : GenericSingleton<WsClient>
     public bool connected;
     private void Start()
     {
-        // StartConnection();
         connected = false;
         idDevice= SystemInfo.deviceUniqueIdentifier;
-
+        StartConnection();
+        //Invoke(nameof(hola), 4f);
     }
     public void StartConnection()
     {
         try
         {
-            Debug.Log("abir");
             ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws.OnOpen += Ws_OnOpen;
             ws.OnMessage += Ws_OnSessionMessage;
@@ -105,7 +104,9 @@ public class WsClient : GenericSingleton<WsClient>
     private void Ws_OnClose(object sender, CloseEventArgs e)
     {
         connected = false;
-        if (e.WasClean) { session = null; }
+        if (e.WasClean) {
+           session = null; 
+        }
         else
         {
             Debug.Log("nO HAY INTERNET2");
@@ -120,12 +121,27 @@ public class WsClient : GenericSingleton<WsClient>
         ws.SendAsync(jsonData, null);
     }
 
+    //void hola() 
+    //{
+    //    ServerMessage.SendInfoInitial();
+    //    Debug.Log("holaaa");
+    //    ws.Close();
+    //    Invoke(nameof(start), 3);
+    //}
+    //void start() 
+    //{
+    //    Debug.Log("holoo");
+    //    StartConnection();
+
+    //}
     void Ws_OnSessionMessage(object sender, MessageEventArgs e)
     {
         try
         {
             mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
+            Debug.Log(mes.data.ToString());
             session = mes.data.ToString();
+            Debug.Log(session);
             ws.OnMessage += Ws_OnMessage;
             ws.OnMessage -= Ws_OnSessionMessage;
         }
@@ -187,7 +203,7 @@ public class WsClient : GenericSingleton<WsClient>
     {
         if (ws != null)
         {
-            ws.CloseAsync();
+            ws.Close();
         }
     }
 

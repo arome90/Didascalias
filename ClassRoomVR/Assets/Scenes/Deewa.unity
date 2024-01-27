@@ -766,7 +766,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1011272615}
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}
 --- !u!1 &27684133
 GameObject:
@@ -7706,6 +7710,27 @@ Transform:
   - {fileID: 780711831}
   m_Father: {fileID: 1225618170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1011272612 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 25366133}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1011272615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011272612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b570e15a0eb350468bad9e9bfad1c27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  session: 
+  idDevice: 
+  connected: 0
 --- !u!1 &1021239396
 GameObject:
   m_ObjectHideFlags: 0
@@ -10653,8 +10678,8 @@ MonoBehaviour:
   beforeClassBell: {fileID: 8300000, guid: ab5010ab38510d74cb1c5d5a75a89adc, type: 3}
   afterClassBell: {fileID: 8300000, guid: a741dd2657aa91d4ab1d3aea2ce29516, type: 3}
   player: {fileID: 301819453}
-  bodyNew: {fileID: 4378866465449014042, guid: 503f91ae4561e3c418f4e257484d3f30, type: 3}
-  newBody: 0
+  bodyNew: {fileID: 2778720238220761630, guid: 5930d992dfbc4bd40bc92260c4120969, type: 3}
+  newBody: 1
 --- !u!4 &1472140262
 Transform:
   m_ObjectHideFlags: 0
