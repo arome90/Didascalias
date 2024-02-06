@@ -325,12 +325,13 @@ namespace ClassRoomVR
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
-            while (Distance(transform.position, desk.GetPositionSitStudent(), 0.3f))
+            while (Distance(transform.position, desk.GetPositionStudent(), 0.1f))
             {
                 yield return null;
             }
             navMeshAgent.enabled = false;
             transform.rotation = desk.transform.rotation;
+            transform.position = desk.transform.position - new Vector3(0,0,0.1f);
             animator.SetBool("onFoot", false);
             desk.PlayAnimacionMesa(Animaciones.SitGanas);
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
@@ -349,7 +350,7 @@ namespace ClassRoomVR
         {
             navMeshAgent.enabled = true;
 
-            navMeshAgent.SetDestination(desk.GetPositionSitStudent());
+            navMeshAgent.SetDestination(desk.GetPositionStudent());
             animator.Play("Walking");
             StartCoroutine(OnCompleteSitBack());
         }

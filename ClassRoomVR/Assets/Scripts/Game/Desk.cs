@@ -12,7 +12,6 @@ public class Desk : MonoBehaviour
 
     // Get the position of the student sitting at the desk
     public Vector3 GetPositionStudent() => transform.GetChild(0).position;
-    public Vector3 GetPositionSitStudent() => transform.GetChild(1).position;
 
     [HideInInspector] public UnityEngine.Events.UnityEvent onCollisionChanged; // Event invoked when collision with other desk occurs
     [SerializeField] Animation deskAnim;

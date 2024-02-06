@@ -56,6 +56,8 @@ MonoBehaviour:
   onCollisionChanged:
     m_PersistentCalls:
       m_Calls: []
+  deskAnim: {fileID: 0}
+  chairAnim: {fileID: 0}
 --- !u!54 &-3678122983538488442
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -111,7 +113,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30167210217595244}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.25, y: 0.29, z: 0.24}
@@ -560,7 +562,7 @@ Transform:
   m_GameObject: {fileID: 2890111314958093538}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.021, y: 0.04, z: 0.03}
+  m_LocalPosition: {x: -0.021, y: 0, z: -0.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
