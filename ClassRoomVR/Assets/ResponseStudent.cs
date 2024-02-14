@@ -5,9 +5,14 @@ using Meta.WitAi.TTS.Utilities;
 using UnityEngine.Windows;
 using Meta.WitAi.TTS.Interfaces;
 using System;
+using Unity.Mathematics;
+using Meta.WitAi.TTS.Data;
+using Meta.WitAi.TTS.Integrations;
 
 public class ResponseStudent : MonoBehaviour
 {
+   // TTSWit TTSWit;
+    TTSVoiceSettings voiceSettings;
     TTSSpeaker _speaker;
     [SerializeField] private string _dateId = "[DATE]";
      private AudioClip _asyncClip;
@@ -15,23 +20,18 @@ public class ResponseStudent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _asyncClip = transform.GetChild(0).GetComponent<AudioClip>();
+        _asyncClip = GetComponent<AudioClip>();
         _speaker = GetComponent<TTSSpeaker>();
+        //_speaker.VoiceID = TTSWit.PresetVoiceSettings[0].SettingsId;
         //_speaker.customWitVoiceSettings.voice
-        Invoke(nameof(TTS), 3);
     }
 
-    void TTS() 
+    public void TTS(string text) 
     {
-        
         // Speak phrase
-        string phrase = FormatText("Hola buenas tardes, que tal estas profesor ?");
-
+        string phrase = FormatText(text);
         // Speak async
-
         _speaker.Speak(phrase);
-
-
     }
 
     // Speak async
@@ -53,12 +53,6 @@ public class ResponseStudent : MonoBehaviour
         {
             _speaker.AudioSource.PlayOneShot(_asyncClip);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private string FormatText(string text)

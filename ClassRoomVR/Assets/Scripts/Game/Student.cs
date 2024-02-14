@@ -34,7 +34,7 @@ namespace ClassRoomVR
         [SerializeField] private TextMesh attentionText;
         private StudentBehavior behavior;
         private Transform player;
-
+        private ResponseStudent response;
         #region Getters
         // Getter methods for accessing properties
         public Desk GetDesk() => desk;
@@ -47,6 +47,7 @@ namespace ClassRoomVR
         private void Awake()
         {
             // Initialize references and components
+            response= GetComponent<ResponseStudent>();
             collider = GetComponent<MeshCollider>();
             animator= GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
@@ -405,9 +406,9 @@ namespace ClassRoomVR
         #endregion
 
         //VoiceGenerator voiceGenerator;
-        //public void GenerateText()
-        //{
-        //    voiceGenerator.GenerateVoiceClipAsync("hola");
-        //}
+        public void GenerateText(string text)
+        {
+            response.TTS(text);
+        }
     }
 }

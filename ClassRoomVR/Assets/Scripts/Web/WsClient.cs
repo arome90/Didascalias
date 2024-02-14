@@ -84,9 +84,9 @@ public class WsClient : GenericSingleton<WsClient>
     private void Start()
     {
         connected = false;
-        idDevice= SystemInfo.deviceUniqueIdentifier;
+        idDevice = SystemInfo.deviceUniqueIdentifier;
         StartConnection();
-        //Invoke(nameof(hola), 4f);
+        Invoke(nameof(Info), 2f);
     }
     public void StartConnection()
     {
@@ -105,7 +105,7 @@ public class WsClient : GenericSingleton<WsClient>
     {
         connected = false;
         if (e.WasClean) {
-           session = null; 
+            session = null;
         }
         else
         {
@@ -121,19 +121,10 @@ public class WsClient : GenericSingleton<WsClient>
         ws.SendAsync(jsonData, null);
     }
 
-    //void hola() 
-    //{
-    //    ServerMessage.SendInfoInitial();
-    //    Debug.Log("holaaa");
-    //    ws.Close();
-    //    Invoke(nameof(start), 3);
-    //}
-    //void start() 
-    //{
-    //    Debug.Log("holoo");
-    //    StartConnection();
-
-    //}
+    void Info()
+    {
+        ServerMessage.SendInfoInitial();
+    }
     void Ws_OnSessionMessage(object sender, MessageEventArgs e)
     {
         try
@@ -141,7 +132,6 @@ public class WsClient : GenericSingleton<WsClient>
             mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
             Debug.Log(mes.data.ToString());
             session = mes.data.ToString();
-            Debug.Log(session);
             ws.OnMessage += Ws_OnMessage;
             ws.OnMessage -= Ws_OnSessionMessage;
         }
@@ -187,8 +177,14 @@ public class WsClient : GenericSingleton<WsClient>
         if (accion)
         {
             accion = false;
-            Debug.Log(Convert.ToInt32(mes.data));
-            ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(mes.data));
+            if (mes.data.ToString().Length > 1)
+            {
+                ClassRoomVR.ClassManager.Instance.GetStudentsController().PlaySentence(mes.data.ToString());
+            }
+            else
+            {
+                ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(mes.data));
+            }
         }
     }
 

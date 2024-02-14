@@ -197,6 +197,9 @@ namespace ClassRoomVR
                     case "Expulsion":
                         st.HandleExpel(studentSelected);
                         break;
+                    case "Saludos":
+                        st.PlaySentence("Buenas profesor");
+                        break;
                     default:
                         intentName = "No hay intencion";
                         break;

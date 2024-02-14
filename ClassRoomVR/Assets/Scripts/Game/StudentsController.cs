@@ -219,6 +219,11 @@ namespace ClassRoomVR
             ClassManager.Instance.DisruptiveSituation = true;
         }
 
+        public void PlaySentence(string text)
+        {
+            students.ElementAt(0).Value.GenerateText(text);
+        }
+
         private void Update()
         {
             if (GameManager.Instance.IsPause) return;
