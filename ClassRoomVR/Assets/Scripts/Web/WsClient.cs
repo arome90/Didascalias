@@ -86,7 +86,7 @@ public class WsClient : GenericSingleton<WsClient>
         connected = false;
         idDevice= SystemInfo.deviceUniqueIdentifier;
         StartConnection();
-        //Invoke(nameof(hola), 4f);
+        Invoke(nameof(hola), 4f);
     }
     public void StartConnection()
     {
@@ -121,13 +121,13 @@ public class WsClient : GenericSingleton<WsClient>
         ws.SendAsync(jsonData, null);
     }
 
-    //void hola() 
-    //{
-    //    ServerMessage.SendInfoInitial();
-    //    Debug.Log("holaaa");
-    //    ws.Close();
-    //    Invoke(nameof(start), 3);
-    //}
+    void hola()
+    {
+        ServerMessage.SendInfoInitial();
+       //Debug.Log("holaaa");
+       // ws.Close();
+       // Invoke(nameof(start), 3);
+    } 
     //void start() 
     //{
     //    Debug.Log("holoo");
