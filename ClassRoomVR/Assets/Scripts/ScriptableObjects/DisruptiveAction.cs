@@ -12,7 +12,8 @@ namespace ClassRoomVR
         None = -1,
         FrontSide,
         BackCorner,
-        Doors
+        Doors,
+        Student
     }
 
     [CreateAssetMenu(fileName = "DisruptiveAction", menuName = "ScriptableObject/DisruptiveAction", order = 2)]
@@ -31,6 +32,8 @@ namespace ClassRoomVR
 
         [Tooltip("Position to move to")]
         public Positions position;
+
+
 
         public float reactionTime;
 

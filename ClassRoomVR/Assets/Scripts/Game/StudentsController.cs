@@ -219,6 +219,18 @@ namespace ClassRoomVR
             ClassManager.Instance.DisruptiveSituation = true;
         }
 
+
+
+
+        public void SeparateStudent() 
+        {
+            int randomStudentIndex = UnityEngine.Random.Range(0, students.Count);
+            Student student = students.ElementAt(randomStudentIndex).Value;
+            Student obj = null;//  ESTUDIANTE OBJETIVO AL QUE LA VA A QUITAR EL SITIO ;
+            Student cOMPAÑE = null;// COMPAÑERO DE TRASTADAS ;
+            //el student va hasta el sitio del objetivo cuando llega le dice al objetivo me quiero sentar con el compañero de al lado 
+            // el otro estudainte se va al sitio del otro y estos dos al sentarse dicen ale ya estamos juntos 
+        }
         public void PlaySentence(string text)
         {
             students.ElementAt(0).Value.GenerateText(text);

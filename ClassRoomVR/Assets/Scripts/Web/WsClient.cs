@@ -142,7 +142,7 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
     [Serializable]
-    struct A { public string type; public string id; }
+    struct A { public string type; public string id;public string  data; }
     private void Ws_OnMessage(object sender, MessageEventArgs e)
     {
         try

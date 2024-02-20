@@ -175,9 +175,12 @@ namespace ClassRoomVR
             {
 
                 Debug.Log("vuelve la conexion");
-                voice.Activate();
+                if (voice != null)
+                {
+                    voice.Activate();
+                }
                 WsClient.Instance.StartConnection();
-                loadingBar.SetActive(false);
+                loadingBar.GetComponent<Canvas>().enabled=false;
                 Continue();
 
             }
@@ -193,9 +196,10 @@ namespace ClassRoomVR
                 {                    
                     if (loadingBar != null)
                     {
-                        loadingBar.SetActive(true);
+                        loadingBar.GetComponent<Canvas>().enabled = true;
+
                     }
-                    
+
                 }
                 //Time.timeScale = 0f;
                 AudioListener.pause = true;

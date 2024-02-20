@@ -14,7 +14,6 @@ public class ReconnectUI : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.SetLoadingBar(this);
-        gameObject.SetActive(false);
     }
     private void Update()
     {
