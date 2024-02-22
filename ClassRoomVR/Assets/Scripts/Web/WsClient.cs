@@ -77,7 +77,7 @@ public class WsClient : GenericSingleton<WsClient>
     public static bool accion = false;
     public static WebSocket ws;
     public string session;
-    ClassRoomVR.UnityMessage mes;
+    ClassRoomVR.MessageReceived recMes;
     public string idDevice;
 
     public bool connected;
@@ -117,7 +117,7 @@ public class WsClient : GenericSingleton<WsClient>
     void Ws_OnOpen(object sender, EventArgs e)
     {
         connected = true;
-        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.UnityMessage(ClassRoomVR.MessageType.CreateSession, session, idDevice));
+        string jsonData = JsonConvert.SerializeObject(new ClassRoomVR.MessageSent(ClassRoomVR.MessageType.CreateSession, session, idDevice));
         ws.SendAsync(jsonData, null);
     }
 
@@ -129,9 +129,9 @@ public class WsClient : GenericSingleton<WsClient>
     {
         try
         {
-            mes = JsonConvert.DeserializeObject<ClassRoomVR.UnityMessage>(e.Data);
-            Debug.Log(mes.data.ToString());
-            session = mes.data.ToString();
+            recMes = JsonConvert.DeserializeObject<ClassRoomVR.MessageReceived>(e.Data);
+            Debug.Log(recMes.data.ToString());
+            session = recMes.data.ToString();
             ws.OnMessage += Ws_OnMessage;
             ws.OnMessage -= Ws_OnSessionMessage;
         }
@@ -141,15 +141,13 @@ public class WsClient : GenericSingleton<WsClient>
         }
     }
 
-    [Serializable]
-    struct A { public string type; public string id;public string  data; }
+   
     private void Ws_OnMessage(object sender, MessageEventArgs e)
     {
         try
         {
             accion = true;
-            mes.data = JsonConvert.DeserializeObject<A>(e.Data).id;
-            Debug.Log("Mes" + " " + mes.data.ToString());
+            recMes = JsonConvert.DeserializeObject<MessageReceived>(e.Data);
         }
         catch (Exception ex)
         {
@@ -158,7 +156,7 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
 
-    public void Ws_SendMessage(ClassRoomVR.UnityMessage mes)
+    public void Ws_SendMessage(ClassRoomVR.MessageSent mes)
     {
         if (ws != null && ws.IsAlive)
         {
@@ -177,13 +175,14 @@ public class WsClient : GenericSingleton<WsClient>
         if (accion)
         {
             accion = false;
-            if (mes.data.ToString().Length > 1)
+            if (Convert.ToInt32(recMes.id)>=0)
             {
-                ClassRoomVR.ClassManager.Instance.GetStudentsController().PlaySentence(mes.data.ToString());
+               
+                ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(recMes.id));
             }
             else
             {
-                ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(mes.data));
+                ClassRoomVR.ClassManager.Instance.GetStudentsController().PlaySentence(recMes.data.ToString());
             }
         }
     }
