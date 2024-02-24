@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 863c66d668df3964cae730c2963689a1
+guid: 0795360c69192644386eec3e65d88b6a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: SentarseRelajadoMesa
+      name: MEmpujar
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0
-      lastFrame: 75
+      lastFrame: 45
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -112,16 +112,21 @@ ModelImporter:
     serializedVersion: 3
     human: []
     skeleton:
-    - name: SentarseRelajadoMesa(Clone)
+    - name: Mesa_Empujar(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
+    - name: Mesa
+      parentName: Mesa_Empujar(Clone)
+      position: {x: -0, y: 0, z: 0.12657921}
+      rotation: {x: -0.7071068, y: 0.000000061817246, z: 0.000000061817246, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
     - name: MesaRoot
-      parentName: SentarseRelajadoMesa(Clone)
+      parentName: Mesa_Empujar(Clone)
       position: {x: -0, y: 0, z: 0.5047808}
       rotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-      scale: {x: 0.39370075, y: 0.39370075, z: 0.39370075}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5

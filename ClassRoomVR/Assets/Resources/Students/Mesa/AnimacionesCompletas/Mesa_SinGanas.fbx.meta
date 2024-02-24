@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4012afa6d3cceab478514e4aab931c0d
+guid: 7265a536d15c87141ab3874be439bf0d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: SentarseSinGanasMesa
+      name: MSinGanas
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0
@@ -112,16 +112,21 @@ ModelImporter:
     serializedVersion: 3
     human: []
     skeleton:
-    - name: SentarseSinGanasMesa(Clone)
+    - name: Mesa_SinGanas(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
+    - name: Mesa
+      parentName: Mesa_SinGanas(Clone)
+      position: {x: -0, y: 0, z: 0.12657921}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
     - name: MesaRoot
-      parentName: SentarseSinGanasMesa(Clone)
+      parentName: Mesa_SinGanas(Clone)
       position: {x: -0, y: 0, z: 0.5047808}
       rotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-      scale: {x: 0.39370075, y: 0.39370075, z: 0.39370075}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5

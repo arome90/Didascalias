@@ -331,9 +331,9 @@ namespace ClassRoomVR
             }
             navMeshAgent.enabled = false;
             transform.rotation = desk.transform.rotation;
-            transform.position = desk.transform.position - new Vector3(0,0,0.1f);
+          //  transform.position = desk.transform.position - new Vector3(0,0,0.1f);
             animator.SetBool("onFoot", false);
-            desk.PlayAnimacionMesa(Animaciones.SitGanas);
+            desk.PlayAnimacionMesa(Animaciones.SitRelajado);
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
             state = State.Sitting;
             visionTeacher = 0;

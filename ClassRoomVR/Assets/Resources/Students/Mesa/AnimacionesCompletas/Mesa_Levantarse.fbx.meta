@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7d04ca9f525f0ca4aa2ea285668622c5
+guid: 8290f41961b530c42973a92dea6fdd55
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: LevantarMesa
+      name: MLevantarse
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0
@@ -112,16 +112,21 @@ ModelImporter:
     serializedVersion: 3
     human: []
     skeleton:
-    - name: LevantarseMesa(Clone)
+    - name: Mesa_Levantarse(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
+    - name: Mesa
+      parentName: Mesa_Levantarse(Clone)
+      position: {x: -0, y: 0, z: 0.30755386}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
     - name: MesaRoot
-      parentName: LevantarseMesa(Clone)
-      position: {x: 9.0238926e-17, y: 2.6893296e-24, z: 0.32648864}
+      parentName: Mesa_Levantarse(Clone)
+      position: {x: -0, y: 0, z: 0.32648864}
       rotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-      scale: {x: 0.39370075, y: 0.39370075, z: 0.39370075}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
