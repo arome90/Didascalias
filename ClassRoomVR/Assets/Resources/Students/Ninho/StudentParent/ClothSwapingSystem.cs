@@ -2,39 +2,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClothSwappingSystem : MonoBehaviour
+public class ClothSwapingSystem : MonoBehaviour
 {
-    [System.Serializable] // Esto hace que puedas ver el struct en el Inspector de Unity
-    public struct MeshMaterialPair
-    {
-        public SkinnedMeshRenderer mesh;
-        public Material material;
-    }
-
     [Header("Player Bones")]
-    public Transform[] playerBonesArray;
-    public Transform rootBone;
-    public Dictionary<string, Transform> playerBonesDict;
+    Transform[] playerBonesArray;
+    Transform rootBone;
+    Dictionary<string, Transform> playerBonesDict;
 
-    [Header("Attach Items")]
-    public List<MeshMaterialPair> itemMeshMaterialPairs; // Lista de meshes y sus materiales
+    [Header("Clothing Assets")]
+    public CharacterSkinnedMeshes characterSkinnedMeshes; // Referencia al Scriptable Object
 
+    void Awake()
+    {
+        if (transform.childCount > 0)
+        {
+            rootBone = transform.GetChild(0);
+            List<Transform> bonesList = new List<Transform>();
+            bonesList.Add(rootBone);
+            PopulateBonesList(rootBone, bonesList);
+            playerBonesArray = bonesList.ToArray();
+        }
+
+        InitializeBoneDictionary();
+    }
     private void Start()
     {
-        InitializeBoneDictionary();
-        foreach (var pair in itemMeshMaterialPairs)
+        AttachRandomItemsFromCategoriesSkippingFirst();
+    }
+
+    Transform FindBoneByName(SkinnedMeshRenderer mesh, string boneName)
+    {
+        foreach (Transform bone in mesh.bones)
         {
-            AttachItemToPlayer(pair.mesh, pair.material); // Pasar el SkinnedMeshRenderer y el Material de cada par
+            if (bone.name == boneName)
+            {
+                return bone;
+            }
+        }
+        return null;
+    }
+
+    // Método recursivo para agregar huesos al diccionario
+    private void PopulateBonesList(Transform root, List<Transform> bonesList)
+    {
+        foreach (Transform child in root)
+        {
+            bonesList.Add(child);
+            PopulateBonesList(child, bonesList);
         }
     }
 
-    public void InitializeBoneDictionary()
+    private void InitializeBoneDictionary()
     {
         playerBonesDict = new Dictionary<string, Transform>();
 
         foreach (Transform bone in playerBonesArray)
         {
-            playerBonesDict.Add(bone.name, bone);
+            if (!playerBonesDict.ContainsKey(bone.name))
+            {
+                playerBonesDict.Add(bone.name, bone);
+            }
+        }
+    }
+
+    public void AttachRandomItemsFromCategoriesSkippingFirst()
+    {
+        // Comenzar desde el segundo elemento en characterSkinnedMeshes.categories
+        for (int i = 1; i < characterSkinnedMeshes.categories.Count; i++)
+        {
+            var category = characterSkinnedMeshes.categories[i];
+
+            if (category.items.Count > 0)
+            {
+                // Seleccionar un ítem aleatorio de la categoría
+                int randomIndex = Random.Range(0, category.items.Count);
+                var selectedItem = category.items[randomIndex];
+
+                AttachItemToPlayer(selectedItem.skinnedMesh, null); // No se pasa un material específico
+            }
         }
     }
 
