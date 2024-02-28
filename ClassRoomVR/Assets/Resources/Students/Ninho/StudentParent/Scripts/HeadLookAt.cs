@@ -14,7 +14,7 @@ public class ApplyAimConstraint : MonoBehaviour
     void Start()
     {
         // Attempt to find the target object in the scene
-        GameObject targetObject = GameObject.Find(targetObjectName);
+        GameObject targetObject = Camera.main.gameObject;
 
         if (targetObject != null)
         {

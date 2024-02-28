@@ -59,12 +59,13 @@ public class CharacterMeshGenerator : MonoBehaviour
                 if (item.tienePeloLargo && item.pelo != null)
                 {
                     AttachItemToPlayer(item.pelo, null, rootBone);
+                    AdjustExtraBonesPositionHair(item.pelo);
+
                 }
 
                 // Ajustar la posición de los huesos extra entre meshes
                 AdjustExtraBonesPositionBody(item.skinnedMesh);
-                AdjustExtraBonesPositionHair(item.pelo);
-
+                
                 return;
             }
         }
@@ -107,19 +108,18 @@ public class CharacterMeshGenerator : MonoBehaviour
         {
             string boneName = "Bip001Hair0" + (i + 1);
             hairBones[i] = FindBoneByName(mesh, boneName);
-        }
 
-        // Ajustar la posición y rotación de los huesos del pelo en playerBonesArray
-        foreach (Transform bone in playerBonesArray)
-        {
-            for (int i = 0; i < 3; i++)
+            // Ajustar la posición y rotación de los huesos del pelo en playerBonesArray
+            foreach (Transform bone in playerBonesArray)
             {
-                if (bone.name == "Bip001Hair0" + (i + 1))
+
+                if (bone.name == boneName && hairBones[i]!=null) 
                 {
                     bone.localPosition = hairBones[i].localPosition;
                     bone.localRotation = hairBones[i].localRotation;
                     break;
                 }
+
             }
         }
     }

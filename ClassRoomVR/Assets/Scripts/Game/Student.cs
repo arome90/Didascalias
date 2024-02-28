@@ -26,7 +26,7 @@ namespace ClassRoomVR
         private Animator animator;
         private AudioSource audioSource;
         private NavMeshAgent navMeshAgent;
-        private new MeshCollider collider;
+        private new BoxCollider collider;
         [SerializeField] private Transform target;
         private Vector3 actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> targets;
@@ -47,7 +47,7 @@ namespace ClassRoomVR
         private void Awake()
         {
             // Initialize references and components
-            collider = GetComponent<MeshCollider>();
+            collider = GetComponent<BoxCollider>();
             animator= GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
             navMeshAgent = GetComponent<NavMeshAgent>();
@@ -83,7 +83,7 @@ namespace ClassRoomVR
         {
             GameObject body = Instantiate(prefab, transform);
             transform.GetChild(1).parent = body.transform;
-            collider = body.AddComponent<MeshCollider>();
+            collider = body.AddComponent<BoxCollider>();
             return body;
         }
 
@@ -205,7 +205,7 @@ namespace ClassRoomVR
             studentNameText.transform.LookAt(player);
             studentNameText.transform.rotation = Quaternion.LookRotation(player.forward);
 
-            if (vision != FieldOfVision.Teacher && state == State.Sitting)
+            if (vision != FieldOfVision.Teacher && state == State.Sitting )
             {
                 target.position = Vector3.SmoothDamp(target.position, actualTargetPosition, ref currentVelocity, smoothTime, maxSpeed, Time.deltaTime);
             }
