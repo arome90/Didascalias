@@ -12,25 +12,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63e115b07a29d6345bff64f2094cb33d, type: 3}
   m_Name: CharacterProps
   m_EditorClassIdentifier: 
-  propSections:
-  - propMesh: {fileID: -9014523447254396584, guid: 019fe93b775ea70449d9257f817c53cb,
-      type: 3}
-    propName: Bip001 L Thigh
-  - propMesh: {fileID: -9014523447254396584, guid: 019fe93b775ea70449d9257f817c53cb,
-      type: 3}
-    propName: Bip001 R Foot
-  - propMesh: {fileID: -9014523447254396584, guid: 019fe93b775ea70449d9257f817c53cb,
-      type: 3}
-    propName: Bip001 L Finger01
-  - propMesh: {fileID: -9014523447254396584, guid: 019fe93b775ea70449d9257f817c53cb,
-      type: 3}
-    propName: Bip001 Neck
-  - propMesh: {fileID: -9014523447254396584, guid: 019fe93b775ea70449d9257f817c53cb,
-      type: 3}
-    propName: Bip001 L Finger31
-  - propMesh: {fileID: -9014523447254396584, guid: 019fe93b775ea70449d9257f817c53cb,
-      type: 3}
-    propName: Bip001
-  - propMesh: {fileID: -9014523447254396584, guid: 019fe93b775ea70449d9257f817c53cb,
-      type: 3}
-    propName: Bip001RightEye
+  boneAttachments:
+  - boneName: Bip001 Head
+    probability: 52
+    complements:
+    - mesh: {fileID: -1683251801000144942, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: a013995b2ae21e544bcc487400f8dbd2,
+        type: 3}
+    - mesh: {fileID: 5116330981955866158, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: a013995b2ae21e544bcc487400f8dbd2,
+        type: 3}
+  - boneName: Bip001 Neck
+    probability: 100
+    complements:
+    - mesh: {fileID: -8696955899238524410, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: 5daa2e3c4c8d7b948841d963f321a6bf,
+        type: 3}
+    - mesh: {fileID: -1246021961651105686, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: 63e62b504ae01914d90d05ae4e14f25e,
+        type: 3}
+  - boneName: Bip001 R Hand
+    probability: 61.8
+    complements:
+    - mesh: {fileID: -2058824929554552035, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: a013995b2ae21e544bcc487400f8dbd2,
+        type: 3}
+    - mesh: {fileID: 2621553942805421775, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: 5daa2e3c4c8d7b948841d963f321a6bf,
+        type: 3}
+  - boneName: Bip001 R Foot
+    probability: 100
+    complements:
+    - mesh: {fileID: 3104225941853961847, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: 5daa2e3c4c8d7b948841d963f321a6bf,
+        type: 3}
+    - mesh: {fileID: -3768274323135963122, guid: f2e20e7a44c1be2489e58ac2224a7b9a,
+        type: 3}
+      material: {fileID: -1251457731659751925, guid: 5daa2e3c4c8d7b948841d963f321a6bf,
+        type: 3}
