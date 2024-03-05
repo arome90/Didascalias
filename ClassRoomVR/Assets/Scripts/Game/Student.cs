@@ -296,13 +296,14 @@ namespace ClassRoomVR
 
         // Methods to handle movement and behavior
         #region Movement
-
+        Material material;
+        Shader shader;
         // Coroutine to complete the move to a destination
         IEnumerator OnCompleteMove(Vector3 destination,float breakDistance)
         {
+            //transform.Translate(0f, 0f, 0.2f);
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
-            
             state = State.Standing;
             visionTeacher = visionFromOnFoot;
             target.position = transform.position + transform.forward + targets[FieldOfVision.Up];
@@ -325,7 +326,7 @@ namespace ClassRoomVR
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
-            while (Distance(transform.position, desk.GetPositionStudent(), 0.1f))
+            while (Distance(transform.position, desk.GetPositionStudent(), 0.01f))
             {
                 yield return null;
             }
@@ -349,7 +350,7 @@ namespace ClassRoomVR
         public void SitBack()
         {
             navMeshAgent.enabled = true;
-
+            
             navMeshAgent.SetDestination(desk.GetPositionStudent());
             animator.Play("Walking");
             StartCoroutine(OnCompleteSitBack());
@@ -363,7 +364,7 @@ namespace ClassRoomVR
             if (state == State.Sitting)
             {
                 animator.SetBool("onFoot", true);
-                desk.PlayAnimacionMesa(Animaciones.Levantar);
+                desk.PlayAnimacionMesa(Animaciones.Empujar);
             }
             else
             {

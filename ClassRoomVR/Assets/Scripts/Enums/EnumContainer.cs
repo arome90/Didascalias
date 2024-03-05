@@ -34,7 +34,7 @@ public enum HeadSelector
 
 public enum Animaciones
 {
-    Levantar, Empujar, SitRelajado, SitSinGanas
+   Empujar, SitRelajado, SitSinGanas
 }
 
 
