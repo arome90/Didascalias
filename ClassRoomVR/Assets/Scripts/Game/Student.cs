@@ -34,6 +34,7 @@ namespace ClassRoomVR
         [SerializeField] private TextMesh attentionText;
         private StudentBehavior behavior;
         private Transform player;
+        private JawMove jaw; 
 
         #region Getters
         // Getter methods for accessing properties
@@ -52,6 +53,7 @@ namespace ClassRoomVR
             audioSource = GetComponent<AudioSource>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             behavior = GetComponent<StudentBehavior>();
+            jaw = GetComponent<JawMove>();
             state = State.Sitting;
             visionTeacher = 0;
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
@@ -273,6 +275,7 @@ namespace ClassRoomVR
             animator.Play(stateName);
             audioSource.clip = clip;
             audioSource.Play();
+            StartCoroutine(jaw.OnCompleteSpeach());
         }
 
         // Method to set the student as not problematic
@@ -301,7 +304,6 @@ namespace ClassRoomVR
         // Coroutine to complete the move to a destination
         IEnumerator OnCompleteMove(Vector3 destination,float breakDistance)
         {
-            //transform.Translate(0f, 0f, 0.2f);
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
             state = State.Standing;

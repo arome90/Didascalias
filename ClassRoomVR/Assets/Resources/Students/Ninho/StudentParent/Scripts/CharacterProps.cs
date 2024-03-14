@@ -10,6 +10,9 @@ public class CharacterProps : ScriptableObject
     {
         public Mesh mesh; // The mesh
         public Material material; // Corresponding material for the mesh
+        public Color[] RedMask;
+        public Color[] GreenMask;
+        public Color[] BlueMask;
     }
 
     [System.Serializable]

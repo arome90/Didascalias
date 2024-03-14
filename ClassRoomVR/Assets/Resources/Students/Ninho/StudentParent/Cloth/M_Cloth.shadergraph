@@ -14,6 +14,9 @@
         },
         {
             "m_Id": "24541c00320345b69eb260ff78741280"
+        },
+        {
+            "m_Id": "a831cda3563041e596d693460460f2ff"
         }
     ],
     "m_Keywords": [],
@@ -74,6 +77,9 @@
         },
         {
             "m_Id": "d8f2d9b9ef20434a800ff93edb7f3cf4"
+        },
+        {
+            "m_Id": "c97c0cec02394cc2a41b4895d699dd6c"
         }
     ],
     "m_GroupDatas": [],
@@ -201,6 +207,20 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "175f0b5b2e6e4288afb14bd227e0a641"
+                },
+                "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "c97c0cec02394cc2a41b4895d699dd6c"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "31317f9f8d8a4b1588b28139e50c450a"
                 },
                 "m_SlotId": 0
             }
@@ -644,9 +664,9 @@
     "m_ShaderOutputName": "BaseColor",
     "m_StageCapability": 2,
     "m_Value": {
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
+        "x": 0.41886788606643679,
+        "y": 0.22049836814403535,
+        "z": 0.22049836814403535
     },
     "m_DefaultValue": {
         "x": 0.0,
@@ -805,6 +825,29 @@
         "y": 0.0,
         "z": 0.0,
         "w": 0.0
+    },
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "38503daa00bd42709e6e9f725110b139",
+    "m_Id": 0,
+    "m_DisplayName": "Color",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
     },
     "m_Labels": []
 }
@@ -1069,6 +1112,9 @@
         },
         {
             "m_Id": "24541c00320345b69eb260ff78741280"
+        },
+        {
+            "m_Id": "a831cda3563041e596d693460460f2ff"
         }
     ]
 }
@@ -1501,6 +1547,34 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector3ShaderProperty",
+    "m_ObjectId": "a831cda3563041e596d693460460f2ff",
+    "m_Guid": {
+        "m_GuidSerialized": "d65b7d5b-bcd6-4dfc-9568-4ad025838f18"
+    },
+    "m_Name": "Color",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Color",
+    "m_DefaultReferenceName": "_Color",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
     "m_ObjectId": "b22377e9c8934e1ca0cab03b61ab1166",
@@ -1733,6 +1807,42 @@
     "m_NormalMapSpace": 0,
     "m_EnableGlobalMipBias": true,
     "m_MipSamplingMode": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "c97c0cec02394cc2a41b4895d699dd6c",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -72.0000228881836,
+            "y": 43.20000076293945,
+            "width": 105.60002136230469,
+            "height": 33.60000991821289
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "38503daa00bd42709e6e9f725110b139"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "a831cda3563041e596d693460460f2ff"
+    }
 }
 
 {

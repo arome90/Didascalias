@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(AudioSource))]
 public class JawMove : MonoBehaviour
 {
     private AudioSource audioSource;
-    public Transform jaw;
-    public float SizeReduction = 500; // Scale factor to adjust the frequency's effect on the rotation
-    public float smoothSpeed = 5f; // Base speed of the smoothing, used for minor adjustments
-    public float fastSmoothSpeed = 20f; // Increased speed for significant changes
-    public float sensitivity = 1f; // Sensitivity for determining significant changes
+    [SerializeField] Transform jaw;
+    [SerializeField] float SizeReduction = 500; // Scale factor to adjust the frequency's effect on the rotation
+    [SerializeField] float smoothSpeed = 5f; // Base speed of the smoothing, used for minor adjustments
+    [SerializeField] float fastSmoothSpeed = 20f; // Increased speed for significant changes
+    [SerializeField] float sensitivity = 1f; // Sensitivity for determining significant changes
 
     private float targetZRotation; // To keep track of the target X rotation
     private float lastMaxValue = 0f; // To store the last frame's max spectrum value for comparison
@@ -20,14 +21,8 @@ public class JawMove : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (!audioSource.isPlaying) {
-
-            jaw.eulerAngles = new Vector3(jaw.eulerAngles.x, jaw.eulerAngles.y, 20);
-            return;
-                } // Only proceed if the audio is playing
-
+   void UpdateJaw()
+    {        
         float[] spectrum = new float[1024];
         audioSource.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
         int maxIndex = 0;
@@ -50,10 +45,18 @@ public class JawMove : MonoBehaviour
 
         targetZRotation = Mathf.Lerp(targetZRotation, frequency, currentSmoothSpeed * Time.deltaTime);
         targetZRotation = Mathf.Clamp(targetZRotation, 0, 40); // Ensuring target rotation is also clamped
-        Debug.Log(frequency+" "+targetZRotation);
         jaw.eulerAngles = new Vector3(jaw.eulerAngles.x, jaw.eulerAngles.y,25 + targetZRotation);
-        Debug.Log(jaw.eulerAngles);
-
         lastMaxValue = maxValue;
     }
+
+   public IEnumerator OnCompleteSpeach()
+   {
+        while (audioSource.isPlaying)
+        {
+            UpdateJaw();
+            yield return new WaitForSeconds(0.4f);
+        }
+        jaw.eulerAngles = new Vector3(jaw.eulerAngles.x, jaw.eulerAngles.y, 16);
+
+   }
 }

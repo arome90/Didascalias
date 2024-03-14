@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ClothSwapingSystem : MonoBehaviour
@@ -8,17 +9,17 @@ public class ClothSwapingSystem : MonoBehaviour
     Transform[] playerBonesArray;
     Transform rootBone;
     Dictionary<string, Transform> playerBonesDict;
-
     [Header("Clothing Assets")]
-    public CharacterSkinnedMeshes characterSkinnedMeshes; // Referencia al Scriptable Object
-
+    [SerializeField] CharacterSkinnedMeshes characterSkinnedMeshes; // Referencia al Scriptable Object
     void Awake()
     {
         if (transform.childCount > 0)
         {
             rootBone = transform.GetChild(0);
-            List<Transform> bonesList = new List<Transform>();
-            bonesList.Add(rootBone);
+            List<Transform> bonesList = new List<Transform>
+            {
+                rootBone
+            };
             PopulateBonesList(rootBone, bonesList);
             playerBonesArray = bonesList.ToArray();
         }
@@ -78,19 +79,14 @@ public class ClothSwapingSystem : MonoBehaviour
                 int randomIndex = Random.Range(0, category.items.Count);
                 var selectedItem = category.items[randomIndex];
 
-                AttachItemToPlayer(selectedItem.skinnedMesh, null); // No se pasa un material específico
+                AttachItemToPlayer(selectedItem.skinnedMesh, category.items[randomIndex].colors); // No se pasa un material específico
             }
         }
     }
 
-    public void AttachItemToPlayer(SkinnedMeshRenderer mesh, Material material)
+    public void AttachItemToPlayer(SkinnedMeshRenderer mesh, Color[] colors)
     {
         SkinnedMeshRenderer newMesh = Instantiate(mesh); // Instanciar una copia del SkinnedMeshRenderer
-        if (material != null)
-        {
-            newMesh.material = material; // Asignar el material específico
-        }
-
         Transform[] newBones = new Transform[mesh.bones.Length];
         for (int i = 0; i < mesh.bones.Length; i++)
         {
@@ -103,9 +99,11 @@ public class ClothSwapingSystem : MonoBehaviour
                 Debug.LogError("Player bones dictionary does not contain bone: " + mesh.bones[i].name);
             }
         }
-
         newMesh.bones = newBones;
         newMesh.rootBone = rootBone;
         newMesh.transform.SetParent(rootBone.parent, false);
+        int c = Random.Range(0, colors.Length);
+        newMesh.material.SetColor("_Color", colors[c]);
+
     }
 }

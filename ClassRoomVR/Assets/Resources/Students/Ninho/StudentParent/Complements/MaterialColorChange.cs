@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class MaterialColorChange : MonoBehaviour
 {
-    public Material material;
+    private Material material;
     public Color[] colors;
 
     // Start is called before the first frame update
     void Start()
     {
+        material= GetComponent<MeshRenderer>().material;
         material.SetColor("_ColorRedMask", colors[Random.Range(0, colors.Length - 1)]);
         material.SetColor("_ColorGreenMask", colors[Random.Range(0, colors.Length - 1)]);
         material.SetColor("_ColorBlueMask", colors[Random.Range(0, colors.Length - 1)]);

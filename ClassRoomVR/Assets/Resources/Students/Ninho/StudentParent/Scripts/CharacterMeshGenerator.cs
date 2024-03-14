@@ -53,12 +53,12 @@ public class CharacterMeshGenerator : MonoBehaviour
                 // Obtener el elemento en el índice aleatorio
                 var item = category.items[randomIndex];
                 // Spawnear el SkinnedMeshRenderer
-                AttachItemToPlayer(item.skinnedMesh, null, rootBone); // No necesitamos material, pasamos null
+                AttachItemToPlayer(item.skinnedMesh, rootBone); // No necesitamos material, pasamos null
 
                 // Si tiene pelo largo, instanciar también el pelo
                 if (item.tienePeloLargo && item.pelo != null)
                 {
-                    AttachItemToPlayer(item.pelo, null, rootBone);
+                    AttachItemToPlayer(item.pelo, rootBone);
                     AdjustExtraBonesPositionHair(item.pelo);
 
                 }
@@ -158,7 +158,7 @@ public class CharacterMeshGenerator : MonoBehaviour
         }
     }
 
-    public void AttachItemToPlayer(SkinnedMeshRenderer mesh, Material material, Transform targetBone)
+    public void AttachItemToPlayer(SkinnedMeshRenderer mesh,Transform targetBone)
     {
         SkinnedMeshRenderer newMesh = Instantiate(mesh, targetBone.position, Quaternion.identity);
 

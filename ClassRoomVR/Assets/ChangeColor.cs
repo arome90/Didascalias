@@ -10,7 +10,7 @@ public class ChangeColor : MonoBehaviour
     void Start()
     {
         int i = Random.Range(0, colors.Count);
-        gameObject.GetComponent<Renderer>().material.color = colors[i];
+        gameObject.GetComponent<SkinnedMeshRenderer>().material.color = colors[i];
 
 
 
@@ -42,6 +42,21 @@ public class ChangeColor : MonoBehaviour
         //    }
 
         //}
+    }
+    private SkinnedMeshRenderer skinnedMeshRenderer;
+    private void Update()
+    {
+        int i = Random.Range(0, colors.Count);
+        // Accede al componente Skinned Mesh Renderer
+        skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
+
+        // Cambia el color del material
+        Material material = skinnedMeshRenderer.material;
+       // material.color = colors[i];
+        material.SetColor("_Color", Color.red);
+        // Actualiza el material
+        //  skinnedMeshRenderer.SetPropertyBlock(new MaterialPropertyBlock());
+       // skinnedMeshRenderer.material.color = colors[i];
     }
 }
 

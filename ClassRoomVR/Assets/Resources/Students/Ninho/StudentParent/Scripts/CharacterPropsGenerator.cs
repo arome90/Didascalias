@@ -16,36 +16,35 @@ public class CharacterPropsSpawner : MonoBehaviour
         // Iterate through each bone attachment
         foreach (var boneAttachment in characterProps.boneAttachments)
         {
-            if (boneAttachment.complements.Count > 0)
+
+            bool isFoot = boneAttachment.boneName.ToLower().Contains("foot");
+            // Decide if the asset should spawn only on one side (not both) for non-foot bones
+            bool spawnOnOneSideOnly = boneAttachment.boneName.Contains("R") && !isFoot;
+
+            // Randomly decide which side to spawn the asset on if spawnOnOneSideOnly is true
+            bool spawnOnRight = spawnOnOneSideOnly ? Random.Range(0, 2) == 0 : true;
+            int randomIndex = Random.Range(0, boneAttachment.complements.Count);
+
+            if (spawnOnRight || isFoot)
             {
-                bool isFoot = boneAttachment.boneName.ToLower().Contains("foot");
-                // Decide if the asset should spawn only on one side (not both) for non-foot bones
-                bool spawnOnOneSideOnly = boneAttachment.boneName.Contains("R") && !isFoot;
-
-                // Randomly decide which side to spawn the asset on if spawnOnOneSideOnly is true
-                bool spawnOnRight = spawnOnOneSideOnly ? Random.Range(0, 2) == 0 : true;
-
-                if (spawnOnRight || isFoot)
-                {
-                    // Use the probability to determine if a mesh should be spawned for this bone attachment
-                    TrySpawnComplement(firstChild, boneAttachment, false);
-                }
-                if (!spawnOnRight || isFoot)
-                {
-                    // Try to spawn on the left side (mirror) if it's either a foot or chosen by probability
-                    TrySpawnComplement(firstChild, boneAttachment, true);
-                }
+                // Use the probability to determine if a mesh should be spawned for this bone attachment
+                TrySpawnComplement(firstChild, boneAttachment, false, randomIndex);
             }
+            if (!spawnOnRight || isFoot)
+            {
+                // Try to spawn on the left side (mirror) if it's either a foot or chosen by probability
+                TrySpawnComplement(firstChild, boneAttachment, true, randomIndex);
+            }
+
         }
     }
 
-    void TrySpawnComplement(Transform rootBone, CharacterProps.BoneAttachment boneAttachment, bool isMirrored)
+    void TrySpawnComplement(Transform rootBone, CharacterProps.BoneAttachment boneAttachment, bool isMirrored, int randomIndex)
     {
         float probabilityRoll = Random.Range(0f, 100f);
         if (probabilityRoll <= boneAttachment.probability)
         {
             // Select a random MeshMaterialPair from the complements list
-            int randomIndex = Random.Range(0, boneAttachment.complements.Count);
             var complement = boneAttachment.complements[randomIndex];
             string boneName = boneAttachment.boneName;
 
@@ -73,6 +72,12 @@ public class CharacterPropsSpawner : MonoBehaviour
             MeshRenderer meshRenderer = propObject.AddComponent<MeshRenderer>();
             meshRenderer.material = complement.material;
 
+            int c = Random.Range(0, complement.RedMask.Length);
+            meshRenderer.material.SetColor("_ColorRedMask", complement.RedMask[c]);
+            c = Random.Range(0, complement.GreenMask.Length);
+            meshRenderer.material.SetColor("_ColorGreenMask", complement.GreenMask[c]);
+            c = Random.Range(0, complement.BlueMask.Length);
+            meshRenderer.material.SetColor("_ColorBlueMask", complement.BlueMask[c]);
             // Set the prop object as a child of the bone
             propObject.transform.SetParent(bone, false);
             if (isMirrored)
