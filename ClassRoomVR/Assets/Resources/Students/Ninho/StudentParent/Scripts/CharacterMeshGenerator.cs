@@ -1,6 +1,8 @@
+using ClassRoomVR;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CharacterSkinnedMeshes;
 
 public class CharacterMeshGenerator : MonoBehaviour
 {
@@ -20,8 +22,8 @@ public class CharacterMeshGenerator : MonoBehaviour
 
     [Header("Meshes")]
     public CharacterSkinnedMeshes characterAssets;
-    public string characterMeshes;
 
+    private Student student;
     void Awake()
     {
         if (transform.childCount > 0)
@@ -38,39 +40,31 @@ public class CharacterMeshGenerator : MonoBehaviour
 
     private void Start()
     {
+        student= GetComponent<Student>();
         CharacterMeshes();
     }
 
     void CharacterMeshes()
     {
-        foreach (var category in characterAssets.categories)
+        BodyItem[] bodies;
+        bodies = student.GetGender() == Gender.Women ? characterAssets.Characters.WomenBody : characterAssets.Characters.MenBody; ;
+        // Elegir un índice aleatorio dentro del rango de la lista de elementos
+        int randomIndex = Random.Range(0, bodies.Length);
+        // Obtener el elemento en el índice aleatorio
+        var item = bodies[randomIndex];
+        // Spawnear el SkinnedMeshRenderer
+        AttachItemToPlayer(item.skinnedMesh, rootBone); // No necesitamos material, pasamos null
+
+        // Si tiene pelo largo, instanciar también el pelo
+        if (item.tienePeloLargo && item.pelo != null)
         {
-            if (category.categoryName == characterMeshes)
-            {
-                Debug.Log("Category: " + category.categoryName);
-                // Elegir un índice aleatorio dentro del rango de la lista de elementos
-                int randomIndex = Random.Range(0, category.items.Count);
-                // Obtener el elemento en el índice aleatorio
-                var item = category.items[randomIndex];
-                // Spawnear el SkinnedMeshRenderer
-                AttachItemToPlayer(item.skinnedMesh, rootBone); // No necesitamos material, pasamos null
+            AttachItemToPlayer(item.pelo, rootBone);
+            AdjustExtraBonesPositionHair(item.pelo);
 
-                // Si tiene pelo largo, instanciar también el pelo
-                if (item.tienePeloLargo && item.pelo != null)
-                {
-                    AttachItemToPlayer(item.pelo, rootBone);
-                    AdjustExtraBonesPositionHair(item.pelo);
-
-                }
-
-                // Ajustar la posición de los huesos extra entre meshes
-                AdjustExtraBonesPositionBody(item.skinnedMesh);
-                
-                return;
-            }
         }
 
-        Debug.LogWarning("No se encontró la categoría " + characterMeshes);
+        // Ajustar la posición de los huesos extra entre meshes
+        AdjustExtraBonesPositionBody(item.skinnedMesh);
     }
 
     void AdjustExtraBonesPositionBody(SkinnedMeshRenderer mesh)

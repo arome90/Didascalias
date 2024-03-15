@@ -68,8 +68,7 @@ public class ClothSwapingSystem : MonoBehaviour
 
     public void AttachRandomItemsFromCategoriesSkippingFirst()
     {
-        // Comenzar desde el segundo elemento en characterSkinnedMeshes.categories
-        for (int i = 1; i < characterSkinnedMeshes.categories.Count; i++)
+        for (int i = 0; i < characterSkinnedMeshes.categories.Count; i++)
         {
             var category = characterSkinnedMeshes.categories[i];
 

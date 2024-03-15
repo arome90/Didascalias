@@ -43,8 +43,6 @@ namespace ClassRoomVR
         public bool IsProblematicStudent() => problematic;
         public AudioSource GetAudioSource() => audioSource;
         #endregion
-       public float visionFromOnFoot;
-        float visionTeacher;
         private void Awake()
         {
             // Initialize references and components
@@ -55,7 +53,6 @@ namespace ClassRoomVR
             behavior = GetComponent<StudentBehavior>();
             jaw = GetComponent<JawMove>();
             state = State.Sitting;
-            visionTeacher = 0;
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
                 .Where(c => (distracted & c) == c)
                 .ToArray();
@@ -213,7 +210,7 @@ namespace ClassRoomVR
             }
             else if (vision == FieldOfVision.Teacher)
             {
-                target.position = Vector3.MoveTowards(target.position, player.position - Vector3.up * visionTeacher, 5.0f * Time.deltaTime);
+                target.position = Vector3.MoveTowards(target.position, player.position , 5.0f * Time.deltaTime);
             }
         
         }
@@ -307,8 +304,6 @@ namespace ClassRoomVR
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
             state = State.Standing;
-            visionTeacher = visionFromOnFoot;
-            target.position = transform.position + transform.forward + targets[FieldOfVision.Up];
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             navMeshAgent.SetDestination(destination);
             while (Distance(transform.position, destination, breakDistance))
@@ -339,7 +334,6 @@ namespace ClassRoomVR
             desk.PlayAnimacionMesa(Animaciones.SitRelajado);
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
             state = State.Sitting;
-            visionTeacher = 0;
             //while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Sitting"))
             //    yield return null;
             //transform.rotation = desk.transform.rotation;

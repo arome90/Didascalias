@@ -15,13 +15,15 @@ public class JawMove : MonoBehaviour
 
     private float targetZRotation; // To keep track of the target X rotation
     private float lastMaxValue = 0f; // To store the last frame's max spectrum value for comparison
+    Vector3 angles;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        angles = jaw.rotation.eulerAngles;
     }
 
     // Update is called once per frame
-   void UpdateJaw()
+    void UpdateJaw()
     {        
         float[] spectrum = new float[1024];
         audioSource.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
@@ -45,18 +47,22 @@ public class JawMove : MonoBehaviour
 
         targetZRotation = Mathf.Lerp(targetZRotation, frequency, currentSmoothSpeed * Time.deltaTime);
         targetZRotation = Mathf.Clamp(targetZRotation, 0, 40); // Ensuring target rotation is also clamped
-        jaw.eulerAngles = new Vector3(jaw.eulerAngles.x, jaw.eulerAngles.y,25 + targetZRotation);
+       // jaw.eulerAngles = new Vector3(jaw.eulerAngles.x, jaw.eulerAngles.y,25 + targetZRotation);
+        jaw.rotation = Quaternion.Euler(354.18f, 81.92f, 15.29f+ targetZRotation);
         lastMaxValue = maxValue;
     }
 
-   public IEnumerator OnCompleteSpeach()
-   {
+    public IEnumerator OnCompleteSpeach()
+    {
+        Debug.Log(jaw.rotation.eulerAngles);
         while (audioSource.isPlaying)
         {
             UpdateJaw();
             yield return new WaitForSeconds(0.4f);
         }
-        jaw.eulerAngles = new Vector3(jaw.eulerAngles.x, jaw.eulerAngles.y, 16);
+        jaw.rotation = Quaternion.Euler(angles.x, angles.y, angles.z);
+        Debug.Log(jaw.rotation.eulerAngles);
 
-   }
+
+    }
 }

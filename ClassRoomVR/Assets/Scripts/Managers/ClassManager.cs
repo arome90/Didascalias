@@ -121,12 +121,14 @@ namespace ClassRoomVR
 
         [SerializeField] Student bodyNew;
         [SerializeField] bool newBody;
+        int j = 1;
         private Student CreateStudent(GameObject body, string name, Gender gender)
         {
             Student pickedStudent;
-            if (newBody)
+            if (j==1)
             {
                 pickedStudent = Instantiate(bodyNew, transform);
+                j--;
             }
             else
             {
