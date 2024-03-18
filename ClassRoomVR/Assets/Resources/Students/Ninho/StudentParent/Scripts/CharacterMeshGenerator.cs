@@ -46,7 +46,7 @@ public class CharacterMeshGenerator : MonoBehaviour
 
     void CharacterMeshes()
     {
-        BodyItem[] bodies;
+        HeadItem[] bodies;
         bodies = student.GetGender() == Gender.Women ? characterAssets.Characters.WomenBody : characterAssets.Characters.MenBody; ;
         // Elegir un índice aleatorio dentro del rango de la lista de elementos
         int randomIndex = Random.Range(0, bodies.Length);
@@ -169,7 +169,6 @@ public class CharacterMeshGenerator : MonoBehaviour
                 Debug.LogError("Player bones dictionary does not contain bone: " + mesh.bones[i].name);
             }
         }
-
         newMesh.bones = newBones;
         newMesh.rootBone = targetBone; // Ajusta el rootBone al objetivo
         newMesh.transform.SetParent(transform, false);

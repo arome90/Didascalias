@@ -14,12 +14,14 @@ public class CharacterSkinnedMeshes : ScriptableObject
     }
 
     [System.Serializable]
-    public struct BodyItem
+    public struct HeadItem
     {
         public string name;
         public SkinnedMeshRenderer skinnedMesh;
         public bool tienePeloLargo; // Booleana para indicar si el personaje tiene pelo largo
         public SkinnedMeshRenderer pelo; // SkinnedMeshRenderer para el pelo
+        public Material bodyMat;
+        public Material HairMat;
 
     }
 
@@ -33,8 +35,8 @@ public class CharacterSkinnedMeshes : ScriptableObject
     [System.Serializable]
     public class CuerposPersonajes
     {
-        public BodyItem[] MenBody;
-        public BodyItem[] WomenBody;
+        public HeadItem[] MenBody;
+        public HeadItem[] WomenBody;
     }
     public CuerposPersonajes Characters;
     public List<ClothingCategory> categories = new List<ClothingCategory>();

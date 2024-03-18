@@ -1870,6 +1870,7 @@ GameObject:
   - component: {fileID: 6091202274669877056}
   - component: {fileID: 4252507083906446710}
   - component: {fileID: 425534648888875691}
+  - component: {fileID: 7955519135228652122}
   m_Layer: 0
   m_Name: SK_StudentParent
   m_TagString: Untagged
@@ -1925,7 +1926,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5796860906c5cb24f953a7ea55172c67, type: 3}
   m_Name: 
@@ -1945,7 +1946,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fd1d983babad3c498a1164b13a7c94e, type: 3}
   m_Name: 
@@ -2207,6 +2208,22 @@ MonoBehaviour:
   smoothSpeed: 5
   fastSmoothSpeed: 20
   sensitivity: 1
+--- !u!114 &7955519135228652122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786677739925861320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44ecb66d1ed52784fbe3170050119fe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  extraBonesBody:
+  - Bip001LeftEye
+  - Bip001RightEye
+  characterAssets: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b, type: 2}
 --- !u!1 &5908004529214358535
 GameObject:
   m_ObjectHideFlags: 0
