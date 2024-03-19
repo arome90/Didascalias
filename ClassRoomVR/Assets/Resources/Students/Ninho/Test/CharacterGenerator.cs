@@ -79,7 +79,7 @@ public class CharacterGenerator : MonoBehaviour
         // Si tiene pelo largo, instanciar también el pelo
         if (item.tienePeloLargo && item.pelo != null)
         {
-            AttachItemToPlayer(item.pelo, rootBone,null);
+            AttachItemToPlayer(item.pelo, rootBone, null);
             AdjustExtraBonesPositionHair(item.pelo);
 
         }
@@ -98,7 +98,7 @@ public class CharacterGenerator : MonoBehaviour
                 randomIndex = Random.Range(0, category.items.Count);
                 var selectedItem = category.items[randomIndex];
 
-                AttachClothToPlayer(selectedItem.skinnedMesh, category.items[randomIndex].colors); // No se pasa un material específico
+                AttachClothToPlayer(selectedItem.skinnedMesh, item.bodyMat ,category.items[randomIndex].colors); // No se pasa un material específico
             }
         }
 
@@ -131,7 +131,7 @@ public class CharacterGenerator : MonoBehaviour
         }
     }
 
-    public void AttachClothToPlayer(SkinnedMeshRenderer mesh, Color[] colors)
+    public void AttachClothToPlayer(SkinnedMeshRenderer mesh,Material material, Color[] colors)
     {
         SkinnedMeshRenderer newMesh = Instantiate(mesh); // Instanciar una copia del SkinnedMeshRenderer
         Transform[] newBones = new Transform[mesh.bones.Length];
@@ -150,8 +150,9 @@ public class CharacterGenerator : MonoBehaviour
         newMesh.rootBone = rootBone;
         newMesh.transform.SetParent(rootBone.parent, false);
         int c = Random.Range(0, colors.Length);
-        newMesh.material.SetColor("_Color", colors[c]);
-
+        newMesh.materials[1].SetColor("_Color", colors[c]);
+        Material[] mats = new Material[] {  newMesh.materials[1] , material };
+        newMesh.materials= mats;
     }
 
     void AdjustExtraBonesPositionHair(SkinnedMeshRenderer mesh)
