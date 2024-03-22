@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cd4a4ccdc2bf614498adeba7678cc904
+guid: 58cec06b528d9ca4b8dffdee23fac383
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,6 +8,11 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: 02 - Default
+    second: {fileID: 2100000, guid: 8ae4f6b5da576bb449f49975816cde69, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 03 - Default
     second: {fileID: 2100000, guid: 8ae4f6b5da576bb449f49975816cde69, type: 2}
   materials:
     materialImportMode: 2
@@ -88,18 +93,18 @@ ModelImporter:
     serializedVersion: 3
     human: []
     skeleton:
-    - name: SK_CamisetaCorta(Clone)
+    - name: camiseta_corta(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0.00000047424837, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: TShirtBoy
-      parentName: SK_CamisetaCorta(Clone)
-      position: {x: -0, y: 0, z: 0}
+    - name: TShirtBoy001
+      parentName: camiseta_corta(Clone)
+      position: {x: -0, y: -0.002520523, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001
-      parentName: SK_CamisetaCorta(Clone)
+      parentName: camiseta_corta(Clone)
       position: {x: -0, y: 0.8264067, z: 0}
       rotation: {x: -0.5000004, y: 0.4999997, z: 0.49999964, w: 0.5000003}
       scale: {x: 1, y: 1, z: 1}
@@ -337,7 +342,7 @@ ModelImporter:
       parentName: Bip001 Head
       position: {x: -0.024127197, y: 0.02668539, z: 0.00000015258789}
       rotation: {x: 0, y: 0, z: 0, w: 1}
-      scale: {x: 1.0000004, y: 0.99999994, z: 1.0000002}
+      scale: {x: 0.99999994, y: 0.9999998, z: 0.99999994}
     - name: Bip001 R Thigh
       parentName: Bip001 Pelvis
       position: {x: -0.000000076293944, y: -0.00000006712464, z: -0.07445054}
