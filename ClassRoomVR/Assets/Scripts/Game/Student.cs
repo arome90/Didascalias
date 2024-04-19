@@ -6,6 +6,8 @@ using UnityEngine.AI;
 using System.Linq;
 using Oculus.Platform.Models;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
+using Meta.WitAi.Data;
 
 namespace ClassRoomVR
 {
@@ -412,5 +414,40 @@ namespace ClassRoomVR
         //{
         //    voiceGenerator.GenerateVoiceClipAsync("hola");
         //}
+        void Start()
+        {
+            Invoke(nameof(RandomPose), 2f);
+        }
+
+        void RandomPose()
+        {
+            float randomTime = Random.Range(6f, 8f);
+            if (changeAnimationCoroutine != null)
+            {
+                StopCoroutine(changeAnimationCoroutine);
+            }
+            changeAnimationCoroutine = StartCoroutine(ChangeBlendParameter());
+            Invoke("RandomPose", randomTime);
+        }
+        private int blendChangeSpeed = 2; // Velocidad de cambio del blend tree
+        private Coroutine changeAnimationCoroutine;
+
+        IEnumerator ChangeBlendParameter()
+        {
+            float targetBlendValue = Random.Range(0, 2);
+            float currentBlendValue = animator.GetFloat("Aburrimiento");
+
+            while (!Mathf.Approximately(currentBlendValue, targetBlendValue))
+            {
+                // Cambiar gradualmente el valor del parámetro del blend tree
+                currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
+                Debug.Log(currentBlendValue);
+                animator.SetFloat("Aburrimiento", currentBlendValue);
+
+                yield return null;
+            }
+        }
+        //float targetBlendValue = Random.Range(0, 2);
+        //animator.SetFloat("Aburrimiento", targetBlendValue);
     }
 }

@@ -1078,6 +1078,21 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!206 &825909144326342767
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BlendTree
+  m_Childs: []
+  m_BlendParameter: Aburrimiento
+  m_BlendParameterY: Blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!206 &1121849365485743082
 BlendTree:
   m_ObjectHideFlags: 1
@@ -1333,7 +1348,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: eb00249aab3a7624daec622bd91cdad5, type: 2}
+  m_Motion: {fileID: 4849089859890436658}
   m_Tag: 
   m_SpeedParameter: Aburrimiento
   m_MirrorParameter: 
@@ -1572,6 +1587,38 @@ BlendTree:
   m_BlendParameterY: Blend
   m_MinThreshold: 0
   m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
+--- !u!206 &4849089859890436658
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Blend Tree
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: -203655887218126122, guid: c6341f1df1cadc74eae8f3c6e98588d5,
+      type: 3}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: Aburrimiento
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: eb00249aab3a7624daec622bd91cdad5, type: 2}
+    m_Threshold: 0.5
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: Aburrimiento
+    m_Mirror: 0
+  m_BlendParameter: Aburrimiento
+  m_BlendParameterY: Aburrimiento
+  m_MinThreshold: 0
+  m_MaxThreshold: 0.5
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 0
