@@ -50,12 +50,16 @@ namespace ClassRoomVR
             students = new Dictionary<string, Student>();
             problematicStudents = new HashSet<string>();
             classInfo = GameManager.Instance.GetCurrentClassInfo();
-            names = new List<List<string>>();
-            names.Add(classInfo.femaleStudentNames.ToList());
-            names.Add(classInfo.maleStudentNames.ToList());
-            prefabBodys = new List<GameObject[]>();
-            prefabBodys.Add(classInfo.femaleStudentPrefabs);
-            prefabBodys.Add(classInfo.maleStudentPrefabs);
+            names = new List<List<string>>
+            {
+                classInfo.femaleStudentNames.ToList(),
+                classInfo.maleStudentNames.ToList()
+            };
+            prefabBodys = new List<GameObject[]>
+            {
+                classInfo.femaleStudentPrefabs,
+                classInfo.maleStudentPrefabs
+            };
             GenerateChilds();
 
             studentsController.SetParameters(player,students);
@@ -141,7 +145,8 @@ namespace ClassRoomVR
             //if (newBody)
             //    pickedStudent.transform.SetPositionAndRotation(pos.position, Quaternion.Euler(-90, 0, 0));
             //else
-            pickedStudent.transform.SetPositionAndRotation(pos.position, pos.rotation);
+            // pickedStudent.transform.SetPositionAndRotation(pos.position- 0.041f, pos.rotation);
+            pickedStudent.transform.position = pos.position - new Vector3(0,0,0.3f);
             pickedStudent.SetDesk(desk);
             pickedStudent.SetTargets(targetsHead);
 

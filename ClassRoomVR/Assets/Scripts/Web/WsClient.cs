@@ -60,7 +60,7 @@ using UnityEngine.Events;
 //        }
 //    }
 
-//    // Asegúrate de cerrar la conexión WebSocket cuando salgas de la aplicación
+//    // Asegï¿½rate de cerrar la conexiï¿½n WebSocket cuando salgas de la aplicaciï¿½n
 //    private void OnDestroy()
 //    {
 //        if (wssv != null)
@@ -98,7 +98,7 @@ public class WsClient : GenericSingleton<WsClient>
             ws.OnClose += Ws_OnClose;
             ws.ConnectAsync();
         }
-        catch (Exception ex) { Debug.LogError("Error en la conexión: " + ex.Message); }
+        catch (Exception ex) { Debug.LogError("Error en la conexiï¿½n: " + ex.Message); }
     }
 
     private void Ws_OnClose(object sender, CloseEventArgs e)
@@ -165,7 +165,7 @@ public class WsClient : GenericSingleton<WsClient>
         }
         else
         {
-           // Debug.LogWarning("La conexión WebSocket no está activa.");
+           // Debug.LogWarning("La conexiï¿½n WebSocket no estï¿½ activa.");
         }
     }
 

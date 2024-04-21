@@ -6,6 +6,8 @@ using UnityEngine.AI;
 using System.Linq;
 using Oculus.Platform.Models;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
+using Meta.WitAi.Data;
 
 namespace ClassRoomVR
 {
@@ -26,7 +28,7 @@ namespace ClassRoomVR
         private Animator animator;
         private AudioSource audioSource;
         private NavMeshAgent navMeshAgent;
-        private new MeshCollider collider;
+        private new BoxCollider collider;
         [SerializeField] private Transform target;
         private Vector3 actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> targets;
@@ -35,6 +37,8 @@ namespace ClassRoomVR
         private StudentBehavior behavior;
         private Transform player;
         private ResponseStudent response;
+        private JawMove jaw;
+        private RigBuilder rig;
         #region Getters
         // Getter methods for accessing properties
         public Desk GetDesk() => desk;
@@ -42,29 +46,29 @@ namespace ClassRoomVR
         public bool IsProblematicStudent() => problematic;
         public AudioSource GetAudioSource() => audioSource;
         #endregion
-       public float visionFromOnFoot;
-        float visionTeacher;
         private void Awake()
         {
             // Initialize references and components
             response= GetComponent<ResponseStudent>();
-            collider = GetComponent<MeshCollider>();
-            animator= GetComponent<Animator>();
+            rig = GetComponent<RigBuilder>();
+            collider = GetComponent<BoxCollider>();
+            animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             behavior = GetComponent<StudentBehavior>();
+            jaw = GetComponent<JawMove>();
             state = State.Sitting;
-            visionTeacher = 0;
             distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
                 .Where(c => (distracted & c) == c)
                 .ToArray();
-            //voiceGenerator = GetComponent<VoiceGenerator>();
+            var stateAnim = animator.GetCurrentAnimatorStateInfo(0);
+            animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
         }
 
         // Methods to set student's parameters and create their body
-        public void SetParameters(Transform player,string name, Gender gender)
+        public void SetParameters(Transform player, string name, Gender gender)
         {
-            this.player = player;            
+            this.player = player;
             transform.name = name;
             studentNameText.text = name;
             this.gender = gender;
@@ -76,7 +80,7 @@ namespace ClassRoomVR
             ConfigureAnimator(body);
             headConstraint.data.constrainedObject = GetHeadBone();
             var rigbuilder = body.AddComponent<RigBuilder>();
-            rigbuilder.layers.Add(new RigLayer(body.transform.GetChild(body.transform.childCount-1).GetComponent<Rig>(), true));
+            rigbuilder.layers.Add(new RigLayer(body.transform.GetChild(body.transform.childCount - 1).GetComponent<Rig>(), true));
             rigbuilder.Build();
         }
 
@@ -84,7 +88,7 @@ namespace ClassRoomVR
         {
             GameObject body = Instantiate(prefab, transform);
             transform.GetChild(1).parent = body.transform;
-            collider = body.AddComponent<MeshCollider>();
+            collider = body.AddComponent<BoxCollider>();
             return body;
         }
 
@@ -147,13 +151,13 @@ namespace ClassRoomVR
             if (GameManager.Instance.IsPause) return;
             HandleInput();
             UpdateTargetPosition();
-            if(attentionText!=null) attentionText.text = behavior.AttentionLevel.ToString("0.##");
+            if (attentionText != null) attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
 
         // Methods to handle user input and trigger actions
         private void HandleInput()
         {
-            for (int i = 0; i <= 6; i++)
+            for (int i = 0; i <= 8; i++)
             {
                 KeyCode keyCode = KeyCode.Keypad0 + i;
                 if (Input.GetKeyDown(keyCode))
@@ -212,9 +216,9 @@ namespace ClassRoomVR
             }
             else if (vision == FieldOfVision.Teacher)
             {
-                target.position = Vector3.MoveTowards(target.position, player.position - Vector3.up * visionTeacher, 5.0f * Time.deltaTime);
+                target.position = Vector3.MoveTowards(target.position, player.position, 5.0f * Time.deltaTime);
             }
-        
+
         }
 
         IEnumerator Nod()
@@ -270,10 +274,11 @@ namespace ClassRoomVR
 
         public void PlayDisruptiveAction(string stateName, AudioClip clip)
         {
-           // int i =Animator.StringToHash("onFoot");
+            // int i =Animator.StringToHash("onFoot");
             animator.Play(stateName);
             audioSource.clip = clip;
             audioSource.Play();
+            StartCoroutine(jaw.OnCompleteSpeach());
         }
 
         // Method to set the student as not problematic
@@ -297,47 +302,47 @@ namespace ClassRoomVR
 
         // Methods to handle movement and behavior
         #region Movement
-
+        Material material;
+        Shader shader;
         // Coroutine to complete the move to a destination
-        IEnumerator OnCompleteMove(Vector3 destination,float breakDistance)
+        IEnumerator OnCompleteMove(Vector3 destination, float breakDistance)
         {
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
-            
             state = State.Standing;
-            visionTeacher = visionFromOnFoot;
-            target.position = transform.position + transform.forward + targets[FieldOfVision.Up];
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.75f, 0);
             navMeshAgent.SetDestination(destination);
             while (Distance(transform.position, destination, breakDistance))
                 yield return null;
+            rig.layers[0].active = true;
             navMeshAgent.enabled = false;
             animator.Play("Standing");
         }
 
-        bool Distance(Vector3 tranform, Vector3 dest, float breakDistance) 
+        bool Distance(Vector3 tranform, Vector3 dest, float breakDistance)
         {
             Vector2 punto1Proyectado = new Vector2(tranform.x, tranform.z);
             Vector2 punto2Proyectado = new Vector2(dest.x, dest.z);
-            return Vector2.Distance(punto1Proyectado, punto2Proyectado)> breakDistance;
+            return Vector2.Distance(punto1Proyectado, punto2Proyectado) > breakDistance;
 
 
         }
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
-            while (Distance(transform.position, desk.GetPositionStudent(), 0.1f))
+            while (Distance(transform.position, desk.GetPositionStudent(), 0.01f))
             {
                 yield return null;
             }
             navMeshAgent.enabled = false;
             transform.rotation = desk.transform.rotation;
-            transform.position = desk.transform.position - new Vector3(0,0,0.1f);
+            //  transform.position = desk.transform.position - new Vector3(0,0,0.1f);
             animator.SetBool("onFoot", false);
-            desk.PlayAnimacionMesa(Animaciones.SitGanas);
+            desk.PlayAnimacionMesa(Animaciones.SitRelajado);
             studentNameText.gameObject.transform.localPosition = new Vector3(0, 1.25f, 0);
             state = State.Sitting;
-            visionTeacher = 0;
+            rig.layers[0].active = true;
+
             //while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Sitting"))
             //    yield return null;
             //transform.rotation = desk.transform.rotation;
@@ -350,21 +355,22 @@ namespace ClassRoomVR
         public void SitBack()
         {
             navMeshAgent.enabled = true;
-
+            rig.layers[0].active = false;
             navMeshAgent.SetDestination(desk.GetPositionStudent());
             animator.Play("Walking");
             StartCoroutine(OnCompleteSitBack());
         }
 
         // Method to move the student to a specific destination
-        public void MoveTo(Vector3 destination,float breakDistance)
+        public void MoveTo(Vector3 destination, float breakDistance)
         {
             navMeshAgent.enabled = true;
+            rig.layers[0].active = false;
 
             if (state == State.Sitting)
             {
                 animator.SetBool("onFoot", true);
-                desk.PlayAnimacionMesa(Animaciones.Levantar);
+                desk.PlayAnimacionMesa(Animaciones.Empujar);
             }
             else
             {
@@ -402,7 +408,7 @@ namespace ClassRoomVR
         // Method to get the student's behavior
         #region Behavior
 
-        public StudentBehavior GetBehavior()=> behavior;
+        public StudentBehavior GetBehavior() => behavior;
         #endregion
 
         //VoiceGenerator voiceGenerator;
@@ -410,5 +416,41 @@ namespace ClassRoomVR
         {
             response.TTS(text);
         }
+      
+        void Start()
+        {
+            Invoke(nameof(RandomPose), 2f);
+        }
+
+        void RandomPose()
+        {
+            float randomTime = Random.Range(6f, 8f);
+            if (changeAnimationCoroutine != null)
+            {
+                StopCoroutine(changeAnimationCoroutine);
+            }
+            changeAnimationCoroutine = StartCoroutine(ChangeBlendParameter());
+            Invoke("RandomPose", randomTime);
+        }
+        private int blendChangeSpeed = 2; // Velocidad de cambio del blend tree
+        private Coroutine changeAnimationCoroutine;
+
+        IEnumerator ChangeBlendParameter()
+        {
+            float targetBlendValue = Random.Range(0, 2);
+            float currentBlendValue = animator.GetFloat("Aburrimiento");
+
+            while (!Mathf.Approximately(currentBlendValue, targetBlendValue))
+            {
+                // Cambiar gradualmente el valor del par�metro del blend tree
+                currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
+                Debug.Log(currentBlendValue);
+                animator.SetFloat("Aburrimiento", currentBlendValue);
+
+                yield return null;
+            }
+        }
+        //float targetBlendValue = Random.Range(0, 2);
+        //animator.SetFloat("Aburrimiento", targetBlendValue);
     }
 }

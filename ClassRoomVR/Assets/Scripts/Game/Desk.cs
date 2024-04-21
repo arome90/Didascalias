@@ -11,7 +11,7 @@ public class Desk : MonoBehaviour
     public bool IsOccupied { get => isOccupied; set => isOccupied = value; } // Property to access the occupancy status
 
     // Get the position of the student sitting at the desk
-    public Vector3 GetPositionStudent() => transform.GetChild(0).position;
+    public Vector3 GetPositionStudent() => transform.GetChild(0).position + new Vector3(0, 0, 0.05f);
 
     [HideInInspector] public UnityEngine.Events.UnityEvent onCollisionChanged; // Event invoked when collision with other desk occurs
     [SerializeField] Animation deskAnim;
