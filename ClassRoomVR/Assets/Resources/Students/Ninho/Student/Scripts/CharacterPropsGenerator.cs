@@ -72,12 +72,12 @@ public class CharacterPropsSpawner : MonoBehaviour
             MeshRenderer meshRenderer = propObject.AddComponent<MeshRenderer>();
             meshRenderer.material = complement.material;
 
-            int c = Random.Range(0, complement.RedMask.Length);
-            meshRenderer.material.SetColor("_ColorRedMask", complement.RedMask[c]);
-            c = Random.Range(0, complement.GreenMask.Length);
-            meshRenderer.material.SetColor("_ColorGreenMask", complement.GreenMask[c]);
-            c = Random.Range(0, complement.BlueMask.Length);
-            meshRenderer.material.SetColor("_ColorBlueMask", complement.BlueMask[c]);
+            if (complement.color.Length > 0)
+            {
+                Debug.Log("entre");
+                int c = Random.Range(0, complement.color.Length);
+                meshRenderer.material.SetColor("_BaseColor", complement.color[c]);
+            }
             // Set the prop object as a child of the bone
             propObject.transform.SetParent(bone, false);
             if (isMirrored)

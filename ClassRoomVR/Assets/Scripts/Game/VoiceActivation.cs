@@ -174,7 +174,7 @@ namespace ClassRoomVR
         //  public void UpdateClass(VoiceSession sessionData) 
         public void UpdateClass(Meta.WitAi.Json.WitResponseNode response)
         {
-            if (response.GetText().Length > 0)
+            if (response.GetResponseText().Length > 0)
             {
                 SetLevelAudio();
                 // var response = sessionData.response;

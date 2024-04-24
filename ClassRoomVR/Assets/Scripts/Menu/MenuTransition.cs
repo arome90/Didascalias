@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
 namespace ClassRoomVR {
     public class MenuTransition : GenericSingleton<MenuTransition>
     {
+
+        [SerializeField] private InputActionProperty helpAction;
 
         [SerializeField] List<GameObject> menus;
         [SerializeField] Button back;
@@ -17,7 +21,6 @@ namespace ClassRoomVR {
         [SerializeField] GameObject player;
         [SerializeField] TextMeshProUGUI textSession; // Reference to the session text
 
-
         private void Awake()
         {
             back.onClick.AddListener(GoBackScreen);
@@ -26,6 +29,19 @@ namespace ClassRoomVR {
         private void OnEnable()
         {
             ActiveFirstPage();
+            if (helpAction != null)
+            {
+                helpAction.action.performed += Disenable;
+            }
+        }
+
+        private void OnDisable()
+        {
+            _isActive = false;
+            if (helpAction != null)
+            {
+                helpAction.action.performed -= Disenable;
+            }
         }
 
         private void ActiveFirstPage() 
@@ -52,6 +68,8 @@ namespace ClassRoomVR {
                 return;
             }
             menus[index].SetActive(true);
+            ChangeScreen(index);
+
 
         }
 
@@ -60,8 +78,10 @@ namespace ClassRoomVR {
             menus[index].SetActive(false);
             index++;
             menus[index].SetActive(true);
+            ChangeScreen(index);
+
         }
-    
+
         private void GoStart()
         {
             //Temporal
@@ -81,6 +101,30 @@ namespace ClassRoomVR {
             player.transform.eulerAngles = new Vector3(0, 180, 0);
         }
 
+
+
+        public string[] texts;
+       [SerializeField] TMPro.TextMeshProUGUI text;
+        bool _isActive;
+
+        private void Disenable(InputAction.CallbackContext context)
+        {
+            if (!_isActive)
+            {
+                _isActive = true;
+                text.gameObject.SetActive(false);
+            }
+            else
+            {
+                _isActive = false;
+                text.gameObject.SetActive(true);
+            }
+        }
+
+        public void ChangeScreen(int i)
+        {
+            text.text = texts[i];
+        }
 
         //public void MovePizarra()
         //{

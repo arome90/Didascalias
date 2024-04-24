@@ -51,19 +51,17 @@ public class VisualController : MonoBehaviour
     }
 
     //public InputDevice targetDevice;
-    public InputDevice _rightController;
-    public InputDevice _leftController;
-
+    public InputDevice controller;
     private void Update()
     {
-        if (!_rightController.isValid || !_leftController.isValid)
+        if (!controller.isValid)
             InitializeInputDevices();
         else
         {
             bool button;
             for (int i = 0; i < inputFeatureUsages.Length; i++)
             {
-                _leftController.TryGetFeatureValue(inputFeatureUsages[i], out button);
+                controller.TryGetFeatureValue(inputFeatureUsages[i], out button);
                 if (button)
                 {
                     renderers[i].material.color = Color.red;
@@ -71,32 +69,26 @@ public class VisualController : MonoBehaviour
 
 
                 }
-                else Debug.Log("noooo");
-                //else 
-                //{
-                //    renderers[1].material.color = Color.green;
-
-                //}
             }
             Vector2 thumb;
-            _leftController.TryReadAxis2DValue(InputHelpers.Axis2D.PrimaryAxis2D, out thumb);
+            controller.TryReadAxis2DValue(InputHelpers.Axis2D.PrimaryAxis2D, out thumb);
             float x = Unity.Mathematics.math.remap(-1f, 1f, -30f, 30f, thumb.y);
             float z = Unity.Mathematics.math.remap(-1f, 1f, -30f, 30f, thumb.x);
 
-            thumbStick.transform.rotation = Quaternion.Euler(x, 0,-z);
+            thumbStick.transform.localRotation = Quaternion.Euler(-x, 0, z);
         }
     }
 
 
-    
+
     private void InitializeInputDevices()
     {
 
-        if (!_rightController.isValid)
-            InitializeInputDevice(InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right, ref _rightController);
-        if (!_leftController.isValid)
-            InitializeInputDevice(InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left, ref _leftController);
-    
+        if (hand == Hand.Right)
+            InitializeInputDevice(InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right, ref controller);
+        if (hand == Hand.Left)
+            InitializeInputDevice(InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left, ref controller);
+
     }
 
     private void InitializeInputDevice(InputDeviceCharacteristics inputCharacteristics, ref InputDevice inputDevice)

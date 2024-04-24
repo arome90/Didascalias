@@ -444,7 +444,6 @@ namespace ClassRoomVR
             {
                 // Cambiar gradualmente el valor del par�metro del blend tree
                 currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
-                Debug.Log(currentBlendValue);
                 animator.SetFloat("Aburrimiento", currentBlendValue);
 
                 yield return null;
