@@ -24,28 +24,28 @@ public class CharacterPropsSpawner : MonoBehaviour
             // Randomly decide which side to spawn the asset on if spawnOnOneSideOnly is true
             bool spawnOnRight = spawnOnOneSideOnly ? Random.Range(0, 2) == 0 : true;
             int randomIndex = Random.Range(0, boneAttachment.complements.Count);
-
+            var complement = boneAttachment.complements[randomIndex];
+            int color = Random.Range(0, complement.color.Length);
             if (spawnOnRight || isFoot)
             {
                 // Use the probability to determine if a mesh should be spawned for this bone attachment
-                TrySpawnComplement(firstChild, boneAttachment, false, randomIndex);
+                TrySpawnComplement(firstChild, boneAttachment, complement, color, false);
             }
             if (!spawnOnRight || isFoot)
             {
                 // Try to spawn on the left side (mirror) if it's either a foot or chosen by probability
-                TrySpawnComplement(firstChild, boneAttachment, true, randomIndex);
+                TrySpawnComplement(firstChild, boneAttachment, complement, color, true);
             }
 
         }
     }
 
-    void TrySpawnComplement(Transform rootBone, CharacterProps.BoneAttachment boneAttachment, bool isMirrored, int randomIndex)
+    void TrySpawnComplement(Transform rootBone, CharacterProps.BoneAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
     {
         float probabilityRoll = Random.Range(0f, 100f);
         if (probabilityRoll <= boneAttachment.probability)
         {
             // Select a random MeshMaterialPair from the complements list
-            var complement = boneAttachment.complements[randomIndex];
             string boneName = boneAttachment.boneName;
 
             // Adjust bone name for mirrored assets
@@ -54,11 +54,11 @@ public class CharacterPropsSpawner : MonoBehaviour
                 boneName = boneName.Replace("R", "L");
             }
 
-            SpawnForBone(rootBone, boneName, complement, isMirrored);
+            SpawnForBone(rootBone, boneName, complement, color, isMirrored);
         }
     }
 
-    void SpawnForBone(Transform rootBone, string boneName, CharacterProps.MeshMaterialPair complement, bool isMirrored)
+    void SpawnForBone(Transform rootBone, string boneName, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
     {
         // Search for the bone with the specified name
         Transform bone = FindBoneInChildren(rootBone, boneName);
@@ -74,9 +74,7 @@ public class CharacterPropsSpawner : MonoBehaviour
 
             if (complement.color.Length > 0)
             {
-                Debug.Log("entre");
-                int c = Random.Range(0, complement.color.Length);
-                meshRenderer.material.SetColor("_BaseColor", complement.color[c]);
+                meshRenderer.material.SetColor("_BaseColor", complement.color[color]);
             }
             // Set the prop object as a child of the bone
             propObject.transform.SetParent(bone, false);
@@ -91,7 +89,7 @@ public class CharacterPropsSpawner : MonoBehaviour
         {
             Debug.LogWarning("Bone not found for prop '" + boneName + "'");
         }
-    }
+    } 
 
     Transform FindBoneInChildren(Transform parent, string boneName)
     {

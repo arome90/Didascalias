@@ -271,6 +271,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a83bc4aa48d0da648b49d0fd56690b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AimFlagsAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: 
+      m_Type: 0
+      m_ExpectedControlType: Integer
+      m_Id: 46151a5a-dcd8-48e9-a40e-d748dae61104
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_SystemGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SystemGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  m_MenuPressed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &10271297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +304,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbac611a2982409ab5f5e604f53bcad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Handedness: 0
+  m_PokeGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_PokeGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &10271298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,6 +368,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadingIndicator
       objectReference: {fileID: 0}
+    - target: {fileID: 6242851352063568600, guid: f9da24840c60a814295b88e6319d9f9c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6242851352063568602, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_Enabled
@@ -378,12 +411,12 @@ PrefabInstance:
     - target: {fileID: 6242851352063568608, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 182
       objectReference: {fileID: 0}
     - target: {fileID: 6242851352063568608, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 103.37
       objectReference: {fileID: 0}
     - target: {fileID: 6242851352063568608, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
@@ -483,7 +516,7 @@ PrefabInstance:
     - target: {fileID: 6242851353689079636, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 19.37
       objectReference: {fileID: 0}
     - target: {fileID: 6242851353689079636, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
@@ -503,22 +536,22 @@ PrefabInstance:
     - target: {fileID: 7647953081274359454, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7647953081274359454, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7647953081274359454, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 91
       objectReference: {fileID: 0}
     - target: {fileID: 7647953081274359454, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -34
       objectReference: {fileID: 0}
     - target: {fileID: 8736767897628646923, guid: f9da24840c60a814295b88e6319d9f9c,
         type: 3}
@@ -738,7 +771,7 @@ PrefabInstance:
         type: 3}
       propertyPath: currentSettings
       value: 
-      objectReference: {fileID: 11400000, guid: 8cf36a907bde6604f87feaafcdafa1fd,
+      objectReference: {fileID: 11400000, guid: 29f6f364e7b4552458c1333c05ef1a22,
         type: 2}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
@@ -7552,8 +7585,8 @@ MonoBehaviour:
   m_Camera: {fileID: 301819459}
   m_OriginBaseGameObject: {fileID: 961265497}
   m_CameraFloorOffsetObject: {fileID: 853775180}
-  m_RequestedTrackingOriginMode: 2
-  m_CameraYOffset: 1
+  m_RequestedTrackingOriginMode: 1
+  m_CameraYOffset: 0.5
 --- !u!4 &961265506
 Transform:
   m_ObjectHideFlags: 0
@@ -11787,6 +11820,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a83bc4aa48d0da648b49d0fd56690b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AimFlagsAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: 
+      m_Type: 0
+      m_ExpectedControlType: Integer
+      m_Id: 1f2a80d7-28a2-4a94-9b0b-0b833b55173f
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_SystemGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SystemGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  m_MenuPressed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1689197810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11799,6 +11853,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbac611a2982409ab5f5e604f53bcad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Handedness: 0
+  m_PokeGestureStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  m_PokeGestureEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1689197811
 MonoBehaviour:
   m_ObjectHideFlags: 0
