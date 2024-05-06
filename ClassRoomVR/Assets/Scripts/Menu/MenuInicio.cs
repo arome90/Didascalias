@@ -7,46 +7,22 @@ namespace ClassRoomVR
 {
     public class MenuInicio : MonoBehaviour
     {
-        [SerializeField] private Button enterButton;
-        [SerializeField] private Button enter2Button;
-        [SerializeField] private Transform desk1;
-        [SerializeField] private Transform desk2;
+        [SerializeField] private Button enter;
+        [SerializeField] private Transform desk;
         [SerializeField] private Button quitButton;
         [SerializeField] private GameObject nextScreen;
         [SerializeField] private Vector3 playerDestination;
         [SerializeField] private Vector3 playerInitialPosition;
         [SerializeField] private Transform player;
-        [SerializeField] List<GameObject> maps;
-        [SerializeField] RectTransform rect;
-        [SerializeField] RectTransform rect2;
-        [SerializeField] GameObject canvas;
         
-
-       
-
         private void Start()
         {
-            enterButton.onClick.AddListener(() =>
+            enter.onClick.AddListener(() =>
             {
                 GameManager.Instance.SetScene(1);
                 PlayButton();
                 GoNextScreen();
-                maps[0].SetActive(true);
-                maps[1].SetActive(false);
-                var a =canvas.GetComponent<RectTransform>();
-                MatchOther(a, rect);
-                DeskManager.Instance.transform.position = desk1.position;
-            });
-            enter2Button.onClick.AddListener(() =>
-            {
-                GameManager.Instance.SetScene(2);
-                PlayButton();
-                GoNextScreen();
-                maps[1].SetActive(true);
-                maps[0].SetActive(false);
-                var a = canvas.GetComponent<RectTransform>();
-                MatchOther(a, rect2);
-                DeskManager.Instance.transform.position = desk2.position;
+                DeskManager.Instance.transform.position = desk.position;
 
             });
             quitButton.onClick.AddListener(QuitButton);
@@ -54,21 +30,6 @@ namespace ClassRoomVR
             DeskManager.Instance.DestroyChildren();
             DontDestroyOnLoad(GameObject.Find("DeskManager"));
         }
-
-        public void MatchOther( RectTransform rt, RectTransform other)
-        {
-            Vector2 myPrevPivot = rt.pivot;
-            myPrevPivot = other.pivot;
-            rt.position = other.position;
-
-            rt.localScale = other.localScale;
-
-            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, other.rect.width);
-            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, other.rect.height);
-            //rectTransf.ForceUpdateRectTransforms(); - needed before we adjust pivot a second time?
-            rt.pivot = myPrevPivot;
-        }
-
 
         private void GoNextScreen()
         {
@@ -97,11 +58,8 @@ namespace ClassRoomVR
 
         public void ReturnButton()
         {
-            SetPlayerPositionAndRotation(playerInitialPosition, Quaternion.Euler(Vector3.down * 90.0f));
+            SetPlayerPositionAndRotation(playerInitialPosition, Quaternion.Euler(Vector3.up * 90.0f));
             gameObject.SetActive(true);
-            maps[0].SetActive(true);
-            maps[1].SetActive(false);
-
         }
 
         private void OnEnable()
