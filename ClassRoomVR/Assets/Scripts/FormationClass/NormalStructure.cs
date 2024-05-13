@@ -171,21 +171,21 @@ namespace ClassRoomVR
             }
         }
 
-        public override void MaxDesk() 
-        { 
+        public override void MaxDesk()
+        {
             // Obtener el BoxCollider del prefab de la silla (o escritorio)
             BoxCollider boxCollider = desk.GetComponent<BoxCollider>();
             // Calcular las dimensiones reales de la silla teniendo en cuenta la escala
             Vector3 sillaDimensions = Vector3.Scale(boxCollider.size, desk.transform.lossyScale);
             Vector3 aulaDimensions = aula.size;
-            int numColumnas = Mathf.FloorToInt(aulaDimensions.x  / (sillaDimensions.x * espacioEntreCol)) ;
+            int numColumnas = Mathf.FloorToInt(aulaDimensions.x / (sillaDimensions.x * espacioEntreCol));
             int numFilas = Mathf.FloorToInt(aulaDimensions.z / (sillaDimensions.z * espacioEntreRow));
-            if (coluOpt != null) coluOpt.SetMax(numColumnas);
+            if (coluOpt != null) coluOpt.SetMax(numColumnas+1);
             //else settings.Columns = numColumnas;
             if (rowsOpt != null) rowsOpt.SetMax(numFilas);
             //else settings.Rows = numFilas;
+            Debug.Log(numFilas + " " + numColumnas);
 
-        
         }
     }
 }

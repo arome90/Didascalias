@@ -39,6 +39,7 @@ namespace ClassRoomVR
             {
                 // Calculate position of the toggle object
                 var v = GetVector(angle, i, radius);
+                //Debug.Log(i+ ": " + v);
                 Vector3 position = new Vector3(v.Item1 / 5.0f, -v.Item2 / 5.0f) + parentTransform.position;
 
                 // Instantiate a toggle object
@@ -49,7 +50,7 @@ namespace ClassRoomVR
 
                 // Instantiate a desk object and set its properties
                 var d = Instantiate(desk, position, Quaternion.identity, parentDeskTransform);
-                if(!isUStructure)d.transform.LookAt(parentDeskTransform);
+                if (!isUStructure) d.transform.LookAt(parentDeskTransform);
                 d.onCollisionChanged.AddListener(CollisionWithOtherDesk);
 
                 // Add listeners to toggle events
@@ -133,6 +134,8 @@ namespace ClassRoomVR
         {
             // Set initial number of desks to match the number of students
             numDesks.SetMin(settings.NumDesks);
+            float radius = Mathf.Min(settings.Radius, radiusOpt.GetMax());
+            settings.Radius = radius;
             // Check if the structure mode is U
             if (settings.StructureMode == StructureMode.U)
             {
@@ -151,12 +154,6 @@ namespace ClassRoomVR
                 isUStructure = false;
             }
 
-            if (GameManager.Instance.GetScene() == 1)
-            {
-                settings.Radius = Mathf.Min(settings.Radius, radioMaximo);
-                radiusOpt.SetMax(3.1f);
-                numDesks.SetMax((settings.StructureMode == StructureMode.U) ? 9 : 17);
-            }
             numDesks.SetValue(settings.NumDesks);
             gradesOpt.SetValue(settings.Degrees);
             radiusOpt.SetValue(settings.Radius);
@@ -197,7 +194,9 @@ namespace ClassRoomVR
         {
             float anchoDisponible = aula.size.x - 2 * espacioEntreParedYSilla;
             float largoDisponible = aula.size.z - 2 * espacioEntreParedYSilla;
-            radioMaximo = Mathf.Min(anchoDisponible, largoDisponible) / 2f;
+            radioMaximo =(float) System.Math.Round( (double) Mathf.Min(anchoDisponible, largoDisponible) / 2f,1);
+            Debug.Log(radioMaximo);
+            radiusOpt.SetMax(radioMaximo);
         }
     }
 }

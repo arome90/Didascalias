@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
 using System.Linq;
-using Oculus.Platform.Models;
-using UnityEngine.UIElements;
-using Unity.VisualScripting;
-using Meta.WitAi.Data;
+using TMPro;
+using UnityEngine.InputSystem;
 
 namespace ClassRoomVR
 {
@@ -22,7 +20,7 @@ namespace ClassRoomVR
         // Serialized fields for customization in the Inspector
         [SerializeField] private Gender gender;
         [SerializeField] private bool problematic = false;
-        [SerializeField] private TextMesh studentNameText;
+        [SerializeField] private TextMeshProUGUI studentNameText;
         private Desk desk;
         [SerializeField] private RuntimeAnimatorController animatorController;
         private Animator animator;
@@ -33,7 +31,7 @@ namespace ClassRoomVR
         private Vector3 actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> targets;
         [SerializeField] private MultiAimConstraint headConstraint;
-        [SerializeField] private TextMesh attentionText;
+        [SerializeField] private TextMeshProUGUI attentionText;
         private StudentBehavior behavior;
         private Transform player;
         private ResponseStudent response;
@@ -149,7 +147,8 @@ namespace ClassRoomVR
         private void Update()
         {
             if (GameManager.Instance.IsPause) return;
-            HandleInput();
+
+            //HandleInput();
             UpdateTargetPosition();
             if (attentionText != null) attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
@@ -207,8 +206,8 @@ namespace ClassRoomVR
         private Vector3 currentVelocity;
         private void UpdateTargetPosition()
         {
-            studentNameText.transform.LookAt(player);
-            studentNameText.transform.rotation = Quaternion.LookRotation(player.forward);
+            studentNameText.transform.parent.LookAt(player);
+            studentNameText.transform.parent.rotation = Quaternion.LookRotation(player.forward);
 
             if (vision != FieldOfVision.Teacher && state == State.Sitting)
             {

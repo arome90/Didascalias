@@ -7,7 +7,6 @@ namespace ClassRoomVR
     public class ClassManager : GenericSingleton<ClassManager>
     {
         private Transform studentsPositions;
-        [SerializeField] private Student prefabStudent;
         private bool[] asientosOcupados;
         private HashSet<string> problematicStudents;
        // private Dictionary<string, Student> students;
@@ -23,7 +22,6 @@ namespace ClassRoomVR
         private int clima;
         private ClassInfo classInfo;
         private List<List<string>> names;
-        private List<GameObject[]> prefabBodys;
         private ClassSettings settings;
 
         [SerializeField] private AudioClip beforeClassBell;
@@ -54,11 +52,6 @@ namespace ClassRoomVR
             {
                 classInfo.femaleStudentNames.ToList(),
                 classInfo.maleStudentNames.ToList()
-            };
-            prefabBodys = new List<GameObject[]>
-            {
-                classInfo.femaleStudentPrefabs,
-                classInfo.maleStudentPrefabs
             };
             GenerateChilds();
 
@@ -112,28 +105,19 @@ namespace ClassRoomVR
         {
             int gender = Random.Range(0, 2);
             int indexName = Random.Range(0, names[gender].Count);
-            var pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
+            var pickedStudent = CreateStudent(names[gender][indexName], (Gender)gender);
             names[gender].RemoveAt(indexName);
             PlaceStudent(ref deskPos, pickedStudent, 1);
             deskPos++;
         }
 
 
-        [SerializeField] Student bodyNew;
-        [SerializeField] bool newBody;
-        private Student CreateStudent(GameObject body, string name, Gender gender)
+        [SerializeField] Student body;
+        private Student CreateStudent(string name, Gender gender)
         {
             Student pickedStudent;
-            if (newBody)
-            {
-                pickedStudent = Instantiate(bodyNew, transform);
-            }
-            else
-            {
-                pickedStudent = Instantiate(prefabStudent, transform);
-                pickedStudent.CreateBody(body);
-            }
-            pickedStudent.SetParameters(player.transform,name, gender);
+            pickedStudent = Instantiate(body, transform);
+            pickedStudent.SetParameters(player.transform, name, gender);
             students.Add(name, pickedStudent);
             return pickedStudent;
         }
@@ -142,14 +126,10 @@ namespace ClassRoomVR
             DeskManager.Instance.GetFreeDesk(ref deskPos, nGruops);
             Desk desk = studentsPositions.GetChild(deskPos).GetComponent<Desk>();
             Transform pos = desk.transform.GetChild(0);
-            //if (newBody)
-            //    pickedStudent.transform.SetPositionAndRotation(pos.position, Quaternion.Euler(-90, 0, 0));
-            //else
-            // pickedStudent.transform.SetPositionAndRotation(pos.position- 0.041f, pos.rotation);
-            pickedStudent.transform.position = pos.position - new Vector3(0,0,0.3f);
+            pickedStudent.transform.SetPositionAndRotation(pos.position , pos.parent.rotation);
+            pickedStudent.transform.Translate(-new Vector3(0,0,0.3f),Space.Self);
             pickedStudent.SetDesk(desk);
             pickedStudent.SetTargets(targetsHead);
-
             asientosOcupados[deskPos] = true;
         }
 
@@ -158,7 +138,7 @@ namespace ClassRoomVR
             for (int i = 0; i < n; i++)
             {
                 int indexName = Random.Range(0, names[gender].Count);
-                var pickedStudent = CreateStudent(prefabBodys[gender][Random.Range(0, prefabBodys[gender].Length)], names[gender][indexName], (Gender)gender);
+                var pickedStudent = CreateStudent(names[gender][indexName], (Gender)gender);
                 names[gender].RemoveAt(indexName);
                 PlaceStudent(ref deskPos, pickedStudent, 1);
                 deskPos++;
@@ -173,9 +153,7 @@ namespace ClassRoomVR
             {
                 StudentInfo info = list[i];
                 Gender gen = (Gender)GetEnumValue<GenderInfo>((int)info.Gender);
-                int nBody = GetEnumValue<BodyInfo>((int)info.Body);
-                GameObject body = gen == Gender.Men ? classInfo.maleStudentPrefabs[nBody] : classInfo.femaleStudentPrefabs[nBody];
-                var pickedStudent = CreateStudent(body, info.Name, gen);
+                var pickedStudent = CreateStudent(info.Name, gen);
                 PlaceStudent(ref deskPos, pickedStudent, 1);
                 deskPos++;
             }

@@ -238,16 +238,16 @@ namespace ClassRoomVR
 
         private void Update()
         {
-            if (GameManager.Instance.IsPause) return;
-            int index = 0;
-            while (index < actions.Length && !ClassManager.Instance.DisruptiveSituation)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1 + index))
-                {
-                    DoSomethingDisruptive(index);
-                }
-                index++;
-            }
+            //if (GameManager.Instance.IsPause) return;
+            //int index = 0;
+            //while (index < actions.Length && !ClassManager.Instance.DisruptiveSituation)
+            //{
+            //    if (Input.GetKeyDown(KeyCode.Alpha1 + index))
+            //    {
+            //        DoSomethingDisruptive(index);
+            //    }
+            //    index++;
+            //}
         }
         
     }

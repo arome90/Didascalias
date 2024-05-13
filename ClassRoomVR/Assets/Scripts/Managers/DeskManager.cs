@@ -8,14 +8,6 @@ namespace ClassRoomVR
 
         public void GetFreeDesk(ref int deskPosition, int numGroups)
         {
-            // Ordenamiento por grupos
-            //if (numGroups > 1)
-            //{
-            //    if (deskPosition == 2 || deskPosition == 7 || deskPosition == 12 || deskPosition == 17 || deskPosition == 22 || deskPosition == 27)
-            //        deskPosition++;
-            //    if (deskPosition == 10 || deskPosition == 11 || deskPosition == 12 || deskPosition == 13 || deskPosition == 14)
-            //        deskPosition = 15;
-            //}
            for(int i = deskPosition; i < transform.childCount; i++) 
            {
                 if (transform.GetChild(i).gameObject.activeSelf) 
@@ -50,10 +42,6 @@ namespace ClassRoomVR
             ClassSettings settings = GameManager.Instance.GetCurrentSettings();
             int numDesks = settings.NumStudents;
             float radius = settings.Radius;
-            //if (GameManager.Instance.GetScene() == 1) 
-            //{
-            //     radius = 3.3f;
-            //}
             
             float angle = settings.Degrees / numDesks;
             for (int i = 0; i < numDesks; i++)

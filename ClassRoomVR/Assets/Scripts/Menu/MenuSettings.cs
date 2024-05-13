@@ -66,11 +66,9 @@ namespace ClassRoomVR
                     break;
                 case StructureMode.Circular:
                     maxStudents = 20;
-                    if (GameManager.Instance.GetScene()==1) maxStudents-= 3;
                     break;
                 case StructureMode.U:
                     maxStudents = 12;
-                    if (GameManager.Instance.GetScene() == 1) maxStudents -= 3;
                     break;
             }
         }

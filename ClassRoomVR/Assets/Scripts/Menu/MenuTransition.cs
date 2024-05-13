@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEngine.XR.Hands.XRHandSubsystemDescriptor;
 
 
 namespace ClassRoomVR {
@@ -25,6 +25,8 @@ namespace ClassRoomVR {
         {
             back.onClick.AddListener(GoBackScreen);
             start.onClick.AddListener(GoStart);
+            WsClient.Instance.StartConnection();
+            _isActive = false;
         }
         private void OnEnable()
         {
@@ -37,7 +39,6 @@ namespace ClassRoomVR {
 
         private void OnDisable()
         {
-            _isActive = false;
             if (helpAction != null)
             {
                 helpAction.action.performed -= Disenable;
@@ -85,11 +86,11 @@ namespace ClassRoomVR {
         private void GoStart()
         {
             //Temporal
-            if (GameManager.Instance.GetCurrentSettings().name != "Personalizado") { DeskManager.Instance.DestroyChildren(); }
-            GameManager.Instance.LoadMainScene();
             start.gameObject.SetActive(false);
+            menus[index].SetActive(false);
+            if (GameManager.Instance.GetCurrentSettings().name != "Personalizado") { DeskManager.Instance.DestroyChildren(); }
             textSession.text = WsClient.Instance.session;
-
+            GameManager.Instance.LoadMainScene();
         }
 
         public void MovePizarra() 
@@ -112,12 +113,12 @@ namespace ClassRoomVR {
             if (!_isActive)
             {
                 _isActive = true;
-                text.gameObject.SetActive(false);
+                text.transform.parent.gameObject.SetActive(true);
             }
             else
             {
                 _isActive = false;
-                text.gameObject.SetActive(true);
+                text.transform.parent.gameObject.SetActive(false);
             }
         }
 

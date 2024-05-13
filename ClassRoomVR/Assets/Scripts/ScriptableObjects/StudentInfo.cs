@@ -13,12 +13,10 @@ namespace ClassRoomVR
         [SerializeField] private GenderInfo gender;
         [SerializeField] private bool hasDisability;
         [SerializeField] private OriginInfo origin;
-        [SerializeField] private BodyInfo body;
         public string Name => nameStudent;
         public GenderInfo Gender => gender;
         public bool Disability => hasDisability;
         public OriginInfo Origin => origin;
-        public BodyInfo Body => body;
 
 #if UNITY_EDITOR
 
@@ -28,7 +26,6 @@ namespace ClassRoomVR
             private SerializedProperty genderProperty;
             private SerializedProperty disabilityProperty;
             private SerializedProperty originProperty;
-            private SerializedProperty bodyProperty;
             private SerializedProperty nameProperty;
 
             private void OnEnable()
@@ -37,7 +34,6 @@ namespace ClassRoomVR
                 genderProperty = serializedObject.FindProperty("gender");
                 disabilityProperty = serializedObject.FindProperty("hasDisability");
                 originProperty = serializedObject.FindProperty("origin");
-                bodyProperty = serializedObject.FindProperty("body");
             }
 
             public override void OnInspectorGUI()
@@ -53,7 +49,6 @@ namespace ClassRoomVR
                 EditorGUILayout.PropertyField(disabilityProperty);
                 EditorGUILayout.PropertyField(genderProperty);
                 EditorGUILayout.PropertyField(originProperty);
-                EditorGUILayout.PropertyField(bodyProperty);
                 EditorGUI.EndChangeCheck();
                 serializedObject.ApplyModifiedProperties();
             }

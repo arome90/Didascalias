@@ -13,13 +13,6 @@ namespace ClassRoomVR
         [Tooltip("Names of female students")]
         public string[] femaleStudentNames;
 
-        [Tooltip("Prefabs for male students")]
-        public GameObject[] maleStudentPrefabs;
-
-        [Tooltip("Prefabs for female students")]
-        public GameObject[] femaleStudentPrefabs;
-
-
         [Tooltip("Animator controller for students")]
         public RuntimeAnimatorController studentAnimatorController;
 

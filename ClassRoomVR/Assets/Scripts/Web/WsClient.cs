@@ -85,8 +85,6 @@ public class WsClient : GenericSingleton<WsClient>
     {
         connected = false;
         idDevice = SystemInfo.deviceUniqueIdentifier;
-        StartConnection();
-        Invoke(nameof(Info), 2f);
     }
     public void StartConnection()
     {
@@ -121,10 +119,7 @@ public class WsClient : GenericSingleton<WsClient>
         ws.SendAsync(jsonData, null);
     }
 
-    void Info()
-    {
-        ServerMessage.SendInfoInitial();
-    }
+    
     void Ws_OnSessionMessage(object sender, MessageEventArgs e)
     {
         try

@@ -19,7 +19,6 @@ namespace ClassRoomVR
         {
             enter.onClick.AddListener(() =>
             {
-                GameManager.Instance.SetScene(1);
                 PlayButton();
                 GoNextScreen();
                 DeskManager.Instance.transform.position = desk.position;

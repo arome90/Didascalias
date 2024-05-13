@@ -20,7 +20,7 @@ namespace ClassRoomVR
         {
             structureDropdown.ClearOptions();
             SetOptions(GameManager.Instance.GetAvailableSettings());
-            structureDropdown.value=GameManager.Instance.GetIndexCurrentSettings();
+            structureDropdown.value = GameManager.Instance.GetIndexCurrentSettings();
 
         }
         private void GoEditScreen()
@@ -28,15 +28,11 @@ namespace ClassRoomVR
             GameManager.Instance.SetCurrentSettings(0);
             MenuTransition.Instance.GoNextScreen();
         }
-    
+
 
         private void ChangeSetting(int value)
         {
             editText.SetActive((value == 0));
-            if(GameManager.Instance.GetScene() == 2) 
-            {
-                value += structureDropdown.options.Count ;
-            }
             GameManager.Instance.SetCurrentSettings(value);
         }
 
@@ -44,10 +40,7 @@ namespace ClassRoomVR
         {
             List<string> dropdownOptions = new List<string>();
 
-            int lenght = classes.Length / 2;
-            int i = GameManager.Instance.GetScene() == 1 ? 0 : lenght;
-            int l = lenght + i;
-            for (; i < l; i++) 
+            for (int i = 0; i < classes.Length; i++)
             {
                 dropdownOptions.Add(classes[i].name);
 

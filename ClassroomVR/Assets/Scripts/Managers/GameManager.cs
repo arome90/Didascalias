@@ -26,7 +26,6 @@ namespace ClassRoomVR
         [SerializeField] private bool saveAudio = false;
        // [SerializeField] private bool firebaseAnalytics = true;
        // [SerializeField] private bool unityAnalytics = true;
-        private int indexScene;
         private int indexCurrentSett;
         
         public static GameManager Instance { get; private set; }
@@ -103,15 +102,12 @@ namespace ClassRoomVR
             //SceneManager.LoadScene("Class_GameScene");
 
             ServerMessage.SendInfoInitial();
-            SceneTransitionManager.singleton.GoToSceneAsync(indexScene);
-            //AnalyticsManager.CustomEvent("Gritar");
+            SceneTransitionManager.singleton.GoToSceneAsync(1);
 
         }
         public void SetChosenPackage(int index) => chosenPackage = availablePackages[index];
         public ScenePackage GetPackageAtIndex(int index) => availablePackages[index];
 
-        public void SetScene(int i) => indexScene = i;
-        public int GetScene() => indexScene;
         public void SetCurrentSettings(int index) 
         {
             currentSettings = availableSettings[index];
@@ -180,7 +176,11 @@ namespace ClassRoomVR
                     voice.Activate();
                 }
                 WsClient.Instance.StartConnection();
-                loadingBar.GetComponent<Canvas>().enabled=false;
+
+                if (loadingBar != null)
+                {
+                    loadingBar.GetComponent<Canvas>().enabled = false;
+                }
                 Continue();
 
             }
@@ -257,6 +257,7 @@ namespace ClassRoomVR
         public void SetLoadingBar(ReconnectUI bar) 
         {
             loadingBar = bar;
+            loadingBar.SetActive(false);
         }
     }
 }

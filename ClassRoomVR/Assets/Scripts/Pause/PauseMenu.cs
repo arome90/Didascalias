@@ -36,6 +36,7 @@ namespace ClassRoomVR
         private void OnDestroy()
         {
             showButtonAction.action.performed -= ToggleMenu;
+            thinkAction.action.performed -= ThinkPause;
             //HVRInputSystemController.InputActions.LeftHand.Menu.performed -= ToggleMenu;
 
         }
@@ -45,15 +46,6 @@ namespace ClassRoomVR
             //pauseMenuUI.enabled = !pauseMenuUI.enabled;
             if (!pauseMenuUI.enabled) PauseGame();
             else ResumeGame();
-        }
-
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                ThinkPause();
-            }
         }
 
         public void ResumeGame()

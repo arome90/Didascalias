@@ -1,5 +1,4 @@
 ﻿public enum OriginInfo { Random, HispanicLatino, AsianPacificIslander, BlackAfricanAmerican, WhiteCaucasian, Other }
-public enum BodyInfo { Random, Body1, Body2, Body3, Body4 }
 public enum GenderInfo { Random, Women, Men }
 public enum Gender { Women, Men };
 public enum State { Sitting ,Standing };
