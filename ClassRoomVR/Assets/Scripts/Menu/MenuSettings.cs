@@ -74,6 +74,7 @@ namespace ClassRoomVR
         }
         private void ChangeBoys(float value)
         {
+            Debug.Log("boys");
             settings.NumMen = (int)value;
             SetMaxStudents();
             DeskManager.Instance.DestroyChildren();

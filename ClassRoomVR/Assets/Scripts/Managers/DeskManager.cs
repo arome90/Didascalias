@@ -1,11 +1,19 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace ClassRoomVR
 {
     public class DeskManager : GenericSingleton<DeskManager>
     {
         [SerializeField] Desk deskPrefab;
+        private List<Vector2> deskPositions;
 
+        public List<Vector2> GetDeskPosition() => deskPositions;
+        private void Start()
+        {
+            deskPositions = new List<Vector2>();
+        }
         public void GetFreeDesk(ref int deskPosition, int numGroups)
         {
            for(int i = deskPosition; i < transform.childCount; i++) 
@@ -17,59 +25,54 @@ namespace ClassRoomVR
                 }
            }
         }
-
-        public void CreateDesks()
+        public void CreateRegularLayout(int numDesks,int numRows, int numColumns, float deskOffsetX, float deskOffsetZ)
         {
-            ClassSettings settings = GameManager.Instance.GetCurrentSettings();
-            CreateRegularLayout(settings, settings.Rows, settings.Columns, 1.3f, 1.6f);
-        }
-
-        private void CreateRegularLayout(ClassSettings settings, int numRows, int numColumns, float deskOffsetX, float deskOffsetZ)
-        {
+            deskPositions.Clear();
             for (int i = 0; i < numRows; i++)
             {
                 for (int j = 0; j < numColumns; j++)
                 {
+                    if (numDesks == 0)
+                    {
+                        return; // If there are no more desks to place, exit the loop
+                    }
                     float xPos = j - (numColumns - 1) / 2f;
                     float zPos = -i + (numRows - 1) / 2f;
+                    deskPositions.Add(new Vector2(xPos, zPos));
                     Instantiate(deskPrefab, new Vector3(transform.position.x + xPos * deskOffsetX, transform.position.y, transform.position.z + zPos * deskOffsetZ), Quaternion.identity, transform);
+                    numDesks--;
                 }
             }
         }
 
-        public void CreateCircle()
+        public void CreateCircle(int numDesks, float radius, float degrees)
         {
-            ClassSettings settings = GameManager.Instance.GetCurrentSettings();
-            int numDesks = settings.NumStudents;
-            float radius = settings.Radius;
-            
-            float angle = settings.Degrees / numDesks;
+            deskPositions.Clear();
+            float angle = degrees / numDesks;
             for (int i = 0; i < numDesks; i++)
             {
-                float x = Mathf.Cos(Mathf.Deg2Rad * angle * i) * radius;
-                float z = Mathf.Sin(Mathf.Deg2Rad * angle * i) * radius;
-                Vector3 position = new Vector3(x, 0, -z) + transform.position;
+                float xPos = Mathf.Cos(Mathf.Deg2Rad * angle * i) * radius;
+                float zPos = Mathf.Sin(Mathf.Deg2Rad * angle * i) * radius;
+                deskPositions.Add(new Vector2(xPos, zPos));
+                Vector3 position = new Vector3(xPos, 0, -zPos) + transform.position;
                 Desk desk = Instantiate(deskPrefab, position, Quaternion.identity, transform);
                 //desk.Position = new Vector2(i, 0);
                 desk.transform.LookAt(transform.position);
             }
         }
 
-        public void CreateUShape()
+        public void CreateUShape(int numDesks, float radius)
         {
-            ClassSettings settings = GameManager.Instance.GetCurrentSettings();
-            int numDesks = settings.NumStudents;
-          //  float radius = GameManager.Instance.GetScene() == 1 ? 3.3f : settings.Radius;
-            float radius =  settings.Radius;
+            deskPositions.Clear();
             float angle = 360f / (numDesks-1);
             float currentAngle = 0f;
-
             for (int i = 0; i < numDesks; i++)
             {
-                float x = Mathf.Cos(Mathf.Deg2Rad / 2f * currentAngle) * radius;
-                float z = Mathf.Sin(Mathf.Deg2Rad / 2f * currentAngle) * radius;
-                Vector3 position = new Vector3(x, 0, -z) + transform.position;
-                Desk desk = Instantiate(deskPrefab, position, Quaternion.identity, transform);
+                float xPos = Mathf.Cos(Mathf.Deg2Rad / 2f * currentAngle) * radius;
+                float zPos = Mathf.Sin(Mathf.Deg2Rad / 2f * currentAngle) * radius;
+                deskPositions.Add(new Vector2(xPos, zPos));
+                Vector3 position = new Vector3(xPos, 0, -zPos) + transform.position;
+                Instantiate(deskPrefab, position, Quaternion.identity, transform);
                 currentAngle += angle;
             }
         }

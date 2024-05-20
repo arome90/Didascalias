@@ -13,10 +13,5 @@ namespace ClassRoomVR
         [Tooltip("Names of female students")]
         public string[] femaleStudentNames;
 
-        [Tooltip("Animator controller for students")]
-        public RuntimeAnimatorController studentAnimatorController;
-
-        [Tooltip("Idle animation (sitting) for students")]
-        public AnimationClip idleAnimation;
     }
 }

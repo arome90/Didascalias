@@ -12,20 +12,16 @@ namespace ClassRoomVR
 
         public float espacioEntreCol = 1.3f;  // Espacio entre sillas
         public float espacioEntreRow = 1.3f;  // Espacio entre sillas
-                                                  // public float espacioPrimeraFila = 3f;
+
 
         public override void Set()
         {
-            ControlMatrix();    
+            ControlMatrix();
             // Destroy previous parent objects
             Destroy(parent);
             parent = new GameObject("Toggles");
             parent.transform.SetParent(parent2.transform, false);
-
-            foreach (Transform child in parentDesk.transform)
-            {
-                Destroy(child.gameObject);
-            }
+            DeskManager.Instance.DestroyChildren();
 
             int numDesks = settings.NumDesks;
             int numRows = settings.Rows;
@@ -33,41 +29,40 @@ namespace ClassRoomVR
 
             Vector3 startPos = parent.transform.position;
             Vector3 startDeskPos = parentDesk.position;
+            DeskManager.Instance.CreateRegularLayout(settings.NumDesks, settings.Rows, settings.Columns, 1.3f, 1.3f);
+            //for (int i = 0; i < numRows; i++)
+            //{
 
-            float deskSpacing = 1.0f / 5.0f; // Spacing between desks
-            for (int i = 0; i < numRows; i++)
-            {
+            //    for (int j = 0; j < numColumns; j++)
+            //    {
+            //        if (numDesks == 0)
+            //        {
+            //            return; // If there are no more desks to place, exit the loop
+            //        }
 
-                for (int j = 0; j < numColumns; j++)
-                {
-                    if (numDesks == 0)
-                    {
-                        return; // If there are no more desks to place, exit the loop
-                    }
+            //        float xPos = j - (numColumns - 1) / 2f;
+            //        float zPos = -i + (numRows - 1) / 2f;
 
-                    float xPos = j - (numColumns - 1) / 2f;
-                    float zPos = -i + (numRows - 1) / 2f;
+            //        Vector3 position = startPos + new Vector3(xPos , zPos , 0);
+            //        Toggle toggle = null;
+            //        if (prefab != null)
+            //        {
+            //             toggle = Instantiate(prefab, position, Quaternion.identity, parent.transform);
+            //        }
 
-                    Vector3 position = startPos + new Vector3(xPos * deskSpacing, zPos * deskSpacing, 0);
-                    Toggle toggle = null;
-                    if (prefab != null)
-                    {
-                         toggle = Instantiate(prefab, position, Quaternion.identity, parent.transform);
-                    }
-
-                    position = startDeskPos + new Vector3(xPos * espacioEntreCol, 0, zPos * espacioEntreRow );
-                    var d = Instantiate(desk, parentDesk);
-                    d.transform.position = position;
+            //        position = startDeskPos + new Vector3(xPos * espacioEntreCol, 0, zPos * espacioEntreRow );
+            //        var d = Instantiate(desk, parentDesk);
+            //        d.transform.position = position;
                     
-                    if (toggle != null)
-                    {
-                        toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
-                        toggleToDeskMap.Add(toggle, d);
-                    }
+            //        if (toggle != null)
+            //        {
+            //            toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
+            //            toggleToDeskMap.Add(toggle, d);
+            //        }
 
-                    numDesks--;
-                }
-            }
+            //        numDesks--;
+            //    }
+            //}
         }
 
         // Method to handle toggling the visibility of desks based on toggle state

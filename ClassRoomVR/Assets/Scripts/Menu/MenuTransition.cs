@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Utilities.Extensions;
 using static UnityEngine.XR.Hands.XRHandSubsystemDescriptor;
 
 
@@ -53,6 +54,7 @@ namespace ClassRoomVR {
             }
             menus[index].SetActive(true);
             menus[index].transform.parent.gameObject.SetActive(true);
+            ChangeScreen(0);
         }
 
        
@@ -85,10 +87,11 @@ namespace ClassRoomVR {
 
         private void GoStart()
         {
-            //Temporal
             start.gameObject.SetActive(false);
+            back.gameObject.SetActive(false);
             menus[index].SetActive(false);
             if (GameManager.Instance.GetCurrentSettings().name != "Personalizado") { DeskManager.Instance.DestroyChildren(); }
+            textSession.SetActive(true);
             textSession.text = WsClient.Instance.session;
             GameManager.Instance.LoadMainScene();
         }

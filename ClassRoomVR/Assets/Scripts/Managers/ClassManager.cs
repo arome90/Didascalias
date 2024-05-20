@@ -35,12 +35,12 @@ namespace ClassRoomVR
 
             if (studentsPositions.childCount == 0)
             {
-                if (settings.StructureMode == StructureMode.Circular)
-                    DeskManager.Instance.CreateCircle();
+                if (settings.StructureMode == StructureMode.Circular) 
+                    DeskManager.Instance.CreateCircle(settings.NumStudents,settings.Radius,settings.Degrees);
                 else if (settings.StructureMode == StructureMode.U)
-                    DeskManager.Instance.CreateUShape();
+                    DeskManager.Instance.CreateUShape(settings.NumStudents,settings.Radius);
                 else
-                    DeskManager.Instance.CreateDesks();
+                    DeskManager.Instance.CreateRegularLayout(settings.NumStudents,settings.Rows,settings.Columns,1.6f,1.6f);
             }
 
             asientosOcupados = new bool[studentsPositions.childCount];
@@ -127,7 +127,7 @@ namespace ClassRoomVR
             Desk desk = studentsPositions.GetChild(deskPos).GetComponent<Desk>();
             Transform pos = desk.transform.GetChild(0);
             pickedStudent.transform.SetPositionAndRotation(pos.position , pos.parent.rotation);
-            pickedStudent.transform.Translate(-new Vector3(0,0,0.3f),Space.Self);
+            pickedStudent.transform.Translate(-new Vector3(0f,0f,0.15f),Space.Self);
             pickedStudent.SetDesk(desk);
             pickedStudent.SetTargets(targetsHead);
             asientosOcupados[deskPos] = true;

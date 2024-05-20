@@ -25,7 +25,15 @@ namespace ClassRoomVR
         public Transform FrontSide => frontSide;
         public Transform BackCorner => backCorner;
         public Transform Door => door;
-
+       // Temporal
+        private void Start()
+        {
+            Invoke(nameof(DoSomethingDisruptives), 2f);
+        }
+        void DoSomethingDisruptives() 
+        {
+            DoSomethingDisruptive(2);
+        }
         // Method to set the dictionary of students
         public void SetParameters(GameObject player,Dictionary<string, Student> students)
         {
@@ -203,7 +211,9 @@ namespace ClassRoomVR
                 AudioClip clip = student.GetGender() == Gender.Women ? action.situationAudioFeminine : action.situationAudioMasculine;
                 student.SetProblematicStudent();
                 student.PayAttention();
+
                 student.PlayDisruptiveAction(action.problematicsAnimation.name, clip);
+
                 if (action.position == Positions.FrontSide)
                     student.MoveTo(frontSide.position, 1f);
                 randomStudentIndex++;
@@ -214,7 +224,7 @@ namespace ClassRoomVR
             if (student != null)
             {
                 actionObject = Instantiate(action.behaviorHolder);
-                actionObject.GetComponent<Action>().SetParameters(player,studentList, action,text);
+                actionObject.GetComponent<Action>().SetParameters(player, studentList, action, text);
             }
             ClassManager.Instance.DisruptiveSituation = true;
         }

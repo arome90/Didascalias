@@ -25,11 +25,6 @@ namespace ClassRoomVR
             pauseMenuUI = GetComponent<Canvas>();
             showButtonAction.action.performed += ToggleMenu;
             thinkAction.action.performed += ThinkPause;
-            //HVRInputSystemController.Init();
-            //HVRInputSystemController.InputActions.LeftHand.Menu.performed += ToggleMenu;
-            //HVRInputSystemController.InputActions.RightHand.PrimaryButton.performed += ThinkPause;
-
-
         }
 
 
@@ -37,8 +32,6 @@ namespace ClassRoomVR
         {
             showButtonAction.action.performed -= ToggleMenu;
             thinkAction.action.performed -= ThinkPause;
-            //HVRInputSystemController.InputActions.LeftHand.Menu.performed -= ToggleMenu;
-
         }
 
         public void ToggleMenu(InputAction.CallbackContext context)

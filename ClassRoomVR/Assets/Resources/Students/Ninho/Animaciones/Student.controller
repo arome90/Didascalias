@@ -174,29 +174,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Label: 
---- !u!206 &-8353622340428874891
-BlendTree:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
-  m_Childs:
-  - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: c1794031044d7cc45bb29be1352cfc6d, type: 2}
-    m_Threshold: 0
-    m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
-    m_CycleOffset: 0
-    m_DirectBlendParameter: Aburrimiento
-    m_Mirror: 0
-  m_BlendParameter: Enfado
-  m_BlendParameterY: Aburrimiento
-  m_MinThreshold: 0
-  m_MaxThreshold: 0
-  m_UseAutomaticThresholds: 0
-  m_NormalizedBlendValues: 0
-  m_BlendType: 0
 --- !u!1101 &-8151440896001851825
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1545,7 +1522,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -8353622340428874891}
+  m_Motion: {fileID: 7400000, guid: c1794031044d7cc45bb29be1352cfc6d, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1617,8 +1594,9 @@ BlendTree:
     m_DirectBlendParameter: Aburrimiento
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: eb00249aab3a7624daec622bd91cdad5, type: 2}
-    m_Threshold: 0.75
+    m_Motion: {fileID: 1827226128182048838, guid: 232e0e74078d78b41af54557de07770d,
+      type: 3}
+    m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -1627,7 +1605,7 @@ BlendTree:
   m_BlendParameter: Aburrimiento
   m_BlendParameterY: Aburrimiento
   m_MinThreshold: 0
-  m_MaxThreshold: 0.75
+  m_MaxThreshold: 1
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0

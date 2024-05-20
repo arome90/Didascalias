@@ -51,7 +51,7 @@ namespace ClassRoomVR
                 // Instantiate a desk object and set its properties
                 var d = Instantiate(desk, position, Quaternion.identity, parentDeskTransform);
                 if (!isUStructure) d.transform.LookAt(parentDeskTransform);
-                d.onCollisionChanged.AddListener(CollisionWithOtherDesk);
+              //  d.onCollisionChanged.AddListener(CollisionWithOtherDesk);
 
                 // Add listeners to toggle events
                 toggle.onValueChanged.AddListener(delegate { ChangeDesk(toggle); });
@@ -60,60 +60,60 @@ namespace ClassRoomVR
         }
 
         // Method called when collision with other desk occurs
-        void CollisionWithOtherDesk()
-        {
-            foreach (Desk d in toggleToDeskMap.Values)
-            {
-                d.onCollisionChanged.RemoveListener(CollisionWithOtherDesk);
-            }
+        //void CollisionWithOtherDesk()
+        //{
+        //    foreach (Desk d in toggleToDeskMap.Values)
+        //    {
+        //        d.onCollisionChanged.RemoveListener(CollisionWithOtherDesk);
+        //    }
 
-            // Determine the action based on the last clicked option
-            switch (lastOptionClicked)
-            {
-                case 0:
-                    if (settings.Radius < radiusOpt.GetMax())
-                    {
-                        settings.Radius += 0.1f;
-                        Set();
-                        radiusOpt.SetValue(settings.Radius);
-                    }
-                    else if (!isUStructure && settings.Degrees <= 360f)
-                    {
-                        settings.Degrees += 10;
-                        Set();
-                        gradesOpt.SetValue(settings.Degrees);
-                    }
-                    break;
-                case 1:
-                    if (settings.NumDesks > settings.NumStudents)
-                    {
-                        settings.NumDesks -= 1;
-                        Set();
-                        numDesks.SetValue(settings.NumDesks);
-                    }
-                    else
-                    {
-                        settings.Radius += 0.1f;
-                        Set();
-                        radiusOpt.SetValue(settings.Radius);
-                    }
-                    break;
-                case 2:
-                    if (settings.NumDesks > settings.NumStudents)
-                    {
-                        settings.NumDesks -= 1;
-                        Set();
-                        numDesks.SetValue(settings.NumDesks);
-                    }
-                    else
-                    {
-                        settings.Degrees += 10f;
-                        Set();
-                        gradesOpt.SetValue(settings.Degrees);
-                    }
-                    break;
-            }
-        }
+        //    // Determine the action based on the last clicked option
+        //    switch (lastOptionClicked)
+        //    {
+        //        case 0:
+        //            if (settings.Radius < radiusOpt.GetMax())
+        //            {
+        //                settings.Radius += 0.1f;
+        //                Set();
+        //                radiusOpt.SetValue(settings.Radius);
+        //            }
+        //            else if (!isUStructure && settings.Degrees <= 360f)
+        //            {
+        //                settings.Degrees += 10;
+        //                Set();
+        //                gradesOpt.SetValue(settings.Degrees);
+        //            }
+        //            break;
+        //        case 1:
+        //            if (settings.NumDesks > settings.NumStudents)
+        //            {
+        //                settings.NumDesks -= 1;
+        //                Set();
+        //                numDesks.SetValue(settings.NumDesks);
+        //            }
+        //            else
+        //            {
+        //                settings.Radius += 0.1f;
+        //                Set();
+        //                radiusOpt.SetValue(settings.Radius);
+        //            }
+        //            break;
+        //        case 2:
+        //            if (settings.NumDesks > settings.NumStudents)
+        //            {
+        //                settings.NumDesks -= 1;
+        //                Set();
+        //                numDesks.SetValue(settings.NumDesks);
+        //            }
+        //            else
+        //            {
+        //                settings.Degrees += 10f;
+        //                Set();
+        //                gradesOpt.SetValue(settings.Degrees);
+        //            }
+        //            break;
+        //    }
+        //}
 
         // Method to handle toggle value change
         void ChangeDesk(Toggle toggle)
@@ -141,15 +141,14 @@ namespace ClassRoomVR
             {
                 numDesks.SetMax(12);
                 gradesOpt.gameObject.SetActive(false);
-                //radiusOpt.gameObject.SetActive(false);
                 settings.Degrees = 180f;
                 isUStructure = true;
             }
             else
             {
-                numDesks.SetMax(20);
+                numDesks.SetMax(15);
+               // numDesks.SetMax(22);
                 gradesOpt.gameObject.SetActive(true);
-                // radiusOpt.gameObject.SetActive(true);
                 settings.Degrees = 360f;
                 isUStructure = false;
             }
@@ -194,9 +193,29 @@ namespace ClassRoomVR
         {
             float anchoDisponible = aula.size.x - 2 * espacioEntreParedYSilla;
             float largoDisponible = aula.size.z - 2 * espacioEntreParedYSilla;
-            radioMaximo =(float) System.Math.Round( (double) Mathf.Min(anchoDisponible, largoDisponible) / 2f,1);
+            radioMaximo = (float)System.Math.Round((double)Mathf.Min(anchoDisponible, largoDisponible) / 2f, 1);
             Debug.Log(radioMaximo);
             radiusOpt.SetMax(radioMaximo);
+            BoxCollider boxCollider = desk.GetComponent<BoxCollider>();
+            Vector3 sillaDimensions = Vector3.Scale(boxCollider.size, desk.transform.lossyScale);
+
+            float anguloOcupacion = Mathf.Atan(sillaDimensions.x / (2 * radioMaximo)) * Mathf.Rad2Deg * 2;
+            Debug.Log(sillaDimensions.x);
+            int cantidadMesas = Mathf.FloorToInt(360f / anguloOcupacion);
+
+            Debug.Log("Cantidad de mesas que caben en el círculo: " + cantidadMesas);
+
+        }
+        private void Update()
+        {
+            BoxCollider boxCollider = desk.GetComponent<BoxCollider>();
+            Vector3 sillaDimensions = Vector3.Scale(boxCollider.size, desk.transform.lossyScale);
+
+            float anguloOcupacion = Mathf.Atan(sillaDimensions.x / (2 * radiusOpt.GetValue())) * Mathf.Rad2Deg * 2;
+            Debug.Log(sillaDimensions.x);
+            int cantidadMesas =Mathf.CeilToInt( 360f / anguloOcupacion);
+
+            Debug.Log("Cantidad de mesas que caben en el círculo: " + cantidadMesas);
         }
     }
 }

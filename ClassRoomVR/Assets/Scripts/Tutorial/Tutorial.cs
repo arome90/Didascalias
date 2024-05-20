@@ -11,6 +11,7 @@ using Utilities.WebRequestRest;
 using Meta.WitAi.TTS.Interfaces;
 using Meta.WitAi.TTS.Utilities;
 using static System.Net.Mime.MediaTypeNames;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class TutorialStep
@@ -38,6 +39,8 @@ public class Tutorial : MonoBehaviour
 
     [SerializeField] Transform player;
 
+   [SerializeField] Tuple<VisualController, VisualController> controllers;
+    
     private void Start()
     {
         tutorialToggles = new List<Toggle>();
@@ -205,6 +208,17 @@ public class Tutorial : MonoBehaviour
     }
     [SerializeField] private string _dateId = "[DATE]";
 
+
+
+    private void ComparePosition() 
+    {
+
+        if (controllers.Item1.ThumbStickVector().x>0 || controllers.Item2.ThumbStickVector().x>0)
+        {
+            Debug.Log("alante");
+        }
+
+    }
 }
 
 

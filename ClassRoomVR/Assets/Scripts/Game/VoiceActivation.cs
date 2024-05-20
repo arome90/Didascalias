@@ -109,14 +109,6 @@ namespace ClassRoomVR
                 volumeList.Add(db);              
             }
         }
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                appVoiceExperience.Activate();
-            }
-        }
-
 
         public void OnValidatePartialResponse(VoiceSession sessionData)
         {

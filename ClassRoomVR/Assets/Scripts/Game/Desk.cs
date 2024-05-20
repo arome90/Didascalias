@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Playables;
+using Utilities.Extensions;
 
 public class Desk : MonoBehaviour
 {
     private bool isOccupied; // Flag to indicate if the desk is occupied
-    [SerializeField] GenerateBackpack backpack;
     public bool IsOccupied { get => isOccupied; set => isOccupied = value; } // Property to access the occupancy status
 
     // Get the position of the student sitting at the desk
@@ -16,6 +17,8 @@ public class Desk : MonoBehaviour
     [HideInInspector] public UnityEngine.Events.UnityEvent onCollisionChanged; // Event invoked when collision with other desk occurs
     [SerializeField] Animation deskAnim;
     [SerializeField] Animation chairAnim;
+
+    [SerializeField] NavMeshObstacle chairObstacle;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Desk"))
@@ -52,5 +55,10 @@ public class Desk : MonoBehaviour
         }
     }
 
+    public void SetChair(bool active)
+    {
+        chairObstacle.SetActive(active);
+
+    }
 
 }

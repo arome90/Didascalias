@@ -81,7 +81,7 @@ Transform:
   m_GameObject: {fileID: 9033477228462175272}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -102,12 +102,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9116709a1fa3a4398e1e7fbb8f4ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backpack: {fileID: 0}
   onCollisionChanged:
     m_PersistentCalls:
       m_Calls: []
   deskAnim: {fileID: 8273878925503955545}
   chairAnim: {fileID: 4772243061603562689}
+  chairObstacle: {fileID: 8010168131387098838}
 --- !u!65 &1003913439399383275
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -123,12 +123,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.2660377, y: 1, z: 1.0969443}
-  m_Center: {x: 0.038160205, y: 0, z: 0.048472315}
+  m_Size: {x: 1.3035681, y: 0.78137594, z: 0.78686965}
+  m_Center: {x: 0.12228295, y: 0.37387326, z: -0.16591418}
 --- !u!54 &6654047565579459372
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -465,7 +465,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0184f662d89f96c4db7630d137c47f50,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1243,7 +1243,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0184f662d89f96c4db7630d137c47f50,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1292,7 +1292,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 53472de09d1190a4c92f02b878b234f0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.19
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 53472de09d1190a4c92f02b878b234f0,
         type: 3}
@@ -1363,6 +1363,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Mesa
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 53472de09d1190a4c92f02b878b234f0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2223639932434330405, guid: 53472de09d1190a4c92f02b878b234f0,
         type: 3}
@@ -1552,6 +1557,11 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -8060300611122380886, guid: 78c8217dd4eda0547ab2fdf6c7bee5ee,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 78c8217dd4eda0547ab2fdf6c7bee5ee,
         type: 3}
       propertyPath: m_Name
@@ -1565,6 +1575,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4772243061603562689}
+    - targetCorrespondingSourceObject: {fileID: -8653333622091080158, guid: 78c8217dd4eda0547ab2fdf6c7bee5ee,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8010168131387098838}
   m_SourcePrefab: {fileID: 100100000, guid: 78c8217dd4eda0547ab2fdf6c7bee5ee, type: 3}
 --- !u!1 &8532494028408496525 stripped
 GameObject:
@@ -1594,6 +1608,28 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8838573536552623324}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &9025711897293488894 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8653333622091080158, guid: 78c8217dd4eda0547ab2fdf6c7bee5ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8838573536552623324}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &8010168131387098838
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9025711897293488894}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.6, y: 0.05, z: 0.6}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0.67}
+  m_TimeToStationary: 0.5
 --- !u!1001 &9161252585351135862
 PrefabInstance:
   m_ObjectHideFlags: 0
