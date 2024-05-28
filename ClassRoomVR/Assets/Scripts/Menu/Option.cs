@@ -73,6 +73,12 @@ public class Option : MonoBehaviour
         optionValue.text = value.ToString("0.#");
     }
 
+    public void SetValueMin(float v) 
+    {
+        SetValue(v);
+        SetMin(v);
+    }
+
 
     public float GetMax() { return maxValue; }
     public float GetMin() { return minValue; }

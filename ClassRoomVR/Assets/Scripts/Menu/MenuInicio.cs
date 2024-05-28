@@ -8,7 +8,6 @@ namespace ClassRoomVR
     public class MenuInicio : MonoBehaviour
     {
         [SerializeField] private Button enter;
-        [SerializeField] private Transform desk;
         [SerializeField] private Button quitButton;
         [SerializeField] private GameObject nextScreen;
         [SerializeField] private Vector3 playerDestination;
@@ -21,8 +20,6 @@ namespace ClassRoomVR
             {
                 PlayButton();
                 GoNextScreen();
-                DeskManager.Instance.transform.position = desk.position;
-
             });
             quitButton.onClick.AddListener(QuitButton);
             // Remove in the future

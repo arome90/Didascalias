@@ -38,9 +38,9 @@ namespace ClassRoomVR
                 if (settings.StructureMode == StructureMode.Circular) 
                     DeskManager.Instance.CreateCircle(settings.NumStudents,settings.Radius,settings.Degrees);
                 else if (settings.StructureMode == StructureMode.U)
-                    DeskManager.Instance.CreateUShape(settings.NumStudents,settings.Radius);
+                    DeskManager.Instance.CreateCircle(settings.NumStudents,settings.Radius);
                 else
-                    DeskManager.Instance.CreateRegularLayout(settings.NumStudents,settings.Rows,settings.Columns,1.6f,1.6f);
+                    DeskManager.Instance.CreateRegularLayout(settings.NumStudents, settings.Rows, settings.Columns);
             }
 
             asientosOcupados = new bool[studentsPositions.childCount];

@@ -1,3 +1,5 @@
+using Meta.WitAi.TTS.Utilities;
+using OVR.OpenVR;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -8,6 +10,7 @@ using UnityEngine.AI;
 public class JawMove : MonoBehaviour
 {
     private AudioSource audioSource;
+    ResponseStudent response;
     [SerializeField] Transform jaw;
     [SerializeField] float SizeReduction = 500; // Scale factor to adjust the frequency's effect on the rotation
     [SerializeField] float smoothSpeed = 5f; // Base speed of the smoothing, used for minor adjustments
@@ -22,8 +25,9 @@ public class JawMove : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        response = GetComponent<ResponseStudent>();
         angles = jaw.localRotation.eulerAngles;
-        StartCoroutine(OnCompleteSpeach());
+        Debug.Log(angles);
     }
 
     // Update is called once per frame
@@ -43,29 +47,26 @@ public class JawMove : MonoBehaviour
         }
         float frequency = (maxIndex * AudioSettings.outputSampleRate / 2 / spectrum.Length) / SizeReduction;
         frequency = Mathf.Clamp(frequency, 0, 40); // Clamping frequency to desired range
-
         float valueDifference = Mathf.Abs(maxValue - lastMaxValue);
-
         float currentSmoothSpeed = valueDifference > sensitivity * lastMaxValue ? fastSmoothSpeed : smoothSpeed;
 
-        targetZRotation = Mathf.Lerp(targetZRotation, frequency, currentSmoothSpeed * timeUpdate);
+        targetZRotation = Mathf.Lerp(targetZRotation, frequency * 10, currentSmoothSpeed * timeUpdate);
         targetZRotation = Mathf.Clamp(targetZRotation, 0, 40); // Ensuring target rotation is also clamped
-                                                               // jaw.eulerAngles = new Vector3(jaw.eulerAngles.x, jaw.eulerAngles.y,25 + targetZRotation);
-        jaw.localRotation = Quaternion.Euler(angles.x, angles.y, angles.z + targetZRotation * 20);
+        Debug.Log(jaw.localRotation.eulerAngles);
+        jaw.localRotation = Quaternion.Euler(angles.x, angles.y, angles.z + targetZRotation);
         lastMaxValue = maxValue;
     }
 
     public IEnumerator OnCompleteSpeach()
     {
-        Debug.Log(jaw.rotation.eulerAngles);
-        while (audioSource.isPlaying)
+       // Debug.Log(jaw.rotation.eulerAngles);
+        while (audioSource.isPlaying || response.Speak )
         {
             UpdateJaw();
             yield return new WaitForSeconds(timeUpdate);
         }
         jaw.localRotation = Quaternion.Euler(angles.x, angles.y, angles.z);
-        Debug.Log(jaw.rotation.eulerAngles);
-
+        Debug.Log(jaw.localRotation.eulerAngles);
 
     }
 }

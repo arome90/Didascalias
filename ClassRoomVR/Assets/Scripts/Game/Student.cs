@@ -42,6 +42,7 @@ namespace ClassRoomVR
         public Gender GetGender() => gender;
         public bool IsProblematicStudent() => problematic;
         public AudioSource GetAudioSource() => audioSource;
+        public TextMeshProUGUI GetNameText() => studentNameText;
         #endregion
         private void Awake()
         {
@@ -243,7 +244,7 @@ namespace ClassRoomVR
             animator.Play(stateName);
             audioSource.clip = clip;
             audioSource.Play();
-            StartCoroutine(jaw.OnCompleteSpeach());
+            MoveJaw();
         }
 
         // Method to set the student as not problematic
@@ -253,6 +254,12 @@ namespace ClassRoomVR
             problematic = false;
             if (state == State.Standing)
                 SitBack();
+        }
+
+        public void MoveJaw() 
+        {
+            StartCoroutine(jaw.OnCompleteSpeach());
+
         }
 
         // Method to check if the student is in the player's field of vision
@@ -376,6 +383,8 @@ namespace ClassRoomVR
         //VoiceGenerator voiceGenerator;
         public void GenerateText(string text)
         {
+            //target.position = player.position;
+            studentNameText.color = Color.red;
             response.TTS(text);
         }
       

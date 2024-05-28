@@ -56,7 +56,7 @@ namespace ClassRoomVR
 
 
         }
-
+        //cambiar TODO
         private void SetMaxValue() 
         {
             switch (settings.StructureMode)
@@ -65,10 +65,10 @@ namespace ClassRoomVR
                     maxStudents = 30;
                     break;
                 case StructureMode.Circular:
-                    maxStudents = 20;
+                    maxStudents = 15;
                     break;
                 case StructureMode.U:
-                    maxStudents = 12;
+                    maxStudents = 8;
                     break;
             }
         }

@@ -5,6 +5,7 @@ using System.Globalization;
 using System;
 using System.Linq;
 using System.Collections;
+using MathNet.Numerics.Distributions;
 
 namespace ClassRoomVR
 {
@@ -26,10 +27,10 @@ namespace ClassRoomVR
         public Transform BackCorner => backCorner;
         public Transform Door => door;
        // Temporal
-        private void Start()
-        {
-            Invoke(nameof(DoSomethingDisruptives), 2f);
-        }
+        //private void Start()
+        //{
+        //    Invoke(nameof(DoSomethingDisruptives), 2f);
+        //}
         void DoSomethingDisruptives() 
         {
             DoSomethingDisruptive(2);
@@ -160,6 +161,7 @@ namespace ClassRoomVR
         public void HandleCall(Student student)
         {
             student.PayAttention();
+            Debug.Log(student.name);
         }
         // Determine a position based on a string description
         public Transform Place(string place)
@@ -243,8 +245,10 @@ namespace ClassRoomVR
         }
         public void PlaySentence(string text)
         {
-            students.ElementAt(0).Value.GenerateText(text);
+            int randomStudentIndex = UnityEngine.Random.Range(0, students.Count);
+            students.ElementAt(randomStudentIndex).Value.GenerateText(text);
         }
+
 
         private void Update()
         {
@@ -262,14 +266,3 @@ namespace ClassRoomVR
         
     }
 }
-        // Get a list of student names that are in the camera's field of vision
-        //public List<string> StudentsOnVision()
-        //{
-        //    Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-        //    return students.Values.Where(student =>
-        //    {
-        //        Bounds bounds = student.GetCollider().bounds;
-        //        bounds.center += new Vector3(0, 1f, 0);
-        //        return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
-        //    }).Select(student => student.GetStudentName()).ToList();
-        //}

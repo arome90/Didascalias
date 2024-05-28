@@ -85,6 +85,15 @@ public class WsClient : GenericSingleton<WsClient>
     {
         connected = false;
         idDevice = SystemInfo.deviceUniqueIdentifier;
+        StartConnection();
+        Invoke(nameof(Info), 2f);
+    }
+
+    void Info() 
+    {
+        ServerMessage.SendInfoInitial();
+        ClassManager.Instance.GetStudentsController().PlaySentence("Hola buenas tardes chicos ");
+
     }
     public void StartConnection()
     {
@@ -173,11 +182,11 @@ public class WsClient : GenericSingleton<WsClient>
             if (Convert.ToInt32(recMes.id)>=0)
             {
                
-                ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(recMes.id));
+                ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(Convert.ToInt32(recMes.id));
             }
             else
             {
-                ClassRoomVR.ClassManager.Instance.GetStudentsController().PlaySentence(recMes.data.ToString());
+                ClassManager.Instance.GetStudentsController().PlaySentence(recMes.data.ToString());
             }
         }
     }

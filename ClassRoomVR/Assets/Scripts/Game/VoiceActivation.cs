@@ -1,30 +1,22 @@
 using UnityEngine;
-using TMPro;
-using Meta.WitAi;
-using Meta.WitAi.Data;
-using UnityEngine.UI;
 using System.Collections.Generic;
+using Oculus.Voice;
 using MathNet.Numerics.Statistics;
-using UnityEngine.InputSystem;
-using MathNet.Numerics.Distributions;
+using Meta.WitAi;
 using Meta.WitAi.Composer.Integrations;
-using Unity.VisualScripting;
-using System.Runtime.Remoting;
 
 namespace ClassRoomVR
 {
     public class VoiceActivation : MonoBehaviour
     {
-        [SerializeField] Oculus.Voice.AppVoiceExperience appVoiceExperience;
+        [SerializeField] AppVoiceExperience appVoiceExperience;
         
          StudentsController st;
-
-
+        string text;
         private void Start()
         {
             appVoiceExperience.Activate();
             st = ClassManager.Instance.GetStudentsController();
-            //Invoke(nameof(Act), 2f);
         }
 
         public void Activate()
@@ -34,13 +26,10 @@ namespace ClassRoomVR
         private void Awake()
         {
             GameManager.Instance.SetVoiceExperience(this);
-            //INVESTIGAR TELEMETRIA
-            //appVoiceExperience.TelemetryEvents.OnAudioTrackerFinished.AddListener((a, k)=>
-             
             studentSelected = null;
             appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
-                // Debug.Log("¡activarCom");
+                 Debug.Log("¡activarCom");
                 appVoiceExperience.Activate();
             });
 
@@ -55,7 +44,7 @@ namespace ClassRoomVR
 
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
-                // Debug.Log("¡update");
+                Debug.Log("¡update");
                 UpdateClass(response);
             });
 
@@ -65,6 +54,14 @@ namespace ClassRoomVR
 
             //    OnValidatePartialResponse(response);
             //});
+                appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener((strin) =>
+                {
+                    text = strin;
+
+                });
+             
+                
+           
 
             appVoiceExperience.VoiceEvents.OnMicAudioLevelChanged.AddListener((value) =>
             {
@@ -110,7 +107,7 @@ namespace ClassRoomVR
             }
         }
 
-        public void OnValidatePartialResponse(VoiceSession sessionData)
+        public void OnValidatePartialResponse(Meta.WitAi.Data.VoiceSession sessionData)
         {
             string[] names = sessionData.response.GetAllEntityValues("wit$contact:student");
             if (names != null && names.Length > 0)
@@ -136,7 +133,7 @@ namespace ClassRoomVR
         }
 
         Student studentSelected;
-        public void OnValidateStudent(VoiceSession sessionData, string student)
+        public void OnValidateStudent(Meta.WitAi.Data.VoiceSession sessionData, string student)
         {
             Student s;
             if (TryGetStudent(student,out s)) 
@@ -166,7 +163,8 @@ namespace ClassRoomVR
         //  public void UpdateClass(VoiceSession sessionData) 
         public void UpdateClass(Meta.WitAi.Json.WitResponseNode response)
         {
-            if (response.GetResponseText().Length > 0)
+            
+            if (text.Length > 0)
             {
                 SetLevelAudio();
                 // var response = sessionData.response;

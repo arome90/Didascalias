@@ -63,8 +63,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3074862754866568168}
   - component: {fileID: 5472194513537842824}
-  - component: {fileID: 1003913439399383275}
-  - component: {fileID: 6654047565579459372}
   m_Layer: 0
   m_Name: Desk
   m_TagString: Desk
@@ -108,54 +106,6 @@ MonoBehaviour:
   deskAnim: {fileID: 8273878925503955545}
   chairAnim: {fileID: 4772243061603562689}
   chairObstacle: {fileID: 8010168131387098838}
---- !u!65 &1003913439399383275
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9033477228462175272}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.3035681, y: 0.78137594, z: 0.78686965}
-  m_Center: {x: 0.12228295, y: 0.37387326, z: -0.16591418}
---- !u!54 &6654047565579459372
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9033477228462175272}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1001 &1704289643876665976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1438,6 +1388,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1801874179036223563}
+    - targetCorrespondingSourceObject: {fileID: 8501349787078090907, guid: 53472de09d1190a4c92f02b878b234f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1067295196355669662}
   m_SourcePrefab: {fileID: 100100000, guid: 53472de09d1190a4c92f02b878b234f0, type: 3}
 --- !u!1 &1869997844941754855 stripped
 GameObject:
@@ -1461,6 +1415,27 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: -0.19, y: 0, z: 0.38}
   m_TimeToStationary: 0.5
+--- !u!65 &1067295196355669662
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869997844941754855}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.3650648, y: 1.0528662, z: 0.7921182}
+  m_Center: {x: -0.073342025, y: 0.00014972687, z: 0.39181787}
 --- !u!4 &2671094884893765929 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5267222626059321429, guid: 53472de09d1190a4c92f02b878b234f0,
