@@ -6,6 +6,7 @@ using UnityEngine.AI;
 using System.Linq;
 using TMPro;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
@@ -15,7 +16,7 @@ namespace ClassRoomVR
         private FieldOfVision vision;
         public FieldOfVision distracted;
         private FieldOfVision[] distractedArray;
-        private State state;
+        public State state;
 
         // Serialized fields for customization in the Inspector
         [SerializeField] private Gender gender;
@@ -43,6 +44,7 @@ namespace ClassRoomVR
         public bool IsProblematicStudent() => problematic;
         public AudioSource GetAudioSource() => audioSource;
         public TextMeshProUGUI GetNameText() => studentNameText;
+        public NavMeshAgent GetNavMeshAgent() => navMeshAgent;
         #endregion
         private void Awake()
         {
@@ -115,58 +117,9 @@ namespace ClassRoomVR
         {
             if (GameManager.Instance.IsPause) return;
 
-            //HandleInput();
             UpdateTargetPosition();
             if (attentionText != null) attentionText.text = behavior.AttentionLevel.ToString("0.##");
         }
-
-        // Methods to handle user input and trigger actions
-        private void HandleInput()
-        {
-            for (int i = 0; i <= 8; i++)
-            {
-                KeyCode keyCode = KeyCode.Keypad0 + i;
-                if (Input.GetKeyDown(keyCode))
-                {
-                    animator.SetInteger("Accion", i);
-                    if (i == 1)
-                    {
-                        desk.Balancearse();
-                    }
-                }
-            }
-
-            // Check specific keys for different actions
-            KeyCode[] actionKeys = { KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha6, KeyCode.Alpha5 };
-
-            foreach (KeyCode key in actionKeys)
-            {
-                if (Input.GetKeyDown(key))
-                {
-                    HandleActionInput(key);
-                }
-            }
-        }
-
-        private void HandleActionInput(KeyCode key)
-        {
-            switch (key)
-            {
-                case KeyCode.Alpha7:
-                    PayAttention();
-                    break;
-                case KeyCode.Alpha8:
-                    GetDistracted();
-                    break;
-                case KeyCode.Alpha6:
-                    StartCoroutine(Nod());
-                    break;
-                case KeyCode.Alpha5:
-                    StartCoroutine(ShakeHead());
-                    break;
-            }
-        }
-
         // Coroutine methods for nodding and shaking head animations
         private float smoothTime = 0.15f;
         private float maxSpeed = 2f;
@@ -187,7 +140,7 @@ namespace ClassRoomVR
 
         }
 
-        IEnumerator Nod()
+       public  IEnumerator Nod()
         {
             for (int i = 0; i < 2; i++)
             {
@@ -200,8 +153,9 @@ namespace ClassRoomVR
             }
         }
 
-        IEnumerator ShakeHead()
+        public IEnumerator ShakeHead()
         {
+
             for (int i = 0; i < 2; i++)
             {
                 SetDirection(FieldOfVision.Right);
@@ -211,6 +165,7 @@ namespace ClassRoomVR
                 while (Vector2.Distance(target.position, actualTargetPosition) > 0.2f)
                     yield return null;
             }
+
         }
 
         // Method to set the direction of student's attention
@@ -250,8 +205,8 @@ namespace ClassRoomVR
         // Method to set the student as not problematic
         public void SetNotProblematicStudent()
         {
-            studentNameText.color = Color.white;
             problematic = false;
+            studentNameText.color = Color.white;
             if (state == State.Standing)
                 SitBack();
         }
@@ -277,7 +232,7 @@ namespace ClassRoomVR
         Material material;
         Shader shader;
         // Coroutine to complete the move to a destination
-        IEnumerator OnCompleteMove(Vector3 destination, float breakDistance)
+        IEnumerator OnCompleteMove(Vector3 destination, float breakDistance, System.Action onComplete = null)
         {
             studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
@@ -289,6 +244,7 @@ namespace ClassRoomVR
             rig.layers[0].active = true;
             navMeshAgent.enabled = false;
             animator.Play("Standing");
+            onComplete?.Invoke();
         }
 
         bool Distance(Vector3 tranform, Vector3 dest, float breakDistance)
@@ -302,7 +258,8 @@ namespace ClassRoomVR
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
-            while (Distance(transform.position, desk.GetPositionStudent(), 0.05f))
+            
+            while (Distance(transform.position, desk.GetPositionStudent(), 0.07f))
             {
                 yield return null;
             }
@@ -310,7 +267,7 @@ namespace ClassRoomVR
             transform.rotation = desk.transform.rotation;
             animator.SetBool("onFoot", false);
             desk.PlayAnimacionMesa(Animaciones.SitRelajado);
-            studentNameText.transform.localPosition = new Vector3(0, 1.3f, 0);
+            studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
             Transform pos = desk.transform.GetChild(0);
             transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
             transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
@@ -330,7 +287,7 @@ namespace ClassRoomVR
         }
 
         // Method to move the student to a specific destination
-        public void MoveTo(Vector3 destination, float breakDistance)
+        public void MoveTo(Vector3 destination, float breakDistance, System.Action onComplete = null)
         {
             navMeshAgent.enabled = true;
             rig.layers[0].active = false;
@@ -345,20 +302,24 @@ namespace ClassRoomVR
             {
                 animator.Play("Walking");
             }
-            StartCoroutine(OnCompleteMove(destination, breakDistance));
+            StartCoroutine(OnCompleteMove(destination, breakDistance, onComplete));
         }
 
         // Method to change the student's desk
-        public void ChangeDesk(Desk d)
+        public IEnumerator ChangeDesk(Desk d)
         {
-            desk = d;
             if (state == State.Standing)
             {
+                yield return new WaitForSeconds(2f);
+                desk = d;
                 SitBack();
             }
             else
             {
+                desk.SetChair(false);
                 animator.SetBool("onFoot", true);
+                desk.PlayAnimacionMesa(Animaciones.Empujar);
+                desk = d;
                 StartCoroutine(OnCompleteStandChange());
             }
         }
@@ -383,8 +344,6 @@ namespace ClassRoomVR
         //VoiceGenerator voiceGenerator;
         public void GenerateText(string text)
         {
-            //target.position = player.position;
-            studentNameText.color = Color.red;
             response.TTS(text);
         }
       
@@ -420,6 +379,7 @@ namespace ClassRoomVR
                 yield return null;
             }
         }
+
         //float targetBlendValue = Random.Range(0, 2);
         //animator.SetFloat("Aburrimiento", targetBlendValue);
     }

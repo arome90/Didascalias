@@ -4,37 +4,46 @@ using Oculus.Voice;
 using MathNet.Numerics.Statistics;
 using Meta.WitAi;
 using Meta.WitAi.Composer.Integrations;
+using MathNet.Numerics.Distributions;
+using Utilities.Extensions;
+using Meta.WitAi.Composer;
 
 namespace ClassRoomVR
 {
     public class VoiceActivation : MonoBehaviour
     {
         [SerializeField] AppVoiceExperience appVoiceExperience;
-        
-         StudentsController st;
+        StudentsController st;
         string text;
-        private void Start()
+        [SerializeField] TMPro.TextMeshProUGUI textMeshPro;
+        List<Student> studentsSelected;
+
+        void Start()
         {
-            appVoiceExperience.Activate();
             st = ClassManager.Instance.GetStudentsController();
         }
 
+        public void ActiveText(bool active)
+        {
+            if (textMeshPro != null) textMeshPro.transform.parent.SetActive(active);
+        }
         public void Activate()
         {
-            if(appVoiceExperience!=null) appVoiceExperience.Activate();
+            if (appVoiceExperience != null) appVoiceExperience.Activate();
         }
         private void Awake()
         {
+            text = string.Empty;
             GameManager.Instance.SetVoiceExperience(this);
-            studentSelected = null;
+            studentsSelected = new List<Student>();
             appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
-                 Debug.Log("¡activarCom");
                 appVoiceExperience.Activate();
             });
 
-            appVoiceExperience.VoiceEvents.OnError.AddListener((a,b) => 
+            appVoiceExperience.VoiceEvents.OnError.AddListener((a, b) =>
             {
+                appVoiceExperience.Activate();
                 if (Application.internetReachability == NetworkReachability.NotReachable)
                 {
                     Debug.Log("nO HAY INTERNET");
@@ -44,24 +53,27 @@ namespace ClassRoomVR
 
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
-                Debug.Log("¡update");
                 UpdateClass(response);
             });
 
-            //appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
+            appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
+            {
+                OnValidatePartialResponse(response);
+            });
+            //appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             //{
-            //    Debug.Log("¡validate");
-
-            //    OnValidatePartialResponse(response);
+            //    OnValidateResponse(response);
             //});
-                appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener((strin) =>
+            appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener((strin) =>
+            {
+                text = strin;
+                Debug.Log(text);
+                if (textMeshPro)
                 {
-                    text = strin;
-
-                });
-             
-                
-           
+                    textMeshPro.text = strin;
+                    Debug.Log("texto");
+                }
+            });
 
             appVoiceExperience.VoiceEvents.OnMicAudioLevelChanged.AddListener((value) =>
             {
@@ -72,14 +84,15 @@ namespace ClassRoomVR
             {
                 volumeList.Clear();
             });
-        
+
             volumeList = new List<float>();
 
         }
 
 
-        private void SetLevelAudio() 
+        private void SetLevelAudio()
         {
+
             double media = volumeList.Mean();
             //  Debug.Log(media);
             if (media > -30)
@@ -101,62 +114,44 @@ namespace ClassRoomVR
             float db = 20 * Mathf.Log10(a);
             if (db > -65)
             {
-               // Debug.Log(db);
-               // Debug.Log("Nota" + Unity.Mathematics.math.remap(-60, -20, 0f, 1f, db));
-                volumeList.Add(db);              
+                // Debug.Log(db);
+                // Debug.Log("Nota" + Unity.Mathematics.math.remap(-60, -20, 0f, 1f, db));
+                volumeList.Add(db);
             }
         }
 
         public void OnValidatePartialResponse(Meta.WitAi.Data.VoiceSession sessionData)
         {
             string[] names = sessionData.response.GetAllEntityValues("wit$contact:student");
-            if (names != null && names.Length > 0)
-            {
-                OnValidateStudent(sessionData, names[0]);
-            }
-        }
 
-
-        //temporal
-        public void OnValidateResponse(Meta.WitAi.Json.WitResponseNode response)
-        {
-            string[] names = response.GetAllEntityValues("wit$contact:student");
             if (names != null && names.Length > 0)
             {
                 Student s;
-                if (TryGetStudent(names[0], out s))
+                for (int i = 0; i < names.Length; i++)
                 {
-                    studentSelected = s;
-                    st.HandleCall(s);
+                    if (TryGetStudent(names[i], out s))
+                    {
+                        if (i == 0)
+                        {
+                            studentsSelected.Clear();
+                        }
+                        studentsSelected.Add(s);
+                        st.HandleCall(s);
+                    }
                 }
             }
         }
-
-        Student studentSelected;
-        public void OnValidateStudent(Meta.WitAi.Data.VoiceSession sessionData, string student)
-        {
-            Student s;
-            if (TryGetStudent(student,out s)) 
-            {
-                studentSelected = s;
-                st.HandleCall(s);
-                sessionData.validResponse = true;
-            }
-        }
-
-     
-
         private bool TryGetStudent(string studentName, out Student s)
         {
             // Checkea student name
-            if (ClassManager.Instance.GetStudentsController().TryGetStudent(studentName,out s))
+            if (ClassManager.Instance.GetStudentsController().TryGetStudent(studentName, out s))
             {
                 return true;
             }
             // No existe
             return false;
         }
-
+    
 
         //Gestion de las ordenes del profesor
         //TO DO : CAMBIAR PARA QUE SEA GENERICO
@@ -171,24 +166,28 @@ namespace ClassRoomVR
                 string intentName = response.GetIntentName();
                 //  var alumnos = response.GetAllEntityValues("wit$contact:student");
                 var insulto = response.GetFirstEntityValue("Insultos:Insultos");
-                OnValidateResponse(response);
 
                 switch (intentName)
                 {
                     case "Sentarse":
-                        st.HandleSit(studentSelected);
+                        st.HandleSit(studentsSelected);
                         break;
-                    case "CambiarSitio":
-                        st.HandleMove(studentSelected, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
+                    case "MoverAlumno":
+                        st.HandleMove(studentsSelected, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
+                        break;
+                    case "CambiarAlumno":
+                        st.HandleChange(studentsSelected);
+                        st.Resolutions = Actions.Separados | Actions.Levantarse;
                         break;
                     case "Postponer":
                         st.HandlePostpone();
                         break;
                     case "Expulsion":
-                        st.HandleExpel(studentSelected);
+                        st.HandleExpel(studentsSelected);
+                        st.Resolutions = Actions.Insultar;
                         break;
                     case "Saludos":
-                        st.PlaySentence("Buenas profesor");
+                        st.PlayAllSentence("Buenos días profesor");
                         break;
                     default:
                         intentName = "No hay intencion";
@@ -199,33 +198,11 @@ namespace ClassRoomVR
 
                 if (insulto != "")
                 {
-                    st.HandleDisrespect();
+                    st.SetMode(TalkMode.Disrespect);
                 }
 
             }
         }
-
-        //[MatchIntent("Move")]
-        //public void OnHandleMoveIntentWithConduit(Meta.WitAi.Json.WitResponseNode response) 
-        //{
-        //    Debug.Log("hola");
-        //}
-        // TODO:Investigar acerca de conduit
-        //[MatchIntent("change_color")]
-        //public void OnHandleColorIntentWithConduit(Color color, Shape shape)
-        //{
-        //    Debug.Log($"OnHandleColorIntent was triggered via Conduit with color {color} {color.ToString()} and shape {shape} {shape.ToString()}");
-
-        //    var shapeTransform = transform.Find(shape.ToString());
-        //    if (shapeTransform)
-        //    {
-        //        if (ColorUtility.TryParseHtmlString(color.ToString(), out var unityColor))
-        //        {
-        //            SetColor(shapeTransform, unityColor);
-        //        }
-        //    }
-        //}
-
 
     }
 

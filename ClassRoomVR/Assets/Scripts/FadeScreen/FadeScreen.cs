@@ -30,12 +30,13 @@ public class FadeScreen : MonoBehaviour
         Fade(0, 1);
     }
 
-    public void Fade(float alphaIn, float alphaOut)
+    public void Fade(float alphaIn, float alphaOut, System.Action onComplete = null)
     {
-        StartCoroutine(FadeRoutine(alphaIn, alphaOut));
+        StartCoroutine(FadeRoutine(alphaIn, alphaOut, onComplete));
+       
     }
 
-    public IEnumerator FadeRoutine(float alphaIn, float alphaOut)
+    public IEnumerator FadeRoutine(float alphaIn, float alphaOut, System.Action onComplete = null)
     {
         rend.enabled = true;
 
@@ -54,6 +55,7 @@ public class FadeScreen : MonoBehaviour
         Color newColor2 = fadeColor;
         newColor2.a = alphaOut;
         rend.material.SetColor(colorPropertyName, newColor2);
+        onComplete?.Invoke();
 
         if (alphaOut == 0)
             rend.enabled = false;

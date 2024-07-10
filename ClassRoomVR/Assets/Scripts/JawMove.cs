@@ -27,7 +27,6 @@ public class JawMove : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         response = GetComponent<ResponseStudent>();
         angles = jaw.localRotation.eulerAngles;
-        Debug.Log(angles);
     }
 
     // Update is called once per frame
@@ -52,7 +51,6 @@ public class JawMove : MonoBehaviour
 
         targetZRotation = Mathf.Lerp(targetZRotation, frequency * 10, currentSmoothSpeed * timeUpdate);
         targetZRotation = Mathf.Clamp(targetZRotation, 0, 40); // Ensuring target rotation is also clamped
-        Debug.Log(jaw.localRotation.eulerAngles);
         jaw.localRotation = Quaternion.Euler(angles.x, angles.y, angles.z + targetZRotation);
         lastMaxValue = maxValue;
     }
@@ -66,7 +64,6 @@ public class JawMove : MonoBehaviour
             yield return new WaitForSeconds(timeUpdate);
         }
         jaw.localRotation = Quaternion.Euler(angles.x, angles.y, angles.z);
-        Debug.Log(jaw.localRotation.eulerAngles);
 
     }
 }

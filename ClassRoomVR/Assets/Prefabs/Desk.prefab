@@ -52,12 +52,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9116709a1fa3a4398e1e7fbb8f4ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backpack: {fileID: 8816176724912858276}
   onCollisionChanged:
     m_PersistentCalls:
       m_Calls: []
   deskAnim: {fileID: 0}
   chairAnim: {fileID: 0}
+  chairObstacle: {fileID: 0}
 --- !u!54 &-3678122983538488442
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -102,7 +102,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.6593038, y: 0.57097614, z: 0.6535548}
   m_Center: {x: -0.02677941, y: 0.34134156, z: 0.1208237}
@@ -1334,15 +1334,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df28c4f93ad0dcb47a8d1d6b8d9eeabc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backpackPosition:
-  - position: {x: -0.259, y: 0.192, z: 0.217}
-    rotation: {x: 340.59998, y: 270, z: 0}
-  - position: {x: -0.022, y: 0.54, z: -0.215}
-    rotation: {x: 350, y: 180, z: 0}
-  - position: {x: 0.2, y: 0.192, z: 0.217}
-    rotation: {x: 333.88, y: 90, z: 0}
-  - position: {x: -0.041, y: 0.1, z: -0.024}
-    rotation: {x: 270, y: 90, z: 0}
 --- !u!1001 &2854384675352647411
 PrefabInstance:
   m_ObjectHideFlags: 0

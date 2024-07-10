@@ -13,7 +13,6 @@ namespace ClassRoomVR
         private float attentionLevelAux = 50.0f; // a>50 attentive a<50 distracted
         public float AttentionLevel => attentionLevel;
         public float resta;
-        [SerializeField] private bool disruptiveBehavior;
         [SerializeField] private float decisionTime = 2.5f;
         public float DecisionTime => decisionTime;
 
@@ -72,10 +71,7 @@ namespace ClassRoomVR
             return  Unity.Mathematics.math.remap(1.5f, 12f, 0f, 1f, d);
         }
 
-        public void SetDisruptive(bool value)
-        {
-            disruptiveBehavior = value;
-        }
+       
 
         private void MakeDecision()
         {

@@ -10,7 +10,7 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
-        public bool IsPause { get; set; }
+        public bool IsPause;
 
         private DataSystem savedData;
         private ScenePackage chosenPackage;
@@ -88,12 +88,21 @@ namespace ClassRoomVR
 
         public ScenePackage GetChosenPackage() => chosenPackage;
         public ClassInfo GetCurrentClassInfo() => currentClassInfo;
+        public VoiceActivation GetVoiceActivation() => voice;
         public bool IsUsingVRHardware() => isUsingVRHardware;
 
         public void LoadMainMenu()
         {
             //SceneManager.LoadScene("Menu");
             SceneTransitionManager.singleton.GoToSceneAsync(0);
+
+        }
+
+        public void LoadTutorial()
+        {
+            //SceneManager.LoadScene("Menu");
+            currentSettings = availableSettings[availableSettings.Length - 1];
+            SceneTransitionManager.singleton.GoToSceneAsync(2);
 
         }
 
@@ -167,7 +176,7 @@ namespace ClassRoomVR
         public bool GetSaveAudio() => saveAudio;
         private void Update()
         {
-            if (IsPause && Application.internetReachability != NetworkReachability.NotReachable)
+            if (IsPause && Application.internetReachability != NetworkReachability.NotReachable && loadingBar.GetComponent<Canvas>().enabled)
             {
 
                 Debug.Log("vuelve la conexion");
@@ -192,24 +201,18 @@ namespace ClassRoomVR
             {
                 IsPause = true;
              
-                if (lostConnection)
-                {                    
-                    if (loadingBar != null)
-                    {
-                        loadingBar.GetComponent<Canvas>().enabled = true;
-
-                    }
-
+                if (lostConnection && loadingBar)
+                {
+                    loadingBar.GetComponent<Canvas>().enabled = true;
                 }
                 //Time.timeScale = 0f;
-                AudioListener.pause = true;
+               // AudioListener.pause = true;
             }
         }
       
         void WaitConnection()
         {
-            Debug.Log("que pasa");
-            if (Application.internetReachability != NetworkReachability.NotReachable)
+            if (loadingBar.GetComponent<Canvas>().enabled && Application.internetReachability != NetworkReachability.NotReachable)
             {
                 Debug.Log("vuelve la coneccion");
                 voice.Activate();
@@ -245,8 +248,8 @@ namespace ClassRoomVR
 
         public void Continue()
         {
-            AudioListener.pause = false;
-          //  Time.timeScale = 1f;
+            //AudioListener.pause = false;
+            //Time.timeScale = 1f;
             IsPause = false;
         }
 

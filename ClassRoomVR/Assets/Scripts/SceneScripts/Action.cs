@@ -1,4 +1,5 @@
 ﻿using BehaviorDesigner.Runtime;
+using MathNet.Numerics.Distributions;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,7 +15,7 @@ namespace ClassRoomVR
         GameObject player;
         BehaviorTree bh;
         List<Student> problematics;
-        DisruptiveAction a;
+        DisruptiveAction action;
         TextMeshProUGUI text;
         private void Start()
         {
@@ -26,16 +27,19 @@ namespace ClassRoomVR
         {
             this.player= player;
             problematics = st;
-            a = dis;
-            if (a.laughter)
+            action = dis;
+            if (action.laughter)
             {
                 Invoke(nameof(Laughter), 2.0f);
             }
             bh = GetComponent<BehaviorTree>();
             InputLogger.Instance.NewAction();
             bh.EnableBehavior();
-            text = t;
-            text.text = "-1";
+            if (t != null)
+            {
+                text = t;
+                text.text = "-1";
+            }
 
         }
         /// <summary>
@@ -44,7 +48,7 @@ namespace ClassRoomVR
         /// </summary>
         public void Ignore()
         {
-            Invoke("IgnoreTime", a.reactionTime);
+            Invoke("IgnoreTime", action.reactionTime);
             foreach (Student s in problematics)
             {
                 StartCoroutine(IgnoreStudent(s));
@@ -62,65 +66,42 @@ namespace ClassRoomVR
                 Laughter();
             }
         }
-
         public IEnumerator IgnoreStudent(Student s)
         {
-            float maxWaitTime = 10.0f; // Maximum wait time for optimization
+            float maxOutOfVisionTime = 20.0f; // Tiempo máximo que el estudiante debe estar fuera de visión
+            float outOfVisionTimer = 0f; // Temporizador para el tiempo fuera de visión
 
-            float startTime = Time.realtimeSinceStartup;
-            while (s.IsStudentInFieldOfVision())
+            while ((int)bh.GetVariable("Path").GetValue() < 0)
             {
+                // Esperar al siguiente frame
                 yield return null;
 
-                if (Time.realtimeSinceStartup - startTime > maxWaitTime)
+                // Comprobar si el estudiante está en el campo de visión
+                if (s.IsStudentInFieldOfVision())
                 {
-                    // Break the loop if the maximum wait time is exceeded
-                    break;
+                    // Si el estudiante está en el campo de visión, reiniciar el temporizador
+                    outOfVisionTimer = 0f;
                 }
-            }
-            yield return new WaitForSecondsRealtime(4);
-
-            if (!s.IsStudentInFieldOfVision())
-            {
-                bh.GetVariable("Path").SetValue(3);
-                if (a.classLaughter != null)
+                else
                 {
-                    Laughter();
+                    // Si el estudiante no está en el campo de visión, incrementar el temporizador
+                    outOfVisionTimer += Time.deltaTime;
+                    // Comprobar si el estudiante ha estado fuera de visión durante el tiempo requerido
+                    if (outOfVisionTimer >= maxOutOfVisionTime)
+                    {
+                        // Seleccionar el camino
+                        bh.GetVariable("Path").SetValue(3);
+                        if (action.classLaughter != null)
+                        {
+                            Laughter();
+                        }
+                        // Salir de la corrutina
+                        yield break;
+                    }
                 }
-            }
-            else if ((int)bh.GetVariable("Path").GetValue() < 0)
-            {
-                StartCoroutine(IgnoreStudent(s));
             }
         }
 
-
-
-        //public IEnumerator IgnoreStudent(Student s)
-        //{
-        //    yield return new WaitWhile(() => s.IsStudentInFieldOfVision());
-        //    yield return new WaitForSecondsRealtime(3);
-        //    if (!s.IsStudentInFieldOfVision())
-        //    {
-        //        bh.GetVariable("Path").SetValue(3);
-        //        if (a.classLaughter != null)
-        //        {
-        //            Laughter();
-        //        }
-        //    }
-        //    else if ((int)bh.GetVariable("Path").GetValue() < 0)
-        //    {
-        //        StartCoroutine(IgnoreStudent(s));
-        //    }
-        //}
-
-
-        //private void OnEnable()
-        //{
-        //    bh = GetComponent<BehaviorTree>();
-        //    bh.EnableBehavior();
-        //    player.GetComponent<AudioSource>().Stop();
-        //}
 
         /// <summary>
         /// Metodo para controlar el camino . Acercarse y hablar bien 
@@ -129,9 +110,8 @@ namespace ClassRoomVR
         {
             foreach (Student s in problematics)
             {
-                if (Vector3.Distance(s.transform.position, player.transform.position) <= distanceNear && s.IsStudentInFieldOfVision())
+                if (Resolve(s))
                 {
-                    Debug.Log("Cerca"+ controller.GetMode());
                     if (controller.GetMode() == TalkMode.Good)
                     {
                         Debug.Log("Genial");
@@ -144,12 +124,16 @@ namespace ClassRoomVR
                         Debug.Log("Segundo camino");
                         bh.GetVariable("Path").SetValue(1);
                     }
-                  //  controller.GoOut();
                 }
             }
         }
 
-
+        private bool Resolve(Student s) 
+        {
+            return (Vector3.Distance(s.transform.position, player.transform.position) <= distanceNear 
+                && s.IsStudentInFieldOfVision()) 
+                || ((controller.Resolutions & action.action) == action.action && controller.GetMode() != TalkMode.Disrespect);
+        }
         /// <summary>
         /// Metodo para controlar el camino  . Grito o falta de respeto
         /// </summary>
@@ -158,7 +142,7 @@ namespace ClassRoomVR
             if (controller.GetMode() == TalkMode.Disrespect )
             {
                 bh.GetVariable("Path").SetValue(2);
-                player.GetComponent<AudioSource>().clip = a.noise;
+                player.GetComponent<AudioSource>().clip = action.noise;
                 player.GetComponent<AudioSource>().Play();
                 
             }
@@ -167,10 +151,10 @@ namespace ClassRoomVR
         //Suena el clip de sonrisas 
         void Laughter()
         {
-            if (a.classLaughter != null)
+            if (action.classLaughter != null)
             {
                 player.GetComponent<AudioSource>().Stop();
-                player.GetComponent<AudioSource>().clip = a.classLaughter;
+                player.GetComponent<AudioSource>().clip = action.classLaughter;
                 player.GetComponent<AudioSource>().Play();
             }
         }
@@ -180,9 +164,9 @@ namespace ClassRoomVR
         public void Finish()
         {
             ChangeText();
-            ClassManager.Instance.DisruptiveSituation = false;
             foreach (Student s in problematics)
             {
+                Debug.Log(s.name);
                 s.SetNotProblematicStudent();
             }
             Debug.Log(bh.GetVariable("Path").GetValue());
@@ -194,12 +178,22 @@ namespace ClassRoomVR
 
         private void ChangeText()
         {
-            text.text = bh.GetVariable("Path").GetValue().ToString();
+            if (text != null)
+            {
+                text.text = bh.GetVariable("Path").GetValue().ToString();
+            }
         }
 
         private void OnDestroy()
         {
-            text.text = string.Empty;
+            if (text != null)
+            {
+                text.text = string.Empty;
+            }
+            if (action != null)
+            {
+                action = null;
+            }
         }
 
     }

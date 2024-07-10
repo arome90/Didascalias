@@ -1,76 +1,8 @@
 using WebSocketSharp;
-using WebSocketSharp.Server;
 using UnityEngine;
 using System;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 using ClassRoomVR;
-using UnityEngine.Events;
-
-#region Server
-//public class WsServer : MonoBehaviour
-//{
-//    public static bool accion = false;
-//    public class Echo : WebSocketBehavior
-//    {
-//        protected override void OnMessage(MessageEventArgs e)
-//        {
-//            int n = e.Data[0] - '0';
-//            if (n >= 0)
-//            {
-//                accion = true;
-//                //ClassRoomVR.WebActions.ProcessMessage(n);
-//            }
-//            Debug.Log("Received message from Echo client: " + e.Data);
-
-//            Send(e.Data);
-//        }
-//    }
-
-//    WebSocketServer wssv;
-
-//    void Start()
-//    {
-
-//        // URL del servidor WebSocket
-//        // string serverURL = "ws://tu-servidor-websocket.com";
-//        // string serverURL = "ws://dear-booming-quill.glitch.me/";
-
-
-//        wssv = new WebSocketServer("ws://127.0.0.1:8080");
-
-//        wssv.AddWebSocketService<Echo>("/Echo");
-
-
-//        wssv.Start();
-//        Debug.Log("WS server started on ws://127.0.0.1:7890/Echo");
-
-
-
-//    }
-
-
-//    private void Update()
-//    {
-//        if (accion)
-//        {
-//            accion = false;
-//            ClassRoomVR.ClassManager.Instance.GetStudentsController().DoSomethingDisruptive(0);
-
-//        }
-//    }
-
-//    // Aseg�rate de cerrar la conexi�n WebSocket cuando salgas de la aplicaci�n
-//    private void OnDestroy()
-//    {
-//        if (wssv != null)
-//        {
-//            wssv.Stop();
-
-//        }
-//    }
-//}
-#endregion
 
 public class WsClient : GenericSingleton<WsClient>
 {
@@ -85,15 +17,14 @@ public class WsClient : GenericSingleton<WsClient>
     {
         connected = false;
         idDevice = SystemInfo.deviceUniqueIdentifier;
-        StartConnection();
-        Invoke(nameof(Info), 2f);
+        //TEMPORAL
+        //StartConnection();
+        //Invoke(nameof(Info), 2f);
     }
 
     void Info() 
     {
         ServerMessage.SendInfoInitial();
-        ClassManager.Instance.GetStudentsController().PlaySentence("Hola buenas tardes chicos ");
-
     }
     public void StartConnection()
     {
@@ -215,15 +146,3 @@ public class WsClient : GenericSingleton<WsClient>
 
 
 }
-
-
-
-//}
-//string getKey(int len)
-//{
-//    string res = string.Empty;
-//    const string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
-//    char[] charac = characters.ToCharArray();
-//    for (int i = 0; i < len; i++) { res += charac[UnityEngine.Random.Range(0, charac.Length - 1)]; }
-//    return res;
-//}

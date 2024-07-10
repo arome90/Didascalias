@@ -6,12 +6,21 @@ using System;
 using System.Linq;
 using System.Collections;
 using MathNet.Numerics.Distributions;
+using System.Diagnostics.Eventing.Reader;
+using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
     public class StudentsController : MonoBehaviour
     {
         TalkMode mode;
+        private Actions res;
+        public Actions Resolutions
+        {
+            get { return res; }
+            set { res = value; }
+        }
+
         Dictionary<string, Student> students;
         GameObject player;
         // Serialized fields for defining positions in the classroom
@@ -26,15 +35,6 @@ namespace ClassRoomVR
         public Transform FrontSide => frontSide;
         public Transform BackCorner => backCorner;
         public Transform Door => door;
-       // Temporal
-        //private void Start()
-        //{
-        //    Invoke(nameof(DoSomethingDisruptives), 2f);
-        //}
-        void DoSomethingDisruptives() 
-        {
-            DoSomethingDisruptive(2);
-        }
         // Method to set the dictionary of students
         public void SetParameters(GameObject player,Dictionary<string, Student> students)
         {
@@ -42,34 +42,13 @@ namespace ClassRoomVR
             this.students = students;
         }
 
-        // Method to handle changing desks for students
-        public void SendChangeDesk(string[] values)
-        {
-            Student s1, s2;
-            if (TryGetStudent(values[0], out s1) && TryGetStudent(values[1], out s2))
-                ChangeDesk(s1, s2);
-        }
-
-        private void ChangeDesk(Student student1, Student student2)
+        public void ChangeDesk(Student student1, Student student2)
         {
             var position1 = student1.GetDesk();
             var position2 = student2.GetDesk();
-            student1.ChangeDesk(position2);
-            student2.ChangeDesk(position1);
+           StartCoroutine(student2.ChangeDesk(position1));
+           StartCoroutine(student1.ChangeDesk(position2));
         }
-
-        //// Remove diacritics (accent marks) from a string
-        //private string RemoveDiacritics(string text)
-        //{
-        //    string normalized = text.Normalize(NormalizationForm.FormD);
-        //    StringBuilder stringBuilder = new StringBuilder();
-        //    foreach (char c in normalized)
-        //    {
-        //        if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-        //            stringBuilder.Append(c);
-        //    }
-        //    return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-        //}
 
         // Search for a student by name, handling diacritics
         public bool TryGetStudent(string name, out Student student)
@@ -102,21 +81,33 @@ namespace ClassRoomVR
         }
 
         // Handle sitting actions for students
-        public void HandleSit(Student student)
+        public void HandleSit(List<Student> studentList)
         {
-            if (student != null) { student.SitBack(); }
+            foreach (var student in studentList)
+            {
+                student.SitBack();
+            }
         }
 
         // Handle moving actions for students
-        public void HandleMove(Student student, string place)
+        public void HandleMove(List<Student> studentList, string place = null)
         {
-            if (student != null)
+
+            foreach (var student in studentList)
             {
                 Transform position = Place(place);
                 if (position != null)
                 {
-                    student.MoveTo(position.position,1.5f);
+                    student.MoveTo(position.position, 1.5f);
                 }
+            }
+        }
+
+        public void HandleChange(List<Student> studentList)
+        {
+            if(studentList.Count > 1) 
+            {
+                ChangeDesk(studentList[0], studentList[1]);
             }
         }
 
@@ -128,40 +119,25 @@ namespace ClassRoomVR
         }
 
         // Handle expelling students
-        public void HandleExpel(Student student)
+        public void HandleExpel(List<Student> studentList)
         {
-            if (student != null)
+            foreach (var student in studentList)
             {
                 student.MoveTo(door.position, 0.5f);
             }
         }
 
-        // Handle disrespectful behavior
-        public void HandleDisrespect()
-        {
-            Debug.Log("You have shown disrespect");
-            mode = TalkMode.Disrespect;
-        }
-
-        // Handle calming situations
-        public void HandleCalm()
-        {
-            Debug.Log("You have spoken well");
-            mode = TalkMode.Good;
-        }
-
-        public void HandleNormal()
-        {
-            Debug.Log("You have spoken");
-            mode = TalkMode.Normal;
-        }
-
-
         // Handle calling a student's attention
         public void HandleCall(Student student)
         {
             student.PayAttention();
-            Debug.Log(student.name);
+            student.GetNameText().color = Color.blue;
+            StartCoroutine(ReturnColor(student));
+        }
+        IEnumerator ReturnColor(Student student)
+        {
+            yield return new WaitForSeconds(5);
+            student.GetNameText().color = Color.white;
         }
         // Determine a position based on a string description
         public Transform Place(string place)
@@ -198,71 +174,92 @@ namespace ClassRoomVR
         }
 
         private GameObject actionObject;
-        [SerializeField]
-        TMPro.TextMeshProUGUI text;
+       
+        DisruptiveAction actionActual;
+        List<Student> studentList;
         // Perform a disruptive action on students
         public void DoSomethingDisruptive(int index)
         {
-            DisruptiveAction action = actions[index];
-            int randomStudentIndex = UnityEngine.Random.Range(0, students.Count);
-            Student student = null;
-            List<Student> studentList = new List<Student>();
-            for (int i = 0; i < action.numStudents; i++)
+            if (actionActual == null && actionObject == null)
             {
-                student = students.ElementAt(randomStudentIndex).Value;
-                AudioClip clip = student.GetGender() == Gender.Women ? action.situationAudioFeminine : action.situationAudioMasculine;
+                actionActual = actions[index];
+                res = Actions.None;
+                int randomStudentIndex = UnityEngine.Random.Range(0, students.Count);
+                Student student = students.ElementAt(randomStudentIndex).Value;
+                if (studentList != null) studentList.Clear();
+                studentList = new List<Student> { student };
+                switch (actionActual.action)
+                {
+                    case Actions.Insultar:
+                        StartCoroutine(ActionsMethod.Insultar(student, actionActual, CreateConflict));
+                        break;
+                    case Actions.Separados:
+                        randomStudentIndex = randomStudentIndex != students.Count - 1 && ((randomStudentIndex + 1) % GameManager.Instance.GetCurrentSettings().Columns != 0) ? randomStudentIndex + 1 : randomStudentIndex - 1;
+                        Student secstudent = students.ElementAt(randomStudentIndex).Value;
+                        var problem = GetRandomStudentExcluding(student, secstudent);
+                        studentList.Add(problem);
+                        StartCoroutine(ActionsMethod.SentarseJuntos(problem, student, secstudent, actionActual, CreateConflict));
+                        break;
+                    case Actions.Levantarse:
+                        ActionsMethod.Levantarse(student, actionActual, frontSide.position, CreateConflict);
+                        break;
+
+                }
+
+            }
+        }
+        [SerializeField]
+        TMPro.TextMeshProUGUI text;
+        private void CreateConflict() 
+        {
+            actionObject = Instantiate(actionActual.behaviorHolder);
+            actionObject.GetComponent<Action>().SetParameters(player, studentList, actionActual, text);
+            actionActual = null;
+            foreach(var student in studentList) 
+            {
                 student.SetProblematicStudent();
                 student.PayAttention();
-
-                student.PlayDisruptiveAction(action.problematicsAnimation.name, clip);
-
-                if (action.position == Positions.FrontSide)
-                    student.MoveTo(frontSide.position, 1f);
-                randomStudentIndex++;
-                if (randomStudentIndex >= students.Count)
-                    randomStudentIndex -= 2;
-                studentList.Add(student);
             }
-            if (student != null)
-            {
-                actionObject = Instantiate(action.behaviorHolder);
-                actionObject.GetComponent<Action>().SetParameters(player, studentList, action, text);
-            }
-            ClassManager.Instance.DisruptiveSituation = true;
         }
 
-
-
-
-        public void SeparateStudent() 
+        private Student GetRandomStudentExcluding(Student exclude1, Student exclude2)
         {
-            int randomStudentIndex = UnityEngine.Random.Range(0, students.Count);
-            Student student = students.ElementAt(randomStudentIndex).Value;
-            Student obj = null;//  ESTUDIANTE OBJETIVO AL QUE LA VA A QUITAR EL SITIO ;
-            Student cOMPAÑE = null;// COMPAÑERO DE TRASTADAS ;
-            //el student va hasta el sitio del objetivo cuando llega le dice al objetivo me quiero sentar con el compañero de al lado 
-            // el otro estudainte se va al sitio del otro y estos dos al sentarse dicen ale ya estamos juntos 
+            List<Student> eligibleStudents = students.Values.Where(s => s != exclude1 && s != exclude2).ToList();
+            int randomIndex = UnityEngine.Random.Range(0, eligibleStudents.Count);
+            return eligibleStudents[randomIndex];
         }
+
+        //private Student GetRandomStudentSitting() 
+        //{
+        //    List<Student> eligibleStudents = students.Values.Where(s => s.state != State.Standing).ToList();
+        //    int randomIndex = UnityEngine.Random.Range(0, eligibleStudents.Count);
+        //    return eligibleStudents[randomIndex];
+        //}
+
         public void PlaySentence(string text)
         {
             int randomStudentIndex = UnityEngine.Random.Range(0, students.Count);
             students.ElementAt(randomStudentIndex).Value.GenerateText(text);
         }
 
-
-        private void Update()
+        public void PlayAllSentence(string text)
         {
-            //if (GameManager.Instance.IsPause) return;
-            //int index = 0;
-            //while (index < actions.Length && !ClassManager.Instance.DisruptiveSituation)
-            //{
-            //    if (Input.GetKeyDown(KeyCode.Alpha1 + index))
-            //    {
-            //        DoSomethingDisruptive(index);
-            //    }
-            //    index++;
-            //}
+            for (int i = 0; i < students.Count - 1; i++)
+            {
+                students.ElementAt(i).Value.GenerateText(text);
+
+            }
         }
-        
+
+        //private void Start()
+        //{
+        //    Invoke(nameof(doso), 2);
+        //}
+
+        //private void doso()
+        //{
+        //    DoSomethingDisruptive(1);
+        //}
+
     }
 }

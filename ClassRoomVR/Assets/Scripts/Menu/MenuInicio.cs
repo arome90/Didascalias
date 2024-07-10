@@ -8,6 +8,7 @@ namespace ClassRoomVR
     public class MenuInicio : MonoBehaviour
     {
         [SerializeField] private Button enter;
+        [SerializeField] private Button tutorial;
         [SerializeField] private Button quitButton;
         [SerializeField] private GameObject nextScreen;
         [SerializeField] private Vector3 playerDestination;
@@ -21,6 +22,12 @@ namespace ClassRoomVR
                 PlayButton();
                 GoNextScreen();
             });
+            tutorial.onClick.AddListener(() =>
+            {
+                tutorial.interactable = false;
+                GameManager.Instance.LoadTutorial();
+            });
+
             quitButton.onClick.AddListener(QuitButton);
             // Remove in the future
             DeskManager.Instance.DestroyChildren();

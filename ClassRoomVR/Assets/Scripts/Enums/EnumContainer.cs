@@ -1,4 +1,6 @@
-﻿public enum OriginInfo { Random, HispanicLatino, AsianPacificIslander, BlackAfricanAmerican, WhiteCaucasian, Other }
+﻿using System;
+
+public enum OriginInfo { Random, HispanicLatino, AsianPacificIslander, BlackAfricanAmerican, WhiteCaucasian, Other }
 public enum GenderInfo { Random, Women, Men }
 public enum Gender { Women, Men };
 public enum State { Sitting ,Standing };
@@ -41,3 +43,25 @@ public enum AnimacionesStudent
 {
     Levantar, Empujar, SitGanas, SitSinGanas
 }
+
+public enum VisualAction { Menu, Activate, Select, PrimaryButton, SecondaryButton, JoyStick };
+
+[Flags]
+public enum Actions
+{
+    None = 0,
+    Insultar = 1 << 0, // 1
+    Separados = 1 << 1, // 2
+    Levantarse = 1 << 2  // 4
+}
+
+// Always update according to the list of positions where students can move
+public enum Positions
+{
+    None = -1,
+    FrontSide,
+    BackCorner,
+    Doors,
+    Student
+}
+

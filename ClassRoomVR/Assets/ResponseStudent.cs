@@ -28,7 +28,7 @@ public class ResponseStudent : MonoBehaviour
         _asyncClip = GetComponent<AudioClip>();
         _speaker = GetComponent<TTSSpeaker>();
         _speaker.VoiceID = student.GetGender()== Gender.Men ? "WIT$CAM": "MARIA";       
-        _speaker.Events.OnComplete.AddListener(a);
+        _speaker.Events.OnPlaybackComplete.AddListener(OnComplete);
     }
 
     public void TTS(string text) 
@@ -43,10 +43,10 @@ public class ResponseStudent : MonoBehaviour
 
     }
 
-    private void a(TTSSpeaker s, TTSClipData data)
+    private void OnComplete(TTSSpeaker s, TTSClipData data)
     {
-        student.GetNameText().color = Color.white;
         speak = false;
+        student.GetNameText().color = student.IsProblematicStudent()? Color.red : Color.white;
 
     }
     // Speak async

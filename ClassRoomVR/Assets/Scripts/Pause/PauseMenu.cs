@@ -37,7 +37,7 @@ namespace ClassRoomVR
         public void ToggleMenu(InputAction.CallbackContext context)
         {
             //pauseMenuUI.enabled = !pauseMenuUI.enabled;
-            if (!pauseMenuUI.enabled) PauseGame();
+            if (!GameManager.Instance.IsPause) PauseGame();
             else ResumeGame();
         }
 
@@ -56,7 +56,7 @@ namespace ClassRoomVR
 
         public void QuitGame()
         {
-            quitButton.gameObject.SetActive(false);
+            quitButton.interactable=false;
             GameManager.Instance.LoadMainMenu();
         }
 
@@ -65,40 +65,26 @@ namespace ClassRoomVR
             //Time.timeScale = 0f; // Pausar el tiempo (detener todas las actualizaciones)
             pauseMenuUI.enabled = true; // Mostrar el menú de pausa
             GameManager.Instance.Pause(false);
-
         }
 
         private void ThinkPause(InputAction.CallbackContext context)
         {
-            // Time.timeScale = Time.timeScale!=0f ? 0f:1f;
-            //pauseMenuUI.enabled = !pauseMenuUI.enabled;
-            TimeSelect();
-
+            if (Time.timeScale != 0)
+            {
+                SceneTransitionManager.singleton.fadeScreen.Fade(0, 0.5f,thinkControl);
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                SceneTransitionManager.singleton.fadeScreen.Fade(0.5f, 0);
+            }
         }
-        private void ThinkPause()
+
+        void thinkControl() 
         {
-            TimeSelect();
-            //pauseMenuUI.enabled = !pauseMenuUI.enabled;
+            Time.timeScale =  0f;
         }
-
-        void TimeSelect()
-        {
-
-            Time.timeScale = (Time.timeScale != 0) ? 0f : 1f;
-
-
-            //if (Time.timeScale != 0)
-            //{
-            //    //AudioRecorder.PauseRecording();
-            //    Time.timeScale = 0f;
-
-            //}
-            //else
-            //{
-            //    Time.timeScale = 1f;
-            //    //AudioRecorder.ResumeRecording();
-            //}
-        }
+     
     }
 
 }

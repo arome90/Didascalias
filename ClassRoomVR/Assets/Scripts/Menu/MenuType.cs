@@ -39,8 +39,8 @@ namespace ClassRoomVR
         public void SetOptions(ClassSettings[] classes)
         {
             List<string> dropdownOptions = new List<string>();
-
-            for (int i = 0; i < classes.Length; i++)
+            //-1 por el tutorial
+            for (int i = 0; i < classes.Length-1; i++)
             {
                 dropdownOptions.Add(classes[i].name);
 

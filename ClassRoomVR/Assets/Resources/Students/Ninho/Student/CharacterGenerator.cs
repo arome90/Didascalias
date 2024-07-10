@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static CharacterProps;
 
 public class CharacterGenerator : MonoBehaviour
 {
@@ -101,6 +102,16 @@ public class CharacterGenerator : MonoBehaviour
                 AttachClothToPlayer(selectedItem.skinnedMesh, item.bodyMat ,category.items[randomIndex].colors); // No se pasa un material específico
             }
         }
+
+
+
+        randomIndex = Random.Range(0, item.headBone.complements.Count);
+        var complement = item.headBone.complements[randomIndex];
+        int color = Random.Range(0, complement.color.Length);
+
+        // Use the probability to determine if a mesh should be spawned for this bone attachment
+        CharacterPropsSpawner.TrySpawnComplement(rootBone, item.headBone, complement, color, false);
+
 
     }
 

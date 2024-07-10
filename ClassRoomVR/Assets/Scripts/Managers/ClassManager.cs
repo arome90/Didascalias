@@ -15,10 +15,6 @@ namespace ClassRoomVR
         private StudentsController studentsController;
 
         [SerializeField] private Transform[] targetsHead;
-
-        private bool disruptiveSituation;
-        public bool DisruptiveSituation { get => disruptiveSituation; set => disruptiveSituation = value; }
-
         private int clima;
         private ClassInfo classInfo;
         private List<List<string>> names;
@@ -27,24 +23,33 @@ namespace ClassRoomVR
         [SerializeField] private AudioClip beforeClassBell;
         [SerializeField] private AudioClip afterClassBell;
         [SerializeField] GameObject player;
+
+        [SerializeField] bool GenerateOnStart;
         public override void Awake()
         {
             settings = GameManager.Instance.GetCurrentSettings();
             studentsController = GetComponent<StudentsController>();
+            if (GenerateOnStart)
+            {
+                Generate();
+                GameManager.Instance.GetVoiceActivation().Activate();
+            }
+        }
+
+        public void Generate()
+        {
             studentsPositions = DeskManager.Instance.gameObject.transform;
 
             if (studentsPositions.childCount == 0)
             {
-                if (settings.StructureMode == StructureMode.Circular) 
-                    DeskManager.Instance.CreateCircle(settings.NumStudents,settings.Radius,settings.Degrees);
+                if (settings.StructureMode == StructureMode.Circular)
+                    DeskManager.Instance.CreateCircle(settings.NumStudents, settings.Radius, settings.Degrees);
                 else if (settings.StructureMode == StructureMode.U)
-                    DeskManager.Instance.CreateCircle(settings.NumStudents,settings.Radius);
+                    DeskManager.Instance.CreateCircle(settings.NumStudents, settings.Radius);
                 else
                     DeskManager.Instance.CreateRegularLayout(settings.NumStudents, settings.Rows, settings.Columns);
             }
-
             asientosOcupados = new bool[studentsPositions.childCount];
-           // students = new Dictionary<string, Student>();
             students = new Dictionary<string, Student>();
             problematicStudents = new HashSet<string>();
             classInfo = GameManager.Instance.GetCurrentClassInfo();
@@ -55,7 +60,7 @@ namespace ClassRoomVR
             };
             GenerateChilds();
 
-            studentsController.SetParameters(player,students);
+            studentsController.SetParameters(player, students);
 
             GetComponent<AudioSource>().clip = beforeClassBell;
             GetComponent<AudioSource>().Play();
@@ -174,30 +179,6 @@ namespace ClassRoomVR
                 s.transform.GetChild(s.transform.childCount - 1).GetComponent<Animator>().Play(animName, 0, time);
             }
         }
-
-        //private void StartScene()
-        //{
-        //    string alumsName = "";
-
-        //    for (int i = 0; i < problematicStudents.Count; i++)
-        //    {
-        //        if (i > 0 && i != problematicStudents.Count - 1)
-        //            alumsName += ", ";
-        //        else if (i > 0 && i == problematicStudents.Count - 1)
-        //            alumsName += " y ";
-
-        //        alumsName += problematicStudents.ElementAt(i);
-
-        //        if (i > 1 && i == problematicStudents.Count - 1)
-        //            alumsName += ";";
-        //    }
-
-        //    ScenePackage sceneInfo = GameManager.Instance.GetChosenPackage();
-        //    player.GetComponent<AudioSource>().clip = sceneInfo.contextClip;
-        //    player.GetComponent<AudioSource>().Play();
-        //    string t = sceneInfo.initialMessage.Replace("alum", alumsName);
-        //    Debug.Log(t);
-        //}
 
         public Student[] GetStudents()
         {

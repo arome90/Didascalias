@@ -11,8 +11,8 @@ public class Desk : MonoBehaviour
     private bool isOccupied; // Flag to indicate if the desk is occupied
     public bool IsOccupied { get => isOccupied; set => isOccupied = value; } // Property to access the occupancy status
 
-    private Vector2 position;
-    private Vector2 Position { get => position; set => position = value; }
+    private int num; // Flag to indicate if the desk is occupied
+    public int Num { get => num; set => num = value; } // Property to access the occupancy status
 
     // Get the position of the student sitting at the desk
     public Vector3 GetPositionStudent() => transform.GetChild(0).position + new Vector3(0, 0, 0.05f);

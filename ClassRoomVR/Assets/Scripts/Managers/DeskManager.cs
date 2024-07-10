@@ -36,19 +36,22 @@ namespace ClassRoomVR
             deskPositions.Clear();
             desks.Clear();
             DestroyChildren();
+            int iDesk=0;
             for (int i = 0; i < numRows; i++)
             {
                 for (int j = 0; j < numColumns; j++)
                 {
-                    if (numDesks == 0)
+                    if (numDesks == iDesk)
                     {
                         return;
                     }
                     float xPos = j - (numColumns - 1) / 2f;
                     float zPos = -i + (numRows - 1) / 2f;
                     deskPositions.Add(new Vector2(xPos, zPos));
-                    desks.Add(Instantiate(deskPrefab, new Vector3(transform.position.x + xPos * deskOffsetX, transform.position.y, transform.position.z + zPos * deskOffsetZ), Quaternion.identity, transform));
-                    numDesks--;
+                    var desk = Instantiate(deskPrefab, new Vector3(transform.position.x + xPos * deskOffsetX, transform.position.y, transform.position.z + zPos * deskOffsetZ), Quaternion.identity, transform);
+                    desk.Num = iDesk;
+                    desks.Add(desk);
+                    iDesk++;
                 }
             }
         }
@@ -70,6 +73,7 @@ namespace ClassRoomVR
                 {
                     desk.transform.LookAt(transform.position);
                 }
+                desk.Num = i;
                 desks.Add(desk);
             }
         }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static CharacterProps;
 
 [CreateAssetMenu(fileName = "CharacterClothingAssets", menuName = "Character Assets/Clothing Assets")]
 public class CharacterSkinnedMeshes : ScriptableObject
@@ -22,6 +23,7 @@ public class CharacterSkinnedMeshes : ScriptableObject
         public SkinnedMeshRenderer pelo; // SkinnedMeshRenderer para el pelo
         public Material bodyMat;
         public Material HairMat;
+        public BoneAttachment headBone;
 
     }
 

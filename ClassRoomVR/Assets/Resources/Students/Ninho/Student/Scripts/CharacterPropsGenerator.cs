@@ -1,4 +1,4 @@
-using UnityEngine;
+    using UnityEngine;
 
 public class CharacterPropsSpawner : MonoBehaviour
 {
@@ -40,7 +40,7 @@ public class CharacterPropsSpawner : MonoBehaviour
         }
     }
 
-    void TrySpawnComplement(Transform rootBone, CharacterProps.BoneAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
+    static public void TrySpawnComplement(Transform rootBone, CharacterProps.BoneAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
     {
         float probabilityRoll = Random.Range(0f, 100f);
         if (probabilityRoll <= boneAttachment.probability)
@@ -58,7 +58,7 @@ public class CharacterPropsSpawner : MonoBehaviour
         }
     }
 
-    void SpawnForBone(Transform rootBone, string boneName, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
+    static public void SpawnForBone(Transform rootBone, string boneName, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
     {
         // Search for the bone with the specified name
         Transform bone = FindBoneInChildren(rootBone, boneName);
@@ -83,15 +83,15 @@ public class CharacterPropsSpawner : MonoBehaviour
                 // If the object is on the "L" side, mirror it by scaling in Z-axis
                 propObject.transform.localScale = new Vector3(propObject.transform.localScale.x, propObject.transform.localScale.y, -propObject.transform.localScale.z);
             }
-            Debug.Log("Spawned mesh for bone '" + boneName + "' with mirrored: " + isMirrored);
+           // Debug.Log("Spawned mesh for bone '" + boneName + "' with mirrored: " + isMirrored);
         }
         else
         {
             Debug.LogWarning("Bone not found for prop '" + boneName + "'");
         }
-    } 
+    }
 
-    Transform FindBoneInChildren(Transform parent, string boneName)
+    static Transform FindBoneInChildren(Transform parent, string boneName)
     {
         Transform bone = parent.Find(boneName); // Try to find the bone directly
 
