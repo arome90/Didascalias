@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Utilities.Extensions;
-using static UnityEngine.XR.Hands.XRHandSubsystemDescriptor;
 
 
 namespace ClassRoomVR {
