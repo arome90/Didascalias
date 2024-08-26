@@ -190,6 +190,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
+      propertyPath: availablePackages.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
       propertyPath: availableSettings.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -741,7 +746,6 @@ MonoBehaviour:
         m_Calls: []
   witRuntimeConfiguration:
     witConfiguration: {fileID: 11400000, guid: 19f6b0532c21147468ac16b4dedcb031, type: 2}
-    useWebSockets: 0
     minKeepAliveVolume: 0.001
     minKeepAliveTimeInSeconds: 2
     minTranscriptionKeepAliveTimeInSeconds: 1
@@ -754,6 +758,7 @@ MonoBehaviour:
     customTranscriptionProvider: {fileID: 0}
     alwaysRecord: 1
     preferredActivationOffset: -0.5
+    pubSubTopicId: 
   usePlatformServices: 0
   enableConsoleLogging: 0
   sendTranscriptionEventsForMessages: 0
@@ -15873,7 +15878,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 13366c9db6a054aa0989e25fed5693ba, type: 3}
+  m_Sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
