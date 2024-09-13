@@ -593,11 +593,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edb0d3acb8333948b3892c34f05c617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deskPrefab: {fileID: 5472194513537842824, guid: f1e5d201b694e1d47889e051afec5378,
+  _deskPrefab: {fileID: 5589385770053457292, guid: f1e5d201b694e1d47889e051afec5378,
     type: 3}
-  deskOffsetX: 1.6
-  deskOffsetZ: 1.7
-  deskOffsetO: 1.4
+  _deskOffsetX: 1.6
+  _deskOffsetZ: 1.7
+  _deskOffsetO: 1.4
 --- !u!4 &818101636
 Transform:
   m_ObjectHideFlags: 0
@@ -1522,6 +1522,11 @@ PrefabInstance:
       propertyPath: fadeScreen
       value: 
       objectReference: {fileID: 1985182415}
+    - target: {fileID: 5023177990599711570, guid: 57ede604c6eeb8049bec7ea3beb34b5f,
+        type: 3}
+      propertyPath: _fadeScreen
+      value: 
+      objectReference: {fileID: 1985182415}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1748,35 +1753,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b71f1a26b80d3348a20c869de44526d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helpAction:
+  _helpAction:
     m_UseReference: 1
     m_Action:
       m_Name: Help
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 30ea9135-5cb0-498d-8915-c37e07e65eba
+      m_Id: b1701ddb-c2dc-4fe7-8585-8de40310b992
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: 8575595579227253781, guid: c348712bda248c246b8c49b3db54643f,
+    m_Reference: {fileID: -568441066401911601, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
-  menus:
+  _menus:
   - {fileID: 4801054152958493290}
   - {fileID: 8413447737479102499}
   - {fileID: 8313058370726284782}
-  back: {fileID: 9073385181750909556}
-  start: {fileID: 2035995872667657695}
-  index: 0
-  menu: {fileID: 8076671057133434943}
-  player: {fileID: 1076980478}
-  textSession: {fileID: 425302977}
-  texts:
+  _backButton: {fileID: 9073385181750909556}
+  _startButton: {fileID: 2035995872667657695}
+  _currentMenuIndex: 0
+  _menuInicio: {fileID: 8076671057133434943}
+  _player: {fileID: 1076980478}
+  _textSession: {fileID: 425302977}
+  _text: {fileID: 1373241818}
+  _texts:
   - Elige una clase predeterminada o personaliza tu propia clase
   - Escoge los alumnos y la forma de clase.Si quieres personalizarla, dale al boton
     de configurar
   - Personaliza el aula a tu gusto y dale a la x
-  text: {fileID: 1373241818}
 --- !u!224 &132707515003419817
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3037,10 +3042,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d6c5c2afaf8f2419cd23c8833bbadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureDropdown: {fileID: 5529895150822919682}
-  editDeskPositionButton: {fileID: 7860514874402560979}
-  boysOption: {fileID: 4169417868821345869}
-  girlsOption: {fileID: 8419819408468853573}
+  _structureDropdown: {fileID: 5529895150822919682}
+  _editDeskPositionButton: {fileID: 7860514874402560979}
+  _boysOption: {fileID: 4169417868821345869}
+  _girlsOption: {fileID: 8419819408468853573}
 --- !u!114 &1019937148329667777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3187,9 +3192,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71435dbe8e0e98e4c931bda8b398d8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureDropdown: {fileID: 8489047435797871939}
-  editButton: {fileID: 135649841727255418}
-  editText: {fileID: 3558913132358148385}
+  _structureDropdown: {fileID: 8489047435797871939}
+  _editButton: {fileID: 135649841727255418}
+  _editText: {fileID: 3558913132358148385}
 --- !u!222 &1115097021182153095
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6123,7 +6128,6 @@ GameObject:
   - component: {fileID: 2443441812895059008}
   - component: {fileID: 6415321002355309953}
   - component: {fileID: 931006541446393825}
-  - component: {fileID: 8562871874273709288}
   - component: {fileID: 8562871874273709289}
   m_Layer: 5
   m_Name: Clase
@@ -6288,7 +6292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45b83a36d3ac2c4f835953c5bbbf6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 461998529859540950, guid: 4d089b34e3071f44694f2515e70130b2, type: 3}
 --- !u!224 &3014165760652730759
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6345,10 +6348,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 3629518020633281111}
   addButton: {fileID: 4619528103842642195}
   subButton: {fileID: 4619528103116693449}
-  value: 5
-  minValue: 1
-  maxValue: 20
-  step: 1
+  _value: 0
+  _minValue: 0
+  _maxValue: 0
+  _step: 0
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6913,10 +6916,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 3036916242660338478}
   addButton: {fileID: 6368147076406218858}
   subButton: {fileID: 6368147076797150896}
-  value: 2
-  minValue: 1
-  maxValue: 2
-  step: 1
+  _value: 0
+  _minValue: 0
+  _maxValue: 0
+  _step: 0
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -7034,10 +7037,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e197022a3fd1e4db3cba185e02be33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleDesks: {fileID: 2996753573196020100}
   numDesks: {fileID: 3029330655479896137}
-  radiusOpt: {fileID: 8915238727295292481}
-  gradesOpt: {fileID: 9106944807318992319}
+  _radiusOption: {fileID: 0}
+  _degreesOption: {fileID: 0}
 --- !u!222 &3980340506062577667
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7046,27 +7048,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4611632883099061644}
   m_CullTransparentMesh: 1
---- !u!95 &4005050173839800126
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7335422701219369071}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 284ad085798be23439f118949cf83bd0, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &4016797175633930245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7261,10 +7242,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 2416256176018582611}
   addButton: {fileID: 6038547605064963863}
   subButton: {fileID: 6038547606494507469}
-  value: 3
-  minValue: 0
-  maxValue: 30
-  step: 1
+  _value: 3
+  _minValue: 0
+  _maxValue: 30
+  _step: 1
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8733,9 +8714,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3235ab4f85ea68349a99b08f915ada55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  applyButton: {fileID: 1853099513978420172}
-  circularStructure: {fileID: 3976865540647762937}
-  filaStructure: {fileID: 5136598059105181275}
+  _applyButton: {fileID: 1853099513978420172}
+  _circularStructure: {fileID: 3976865540647762937}
+  _filaStructure: {fileID: 5136598059105181275}
 --- !u!224 &4640381152504819457
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9489,10 +9470,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57e9c28d8ef24c45a5d2639c786b480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleDesks: {fileID: 2996753573196020100}
   numDesks: {fileID: 6951075926396908551}
-  rowsOpt: {fileID: 6158924693713422627}
-  coluOpt: {fileID: 3634880426235883824}
+  _rowsOption: {fileID: 0}
+  _columnsOption: {fileID: 0}
 --- !u!223 &5156428309466698636
 Canvas:
   m_ObjectHideFlags: 0
@@ -12497,10 +12477,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 5560852788881576765}
   addButton: {fileID: 4569290066463451257}
   subButton: {fileID: 4569290067080335011}
-  value: 1
-  minValue: 1
-  maxValue: 3
-  step: 1
+  _value: 0
+  _minValue: 0
+  _maxValue: 0
+  _step: 0
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -13703,10 +13683,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 8656998190148840985}
   addButton: {fileID: 749474136455501149}
   subButton: {fileID: 749474138146009991}
-  value: 5
-  minValue: 1
-  maxValue: 30
-  step: 1
+  _value: 0
+  _minValue: 0
+  _maxValue: 0
+  _step: 0
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -14124,7 +14104,6 @@ GameObject:
   - component: {fileID: 6779283464674864305}
   - component: {fileID: 4575451342204591298}
   - component: {fileID: 6044780288660532135}
-  - component: {fileID: 4005050173839800126}
   - component: {fileID: 3921855282170062475}
   m_Layer: 5
   m_Name: OpcionesButton
@@ -14643,31 +14622,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8514447671105789175}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!224 &7866544822530333156
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14974,13 +14929,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82d6ab28523473846be61c0bb40f32c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enter: {fileID: 8562871874273709289}
-  tutorial: {fileID: 1303743684}
-  quitButton: {fileID: 9023594292716275006}
-  nextScreen: {fileID: 783091132957972043}
-  playerDestination: {x: 4.5, y: 0.4, z: -2.5}
-  playerInitialPosition: {x: -3.224, y: 0.5, z: -6.782}
-  player: {fileID: 1076980481}
+  _enter: {fileID: 8562871874273709289}
+  _tutorial: {fileID: 1303743684}
+  _quitButton: {fileID: 9023594292716275006}
+  _nextScreen: {fileID: 783091132957972043}
+  _playerDestination: {x: 4.5, y: 0.4, z: -2.5}
+  _playerInitialPosition: {x: -3.224, y: 0.5, z: -6.782}
+  _player: {fileID: 1076980481}
 --- !u!114 &8130283203692093681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15260,10 +15215,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 7822135052075309403}
   addButton: {fileID: 2218217841328661023}
   subButton: {fileID: 2218217840905356485}
-  value: 3
-  minValue: 0
-  maxValue: 30
-  step: 1
+  _value: 3
+  _minValue: 0
+  _maxValue: 30
+  _step: 1
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -16660,27 +16615,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!95 &8562871874273709288
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2894662993336656984}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 99187d156b9a3d44784675b55200dada, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8562871874273709289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17044,10 +16978,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 7200606154031926879}
   addButton: {fileID: 1272493499963421979}
   subButton: {fileID: 1272493500681491393}
-  value: 3.2
-  minValue: 1
-  maxValue: 3.7
-  step: 0.1
+  _value: 0
+  _minValue: 0
+  _maxValue: 0
+  _step: 0
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -17366,10 +17300,10 @@ MonoBehaviour:
   optionMaxValue: {fileID: 7365255984500666273}
   addButton: {fileID: 1473761706193442021}
   subButton: {fileID: 1473761706885182015}
-  value: 360
-  minValue: 10
-  maxValue: 360
-  step: 10
+  _value: 0
+  _minValue: 0
+  _maxValue: 0
+  _step: 0
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []

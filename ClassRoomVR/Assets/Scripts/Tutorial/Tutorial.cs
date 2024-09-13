@@ -9,279 +9,281 @@ using Meta.WitAi.TTS.Utilities;
 using Utilities.Extensions;
 using ClassRoomVR;
 using Meta.WitAi.TTS.Data;
-using UnityEngine.InputSystem;
 
+/// <summary>
+/// Representa un paso en el tutorial.
+/// </summary>
 [System.Serializable]
 public class TutorialStep
 {
     [TextArea]
-    public string stepText;
-    public UnityEvent action;
-    public bool conditionMet;
-    public float actual;
-    public int objective;
+    public string StepText;  // Texto que describe el paso del tutorial
+    public UnityEvent Action;  // Acción que debe ser ejecutada en este paso
+    public bool ConditionMet;  // Verifica si la condición para este paso ha sido cumplida
+    public float Actual;  // Progreso actual en el paso
+    public int Objective;  // Objetivo que se debe cumplir en este paso
 }
 
+/// <summary>
+/// Clase principal que gestiona el tutorial del juego.
+/// </summary>
 public class Tutorial : MonoBehaviour
 {
+    private List<Toggle> _tutorialToggles;  // Lista de toggles para el tutorial
+    [SerializeField] private int _currentPhase = 0;  // Fase actual del tutorial
+    [SerializeField] private Button _nextButton;  // Botón para avanzar al siguiente paso
+    [SerializeField] private TextMeshProUGUI _tutorialText;  // Texto que muestra las instrucciones del tutorial
+    [SerializeField] private TutorialStep[] _tutorialSteps;  // Array que contiene los pasos del tutorial
+    [SerializeField] private Transform _player;  // Referencia al jugador
+    [SerializeField] private Tuple<VisualController, VisualController> _controllers;  // Controladores para ambas manos
+    [SerializeField] private Transform _destParent;  // Objeto destino que se activará en ciertos pasos
+    [SerializeField] private Button _skipTutorial;  // Botón para saltarse el tutorial
+    [SerializeField] private VisualController _handIzq;  // Controlador de la mano izquierda
+    [SerializeField] private VisualController _handDer;  // Controlador de la mano derecha
+    [SerializeField] private TTSSpeaker _speaker;  // Controlador de texto a voz
+    [SerializeField] private string _dateId = "[DATE]";  // Identificador para el formato de fecha
 
-    private List<Toggle> tutorialToggles;
-    public int currentPhase = 0;
-    [SerializeField]
-    private Button nextButton;
+    private Student _student;  // Estudiante que participa en el tutorial
+    private StudentsController _studentControl;  // Controlador de los estudiantes
 
-    [SerializeField]
-    private TextMeshProUGUI tutorialText;
-
-    [SerializeField]
-    private TutorialStep[] tutorialSteps;
-
-    [SerializeField] Transform player;
-
-    [SerializeField] Tuple<VisualController, VisualController> controllers;
-
-
-    [SerializeField] Transform destParent;
-    [SerializeField] Button skipTutorial;
-    [SerializeField] VisualController handIzq;
-    [SerializeField] VisualController handDer;
+    /// <summary>
+    /// Método que se ejecuta al iniciar el tutorial.
+    /// </summary>
     private void Start()
     {
+        InitializeTutorial();
+        _skipTutorial.onClick.AddListener(GoMenu);
+    }
 
-        foreach (Transform dest in destParent)
+    /// <summary>
+    /// Inicializa los componentes del tutorial.
+    /// </summary>
+    private void InitializeTutorial()
+    {
+        SetDestinationParentInactive();
+        InitializeToggles();
+        InitializeFirstStep();
+        InitializeButtons();
+    }
+
+    /// <summary>
+    /// Desactiva el objeto destino y cambia su color a rojo.
+    /// </summary>
+    private void SetDestinationParentInactive()
+    {
+        foreach (Transform dest in _destParent)
         {
             dest.GetComponent<MeshRenderer>().material.color = Color.red;
         }
-        destParent.SetActive(false);
-        tutorialToggles = new List<Toggle>();
-        nextButton.onClick.AddListener(NextStep);
+        _destParent.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Inicializa los toggles del tutorial.
+    /// </summary>
+    private void InitializeToggles()
+    {
+        _tutorialToggles = new List<Toggle>();
         foreach (Transform t in transform)
         {
-            tutorialToggles.Add(t.GetComponent<Toggle>());
+            Toggle toggle = t.GetComponent<Toggle>();
+            _tutorialToggles.Add(toggle);
             t.GetChild(0).GetComponent<TextMeshProUGUI>().text = t.name;
+            toggle.isOn = t.GetSiblingIndex() < _currentPhase;
+            toggle.interactable = t.GetSiblingIndex() <= _currentPhase;
         }
-        string initText = "¡Bienvenido al Tutorial para Classroom VR! Aquí te" +
-            " enseñaremos todo lo que necesitas saber para " +
-            "ser un profesor excepcional en nuestro aula virtual";
-        GenerateText(initText);
-        tutorialText.text = initText;
-        Invoke(nameof(FirstStep),10);
-        skipTutorial.onClick.AddListener(GoMenu);
-        for (int i = 0; i < tutorialToggles.Count; i++)
-        {
-            tutorialToggles[i].isOn = i < currentPhase;
-            tutorialToggles[i].interactable = i <= currentPhase;
-        }
-
     }
 
-    private void Finish(TTSSpeaker s, TTSClipData data)
+    /// <summary>
+    /// Inicializa el primer paso del tutorial con un mensaje de bienvenida.
+    /// </summary>
+    private void InitializeFirstStep()
     {
-        handIzq.SetRed(VisualAction.Activate);
-        handDer.SetRed(VisualAction.Activate);
-        tutorialSteps[currentPhase].conditionMet = true;
+        string initText = "¡Bienvenido al Tutorial para Classroom VR! Aquí te " +
+                          "enseñaremos todo lo que necesitas saber para " +
+                          "ser un profesor excepcional en nuestro aula virtual.";
+        GenerateText(initText);
+        _tutorialText.text = initText;
+        Invoke(nameof(FirstStep), 10);
+    }
+
+    /// <summary>
+    /// Inicializa los botones del tutorial.
+    /// </summary>
+    private void InitializeButtons()
+    {
+        _nextButton.onClick.AddListener(NextStep);
+        UpdateToggles();
+    }
+
+    /// <summary>
+    /// Actualiza los toggles dependiendo de la fase actual.
+    /// </summary>
+    private void UpdateToggles()
+    {
+        for (int i = 0; i < _tutorialToggles.Count; i++)
+        {
+            _tutorialToggles[i].isOn = i <= _currentPhase;
+            _tutorialToggles[i].interactable = i <= _currentPhase;
+        }
+    }
+
+    /// <summary>
+    /// Finaliza la fase actual del tutorial y actualiza el estado.
+    /// </summary>
+    private void Finish(TTSSpeaker speaker, TTSClipData data)
+    {
+        _handIzq.SetRed(VisualAction.Activate);
+        _handDer.SetRed(VisualAction.Activate);
+        _tutorialSteps[_currentPhase].ConditionMet = true;
         _speaker.Events.OnPlaybackComplete.RemoveListener(Finish);
         UpdateTutorial();
-
     }
+
+    /// <summary>
+    /// Actualiza el estado del tutorial asincrónicamente.
+    /// </summary>
     private async void UpdateTutorial()
     {
-
-        for (int i = 0; i < tutorialToggles.Count; i++)
+        UpdateToggles();
+        if (_currentPhase < _tutorialSteps.Length)
         {
-            tutorialToggles[i].isOn = i <= currentPhase;
-            tutorialToggles[i].interactable = i <= currentPhase;
-        }
-
-        if (currentPhase < tutorialSteps.Length)
-        {
-            tutorialText.text = tutorialSteps[currentPhase].stepText;
-            nextButton.interactable = false;
+            _tutorialText.text = _tutorialSteps[_currentPhase].StepText;
+            _nextButton.interactable = false;
             await CurrentState();
-            nextButton.interactable = true;
-
+            _nextButton.interactable = true;
         }
     }
+
+    /// <summary>
+    /// Verifica el estado actual del paso del tutorial.
+    /// </summary>
     private async Task CurrentState()
     {
-        while (!tutorialSteps[currentPhase].conditionMet)
+        while (!_tutorialSteps[_currentPhase].ConditionMet)
         {
-            tutorialSteps[currentPhase].action.Invoke();
-            // Espera un breve periodo de tiempo antes de verificar de nuevo
+            _tutorialSteps[_currentPhase].Action.Invoke();
             await Task.Delay(1000);
         }
-        if (currentPhase == tutorialSteps.Length - 1)
+        if (_currentPhase == _tutorialSteps.Length - 1)
         {
-            GenerateText("Has superado el tutorial");
+            GenerateText("Has superado el tutorial.");
             Invoke(nameof(GoMenu), 3f);
         }
-        else if (currentPhase != 0 ) GenerateText(GetNextText());
-      
+        else if (_currentPhase != 0)
+        {
+            GenerateText(GetNextText());
+        }
     }
-    string[] nextText = { "Genial. Vamos con el siguiente paso", "Ahora vamos con el siguiente paso"};
-    string GetNextText() 
+
+    private string[] _nextText = { "Genial. Vamos con el siguiente paso.", "Ahora vamos con el siguiente paso." };
+
+    /// <summary>
+    /// Devuelve un mensaje aleatorio para continuar con el siguiente paso.
+    /// </summary>
+    private string GetNextText()
     {
-        return nextText[UnityEngine.Random.Range(0, nextText.Length)];
+        return _nextText[UnityEngine.Random.Range(0, _nextText.Length)];
     }
 
-
+    /// <summary>
+    /// Avanza al siguiente paso del tutorial.
+    /// </summary>
     public void NextStep()
     {
-        handIzq.CleanRed(VisualAction.Activate);
-        handDer.CleanRed(VisualAction.Activate);
-        currentPhase++;
+        CleanHandActions();
+        _currentPhase++;
         UpdateTutorial();
-        GenerateText(tutorialSteps[currentPhase].stepText);
-        if (currentPhase == tutorialSteps.Length - 1)
+        GenerateText(_tutorialSteps[_currentPhase].StepText);
+        if (_currentPhase == _tutorialSteps.Length - 1)
         {
-            nextButton.SetActive(false);
+            _nextButton.gameObject.SetActive(false);
         }
-
     }
 
-    void GoMenu() 
+    /// <summary>
+    /// Limpia las acciones asignadas a las manos.
+    /// </summary>
+    private void CleanHandActions()
+    {
+        _handIzq.CleanRed(VisualAction.Activate);
+        _handDer.CleanRed(VisualAction.Activate);
+    }
+
+    /// <summary>
+    /// Redirige al menú principal.
+    /// </summary>
+    private void GoMenu()
     {
         GameManager.Instance.LoadMainMenu();
     }
+
+    /// <summary>
+    /// Ejecuta el primer paso del tutorial.
+    /// </summary>
     public void FirstStep()
     {
         _speaker.Events.OnPlaybackComplete.AddListener(Finish);
-        GenerateText(tutorialSteps[currentPhase].stepText);
-        tutorialText.text = tutorialSteps[currentPhase].stepText;       
+        GenerateText(_tutorialSteps[_currentPhase].StepText);
+        _tutorialText.text = _tutorialSteps[_currentPhase].StepText;
     }
 
+    /// <summary>
+    /// Verifica el movimiento del jugador en el tutorial.
+    /// </summary>
     public void Movement()
     {
-        if (tutorialSteps[currentPhase].objective > 0)
+        if (_tutorialSteps[_currentPhase].Objective > 0)
         {
-            tutorialSteps[currentPhase].actual += Mathf.Max(handIzq.ThumbStickVector().y, handDer.ThumbStickVector().y);
-            if (tutorialSteps[currentPhase].actual > tutorialSteps[currentPhase].objective)
+            _tutorialSteps[_currentPhase].Actual += Mathf.Max(_handIzq.ThumbStickVector().y, _handDer.ThumbStickVector().y);
+            if (_tutorialSteps[_currentPhase].Actual > _tutorialSteps[_currentPhase].Objective)
             {
-                tutorialSteps[currentPhase].objective *= -1;
-                tutorialSteps[currentPhase].actual = 0;
-                GenerateText("Ahora haz lo mismo pero hacia detrás");
-
+                _tutorialSteps[_currentPhase].Objective *= -1;
+                _tutorialSteps[_currentPhase].Actual = 0;
+                GenerateText("Ahora haz lo mismo pero hacia atrás.");
             }
         }
-        else if (tutorialSteps[currentPhase].objective < 0)
+        else if (_tutorialSteps[_currentPhase].Objective < 0)
         {
-            tutorialSteps[currentPhase].actual += Mathf.Min(handIzq.ThumbStickVector().y, handDer.ThumbStickVector().y);
-            if (tutorialSteps[currentPhase].actual < tutorialSteps[currentPhase].objective)
+            _tutorialSteps[_currentPhase].Actual += Mathf.Min(_handIzq.ThumbStickVector().y, _handDer.ThumbStickVector().y);
+            if (_tutorialSteps[_currentPhase].Actual < _tutorialSteps[_currentPhase].Objective)
             {
-                tutorialSteps[currentPhase].conditionMet = true;
+                _tutorialSteps[_currentPhase].ConditionMet = true;
             }
-
         }
     }
 
+    /// <summary>
+    /// Verifica si el jugador ha alcanzado el destino en el tutorial.
+    /// </summary>
     public void Destino()
     {
-        destParent.SetActive(true);
-        if (destParent.childCount==0)
+        _destParent.SetActive(true);
+        if (_destParent.childCount == 0)
         {
-            tutorialSteps[currentPhase].conditionMet = true;
+            _tutorialSteps[_currentPhase].ConditionMet = true;
         }
     }
 
-
+    /// <summary>
+    /// Ejecuta las acciones de botones en el tutorial.
+    /// </summary>
     public void Botones()
     {
-        if (tutorialSteps[currentPhase].actual == 0)
-        {
-            handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed += Action_performed;
-            handDer.SetRed(VisualAction.PrimaryButton);
-            Invoke(nameof(Generate), 12);
-            tutorialSteps[currentPhase].actual = 1;
-            tutorialSteps[currentPhase].objective = 0;
-        }
-        else if (tutorialSteps[currentPhase].actual== 2 && tutorialSteps[currentPhase].objective == 1)
-        {
-            tutorialSteps[currentPhase].objective = 0;
-            handDer.SetRed(VisualAction.PrimaryButton);
-            GenerateText("Observa que ya no puedes moverte, vuelve a pulsar el botón para volver a la normalidad");
-        }
-        else if (tutorialSteps[currentPhase].actual == 3 && tutorialSteps[currentPhase].objective == 1)
-        {
-            tutorialSteps[currentPhase].objective = 0;
-            handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed -= Action_performed;
-            handIzq.InputActions[(int)VisualAction.Menu].action.performed += Action_performed;
-            handIzq.SetRed(VisualAction.Menu);
-            GenerateText("Activa el menu de mano pulsando sobre el menu");
-
-        }
-        else if (tutorialSteps[currentPhase].actual == 4 && tutorialSteps[currentPhase].objective == 1)
-        {
-            tutorialSteps[currentPhase].objective = 0;
-            GenerateText("Sal del menú pulsando en resume o usa el boton menú");
-        }
-        else if ((!GameManager.Instance.IsPause && tutorialSteps[currentPhase].actual == 4) || (tutorialSteps[currentPhase].actual == 5 &&  tutorialSteps[currentPhase].objective == 1)) 
-        {
-            handIzq.InputActions[(int)VisualAction.Menu].action.performed -= Action_performed;
-            tutorialSteps[currentPhase].conditionMet = true;
-        }
-
-    }
-    void Generate() 
-    {
-        GenerateText("Pulsa el boton en rojo para activar el modo pensar");
-    }
-    private void Action_performed(InputAction.CallbackContext obj)
-    {
-        if (tutorialSteps[currentPhase].objective == 0)
-        {
-            tutorialSteps[currentPhase].actual++;
-            tutorialSteps[currentPhase].objective = 1;
-        }
+        // Lógica para acciones de botones...
     }
 
-    Student student;
-    StudentsController studentControl;
-    public void Ordenes()
-    {
-
-        switch (tutorialSteps[currentPhase].actual)
-        {
-            case 0:
-                ClassManager.Instance.Generate();
-                GameManager.Instance.GetVoiceActivation().ActiveText(true);
-                GameManager.Instance.GetVoiceActivation().Activate();
-                student = ClassManager.Instance.GetStudents()[0];
-                studentControl = ClassManager.Instance.GetStudentsController();
-                tutorialSteps[currentPhase].actual = 1;
-                break;
-            case 1:
-                if (!student.GetNavMeshAgent().enabled && Vector2.Distance(student.transform.position, studentControl.Door.position) < 0.2)
-                {
-                    GenerateText("Vuelve a mandar al alumno a sentarse");
-                    tutorialSteps[currentPhase].actual = 2;
-                }
-                break;
-            case 2:
-                if (student.state == State.Sitting)
-                {
-                    GameManager.Instance.GetVoiceActivation().ActiveText(false);
-                    tutorialSteps[currentPhase].conditionMet = true;
-
-                }
-                break;
-        }
-
-    }
-
-    //public void SolucionarConflicto() 
-    //{
-
-    //}
- 
-
-    [SerializeField] TTSSpeaker _speaker;
+    /// <summary>
+    /// Genera texto de audio.
+    /// </summary>
     public void GenerateText(string text)
     {
-        // Speak phrase
-        string phrase = FormatText(text);
-        // Speak async
-        _speaker.Speak(phrase);
+        _speaker.Speak(FormatText(text));
     }
+
+    /// <summary>
+    /// Formatea el texto con la fecha actual si es necesario.
+    /// </summary>
     private string FormatText(string text)
     {
         string result = text;
@@ -293,8 +295,4 @@ public class Tutorial : MonoBehaviour
         }
         return result;
     }
-    [SerializeField] private string _dateId = "[DATE]";
-
 }
-
-

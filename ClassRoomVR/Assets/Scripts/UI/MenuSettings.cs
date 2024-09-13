@@ -1,0 +1,135 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+namespace ClassRoomVR
+{
+    /// <summary>
+    /// Clase que gestiona la configuración del menú de ajustes.
+    /// </summary>
+    public class MenuSettings : MonoBehaviour
+    {
+        private ClassSettings _settings; // Configuraciones del aula
+        [SerializeField] private TMP_Dropdown _structureDropdown; // Menú desplegable para seleccionar la estructura
+        [SerializeField] private Button _editDeskPositionButton; // Botón para editar la posición de los escritorios
+        [SerializeField] private Option _boysOption; // Opción para configurar el número de chicos
+        [SerializeField] private Option _girlsOption; // Opción para configurar el número de chicas
+        private int _maxStudents; // Número máximo de estudiantes permitido
+
+        private void Start()
+        {
+            InitializeSettings();
+            InitializeDropdown();
+            InitializeListeners();
+            UpdateStructureAndStudents();
+        }
+
+        /// <summary>
+        /// Inicializa las configuraciones del aula.
+        /// </summary>
+        private void InitializeSettings()
+        {
+            _settings = GameManager.Instance.GetCurrentSettings();
+            _girlsOption.SetValue(_settings.NumWomen);
+            _boysOption.SetValue(_settings.NumMen);
+        }
+
+        /// <summary>
+        /// Inicializa el menú desplegable de estructuras.
+        /// </summary>
+        private void InitializeDropdown()
+        {
+            _structureDropdown.AddOptions(new List<string>(Enum.GetNames(typeof(StructureMode))));
+            _structureDropdown.value = (int)_settings.StructureMode;
+        }
+
+        /// <summary>
+        /// Inicializa los listeners para los eventos de los botones y opciones.
+        /// </summary>
+        private void InitializeListeners()
+        {
+            _structureDropdown.onValueChanged.AddListener(ChangeStructure);
+            _boysOption.onValueChanged.AddListener(value => UpdateStudentCount(value, Gender.Men));
+            _girlsOption.onValueChanged.AddListener(value => UpdateStudentCount(value, Gender.Women));
+            _editDeskPositionButton.onClick.AddListener(() =>
+            {
+                MenuTransition.Instance.GoNextScreen();
+                MenuTransition.Instance.MoveClase();
+            });
+        }
+
+        /// <summary>
+        /// Cambia la estructura del aula según la selección del menú desplegable.
+        /// </summary>
+        /// <param name="value">El valor seleccionado en el menú desplegable.</param>
+        private void ChangeStructure(int value)
+        {
+            _settings.StructureMode = (StructureMode)value;
+            DeskManager.Instance.DestroyChildren();
+            UpdateStructureAndStudents();
+        }
+
+        /// <summary>
+        /// Actualiza la estructura y el número máximo de estudiantes según la estructura seleccionada.
+        /// </summary>
+        private void UpdateStructureAndStudents()
+        {
+            _maxStudents = _settings.StructureMode switch
+            {
+                StructureMode.Fila => 30,
+                StructureMode.Circular => 15,
+                StructureMode.U => 8,
+                _ => _maxStudents
+            };
+
+            if (_settings.NumMen + _settings.NumWomen > _maxStudents)
+            {
+                DistributeStudentCount();
+            }
+
+            SetMaxStudents();
+        }
+
+        /// <summary>
+        /// Actualiza el número de estudiantes según el género seleccionado.
+        /// </summary>
+        /// <param name="value">El nuevo número de estudiantes.</param>
+        /// <param name="gender">El género de los estudiantes.</param>
+        private void UpdateStudentCount(float value, Gender gender)
+        {
+            if (gender == Gender.Men)
+            {
+                _settings.NumMen = (int)value;
+            }
+            else
+            {
+                _settings.NumWomen = (int)value;
+            }
+            SetMaxStudents();
+            DeskManager.Instance.DestroyChildren();
+        }
+
+        /// <summary>
+        /// Configura el número máximo de estudiantes y escritorios.
+        /// </summary>
+        private void SetMaxStudents()
+        {
+            _settings.NumStudents = _settings.NumMen + _settings.NumWomen;
+            _boysOption.SetMax(_maxStudents - _settings.NumWomen);
+            _girlsOption.SetMax(_maxStudents - _settings.NumMen);
+            _settings.NumDesks = _settings.NumStudents;
+        }
+
+        /// <summary>
+        /// Distribuye el número de estudiantes equitativamente entre chicos y chicas.
+        /// </summary>
+        private void DistributeStudentCount()
+        {
+            _settings.NumMen = _settings.NumWomen = _maxStudents / 2;
+            _boysOption.SetValue(_maxStudents / 2);
+            _girlsOption.SetValue(_maxStudents / 2);
+        }
+    }
+}
