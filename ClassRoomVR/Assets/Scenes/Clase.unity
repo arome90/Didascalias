@@ -745,6 +745,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &826651149 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5267781151165074458, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3625330677312976096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &889602728
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +902,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8a7b4a89377afa4fb994d120bc1272f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &942254702 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2630973840539087684, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3625330677312976096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &964548843
@@ -1798,6 +1822,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fd15b4187652d34e983284606cabf0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1670252394 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6356641320981805860, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3625330677312976096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1791295664 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8953582657254484841, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
@@ -1946,6 +1982,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4253f32900bcc4d499d675566142ded0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2074137103 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1097811303532070565, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3625330677312976096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2101349841
@@ -2695,9 +2743,19 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 5173330148974518926, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
+      propertyPath: m_RayInteractor
+      value: 
+      objectReference: {fileID: 826651149}
+    - target: {fileID: 5173330148974518926, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+        type: 3}
       propertyPath: m_DirectInteractor
       value: 
       objectReference: {fileID: 1986096329}
+    - target: {fileID: 5173330148974518926, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+        type: 3}
+      propertyPath: m_TeleportInteractor
+      value: 
+      objectReference: {fileID: 1670252394}
     - target: {fileID: 5173330148974518926, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
       propertyPath: m_TeleportModeCancel
@@ -2730,6 +2788,11 @@ PrefabInstance:
       propertyPath: m_AimFlagsAction.m_Action.m_Name
       value: Aim Flags
       objectReference: {fileID: 0}
+    - target: {fileID: 6231058697485913514, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+        type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 1403025453263349038}
     - target: {fileID: 6740379855771853829, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
       propertyPath: m_IsActive
@@ -2796,9 +2859,19 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 7606903132457420231, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
+      propertyPath: m_RayInteractor
+      value: 
+      objectReference: {fileID: 2074137103}
+    - target: {fileID: 7606903132457420231, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+        type: 3}
       propertyPath: m_DirectInteractor
       value: 
       objectReference: {fileID: 1812324003}
+    - target: {fileID: 7606903132457420231, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+        type: 3}
+      propertyPath: m_TeleportInteractor
+      value: 
+      objectReference: {fileID: 942254702}
     - target: {fileID: 7606903132457420231, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
       propertyPath: m_TeleportModeCancel
@@ -3102,6 +3175,11 @@ PrefabInstance:
       propertyPath: m_DirectionalAnchorRotationAction.m_Action.m_ExpectedControlType
       value: Vector2
       objectReference: {fileID: 0}
+    - target: {fileID: 8953582657254484841, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+        type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 1403025453263349038}
     - target: {fileID: 8967829455558256018, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
       propertyPath: m_AnchorMax.y
