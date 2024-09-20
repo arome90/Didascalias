@@ -9,6 +9,9 @@ using Meta.WitAi.TTS.Utilities;
 using Utilities.Extensions;
 using ClassRoomVR;
 using Meta.WitAi.TTS.Data;
+using MathNet.Numerics;
+using UnityEngine.InputSystem;
+using MathNet.Numerics.Distributions;
 
 /// <summary>
 /// Representa un paso en el tutorial.
@@ -135,8 +138,11 @@ public class Tutorial : MonoBehaviour
     {
         _handIzq.SetRed(VisualAction.Activate);
         _handDer.SetRed(VisualAction.Activate);
+        _handIzq.transform.parent.GetChild(3).SetActive(true);
+        _handDer.transform.parent.GetChild(2).SetActive(true);
         _tutorialSteps[_currentPhase].ConditionMet = true;
         _speaker.Events.OnPlaybackComplete.RemoveListener(Finish);
+        Debug.Log("FINISHED TTS");
         UpdateTutorial();
     }
 
@@ -145,6 +151,7 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     private async void UpdateTutorial()
     {
+        Debug.Log("UPDATING TUTORIAL");
         UpdateToggles();
         if (_currentPhase < _tutorialSteps.Length)
         {
@@ -270,7 +277,81 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     public void Botones()
     {
-        // Lógica para acciones de botones...
+        if (_tutorialSteps[_currentPhase].Actual == 0)
+        {
+            _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed += Action_performed;
+            _handDer.SetRed(VisualAction.PrimaryButton);
+            Invoke(nameof(Generate), 12);
+            _tutorialSteps[_currentPhase].Actual = 1;
+            _tutorialSteps[_currentPhase].Objective = 0;
+        }
+        else if (_tutorialSteps[_currentPhase].Actual == 2 && _tutorialSteps[_currentPhase].Objective == 1)
+        {
+            _tutorialSteps[_currentPhase].Objective = 0;
+            _handDer.SetRed(VisualAction.PrimaryButton);
+            GenerateText("Observa que ya no puedes moverte, vuelve a pulsar el botón para volver a la normalidad");
+        }
+        else if (_tutorialSteps[_currentPhase].Actual == 3 && _tutorialSteps[_currentPhase].Objective == 1)
+        {
+            _tutorialSteps[_currentPhase].Objective = 0;
+            _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed -= Action_performed;
+            _handIzq.InputActions[(int)VisualAction.Menu].action.performed += Action_performed;
+            _handIzq.SetRed(VisualAction.Menu);
+            GenerateText("Activa el menu de mano pulsando sobre el menu");
+
+        }
+        else if (_tutorialSteps[_currentPhase].Actual == 4 && _tutorialSteps[_currentPhase].Objective == 1)
+        {
+            _tutorialSteps[_currentPhase].Objective = 0;
+            GenerateText("Sal del menú pulsando en resume o usa el boton menú");
+        }
+        else if ((!GameManager.Instance.IsPause && _tutorialSteps[_currentPhase].Actual == 4) || (_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
+        {
+            _handIzq.InputActions[(int)VisualAction.Menu].action.performed -= Action_performed;
+            _tutorialSteps[_currentPhase].ConditionMet = true;
+        }
+
+    }
+
+    public void Ordenes()
+    {
+
+        switch (_tutorialSteps[_currentPhase].Actual)
+        {
+            case 0:
+                ClassManager.Instance.Generate();
+                GameManager.Instance.GetVoiceActivation().ActiveText(true);
+                GameManager.Instance.GetVoiceActivation().Activate();
+                _student = ClassManager.Instance.GetStudents()[0];
+                _studentControl = ClassManager.Instance.GetStudentsController();
+                _tutorialSteps[_currentPhase].Actual = 1;
+                break;
+            case 1:
+                if (!_student.GetNavMeshAgent().enabled && Vector2.Distance(_student.transform.position, _studentControl.Door.position) < 0.2)
+                {
+                    GenerateText("Vuelve a mandar al alumno a sentarse");
+                    _tutorialSteps[_currentPhase].Actual = 2;
+                }
+                break;
+            case 2:
+                if (_student.GetState() == State.Sitting)
+                {
+                    GameManager.Instance.GetVoiceActivation().ActiveText(false);
+                    _tutorialSteps[_currentPhase].ConditionMet = true;
+
+                }
+                break;
+        }
+
+    }
+
+    private void Action_performed(InputAction.CallbackContext obj)
+    {
+        if (_tutorialSteps[_currentPhase].Objective == 0)
+        {
+            _tutorialSteps[_currentPhase].Actual++;
+            _tutorialSteps[_currentPhase].Objective = 1;
+        }
     }
 
     /// <summary>

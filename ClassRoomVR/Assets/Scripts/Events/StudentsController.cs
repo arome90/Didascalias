@@ -65,6 +65,7 @@ namespace ClassRoomVR
         // Método para buscar un estudiante por nombre (manejo de diacríticos)
         public bool TryGetStudent(string name, out Student student)
         {
+            Debug.Log(_students[name]);
             student = null;
             if (_students.ContainsKey(name))
             {
