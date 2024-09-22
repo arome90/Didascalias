@@ -25,6 +25,9 @@ namespace ClassRoomVR
         [SerializeField] GameObject player;
 
         [SerializeField] bool GenerateOnStart;
+
+        [SerializeField] Vector3 studentSittingPlaceOffset= new Vector3(0f, 0f, -0.15f);
+
         public override void Awake()
         {
             settings = GameManager.Instance.GetCurrentSettings();
@@ -132,7 +135,7 @@ namespace ClassRoomVR
             Desk desk = studentsPositions.GetChild(deskPos).GetComponent<Desk>();
             Transform pos = desk.transform.GetChild(0);
             pickedStudent.transform.SetPositionAndRotation(pos.position , pos.parent.rotation);
-            pickedStudent.transform.Translate(-new Vector3(0f,0f,0.15f),Space.Self);
+            pickedStudent.transform.Translate(studentSittingPlaceOffset ,Space.Self);
             pickedStudent.SetDesk(desk);
             pickedStudent.SetTargets(targetsHead);
             asientosOcupados[deskPos] = true;

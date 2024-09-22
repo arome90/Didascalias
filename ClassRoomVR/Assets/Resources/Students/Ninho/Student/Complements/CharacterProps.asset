@@ -14,41 +14,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boneAttachments:
   - boneName: head.x
-    probability: 0
+    probability: 20.8
     complements:
     - mesh: {fileID: 5116330981955866158, guid: 8e13544862498d54d80773e1279ddb3e,
         type: 3}
       material: {fileID: 2100000, guid: c01a0e981160cb54283f47bbe430b2a6, type: 2}
       color: []
+      scaleOffset: {x: 1.2, y: 1.2, z: 1.2}
+      rotationOffset: {x: 180, y: 90, z: 55}
+      positionOffset: {x: 0, y: 0.03, z: -0.01}
     - mesh: {fileID: 5116330981955866158, guid: 8e13544862498d54d80773e1279ddb3e,
         type: 3}
       material: {fileID: 2100000, guid: a484b2c436cb1df4099e5c7c004af33f, type: 2}
       color: []
+      scaleOffset: {x: 1.2, y: 1.2, z: 1.2}
+      rotationOffset: {x: 180, y: 90, z: 55}
+      positionOffset: {x: 0, y: 0.03, z: -0.01}
     - mesh: {fileID: -1683251801000144942, guid: c8032c95b555a3b44bad08f970f310eb,
         type: 3}
       material: {fileID: 2100000, guid: f5dd36ac2d617cf41ab202786b800243, type: 2}
       color:
       - {r: 0, g: 0, b: 0, a: 0}
       - {r: 1, g: 1, b: 1, a: 0}
+      scaleOffset: {x: 1.1, y: 1.1, z: 1.1}
+      rotationOffset: {x: 180, y: 270, z: 50}
+      positionOffset: {x: 0, y: 0.03, z: 0.058}
   - boneName: foot.r
     probability: 100
     complements:
     - mesh: {fileID: -8696955899238524410, guid: 9db1ee3d294adc344a08dc2a2a6d68fd,
         type: 3}
       material: {fileID: 2100000, guid: 4e672ffb323454b4798ce5379127824b, type: 2}
-      color: []
+      color:
+      - {r: 0.6830188, g: 0.21006045, b: 0.21006045, a: 0}
+      - {r: 0.44182983, g: 0.51973456, b: 0.7433963, a: 0}
+      - {r: 0.68235296, g: 0.5122683, b: 0.21176471, a: 0}
+      - {r: 0.82641506, g: 0.82641506, b: 0.82641506, a: 0}
+      scaleOffset: {x: 1.1, y: 1.1, z: 1.1}
+      rotationOffset: {x: 0, y: 270, z: -35}
+      positionOffset: {x: 0.01, y: -0.02, z: 0.01}
     - mesh: {fileID: -8696955899238524410, guid: 9db1ee3d294adc344a08dc2a2a6d68fd,
         type: 3}
       material: {fileID: 2100000, guid: 847320eaf5a8ddc4f896e53edead7cd1, type: 2}
       color: []
+      scaleOffset: {x: 1.1, y: 1.1, z: 1.1}
+      rotationOffset: {x: 0, y: 270, z: -35}
+      positionOffset: {x: 0.01, y: -0.02, z: -0.01}
     - mesh: {fileID: -1246021961651105686, guid: 4af0ff9ba2b82ab438f17eb1c5abc0f6,
         type: 3}
       material: {fileID: 2100000, guid: 6a196079dd309e541aaf7f6604bde1cd, type: 2}
-      color: []
+      color:
+      - {r: 0.25898892, g: 0.4716981, b: 0.32260972, a: 0}
+      - {r: 0.6528301, g: 0.25751546, b: 0.21555705, a: 0}
+      - {r: 0.38888568, g: 0.6320043, b: 0.7283019, a: 0}
+      - {r: 0.81886786, g: 0.81886786, b: 0.81886786, a: 0}
+      scaleOffset: {x: 0.9, y: 0.9, z: 0.9}
+      rotationOffset: {x: 0, y: 270, z: -35}
+      positionOffset: {x: 0.01, y: -0.02, z: -0.01}
     - mesh: {fileID: -1246021961651105686, guid: 4af0ff9ba2b82ab438f17eb1c5abc0f6,
         type: 3}
       material: {fileID: 2100000, guid: 3ecffed869fb134478b21cb8494fae77, type: 2}
       color: []
+      scaleOffset: {x: 0.9, y: 0.9, z: 0.9}
+      rotationOffset: {x: 0, y: 270, z: -35}
+      positionOffset: {x: 0.01, y: -0.02, z: -0.01}
   - boneName: hand.r
     probability: 100
     complements:
@@ -56,10 +85,16 @@ MonoBehaviour:
         type: 3}
       material: {fileID: 2100000, guid: a2c94edc0222c9840a4c3ab5c83357a6, type: 2}
       color: []
+      scaleOffset: {x: 0, y: 0, z: 0}
+      rotationOffset: {x: 0, y: 270, z: -90}
+      positionOffset: {x: 0, y: 0, z: 0}
     - mesh: {fileID: 3940827982120485633, guid: ceeadec9534ceca4c95bef5374836496,
         type: 3}
       material: {fileID: 2100000, guid: a2c94edc0222c9840a4c3ab5c83357a6, type: 2}
       color: []
+      scaleOffset: {x: 0, y: 0, z: 0}
+      rotationOffset: {x: 0, y: 270, z: -90}
+      positionOffset: {x: 0, y: 0, z: 0}
   - boneName: neck.x
     probability: 100
     complements:
@@ -67,7 +102,13 @@ MonoBehaviour:
         type: 3}
       material: {fileID: 2100000, guid: dc2e56a8b25e6ec4eb2e43431963172b, type: 2}
       color: []
+      scaleOffset: {x: 1.2, y: 1.2, z: 1.2}
+      rotationOffset: {x: 0, y: 270, z: -90}
+      positionOffset: {x: 0, y: 0, z: 0}
     - mesh: {fileID: -4614220501822760727, guid: d60b5490a5e4dd843a3447ce6fffa4b6,
         type: 3}
       material: {fileID: 2100000, guid: dc2e56a8b25e6ec4eb2e43431963172b, type: 2}
       color: []
+      scaleOffset: {x: 1.2, y: 1.2, z: 1.2}
+      rotationOffset: {x: 0, y: 270, z: -90}
+      positionOffset: {x: 0, y: 0, z: 0}

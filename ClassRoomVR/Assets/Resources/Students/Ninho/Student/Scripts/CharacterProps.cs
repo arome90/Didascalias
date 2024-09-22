@@ -11,7 +11,10 @@ public class CharacterProps : ScriptableObject
         public Mesh mesh; // The mesh
         public Material material; // Corresponding material for the mesh
         public Color[] color;
-       
+        public Vector3 scaleOffset;
+        public Vector3 rotationOffset;
+        public Vector3 positionOffset;
+
     }
 
     [System.Serializable]

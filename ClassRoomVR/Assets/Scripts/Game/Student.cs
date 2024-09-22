@@ -258,7 +258,7 @@ namespace ClassRoomVR
         // Coroutine to complete the sit back action
         IEnumerator OnCompleteSitBack()
         {
-            
+            Debug.Log("semtar");
             while (Distance(transform.position, desk.GetPositionStudent(), 0.07f))
             {
                 yield return null;
@@ -269,8 +269,8 @@ namespace ClassRoomVR
             desk.PlayAnimacionMesa(Animaciones.SitRelajado);
             studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
             Transform pos = desk.transform.GetChild(0);
-            transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
-            transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
+          //  transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
+       //     transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
             state = State.Sitting;
             rig.layers[0].active = true;
             desk.SetChair(true);
@@ -327,7 +327,7 @@ namespace ClassRoomVR
         // Coroutine to complete the stand change action
         IEnumerator OnCompleteStandChange()
         {
-            studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
+          //  studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
             while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
             SitBack();

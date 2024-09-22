@@ -82,7 +82,7 @@ namespace ClassRoomVR
         public void SetAttention() 
         {
             attentionLevel = Mathf.Max(attentionLevel, 65f);
-            StartCoroutine(SetExpression(Expresiones.Sonreir));
+            StartCoroutine(SetExpression(StudentProperties.Expressions.Smile));
         }
 
         public double CalculateAttentionAverage()
@@ -100,14 +100,14 @@ namespace ClassRoomVR
 
 
         SkinnedMeshRenderer meshRenderer;
-        public enum Expresiones { LLorar, Dormido, Sonreir, Quejarse, Enfadado, Pestañear }
+      
         private float[] list;
 
 
         public void SetPestañeo()
         {
-            SetBlendShape(Expresiones.Pestañear, 100);
-            if (attentionLevel < 40) { StartCoroutine(SetExpression(Expresiones.Quejarse)); }
+            SetBlendShape(StudentProperties.Expressions.CloseEyes, 100);
+            if (attentionLevel < 40) { StartCoroutine(SetExpression(StudentProperties.Expressions.Bored)); }
             Invoke(nameof(SetAbrirOjos), 0.2f);
 
         }
@@ -121,10 +121,10 @@ namespace ClassRoomVR
         }
         public void SetAbrirOjos()
         {
-            SetBlendShape(Expresiones.Pestañear, 0);
+            SetBlendShape(StudentProperties.Expressions.CloseEyes, 0);
 
         }
-        public void SetBlendShape(Expresiones expresion, float value)
+        public void SetBlendShape(StudentProperties.Expressions expresion, float value)
         {
             meshRenderer.SetBlendShapeWeight((int)expresion, value);
         }
@@ -166,7 +166,7 @@ namespace ClassRoomVR
         //}
 
 
-        public IEnumerator SetExpression(Expresiones exp)
+        public IEnumerator SetExpression(StudentProperties.Expressions exp)
         {
             while (meshRenderer.GetBlendShapeWeight((int)exp) != 100)
             {

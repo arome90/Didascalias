@@ -1,4 +1,5 @@
-    using UnityEngine;
+using UnityEngine;
+using Utilities.Extensions;
 
 public class CharacterPropsSpawner : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class CharacterPropsSpawner : MonoBehaviour
 
             bool isFoot = boneAttachment.boneName.ToLower().Contains("foot");
             // Decide if the asset should spawn only on one side (not both) for non-foot bones
-            bool spawnOnOneSideOnly = boneAttachment.boneName.Contains("R") && !isFoot;
+            bool spawnOnOneSideOnly = boneAttachment.boneName.Contains("r") && !isFoot;
 
             // Randomly decide which side to spawn the asset on if spawnOnOneSideOnly is true
             bool spawnOnRight = spawnOnOneSideOnly ? Random.Range(0, 2) == 0 : true;
@@ -49,9 +50,9 @@ public class CharacterPropsSpawner : MonoBehaviour
             string boneName = boneAttachment.boneName;
 
             // Adjust bone name for mirrored assets
-            if (isMirrored && boneName.Contains("R"))
+            if (isMirrored && boneName.Contains("r"))
             {
-                boneName = boneName.Replace("R", "L");
+                boneName = boneName.Replace("r", "l");
             }
 
             SpawnForBone(rootBone, boneName, complement, color, isMirrored);
@@ -78,12 +79,23 @@ public class CharacterPropsSpawner : MonoBehaviour
             }
             // Set the prop object as a child of the bone
             propObject.transform.SetParent(bone, false);
+
+            if (complement.scaleOffset.x != 0 && complement.scaleOffset.y != 0 && complement.scaleOffset.z != 0)
+                propObject.transform.localScale
+                    = new Vector3(propObject.transform.localScale.x * complement.scaleOffset.x, propObject.transform.localScale.y * complement.scaleOffset.y, propObject.transform.localScale.z * complement.scaleOffset.z);
+
+            propObject.transform.Rotate(complement.rotationOffset);
+
+          
             if (isMirrored)
             {
                 // If the object is on the "L" side, mirror it by scaling in Z-axis
                 propObject.transform.localScale = new Vector3(propObject.transform.localScale.x, propObject.transform.localScale.y, -propObject.transform.localScale.z);
+                propObject.transform.Translate(new Vector3(-complement.positionOffset.x, complement.positionOffset.y, complement.positionOffset.z), Space.World);
+
             }
-           // Debug.Log("Spawned mesh for bone '" + boneName + "' with mirrored: " + isMirrored);
+            else propObject.transform.Translate(complement.positionOffset, Space.World);
+            // Debug.Log("Spawned mesh for bone '" + boneName + "' with mirrored: " + isMirrored);
         }
         else
         {

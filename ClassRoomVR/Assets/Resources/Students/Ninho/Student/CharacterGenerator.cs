@@ -112,7 +112,20 @@ public class CharacterGenerator : MonoBehaviour
         // Use the probability to determine if a mesh should be spawned for this bone attachment
         CharacterPropsSpawner.TrySpawnComplement(rootBone, item.headBone, complement, color, false);
 
+        //Modelar cara aleatoriamente 
+        RandomFaceModeling(item.skinnedMesh,-100,100);
+    }
 
+    public void RandomFaceModeling(SkinnedMeshRenderer mesh,float minValue,float maxValue)
+    {
+        for(int i = (int)StudentProperties.Expressions.EXPRESSIONS_SIZE; i < (int)StudentProperties.ModelingProperties.MODELING_PROPERTIES_SIZE; i++)
+        {
+            SetModelBlendShape(mesh,(StudentProperties.ModelingProperties)i,Random.Range(minValue, maxValue));
+        }
+    }
+    public void SetModelBlendShape(SkinnedMeshRenderer mesh,StudentProperties.ModelingProperties prop, float value)
+    {
+        mesh.SetBlendShapeWeight((int)prop, value);
     }
 
     public void AttachItemToPlayer(SkinnedMeshRenderer mesh, Transform targetBone,Material[] mat)
