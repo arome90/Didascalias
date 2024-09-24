@@ -3522,8 +3522,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28779cfed47441a42a6cd4fb49c8dc89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShouldWrap: 1
-  ShouldLog: 1
+  ShouldWrap: 0
+  ShouldLog: 0
   events:
     _onRequestOptionSetup:
       m_PersistentCalls:
@@ -3633,8 +3633,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7eed01cef1d8f4091b8fc170a91dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appVoiceExperience: {fileID: 1144627814}
-  _textMeshPro: {fileID: 425754645}
+  appVoiceExperience: {fileID: 1144627814}
+  textMeshPro: {fileID: 425754645}
 --- !u!4 &1144627816
 Transform:
   m_ObjectHideFlags: 0
@@ -5596,6 +5596,7 @@ GameObject:
   - component: {fileID: 1656109111}
   - component: {fileID: 1656109107}
   - component: {fileID: 1656109105}
+  - component: {fileID: 1656109114}
   m_Layer: 9
   m_Name: XR Origin
   m_TagString: Player
@@ -5617,7 +5618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_System: {fileID: 1656109111}
   m_MoveSpeed: 1
-  m_EnableStrafe: 0
+  m_EnableStrafe: 1
   m_EnableFly: 0
   m_UseGravity: 1
   m_GravityApplicationMode: 0
@@ -5636,7 +5637,7 @@ MonoBehaviour:
     m_Reference: {fileID: 6972639530819350904, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
   m_RightHandMoveAction:
-    m_UseReference: 1
+    m_UseReference: 0
     m_Action:
       m_Name: Right Hand Move
       m_Type: 0
@@ -5646,8 +5647,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: -8198699208435500284, guid: c348712bda248c246b8c49b3db54643f,
-      type: 3}
+    m_Reference: {fileID: 0}
 --- !u!114 &1656109107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5736,6 +5736,50 @@ Transform:
   - {fileID: 452611037}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1656109114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656109104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2213c36610e3b1c4bbf886810ed9db12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_System: {fileID: 0}
+  m_TurnAmount: 45
+  m_DebounceTime: 0.5
+  m_EnableTurnLeftRight: 1
+  m_EnableTurnAround: 1
+  m_DelayTime: 0
+  m_LeftHandSnapTurnAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Left Hand Snap Turn
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: 672ab4a2-7936-46da-a359-54df7ab6943f
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -7374733323251553461, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
+  m_RightHandSnapTurnAction:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Hand Snap Turn
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: 0efba8bc-d133-4bbc-a9db-1408e8bb0720
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -6493913391331992944, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
 --- !u!1 &1693098118
 GameObject:
   m_ObjectHideFlags: 0
@@ -9208,6 +9252,7 @@ GameObject:
   - component: {fileID: 6491272944894373047}
   - component: {fileID: 7811000736685580384}
   - component: {fileID: 8194037973328525635}
+  - component: {fileID: 8194037973328525636}
   m_Layer: 5
   m_Name: Nav Panel
   m_TagString: Untagged
@@ -9783,6 +9828,28 @@ MonoBehaviour:
   _handDer: {fileID: 347510963}
   _speaker: {fileID: 1963423316}
   _dateId: '[DATE]'
+--- !u!114 &8194037973328525636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6627122057439592994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f01482b6fc052c1488234e44eab55eea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _nextButton: {fileID: 9066662214196682475}
+  _pressButton:
+    m_Name: Press Button
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 57ded664-1bf9-4f1f-8315-3ecb9bb031f2
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &8214220876757960524
 MonoBehaviour:
   m_ObjectHideFlags: 0

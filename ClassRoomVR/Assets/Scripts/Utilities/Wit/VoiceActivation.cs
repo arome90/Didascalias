@@ -1,247 +1,209 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using Meta.WitAi;
-using TMPro;
-using MathNet.Numerics.Statistics;
+﻿using UnityEngine;
+using System.Collections.Generic;
 using Oculus.Voice;
+using MathNet.Numerics.Statistics;
+using Meta.WitAi;
+using Meta.WitAi.Composer.Integrations;
+using MathNet.Numerics.Distributions;
+using Utilities.Extensions;
+using Meta.WitAi.Composer;
 
 namespace ClassRoomVR
 {
-    /// <summary>
-    /// Controla la activación de comandos de voz y la interacción con los estudiantes en base al análisis de audio.
-    /// </summary>
     public class VoiceActivation : MonoBehaviour
     {
-        [SerializeField] private AppVoiceExperience _appVoiceExperience; // Experiencia de voz para interacción con el asistente
-        [SerializeField] private TextMeshProUGUI _textMeshPro; // Componente para mostrar texto en la interfaz de usuario
+        [SerializeField] AppVoiceExperience appVoiceExperience;
+        StudentsController st;
+        string text;
+        [SerializeField] TMPro.TextMeshProUGUI textMeshPro;
+        List<Student> studentsSelected;
 
-        private StudentsController _studentsController; // Controlador de estudiantes
-        private List<Student> _selectedStudents; // Lista de estudiantes seleccionados
-        private List<float> _volumeList; // Lista de niveles de volumen capturados
-        private string _currentText; // Texto actual transcrito
-        private bool _greetingsSentInitial; // Indica si se han enviado saludos iniciales
-
-        /// <summary>
-        /// Método que se ejecuta al inicializar el objeto.
-        /// </summary>
-        private void Awake()
+        void Start()
         {
-            InitializeComponents();
-            InitializeVoiceExperience();
+            st = ClassManager.Instance.GetStudentsController();
         }
 
-        /// <summary>
-        /// Inicializa los componentes y variables necesarias para la activación de voz.
-        /// </summary>
-        private void InitializeComponents()
-        {
-            _studentsController = ClassManager.Instance.GetStudentsController();
-            _selectedStudents = new List<Student>();
-            _volumeList = new List<float>();
-            _currentText = string.Empty;
-            _greetingsSentInitial = false;
-        }
-
-        /// <summary>
-        /// Inicializa la experiencia de voz y establece los eventos correspondientes.
-        /// </summary>
-        private void InitializeVoiceExperience()
-        {
-            if (_appVoiceExperience == null)
-            {
-                Debug.LogError("AppVoiceExperience no está asignado.");
-                return;
-            }
-
-            GameManager.Instance.SetVoiceExperience(this);
-
-            var voiceEvents = _appVoiceExperience.VoiceEvents;
-
-            voiceEvents.OnComplete.AddListener((a) => _appVoiceExperience.Activate());
-            voiceEvents.OnError.AddListener(HandleVoiceError);
-            voiceEvents.OnResponse.AddListener(UpdateClass);
-            voiceEvents.OnValidatePartialResponse.AddListener(OnValidatePartialResponse);
-            voiceEvents.OnFullTranscription.AddListener(UpdateTextMeshPro);
-            voiceEvents.OnMicAudioLevelChanged.AddListener(OnMicLevelChanged);
-            voiceEvents.OnMicStartedListening.AddListener(() => _volumeList.Clear());
-        }
-
-        /// <summary>
-        /// Maneja los errores relacionados con la activación por voz.
-        /// </summary>
-        /// <param name="error">Código del error.</param>
-        /// <param name="message">Mensaje relacionado al error.</param>
-        private void HandleVoiceError(string error, string message)
-        {
-            _appVoiceExperience.Activate();
-            if (Application.internetReachability == NetworkReachability.NotReachable)
-            {
-                Debug.Log("No hay conexión a Internet.");
-                GameManager.Instance.Pause(true);
-            }
-        }
-
-        /// <summary>
-        /// Activa o desactiva el texto mostrado en pantalla.
-        /// </summary>
-        /// <param name="active">True para activar, false para desactivar.</param>
         public void ActiveText(bool active)
         {
-            if (_textMeshPro != null)
-            {
-                _textMeshPro.transform.parent.gameObject.SetActive(active);
-            }
+            if (textMeshPro != null) textMeshPro.transform.parent.SetActive(active);
         }
-
-        /// <summary>
-        /// Activa la experiencia de voz.
-        /// </summary>
         public void Activate()
         {
-            _appVoiceExperience?.Activate();
+            if (appVoiceExperience != null) 
+                appVoiceExperience.Activate();
         }
 
-        /// <summary>
-        /// Actualiza el texto mostrado en el componente TextMeshPro.
-        /// </summary>
-        /// <param name="transcribedText">Texto transcrito.</param>
-        private void UpdateTextMeshPro(string transcribedText)
+        private void Awake()
         {
-            _currentText = transcribedText;
-            if (_textMeshPro != null)
+            text = string.Empty;
+            GameManager.Instance.SetVoiceExperience(this);
+            studentsSelected = new List<Student>();
+            appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
-                _textMeshPro.text = transcribedText;
-            }
+                appVoiceExperience.Activate();
+            });
+
+            appVoiceExperience.VoiceEvents.OnError.AddListener((a, b) =>
+            {
+                appVoiceExperience.Activate();
+                if (Application.internetReachability == NetworkReachability.NotReachable)
+                {
+                    Debug.Log("nO HAY INTERNET");
+                    GameManager.Instance.Pause(true);
+                }
+            });
+
+            appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
+            {
+                UpdateClass(response);
+            });
+
+            appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
+            {
+                OnValidatePartialResponse(response);
+            });
+            //appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
+            //{
+            //    OnValidateResponse(response);
+            //});
+            appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener((strin) =>
+            {
+                text = strin;
+                Debug.Log(text);
+                if (textMeshPro)
+                {
+                    textMeshPro.text = strin;
+                    Debug.Log("texto");
+                }
+                appVoiceExperience.Deactivate();
+                Activate();
+            });
+
+            appVoiceExperience.VoiceEvents.OnMicAudioLevelChanged.AddListener((value) =>
+            {
+                OnMicLevelChanged(value);
+            });
+
+            appVoiceExperience.VoiceEvents.OnMicStartedListening.AddListener(() =>
+            {
+                volumeList.Clear();
+            });
+
+            volumeList = new List<float>();
+
         }
 
-        /// <summary>
-        /// Establece el nivel de audio en base a la media de los niveles de volumen capturados.
-        /// </summary>
+
         private void SetLevelAudio()
         {
-            if (_volumeList.Count == 0) return;
 
-            double averageVolume = _volumeList.Mean();
-            TalkMode mode;
+            double media = volumeList.Mean();
+            //  Debug.Log(media);
+            if (media > -30)
+            {
+                Debug.Log("¡Gritando " + (int)media);
+                st.SetMode(TalkMode.Disrespect);
+            }
+            else if (media < -50)
+            {
+                Debug.Log("¡Susurrando " + (int)media);
+                st.SetMode(TalkMode.Good);
 
-            if (averageVolume > -30)
-            {
-                mode = TalkMode.Disrespect;
-                Debug.Log($"Shouting: {(int)averageVolume}");
             }
-            else if (averageVolume < -50)
-            {
-                mode = TalkMode.Good;
-                Debug.Log($"Whispering: {(int)averageVolume}");
-            }
-            else
-            {
-                mode = TalkMode.Normal;
-                Debug.Log($"Normal: {(int)averageVolume}");
-            }
-
-            _studentsController.SetMode(mode);
+            else { Debug.Log("¡Normal " + (int)media); st.SetMode(TalkMode.Normal); }
         }
-
-        /// <summary>
-        /// Evento que se activa cuando cambia el nivel de audio del micrófono.
-        /// </summary>
-        /// <param name="audioLevel">Nivel de audio en flotante.</param>
-        private void OnMicLevelChanged(float audioLevel)
+        List<float> volumeList;
+        public void OnMicLevelChanged(float a)
         {
-            if (audioLevel <= 0) return;
-
-            float db = 20 * Mathf.Log10(audioLevel);
+            float db = 20 * Mathf.Log10(a);
             if (db > -65)
             {
-                _volumeList.Add(db);
+                // Debug.Log(db);
+                // Debug.Log("Nota" + Unity.Mathematics.math.remap(-60, -20, 0f, 1f, db));
+                volumeList.Add(db);
             }
         }
 
-        /// <summary>
-        /// Valida respuestas parciales de reconocimiento de voz y selecciona a los estudiantes mencionados.
-        /// </summary>
-        /// <param name="sessionData">Datos de la sesión de voz.</param>
-        private void OnValidatePartialResponse(Meta.WitAi.Data.VoiceSession sessionData)
+        public void OnValidatePartialResponse(Meta.WitAi.Data.VoiceSession sessionData)
         {
             string[] names = sessionData.response.GetAllEntityValues("wit$contact:student");
 
-            if (names == null || names.Length == 0) return;
-
-            foreach (string name in names)
+            if (names != null && names.Length > 0)
             {
-                if (TryGetStudent(name, out Student student))
+                Student s;
+                for (int i = 0; i < names.Length; i++)
                 {
-                    if (_selectedStudents.Count == 0)
+                    if (TryGetStudent(names[i], out s))
                     {
-                        _selectedStudents.Clear();
+                        if (i == 0)
+                        {
+                            studentsSelected.Clear();
+                        }
+                        studentsSelected.Add(s);
+                        st.HandleCall(s);
                     }
-                    _selectedStudents.Add(student);
-                    _studentsController.HandleCall(student);
                 }
             }
         }
-
-        /// <summary>
-        /// Intenta obtener un estudiante por su nombre.
-        /// </summary>
-        /// <param name="studentName">Nombre del estudiante.</param>
-        /// <param name="student">Referencia al objeto estudiante.</param>
-        /// <returns>True si encuentra al estudiante, false en caso contrario.</returns>
-        private bool TryGetStudent(string studentName, out Student student)
+        private bool TryGetStudent(string studentName, out Student s)
         {
-            return _studentsController.TryGetStudent(studentName, out student);
+            // Checkea student name
+            if (ClassManager.Instance.GetStudentsController().TryGetStudent(studentName, out s))
+            {
+                return true;
+            }
+            // No existe
+            return false;
         }
 
-        /// <summary>
-        /// Actualiza la clase en función de la respuesta del sistema de reconocimiento de voz.
-        /// </summary>
-        /// <param name="response">Respuesta de voz procesada.</param>
+
+        //Gestion de las ordenes del profesor
+        //TO DO : CAMBIAR PARA QUE SEA GENERICO
+        //  public void UpdateClass(VoiceSession sessionData) 
         public void UpdateClass(Meta.WitAi.Json.WitResponseNode response)
         {
-            if (string.IsNullOrEmpty(_currentText)) return;
 
-            SetLevelAudio();
-
-            string intentName = response.GetIntentName();
-            var insult = response.GetFirstEntityValue("Insultos:Insultos");
-
-            switch (intentName)
+            if (text.Length > 0)
             {
-                case "Sentarse":
-                    _studentsController.HandleSit(_selectedStudents);
-                    break;
-                case "MoverAlumno":
-                    _studentsController.HandleMove(_selectedStudents, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
-                    break;
-                case "CambiarAlumno":
-                    _studentsController.HandleChange(_selectedStudents);
-                    _studentsController.Resolutions = Actions.Separados | Actions.Levantarse;
-                    break;
-                case "Postponer":
-                    _studentsController.HandlePostpone();
-                    break;
-                case "Expulsion":
-                    _studentsController.HandleExpel(_selectedStudents);
-                    _studentsController.Resolutions = Actions.Insultar;
-                    break;
-                case "Saludos":
-                    if (!_greetingsSentInitial)
-                    {
-                        _greetingsSentInitial = true;
-                        _studentsController.PlayAllSentence("Buenos días profesor");
-                    }
-                    break;
-                default:
-                    intentName = "No hay intención";
-                    break;
-            }
+                SetLevelAudio();
+                // var response = sessionData.response;
+                string intentName = response.GetIntentName();
+                //  var alumnos = response.GetAllEntityValues("wit$contact:student");
+                var insulto = response.GetFirstEntityValue("Insultos:Insultos");
 
-            Debug.Log($"{intentName}\n{response.GetTranscription()}");
+                switch (intentName)
+                {
+                    case "Sentarse":
+                        st.HandleSit(studentsSelected);
+                        break;
+                    case "MoverAlumno":
+                        st.HandleMove(studentsSelected, WitResultUtilities.GetFirstEntityValue(response, "Posiciones:Posiciones"));
+                        break;
+                    case "CambiarAlumno":
+                        st.HandleChange(studentsSelected);
+                        st.Resolutions = Actions.Separados | Actions.Levantarse;
+                        break;
+                    case "Postponer":
+                        st.HandlePostpone();
+                        break;
+                    case "Expulsion":
+                        st.HandleExpel(studentsSelected);
+                        st.Resolutions = Actions.Insultar;
+                        break;
+                    case "Saludos":
+                        st.PlayAllSentence("Buenos días profesor");
+                        break;
+                    default:
+                        intentName = "No hay intencion";
+                        break;
+                }
 
-            if (!string.IsNullOrEmpty(insult))
-            {
-                _studentsController.SetMode(TalkMode.Disrespect);
+                Debug.Log(intentName + "\n" + response.GetTranscription());
+
+                if (insulto != "")
+                {
+                    st.SetMode(TalkMode.Disrespect);
+                }
             }
         }
     }
