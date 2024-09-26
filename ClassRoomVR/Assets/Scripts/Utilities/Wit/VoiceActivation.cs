@@ -96,7 +96,6 @@ namespace ClassRoomVR
 
         private void SetLevelAudio()
         {
-
             double media = volumeList.Mean();
             //  Debug.Log(media);
             if (media > -30)
