@@ -112,8 +112,10 @@ public class WsClient : GenericSingleton<WsClient>
     /// <param name="e">El mensaje recibido.</param>
     private void HandleGeneralMessage(object sender, MessageEventArgs e)
     {
+        Debug.Log("Action Message Recieved");
         if (TryDeserializeMessage(e.Data, ref receivedMessage))
         {
+            Debug.Log("Message was deserialized correctly, proceeded to take action");
             actionFlag = true;
         }
     }
@@ -152,13 +154,17 @@ public class WsClient : GenericSingleton<WsClient>
     /// </summary>
     private void HandleAction()
     {
+        Debug.Log("Handling Action from server!");
         var studentController = ClassManager.Instance.GetStudentsController();
         if (int.TryParse(receivedMessage.id, out int studentId) && studentId >= 0)
         {
+            // Faltar al respeto/Sentarse juntos/Levantarse
+            Debug.Log(studentId + " student is doing something disruptive!");
             studentController.DoSomethingDisruptive(studentId);
         }
         else
         {
+            // Mensajes escritos desde servidor
             studentController.PlaySentence(receivedMessage.data.ToString());
         }
     }

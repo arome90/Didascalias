@@ -3197,6 +3197,7 @@ GameObject:
   - component: {fileID: 8076671057133434943}
   - component: {fileID: 9094958956054310944}
   - component: {fileID: 9094958956054310943}
+  - component: {fileID: 9094958956054310945}
   m_Layer: 5
   m_Name: CanvasMenu
   m_TagString: Untagged
@@ -4885,7 +4886,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1328684498213280074}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+          type: 3}
+        m_TargetAssemblyTypeName: ClassRoomVR.GameManager, Assembly-CSharp
+        m_MethodName: LoadMainScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2069352168594054522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16682,19 +16696,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 931006541446393825}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1096627054}
-        m_TargetAssemblyTypeName: ClassRoomVR.GameManager, Assembly-CSharp
-        m_MethodName: LoadMainScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &8567289240195540991
 GameObject:
   m_ObjectHideFlags: 0
@@ -17319,6 +17321,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1051094198022113148}
   m_CullTransparentMesh: 1
+--- !u!114 &9094958956054310945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051094198022113148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06412f346d2b7b740b81bb5d4a48a0e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classButton: {fileID: 8562871874273709289}
+  tutorialButton: {fileID: 1303743684}
+  exitButton: {fileID: 9023594292716275006}
 --- !u!114 &9106944807318992319
 MonoBehaviour:
   m_ObjectHideFlags: 0

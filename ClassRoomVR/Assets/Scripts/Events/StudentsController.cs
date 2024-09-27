@@ -182,28 +182,37 @@ namespace ClassRoomVR
 
         // Objeto para la acción disruptiva actual
         private GameObject actionObject;
-        private DisruptiveAction actionActual;
+        private DisruptiveAction currentAction;
         private List<Student> studentList;
 
         // Realiza una acción disruptiva sobre los estudiantes
         public void DoSomethingDisruptive(int index)
         {
-            if (actionActual == null && actionObject == null)
+            Debug.Log("Trying something disruptive");
+            if (currentAction == null && actionObject == null)
             {
-                actionActual = actions[index];
+                Debug.Log("Choosing new action to perform");
+                currentAction = actions[index];
                 _res = Actions.None;
 
-                switch (actionActual.Action)
+                switch (currentAction.Action)
                 {
                     case Actions.Insultar:
-                        StartCoroutine(ActionsMethod.Insult(GetRandomStudentExcluding(), actionActual, CreateConflict));
+                        Debug.Log("Insultando");
+                        StartCoroutine(ActionsMethod.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
                         break;
                     case Actions.Separados:
+                        Debug.Log("Separándonos");
                         GetRandomStudentsSeparate();
-                        StartCoroutine(ActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], actionActual, CreateConflict));
+                        StartCoroutine(ActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
                         break;
                     case Actions.Levantarse:
-                        ActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), actionActual, _frontSide.position, CreateConflict);
+                        Debug.Log("Levantándose");
+                        ActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
+                        break;
+                    default:
+                        Debug.LogError(currentAction.name + " action is not implemented or its type is missing. Check it!");
+                        currentAction = null;
                         break;
                 }
             }
@@ -212,9 +221,11 @@ namespace ClassRoomVR
         // Crea un conflicto a partir de la acción disruptiva
         private void CreateConflict()
         {
-            actionObject = Instantiate(actionActual.BehaviorHolder);
-            actionObject.GetComponent<Action>().SetParameters(_player, studentList, actionActual, text);
-            actionActual = null;
+            Debug.Log("Creating a conflict");
+            actionObject = Instantiate(currentAction.BehaviorHolder);
+            actionObject.GetComponent<Action>().SetParameters(_player, studentList, currentAction, text);
+            actionObject = null;
+            currentAction = null;
 
             foreach (var student in studentList)
             {

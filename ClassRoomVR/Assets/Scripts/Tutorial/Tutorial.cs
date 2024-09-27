@@ -105,7 +105,7 @@ public class Tutorial : MonoBehaviour
         string initText = "¡Bienvenido al Tutorial para Classroom VR! Aquí te " +
                           "enseñaremos todo lo que necesitas saber para " +
                           "ser un profesor excepcional en nuestro aula virtual.";
-        GenerateText(initText);
+        TextToSpeech(initText);
         _tutorialText.text = initText;
         Invoke(nameof(FirstStep), 10);
     }
@@ -155,6 +155,7 @@ public class Tutorial : MonoBehaviour
         UpdateToggles();
         if (_currentPhase < _tutorialSteps.Length)
         {
+            ModifyTextToSpeech(_tutorialSteps[_currentPhase].StepText, true);
             _tutorialText.text = _tutorialSteps[_currentPhase].StepText;
             _nextButton.interactable = false;
             await CurrentState();
@@ -174,12 +175,12 @@ public class Tutorial : MonoBehaviour
         }
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
-            GenerateText("Has superado el tutorial.");
+            ModifyTextToSpeech("Has superado el tutorial.", true);
             Invoke(nameof(GoMenu), 3f);
         }
         else if (_currentPhase != 0)
         {
-            GenerateText(GetNextText());
+            TextToSpeech(GetNextText());
         }
     }
 
@@ -201,7 +202,6 @@ public class Tutorial : MonoBehaviour
         CleanHandActions();
         _currentPhase++;
         UpdateTutorial();
-        GenerateText(_tutorialSteps[_currentPhase].StepText);
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
             _nextButton.gameObject.SetActive(false);
@@ -231,7 +231,7 @@ public class Tutorial : MonoBehaviour
     public void FirstStep()
     {
         _speaker.Events.OnPlaybackComplete.AddListener(Finish);
-        GenerateText(_tutorialSteps[_currentPhase].StepText);
+        ModifyTextToSpeech(_tutorialSteps[_currentPhase].StepText, false);
         _tutorialText.text = _tutorialSteps[_currentPhase].StepText;
     }
 
@@ -247,7 +247,7 @@ public class Tutorial : MonoBehaviour
             {
                 _tutorialSteps[_currentPhase].Objective *= -1;
                 _tutorialSteps[_currentPhase].Actual = 0;
-                GenerateText("Ahora haz lo mismo pero hacia atrás.");
+                ModifyTextToSpeech("Ahora haz lo mismo pero hacia atrás.", false);
             }
         }
         else if (_tutorialSteps[_currentPhase].Objective < 0)
@@ -289,7 +289,7 @@ public class Tutorial : MonoBehaviour
         {
             _tutorialSteps[_currentPhase].Objective = 0;
             _handDer.SetRed(VisualAction.PrimaryButton);
-            GenerateText("Observa que ya no puedes moverte, vuelve a pulsar el botón para volver a la normalidad");
+            ModifyTextToSpeech("Observa que ya no puedes moverte, vuelve a pulsar el botón para volver a la normalidad", true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 3 && _tutorialSteps[_currentPhase].Objective == 1)
         {
@@ -297,13 +297,13 @@ public class Tutorial : MonoBehaviour
             _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed -= Action_performed;
             _handIzq.InputActions[(int)VisualAction.Menu].action.performed += Action_performed;
             _handIzq.SetRed(VisualAction.Menu);
-            GenerateText("Activa el menu de mano pulsando sobre el menu");
+            ModifyTextToSpeech("Activa el menu de mano pulsando sobre el menu", true);
 
         }
         else if (_tutorialSteps[_currentPhase].Actual == 4 && _tutorialSteps[_currentPhase].Objective == 1)
         {
             _tutorialSteps[_currentPhase].Objective = 0;
-            GenerateText("Sal del menú pulsando en resume o usa el boton menú");
+            ModifyTextToSpeech("Sal del menú pulsando en resume o usa el boton menú", true);
         }
         else if ((!GameManager.Instance.IsPause && _tutorialSteps[_currentPhase].Actual == 4) || (_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
         {
@@ -329,7 +329,7 @@ public class Tutorial : MonoBehaviour
             case 1:
                 if (!_student.GetNavMeshAgent().enabled && Vector2.Distance(_student.transform.position, _studentControl.Door.position) < 0.2)
                 {
-                    GenerateText("Vuelve a mandar al alumno a sentarse");
+                    ModifyTextToSpeech("Vuelve a mandar al alumno a sentarse", true);
                     _tutorialSteps[_currentPhase].Actual = 2;
                 }
                 break;
@@ -357,7 +357,17 @@ public class Tutorial : MonoBehaviour
     /// <summary>
     /// Genera texto de audio.
     /// </summary>
-    public void GenerateText(string text)
+    public void ModifyTextToSpeech(string text, bool cleanTutorialText)
+    {
+        _speaker.Speak(FormatText(text));
+        if(cleanTutorialText)
+        {
+            _tutorialText.text = text;
+        }
+        else _tutorialText.text += '\n'+text;
+    }
+
+    public void TextToSpeech(string text)
     {
         _speaker.Speak(FormatText(text));
     }
