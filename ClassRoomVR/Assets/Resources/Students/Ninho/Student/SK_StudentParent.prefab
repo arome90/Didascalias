@@ -1955,9 +1955,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1805749416763871098}
   - component: {fileID: 6394200175754609986}
-  - component: {fileID: 8180819409187534140}
   - component: {fileID: 1631840898621227813}
-  - component: {fileID: 8476855448269478659}
+  - component: {fileID: 920688379989659740}
   m_Layer: 0
   m_Name: SK_StudentParent
   m_TagString: Untagged
@@ -1993,34 +1992,23 @@ Animator:
   m_GameObject: {fileID: 5786677739925861320}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: c23715825203098408afe2af1e8819b6, type: 3}
-  m_Controller: {fileID: 9100000, guid: 872cb70bb9b410d4d897ceba82eab1ab, type: 2}
+  m_Controller: {fileID: 9100000, guid: 91e7b3e1be37fab4b97b0deef0f18fb7, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'c_middle1.r'\n\tTransform 'c_ring3.l'\n\tTransform
+    'arm_stretch.l'\n\tTransform 'spine_02.x'\n\tTransform 'c_ring3.r'\n\tTransform
+    'c_index2.r'\n\tTransform 'c_middle2.r'\n\tTransform 'c_pinky2.l'\n\tTransform
+    'c_middle3.r'\n\tTransform 'c_index3.l'\n\tand more ...\n\tFrom animation clip
+    'root|SitHandsOnDesk'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8180819409187534140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5796860906c5cb24f953a7ea55172c67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  extraBonesBody:
-  - Bip001LeftEye
-  - Bip001RightEye
-  extraBonesHair: []
-  characterAssets: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b, type: 2}
 --- !u!114 &1631840898621227813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2033,9 +2021,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd1d983babad3c498a1164b13a7c94e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterSkinnedMeshes: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b,
+  _characterSkinnedMeshes: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b,
     type: 2}
---- !u!114 &8476855448269478659
+--- !u!114 &920688379989659740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2044,10 +2032,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5786677739925861320}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cadc973c80f941a188548f9965321, type: 3}
+  m_Script: {fileID: 11500000, guid: 845ddd15bff31df448c75c1eff95a888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterProps: {fileID: 11400000, guid: 6b2a692a152826a47a43f9f0de117cec, type: 2}
+  characterProps: {fileID: 11400000, guid: 32f6969bb19126c448b1e9590e38555f, type: 2}
 --- !u!1 &5809907412560224114
 GameObject:
   m_ObjectHideFlags: 0

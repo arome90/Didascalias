@@ -1,180 +1,180 @@
-using ClassRoomVR;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using static CharacterSkinnedMeshes;
+//using ClassRoomVR;
+//using System.Collections;
+//using System.Collections.Generic;
+//using System.Linq;
+//using UnityEngine;
+//using static CharacterSkinnedMeshes;
 
-public class CharacterMeshGenerator : MonoBehaviour
-{
-    [System.Serializable]
-    public struct MeshMaterialPair
-    {
-        public SkinnedMeshRenderer mesh;
-        public Material material;
-    }
+//public class CharacterMeshGenerator : MonoBehaviour
+//{
+//    [System.Serializable]
+//    public struct MeshMaterialPair
+//    {
+//        public SkinnedMeshRenderer mesh;
+//        public Material material;
+//    }
 
-    [Header("Student Bones")]
-    Transform[] playerBonesArray;
-    Transform rootBone;
-    Dictionary<string, Transform> playerBonesDict;
-    public string[] extraBonesBody;
-    public string[] extraBonesHair;
+//    [Header("Student Bones")]
+//    Transform[] playerBonesArray;
+//    Transform rootBone;
+//    Dictionary<string, Transform> playerBonesDict;
+//    public string[] extraBonesBody;
+//    public string[] extraBonesHair;
 
-    [Header("Meshes")]
-    public CharacterSkinnedMeshes characterAssets;
+//    [Header("Meshes")]
+//    public CharacterSkinnedMeshes characterAssets;
 
-    private Student student;
-    void Awake()
-    {
-        if (transform.childCount > 0)
-        {
-            rootBone = transform.GetChild(0);
-            List<Transform> bonesList = new List<Transform>();
-            bonesList.Add(rootBone);
-            PopulateBonesList(rootBone, bonesList);
-            playerBonesArray = bonesList.ToArray();
-        }
+//    private Student student;
+//    void Awake()
+//    {
+//        if (transform.childCount > 0)
+//        {
+//            rootBone = transform.GetChild(0);
+//            List<Transform> bonesList = new List<Transform>();
+//            bonesList.Add(rootBone);
+//            PopulateBonesList(rootBone, bonesList);
+//            playerBonesArray = bonesList.ToArray();
+//        }
 
-        InitializeBoneDictionary();
-    }
+//        InitializeBoneDictionary();
+//    }
 
-    private void Start()
-    {
-        student= GetComponent<Student>();
-        CharacterMeshes();
-    }
+//    private void Start()
+//    {
+//        student= GetComponent<Student>();
+//        CharacterMeshes();
+//    }
 
-    void CharacterMeshes()
-    {
-        HeadItem[] bodies;
-        bodies = student.GetGender() == Gender.Women ? characterAssets.Characters.WomenBody : characterAssets.Characters.MenBody; ;
-        // Elegir un índice aleatorio dentro del rango de la lista de elementos
-        int randomIndex = Random.Range(0, bodies.Length);
-        // Obtener el elemento en el índice aleatorio
-        var item = bodies[randomIndex];
-        // Spawnear el SkinnedMeshRenderer
-        AttachItemToPlayer(item.skinnedMesh, rootBone); // No necesitamos material, pasamos null
+//    void CharacterMeshes()
+//    {
+//        HeadItem[] bodies;
+//        bodies = student.GetGender() == Gender.Women ? characterAssets.Characters.WomenBody : characterAssets.Characters.MenBody; ;
+//        // Elegir un índice aleatorio dentro del rango de la lista de elementos
+//        int randomIndex = Random.Range(0, bodies.Length);
+//        // Obtener el elemento en el índice aleatorio
+//        var item = bodies[randomIndex];
+//        // Spawnear el SkinnedMeshRenderer
+//        AttachItemToPlayer(item.skinnedMesh, rootBone); // No necesitamos material, pasamos null
 
-        // Si tiene pelo  instanciar también el pelo
-        if (item.pelo.Length> 0)
-        {
-            SkinnedMeshRenderer hair = item.pelo[Random.Range(0, item.pelo.Length)] ;
-            AttachItemToPlayer(hair, rootBone);
-            AdjustExtraBonesPositionHair(hair);
+//        // Si tiene pelo  instanciar también el pelo
+//        if (item.pelo.Length> 0)
+//        {
+//            SkinnedMeshRenderer hair = item.pelo[Random.Range(0, item.pelo.Length)] ;
+//            AttachItemToPlayer(hair, rootBone);
+//            AdjustExtraBonesPositionHair(hair);
 
-        }
+//        }
 
-        // Ajustar la posición de los huesos extra entre meshes
-        AdjustExtraBonesPositionBody(item.skinnedMesh);
-    }
+//        // Ajustar la posición de los huesos extra entre meshes
+//        AdjustExtraBonesPositionBody(item.skinnedMesh);
+//    }
 
-    void AdjustExtraBonesPositionBody(SkinnedMeshRenderer mesh)
-    {
-        Transform[] bodyBones = new Transform[extraBonesBody.Length];
+//    void AdjustExtraBonesPositionBody(SkinnedMeshRenderer mesh)
+//    {
+//        Transform[] bodyBones = new Transform[extraBonesBody.Length];
 
-        // Encontrar los huesos del cuerpo
-        for (int i = 0; i < extraBonesBody.Length; i++)
-        {
-            bodyBones[i] = FindBoneByName(mesh, extraBonesBody[i]);
-        }
+//        // Encontrar los huesos del cuerpo
+//        for (int i = 0; i < extraBonesBody.Length; i++)
+//        {
+//            bodyBones[i] = FindBoneByName(mesh, extraBonesBody[i]);
+//        }
 
-        // Ajustar la posición y rotación de los huesos del cuerpo en playerBonesArray
-        foreach (Transform bone in playerBonesArray)
-        {
-            for (int i = 0; i < extraBonesBody.Length; i++)
-            {
-                if (bone.name == extraBonesBody[i])
-                {
-                    bone.localPosition = bodyBones[i].localPosition;
-                    bone.localRotation = bodyBones[i].localRotation;
-                    break;
-                }
-            }
-        }
-    }
+//        // Ajustar la posición y rotación de los huesos del cuerpo en playerBonesArray
+//        foreach (Transform bone in playerBonesArray)
+//        {
+//            for (int i = 0; i < extraBonesBody.Length; i++)
+//            {
+//                if (bone.name == extraBonesBody[i])
+//                {
+//                    bone.localPosition = bodyBones[i].localPosition;
+//                    bone.localRotation = bodyBones[i].localRotation;
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
 
-    void AdjustExtraBonesPositionHair(SkinnedMeshRenderer mesh)
-    {
-        Transform[] hairBones = new Transform[3];
+//    void AdjustExtraBonesPositionHair(SkinnedMeshRenderer mesh)
+//    {
+//        Transform[] hairBones = new Transform[3];
 
-        // Encontrar los huesos del pelo
-        for (int i = 0; i < 3; i++)
-        {
-            string boneName = "Bip001Hair0" + (i + 1);
-            hairBones[i] = FindBoneByName(mesh, boneName);
+//        // Encontrar los huesos del pelo
+//        for (int i = 0; i < 3; i++)
+//        {
+//            string boneName = "Bip001Hair0" + (i + 1);
+//            hairBones[i] = FindBoneByName(mesh, boneName);
 
-            // Ajustar la posición y rotación de los huesos del pelo en playerBonesArray
-            foreach (Transform bone in playerBonesArray)
-            {
+//            // Ajustar la posición y rotación de los huesos del pelo en playerBonesArray
+//            foreach (Transform bone in playerBonesArray)
+//            {
 
-                if (bone.name == boneName && hairBones[i]!=null) 
-                {
-                    bone.localPosition = hairBones[i].localPosition;
-                    bone.localRotation = hairBones[i].localRotation;
-                    break;
-                }
+//                if (bone.name == boneName && hairBones[i]!=null) 
+//                {
+//                    bone.localPosition = hairBones[i].localPosition;
+//                    bone.localRotation = hairBones[i].localRotation;
+//                    break;
+//                }
 
-            }
-        }
-    }
+//            }
+//        }
+//    }
 
-    Transform FindBoneByName(SkinnedMeshRenderer mesh, string boneName)
-    {
-        foreach (Transform bone in mesh.bones)
-        {
-            if (bone.name == boneName)
-            {
-                return bone;
-            }
-        }
-        return null;
-    }
+//    Transform FindBoneByName(SkinnedMeshRenderer mesh, string boneName)
+//    {
+//        foreach (Transform bone in mesh.bones)
+//        {
+//            if (bone.name == boneName)
+//            {
+//                return bone;
+//            }
+//        }
+//        return null;
+//    }
 
-    private void PopulateBonesList(Transform root, List<Transform> bonesList)
-    {
-        foreach (Transform child in root)
-        {
-            bonesList.Add(child);
-            PopulateBonesList(child, bonesList);
-        }
-    }
+//    private void PopulateBonesList(Transform root, List<Transform> bonesList)
+//    {
+//        foreach (Transform child in root)
+//        {
+//            bonesList.Add(child);
+//            PopulateBonesList(child, bonesList);
+//        }
+//    }
 
-    private void InitializeBoneDictionary()
-    {
-        playerBonesDict = new Dictionary<string, Transform>();
+//    private void InitializeBoneDictionary()
+//    {
+//        playerBonesDict = new Dictionary<string, Transform>();
 
-        foreach (Transform bone in playerBonesArray)
-        {
-            if (!playerBonesDict.ContainsKey(bone.name))
-            {
-                playerBonesDict.Add(bone.name, bone);
-            }
-        }
-    }
+//        foreach (Transform bone in playerBonesArray)
+//        {
+//            if (!playerBonesDict.ContainsKey(bone.name))
+//            {
+//                playerBonesDict.Add(bone.name, bone);
+//            }
+//        }
+//    }
 
-    public void AttachItemToPlayer(SkinnedMeshRenderer mesh,Transform targetBone)
-    {
-        SkinnedMeshRenderer newMesh = Instantiate(mesh, targetBone.position, Quaternion.identity);
+//    public void AttachItemToPlayer(SkinnedMeshRenderer mesh,Transform targetBone)
+//    {
+//        SkinnedMeshRenderer newMesh = Instantiate(mesh, targetBone.position, Quaternion.identity);
 
-        // Configura los huesos del nuevo mesh para que coincidan con los del jugador
-        Transform[] newBones = new Transform[mesh.bones.Length];
-        for (int i = 0; i < mesh.bones.Length; i++)
-        {
-            if (playerBonesDict.ContainsKey(mesh.bones[i].name))
-            {
-                newBones[i] = playerBonesDict[mesh.bones[i].name];
-            }
-            else
-            {
-                Debug.LogError("Player bones dictionary does not contain bone: " + mesh.bones[i].name);
-            }
-        }
-        newMesh.bones = newBones;
-        newMesh.rootBone = targetBone; // Ajusta el rootBone al objetivo
-        newMesh.transform.SetParent(transform, false);
+//        // Configura los huesos del nuevo mesh para que coincidan con los del jugador
+//        Transform[] newBones = new Transform[mesh.bones.Length];
+//        for (int i = 0; i < mesh.bones.Length; i++)
+//        {
+//            if (playerBonesDict.ContainsKey(mesh.bones[i].name))
+//            {
+//                newBones[i] = playerBonesDict[mesh.bones[i].name];
+//            }
+//            else
+//            {
+//                Debug.LogError("Player bones dictionary does not contain bone: " + mesh.bones[i].name);
+//            }
+//        }
+//        newMesh.bones = newBones;
+//        newMesh.rootBone = targetBone; // Ajusta el rootBone al objetivo
+//        newMesh.transform.SetParent(transform, false);
 
-    }
+//    }
 
-}
+//}

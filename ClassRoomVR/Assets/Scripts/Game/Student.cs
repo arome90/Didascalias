@@ -1,386 +1,386 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Animations.Rigging;
-using UnityEngine.AI;
-using System.Linq;
-using TMPro;
-using UnityEngine.InputSystem;
-using Unity.VisualScripting;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using UnityEngine.Animations.Rigging;
+//using UnityEngine.AI;
+//using System.Linq;
+//using TMPro;
+//using UnityEngine.InputSystem;
+//using Unity.VisualScripting;
 
-namespace ClassRoomVR
-{
-    [System.Serializable]
-    public class Student : MonoBehaviour
-    {
-        private FieldOfVision vision;
-        public FieldOfVision distracted;
-        private FieldOfVision[] distractedArray;
-        public State state;
+//namespace ClassRoomVR
+//{
+//    [System.Serializable]
+//    public class Student : MonoBehaviour
+//    {
+//        private FieldOfVision vision;
+//        public FieldOfVision distracted;
+//        private FieldOfVision[] distractedArray;
+//        public State state;
 
-        // Serialized fields for customization in the Inspector
-        [SerializeField] private Gender gender;
-        [SerializeField] private bool problematic = false;
-        [SerializeField] private TextMeshProUGUI studentNameText;
-        [SerializeField] private TextMeshProUGUI attentionText;
-        private Desk desk;
-        private Animator animator;
-        private AudioSource audioSource;
-        private NavMeshAgent navMeshAgent;
-        private new BoxCollider collider;
-        [SerializeField] private Transform target;
-        private Vector3 actualTargetPosition;
-        private Dictionary<FieldOfVision, Vector3> targets;
-        [SerializeField] private MultiAimConstraint headConstraint;
-        private StudentBehavior behavior;
-        private Transform player;
-        private ResponseStudent response;
-        private JawMove jaw;
-        private RigBuilder rig;
-        #region Getters
-        // Getter methods for accessing properties
-        public Desk GetDesk() => desk;
-        public Gender GetGender() => gender;
-        public bool IsProblematicStudent() => problematic;
-        public AudioSource GetAudioSource() => audioSource;
-        public TextMeshProUGUI GetNameText() => studentNameText;
-        public NavMeshAgent GetNavMeshAgent() => navMeshAgent;
-        #endregion
-        private void Awake()
-        {
-            // Initialize references and components
-            response= GetComponent<ResponseStudent>();
-            rig = GetComponent<RigBuilder>();
-            collider = GetComponent<BoxCollider>();
-            animator = GetComponent<Animator>();
-            audioSource = GetComponent<AudioSource>();
-            navMeshAgent = GetComponent<NavMeshAgent>();
-            behavior = GetComponent<StudentBehavior>();
-            jaw = GetComponent<JawMove>();
-            state = State.Sitting;
-            distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
-                .Where(c => (distracted & c) == c)
-                .ToArray();
-            var stateAnim = animator.GetCurrentAnimatorStateInfo(0);
-            animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
-        }
+//        // Serialized fields for customization in the Inspector
+//        [SerializeField] private Gender gender;
+//        [SerializeField] private bool problematic = false;
+//        [SerializeField] private TextMeshProUGUI studentNameText;
+//        [SerializeField] private TextMeshProUGUI attentionText;
+//        private Desk desk;
+//        private Animator animator;
+//        private AudioSource audioSource;
+//        private NavMeshAgent navMeshAgent;
+//        private new BoxCollider collider;
+//        [SerializeField] private Transform target;
+//        private Vector3 actualTargetPosition;
+//        private Dictionary<FieldOfVision, Vector3> targets;
+//        [SerializeField] private MultiAimConstraint headConstraint;
+//        private StudentBehavior behavior;
+//        private Transform player;
+//        private ResponseStudent response;
+//        private JawMove jaw;
+//        private RigBuilder rig;
+//        #region Getters
+//        // Getter methods for accessing properties
+//        public Desk GetDesk() => desk;
+//        public Gender GetGender() => gender;
+//        public bool IsProblematicStudent() => problematic;
+//        public AudioSource GetAudioSource() => audioSource;
+//        public TextMeshProUGUI GetNameText() => studentNameText;
+//        public NavMeshAgent GetNavMeshAgent() => navMeshAgent;
+//        #endregion
+//        private void Awake()
+//        {
+//            // Initialize references and components
+//            response= GetComponent<ResponseStudent>();
+//            rig = GetComponent<RigBuilder>();
+//            collider = GetComponent<BoxCollider>();
+//            animator = GetComponent<Animator>();
+//            audioSource = GetComponent<AudioSource>();
+//            navMeshAgent = GetComponent<NavMeshAgent>();
+//            behavior = GetComponent<StudentBehavior>();
+//            jaw = GetComponent<JawMove>();
+//            state = State.Sitting;
+//            distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
+//                .Where(c => (distracted & c) == c)
+//                .ToArray();
+//            var stateAnim = animator.GetCurrentAnimatorStateInfo(0);
+//            animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
+//        }
 
-        // Methods to set student's parameters and create their body
-        public void SetParameters(Transform player, string name, Gender gender)
-        {
-            this.player = player;
-            transform.name = name;
-            studentNameText.text = name;
-            this.gender = gender;
-        }
+//        // Methods to set student's parameters and create their body
+//        public void SetParameters(Transform player, string name, Gender gender)
+//        {
+//            this.player = player;
+//            transform.name = name;
+//            studentNameText.text = name;
+//            this.gender = gender;
+//        }
 
-        // Methods to set and manage the student's behavior and actions
-        public void SetProblematicStudent()
-        {
-            studentNameText.color = Color.red;
-            problematic = true;
-        }
+//        // Methods to set and manage the student's behavior and actions
+//        public void SetProblematicStudent()
+//        {
+//            studentNameText.color = Color.red;
+//            problematic = true;
+//        }
 
-        public void SetDesk(Desk d)
-        {
-            desk = d;
-        }
+//        public void SetDesk(Desk d)
+//        {
+//            desk = d;
+//        }
 
-        public void SetTargets(Transform[] transforms)
-        {
-            // Set target positions for different field of vision options
-            targets = new Dictionary<FieldOfVision, Vector3>
-            {
-                { FieldOfVision.Up, transform.up * 2f },
-                { FieldOfVision.Right, transform.right },
-                { FieldOfVision.Down, transform.up / -2 },
-                { FieldOfVision.Left, -transform.right },
-                { FieldOfVision.Window, transforms[0].position },
-                { FieldOfVision.Door, transforms[1].position },
-                { FieldOfVision.Teacher, Vector3.zero }
-            };
-        }
+//        public void SetTargets(Transform[] transforms)
+//        {
+//            // Set target positions for different field of vision options
+//            targets = new Dictionary<FieldOfVision, Vector3>
+//            {
+//                { FieldOfVision.Up, transform.up * 2f },
+//                { FieldOfVision.Right, transform.right },
+//                { FieldOfVision.Down, transform.up / -2 },
+//                { FieldOfVision.Left, -transform.right },
+//                { FieldOfVision.Window, transforms[0].position },
+//                { FieldOfVision.Door, transforms[1].position },
+//                { FieldOfVision.Teacher, Vector3.zero }
+//            };
+//        }
 
-        public void PayAttention()
-        {
-            behavior.SetAttention();
-            SetDirection(FieldOfVision.Teacher);
-        }
+//        public void PayAttention()
+//        {
+//            behavior.SetAttention();
+//            SetDirection(FieldOfVision.Teacher);
+//        }
 
-        public void GetDistracted()
-        {
-            SetDirection(distractedArray[Random.Range(0, distractedArray.Length)]);
-        }
+//        public void GetDistracted()
+//        {
+//            SetDirection(distractedArray[Random.Range(0, distractedArray.Length)]);
+//        }
 
-        // Update method to handle student's behavior and animations
-        private void Update()
-        {
-            if (GameManager.Instance.IsPause) return;
+//        // Update method to handle student's behavior and animations
+//        private void Update()
+//        {
+//            if (GameManager.Instance.IsPause) return;
 
-            UpdateTargetPosition();
-            if (attentionText != null) attentionText.text = behavior.AttentionLevel.ToString("0.##");
-        }
-        // Coroutine methods for nodding and shaking head animations
-        private float smoothTime = 0.15f;
-        private float maxSpeed = 2f;
-        private Vector3 currentVelocity;
-        private void UpdateTargetPosition()
-        {
-            studentNameText.transform.parent.LookAt(player);
-            studentNameText.transform.parent.rotation = Quaternion.LookRotation(player.forward);
+//            UpdateTargetPosition();
+//            if (attentionText != null) attentionText.text = behavior.AttentionLevel.ToString("0.##");
+//        }
+//        // Coroutine methods for nodding and shaking head animations
+//        private float smoothTime = 0.15f;
+//        private float maxSpeed = 2f;
+//        private Vector3 currentVelocity;
+//        private void UpdateTargetPosition()
+//        {
+//            studentNameText.transform.parent.LookAt(player);
+//            studentNameText.transform.parent.rotation = Quaternion.LookRotation(player.forward);
 
-            if (vision != FieldOfVision.Teacher && state == State.Sitting)
-            {
-                target.position = Vector3.SmoothDamp(target.position, actualTargetPosition, ref currentVelocity, smoothTime, maxSpeed, Time.deltaTime);
-            }
-            else if (vision == FieldOfVision.Teacher)
-            {
-                target.position = Vector3.MoveTowards(target.position, player.position, 5.0f * Time.deltaTime);
-            }
+//            if (vision != FieldOfVision.Teacher && state == State.Sitting)
+//            {
+//                target.position = Vector3.SmoothDamp(target.position, actualTargetPosition, ref currentVelocity, smoothTime, maxSpeed, Time.deltaTime);
+//            }
+//            else if (vision == FieldOfVision.Teacher)
+//            {
+//                target.position = Vector3.MoveTowards(target.position, player.position, 5.0f * Time.deltaTime);
+//            }
 
-        }
+//        }
 
-       public  IEnumerator Nod()
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                SetDirection(FieldOfVision.Up);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.5f)
-                    yield return null;
-                SetDirection(FieldOfVision.Down);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.5f)
-                    yield return null;
-            }
-        }
+//       public  IEnumerator Nod()
+//        {
+//            for (int i = 0; i < 2; i++)
+//            {
+//                SetDirection(FieldOfVision.Up);
+//                while (Vector2.Distance(target.position, actualTargetPosition) > 0.5f)
+//                    yield return null;
+//                SetDirection(FieldOfVision.Down);
+//                while (Vector2.Distance(target.position, actualTargetPosition) > 0.5f)
+//                    yield return null;
+//            }
+//        }
 
-        public IEnumerator ShakeHead()
-        {
+//        public IEnumerator ShakeHead()
+//        {
 
-            for (int i = 0; i < 2; i++)
-            {
-                SetDirection(FieldOfVision.Right);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.2f)
-                    yield return null;
-                SetDirection(FieldOfVision.Left);
-                while (Vector2.Distance(target.position, actualTargetPosition) > 0.2f)
-                    yield return null;
-            }
+//            for (int i = 0; i < 2; i++)
+//            {
+//                SetDirection(FieldOfVision.Right);
+//                while (Vector2.Distance(target.position, actualTargetPosition) > 0.2f)
+//                    yield return null;
+//                SetDirection(FieldOfVision.Left);
+//                while (Vector2.Distance(target.position, actualTargetPosition) > 0.2f)
+//                    yield return null;
+//            }
 
-        }
+//        }
 
-        // Method to set the direction of student's attention
-        private void SetDirection(FieldOfVision fieldOfVision)
-        {
-            vision = fieldOfVision;
-            switch (vision)
-            {
-                case FieldOfVision.Up:
-                case FieldOfVision.Down:
-                case FieldOfVision.Right:
-                case FieldOfVision.Left:
-                    actualTargetPosition = transform.position + targets[vision] + transform.forward;
-                    break;
-                case FieldOfVision.Door:
-                case FieldOfVision.Window:
-                    actualTargetPosition = targets[vision];
-                    break;
-            }
-        }
+//        // Method to set the direction of student's attention
+//        private void SetDirection(FieldOfVision fieldOfVision)
+//        {
+//            vision = fieldOfVision;
+//            switch (vision)
+//            {
+//                case FieldOfVision.Up:
+//                case FieldOfVision.Down:
+//                case FieldOfVision.Right:
+//                case FieldOfVision.Left:
+//                    actualTargetPosition = transform.position + targets[vision] + transform.forward;
+//                    break;
+//                case FieldOfVision.Door:
+//                case FieldOfVision.Window:
+//                    actualTargetPosition = targets[vision];
+//                    break;
+//            }
+//        }
 
-        // Methods to play animations and actions
-        public void PlayAnimation(string stateName)
-        {
-            animator.Play(stateName);
-        }
+//        // Methods to play animations and actions
+//        public void PlayAnimation(string stateName)
+//        {
+//            animator.Play(stateName);
+//        }
 
-        public void PlayDisruptiveAction(string stateName, AudioClip clip)
-        {
-            // int i =Animator.StringToHash("onFoot");
-            animator.Play(stateName);
-            audioSource.clip = clip;
-            audioSource.Play();
-            MoveJaw();
-        }
+//        public void PlayDisruptiveAction(string stateName, AudioClip clip)
+//        {
+//            // int i =Animator.StringToHash("onFoot");
+//            animator.Play(stateName);
+//            audioSource.clip = clip;
+//            audioSource.Play();
+//            MoveJaw();
+//        }
 
-        // Method to set the student as not problematic
-        public void SetNotProblematicStudent()
-        {
-            problematic = false;
-            studentNameText.color = Color.white;
-            if (state == State.Standing)
-                SitBack();
-        }
+//        // Method to set the student as not problematic
+//        public void SetNotProblematicStudent()
+//        {
+//            problematic = false;
+//            studentNameText.color = Color.white;
+//            if (state == State.Standing)
+//                SitBack();
+//        }
 
-        public void MoveJaw() 
-        {
-            StartCoroutine(jaw.OnCompleteSpeach());
+//        public void MoveJaw() 
+//        {
+//            StartCoroutine(jaw.OnCompleteSpeach());
 
-        }
+//        }
 
-        // Method to check if the student is in the player's field of vision
-        public bool IsStudentInFieldOfVision()
-        {
-            Plane[] cameraFrustum;
-            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
-            var bounds = collider.bounds;
-            bounds.center += new Vector3(0, 1f, 0);
-            return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
-        }
+//        // Method to check if the student is in the player's field of vision
+//        public bool IsStudentInFieldOfVision()
+//        {
+//            Plane[] cameraFrustum;
+//            cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+//            var bounds = collider.bounds;
+//            bounds.center += new Vector3(0, 1f, 0);
+//            return GeometryUtility.TestPlanesAABB(cameraFrustum, bounds);
+//        }
 
-        // Methods to handle movement and behavior
-        #region Movement
-        Material material;
-        Shader shader;
-        // Coroutine to complete the move to a destination
-        IEnumerator OnCompleteMove(Vector3 destination, float breakDistance, System.Action onComplete = null)
-        {
-            studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
-            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
-                yield return null;
-            state = State.Standing;
-            navMeshAgent.SetDestination(destination);
-            while (Distance(transform.position, destination, breakDistance))
-                yield return null;
-            rig.layers[0].active = true;
-            navMeshAgent.enabled = false;
-            animator.Play("Standing");
-            onComplete?.Invoke();
-        }
+//        // Methods to handle movement and behavior
+//        #region Movement
+//        Material material;
+//        Shader shader;
+//        // Coroutine to complete the move to a destination
+//        IEnumerator OnCompleteMove(Vector3 destination, float breakDistance, System.Action onComplete = null)
+//        {
+//            studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
+//            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
+//                yield return null;
+//            state = State.Standing;
+//            navMeshAgent.SetDestination(destination);
+//            while (Distance(transform.position, destination, breakDistance))
+//                yield return null;
+//            rig.layers[0].active = true;
+//            navMeshAgent.enabled = false;
+//            animator.Play("Standing");
+//            onComplete?.Invoke();
+//        }
 
-        bool Distance(Vector3 tranform, Vector3 dest, float breakDistance)
-        {
-            Vector2 punto1Proyectado = new Vector2(tranform.x, tranform.z);
-            Vector2 punto2Proyectado = new Vector2(dest.x, dest.z);
-            return Vector2.Distance(punto1Proyectado, punto2Proyectado) > breakDistance;
+//        bool Distance(Vector3 tranform, Vector3 dest, float breakDistance)
+//        {
+//            Vector2 punto1Proyectado = new Vector2(tranform.x, tranform.z);
+//            Vector2 punto2Proyectado = new Vector2(dest.x, dest.z);
+//            return Vector2.Distance(punto1Proyectado, punto2Proyectado) > breakDistance;
 
 
-        }
-        // Coroutine to complete the sit back action
-        IEnumerator OnCompleteSitBack()
-        {
-            Debug.Log("semtar");
-            while (Distance(transform.position, desk.GetPositionStudent(), 0.07f))
-            {
-                yield return null;
-            }
-            navMeshAgent.enabled = false;
-            transform.rotation = desk.transform.rotation;
-            animator.SetBool("onFoot", false);
-            desk.PlayAnimacionMesa(Animaciones.SitRelajado);
-            studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
-            Transform pos = desk.transform.GetChild(0);
-          //  transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
-       //     transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
-            state = State.Sitting;
-            rig.layers[0].active = true;
-            desk.SetChair(true);
-        }
+//        }
+//        // Coroutine to complete the sit back action
+//        IEnumerator OnCompleteSitBack()
+//        {
+//            Debug.Log("semtar");
+//            while (Distance(transform.position, desk.GetPositionStudent(), 0.07f))
+//            {
+//                yield return null;
+//            }
+//            navMeshAgent.enabled = false;
+//            transform.rotation = desk.transform.rotation;
+//            animator.SetBool("onFoot", false);
+//            desk.PlayAnimacionMesa(Animaciones.SitRelajado);
+//            studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
+//            Transform pos = desk.transform.GetChild(0);
+//          //  transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
+//       //     transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
+//            state = State.Sitting;
+//            rig.layers[0].active = true;
+//            desk.SetChair(true);
+//        }
 
-        // Method to make the student sit back in their desk
-        public void SitBack()
-        {
-            navMeshAgent.enabled = true;
-            rig.layers[0].active = false;
-            navMeshAgent.SetDestination(desk.GetPositionStudent());
-            animator.Play("Walking");
-            StartCoroutine(OnCompleteSitBack());
-        }
+//        // Method to make the student sit back in their desk
+//        public void SitBack()
+//        {
+//            navMeshAgent.enabled = true;
+//            rig.layers[0].active = false;
+//            navMeshAgent.SetDestination(desk.GetPositionStudent());
+//            animator.Play("Walking");
+//            StartCoroutine(OnCompleteSitBack());
+//        }
 
-        // Method to move the student to a specific destination
-        public void MoveTo(Vector3 destination, float breakDistance, System.Action onComplete = null)
-        {
-            navMeshAgent.enabled = true;
-            rig.layers[0].active = false;
+//        // Method to move the student to a specific destination
+//        public void MoveTo(Vector3 destination, float breakDistance, System.Action onComplete = null)
+//        {
+//            navMeshAgent.enabled = true;
+//            rig.layers[0].active = false;
 
-            if (state == State.Sitting)
-            {
-                desk.SetChair(false);
-                animator.SetBool("onFoot", true);
-                desk.PlayAnimacionMesa(Animaciones.Empujar);
-            }
-            else
-            {
-                animator.Play("Walking");
-            }
-            StartCoroutine(OnCompleteMove(destination, breakDistance, onComplete));
-        }
+//            if (state == State.Sitting)
+//            {
+//                desk.SetChair(false);
+//                animator.SetBool("onFoot", true);
+//                desk.PlayAnimacionMesa(Animaciones.Empujar);
+//            }
+//            else
+//            {
+//                animator.Play("Walking");
+//            }
+//            StartCoroutine(OnCompleteMove(destination, breakDistance, onComplete));
+//        }
 
-        // Method to change the student's desk
-        public IEnumerator ChangeDesk(Desk d)
-        {
-            if (state == State.Standing)
-            {
-                yield return new WaitForSeconds(2f);
-                desk = d;
-                SitBack();
-            }
-            else
-            {
-                desk.SetChair(false);
-                animator.SetBool("onFoot", true);
-                desk.PlayAnimacionMesa(Animaciones.Empujar);
-                desk = d;
-                StartCoroutine(OnCompleteStandChange());
-            }
-        }
+//        // Method to change the student's desk
+//        public IEnumerator ChangeDesk(Desk d)
+//        {
+//            if (state == State.Standing)
+//            {
+//                yield return new WaitForSeconds(2f);
+//                desk = d;
+//                SitBack();
+//            }
+//            else
+//            {
+//                desk.SetChair(false);
+//                animator.SetBool("onFoot", true);
+//                desk.PlayAnimacionMesa(Animaciones.Empujar);
+//                desk = d;
+//                StartCoroutine(OnCompleteStandChange());
+//            }
+//        }
 
-        // Coroutine to complete the stand change action
-        IEnumerator OnCompleteStandChange()
-        {
-          //  studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
-            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
-                yield return null;
-            SitBack();
-        }
+//        // Coroutine to complete the stand change action
+//        IEnumerator OnCompleteStandChange()
+//        {
+//          //  studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
+//            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
+//                yield return null;
+//            SitBack();
+//        }
 
-        #endregion
+//        #endregion
 
-        // Method to get the student's behavior
-        #region Behavior
+//        // Method to get the student's behavior
+//        #region Behavior
 
-        public StudentBehavior GetBehavior() => behavior;
-        #endregion
+//        public StudentBehavior GetBehavior() => behavior;
+//        #endregion
 
-        //VoiceGenerator voiceGenerator;
-        public void GenerateText(string text)
-        {
-            response.TTS(text);
-        }
+//        //VoiceGenerator voiceGenerator;
+//        public void GenerateText(string text)
+//        {
+//            response.TTS(text);
+//        }
       
-        void Start()
-        {
-            Invoke(nameof(RandomPose), 2f);
-        }
+//        void Start()
+//        {
+//            Invoke(nameof(RandomPose), 2f);
+//        }
 
-        void RandomPose()
-        {
-            float randomTime = Random.Range(6f, 8f);
-            if (changeAnimationCoroutine != null)
-            {
-                StopCoroutine(changeAnimationCoroutine);
-            }
-            changeAnimationCoroutine = StartCoroutine(ChangeBlendParameter());
-            Invoke("RandomPose", randomTime);
-        }
-        private int blendChangeSpeed = 2; // Velocidad de cambio del blend tree
-        private Coroutine changeAnimationCoroutine;
+//        void RandomPose()
+//        {
+//            float randomTime = Random.Range(6f, 8f);
+//            if (changeAnimationCoroutine != null)
+//            {
+//                StopCoroutine(changeAnimationCoroutine);
+//            }
+//            changeAnimationCoroutine = StartCoroutine(ChangeBlendParameter());
+//            Invoke("RandomPose", randomTime);
+//        }
+//        private int blendChangeSpeed = 2; // Velocidad de cambio del blend tree
+//        private Coroutine changeAnimationCoroutine;
 
-        IEnumerator ChangeBlendParameter()
-        {
-            float targetBlendValue = Random.Range(0, 2);
-            float currentBlendValue = animator.GetFloat("Aburrimiento");
+//        IEnumerator ChangeBlendParameter()
+//        {
+//            float targetBlendValue = Random.Range(0, 2);
+//            float currentBlendValue = animator.GetFloat("Aburrimiento");
 
-            while (!Mathf.Approximately(currentBlendValue, targetBlendValue))
-            {
-                // Cambiar gradualmente el valor del par�metro del blend tree
-                currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
-                animator.SetFloat("Aburrimiento", currentBlendValue);
+//            while (!Mathf.Approximately(currentBlendValue, targetBlendValue))
+//            {
+//                // Cambiar gradualmente el valor del par�metro del blend tree
+//                currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
+//                animator.SetFloat("Aburrimiento", currentBlendValue);
 
-                yield return null;
-            }
-        }
+//                yield return null;
+//            }
+//        }
 
-        //float targetBlendValue = Random.Range(0, 2);
-        //animator.SetFloat("Aburrimiento", targetBlendValue);
-    }
-}
+//        //float targetBlendValue = Random.Range(0, 2);
+//        //animator.SetFloat("Aburrimiento", targetBlendValue);
+//    }
+//}

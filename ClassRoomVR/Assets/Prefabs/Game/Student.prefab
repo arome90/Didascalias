@@ -2434,7 +2434,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1805749416763871098}
   - component: {fileID: 6394200175754609986}
-  - component: {fileID: 8476855448269478659}
   - component: {fileID: 7509973540603057216}
   - component: {fileID: -4003894230735117553}
   - component: {fileID: 8089880809311193109}
@@ -2447,6 +2446,7 @@ GameObject:
   - component: {fileID: 8089822018792531412}
   - component: {fileID: 8024393512368406280}
   - component: {fileID: 3688080226689136329}
+  - component: {fileID: 668148094191786019}
   m_Layer: 0
   m_Name: Student
   m_TagString: Untagged
@@ -2490,24 +2490,17 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'c_middle1.r'\n\tTransform 'c_ring3.l'\n\tTransform
+    'arm_stretch.l'\n\tTransform 'spine_02.x'\n\tTransform 'c_ring3.r'\n\tTransform
+    'c_index2.r'\n\tTransform 'c_middle2.r'\n\tTransform 'c_pinky2.l'\n\tTransform
+    'c_middle3.r'\n\tTransform 'c_index3.l'\n\tand more ...\n\tFrom animation clip
+    'root|SitHandsOnDesk'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8476855448269478659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cadc973c80f941a188548f9965321, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterProps: {fileID: 11400000, guid: 6b2a692a152826a47a43f9f0de117cec, type: 2}
 --- !u!114 &7509973540603057216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2520,14 +2513,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21bfddb18390c954da519c79fa0af5a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distracted: 63
-  state: 0
-  gender: 0
-  problematic: 0
-  studentNameText: {fileID: 813558317919732908}
-  attentionText: {fileID: 4496128837668229746}
-  target: {fileID: 5893043990474631000}
-  headConstraint: {fileID: 7980371750097749196}
+  _distracted: -1
+  _state: 0
+  _gender: 0
+  _problematic: 0
+  _studentNameText: {fileID: 813558317919732908}
+  _attentionText: {fileID: 4496128837668229746}
+  _target: {fileID: 5893043990474631000}
+  _headConstraint: {fileID: 0}
 --- !u!114 &-4003894230735117553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2540,12 +2533,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b752a859fadbaec4db44765a112610d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resta: 0
-  decisionTime: 2
-  attentionAddition: 3
-  attentionSubtraction: 6
-  distanceFactorAddition: 1
-  distanceFactorSubtraction: 0.5
+  _decisionTime: 2.5
+  _attentionAddition: 30
+  _attentionSubtraction: 20
+  _distanceFactorAddition: 2.1
+  _distanceFactorSubtraction: 2
 --- !u!195 &8089880809311193109
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2723,11 +2715,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b98669901b3c5449be7814b2798b2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jaw: {fileID: 3866714714512338021}
-  SizeReduction: 500
-  smoothSpeed: 5
-  fastSmoothSpeed: 20
-  sensitivity: 1
+  _jaw: {fileID: 3866714714512338021}
+  _sizeReduction: 500
+  _smoothSpeed: 5
+  _fastSmoothSpeed: 20
+  _sensitivity: 1
+  _timeUpdate: 0.4
 --- !u!114 &7955519135228652122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2740,10 +2733,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44ecb66d1ed52784fbe3170050119fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  extraBonesBody:
-  - Bip001LeftEye
-  - Bip001RightEye
-  characterAssets: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b, type: 2}
+  _extraBonesBody: []
+  _characterAssets: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b, type: 2}
 --- !u!114 &8089822018792531412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2911,6 +2902,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2814703, y: 1.0466895, z: 0.2650751}
   m_Center: {x: 0, y: 0.65077126, z: 0}
+--- !u!114 &668148094191786019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786677739925861320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845ddd15bff31df448c75c1eff95a888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterProps: {fileID: 11400000, guid: 32f6969bb19126c448b1e9590e38555f, type: 2}
 --- !u!1 &5938669996460212149
 GameObject:
   m_ObjectHideFlags: 0

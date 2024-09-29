@@ -75,12 +75,12 @@ namespace ClassRoomVR
             var bodies = _student.GetGender() == Gender.Women ? _characterAssets.Bodies.Women : _characterAssets.Bodies.Men;
             var selectedBody = bodies[Random.Range(0, bodies.Length)];
 
-            AttachMesh(selectedBody.Body, selectedBody.BodyMat, selectedBody.HairMat, _rootBone);
+            AttachMesh(selectedBody.Body, selectedBody.BodyMat, selectedBody.HairMat[Random.Range(0, selectedBody.HairMat.Length)], _rootBone);
 
             if (selectedBody.Hair != null)
             {
-                AttachMesh(selectedBody.Hair, null, null, _rootBone);
-                AdjustBonesPosition(selectedBody.Hair, new[] { "Bip001Hair01", "Bip001Hair02", "Bip001Hair03" });
+                AttachMesh(selectedBody.Hair[Random.Range(0, selectedBody.Hair.Length)], null, null, _rootBone);
+               // AdjustBonesPosition(selectedBody.Hair, new[] { "Bip001Hair01", "Bip001Hair02", "Bip001Hair03" });
             }
 
             AdjustBonesPosition(selectedBody.Body, _extraBonesBody);
@@ -94,10 +94,10 @@ namespace ClassRoomVR
                 }
             }
 
-            var complement = selectedBody.HeadBone.Complements[Random.Range(0, selectedBody.HeadBone.Complements.Count)];
-            int colorIndex = Random.Range(0, complement.Color.Length);
+           // var complement = selectedBody.HeadBone.Complements[Random.Range(0, selectedBody.HeadBone.Complements.Count)];
+        //    int colorIndex = Random.Range(0, complement.color.Length);
 
-            CharacterPropsSpawner.TrySpawnComplement(_rootBone, selectedBody.HeadBone, complement, colorIndex, false);
+        //    CharacterPropsSpawner.TrySpawnComplement(_rootBone, selectedBody.HeadBone, complement, colorIndex, false);
         }
 
         /// <summary>

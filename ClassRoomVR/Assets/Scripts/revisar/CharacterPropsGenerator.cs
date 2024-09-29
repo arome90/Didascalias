@@ -25,7 +25,7 @@ public class CharacterPropsSpawner : MonoBehaviour
             bool spawnOnRight = DetermineSpawnSide(boneAttachment, isFoot);
             int randomIndex = Random.Range(0, boneAttachment.Complements.Count);
             var complement = boneAttachment.Complements[randomIndex];
-            int colorIndex = Random.Range(0, complement.Color.Length);
+            int colorIndex = Random.Range(0, complement.color.Length);
 
             SpawnComplement(rootBone, boneAttachment, complement, colorIndex, spawnOnRight, isFoot);
         }
@@ -106,13 +106,13 @@ public class CharacterPropsSpawner : MonoBehaviour
 
         GameObject propObject = new GameObject($"{boneName}_Prop");
         MeshFilter meshFilter = propObject.AddComponent<MeshFilter>();
-        meshFilter.mesh = complement.Mesh;
+        meshFilter.mesh = complement.mesh;
 
         MeshRenderer meshRenderer = propObject.AddComponent<MeshRenderer>();
-        meshRenderer.material = complement.Material;
-        if (complement.Material.HasProperty("_BaseColor"))
+        meshRenderer.material = complement.material;
+        if (complement.material.HasProperty("_BaseColor"))
         {
-            meshRenderer.material.SetColor("_BaseColor", complement.Material.GetColor("_BaseColor"));
+            meshRenderer.material.SetColor("_BaseColor", complement.material.GetColor("_BaseColor"));
         }
 
         propObject.transform.SetParent(bone, false);

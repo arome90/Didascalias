@@ -25,6 +25,8 @@ namespace ClassRoomVR
         private List<List<string>> _names;
         private ClassSettings _settings;
 
+        [SerializeField] Vector3 studentSittingPlaceOffset = new Vector3(0f, 0f, -0.15f);
+
         /// <summary>
         /// Método llamado al iniciar el script. Configura el entorno y, si es necesario, genera la clase.
         /// </summary>
@@ -165,7 +167,7 @@ namespace ClassRoomVR
             Desk desk = _studentsPositions.GetChild(deskPos).GetComponent<Desk>();
             Transform seatPosition = desk.transform.GetChild(0);
             student.transform.SetPositionAndRotation(seatPosition.position, seatPosition.parent.rotation);
-            student.transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
+            student.transform.Translate(studentSittingPlaceOffset, Space.Self);
             student.SetDesk(desk);
             student.SetTargets(_targetsHead);
             _asientosOcupados[deskPos] = true;

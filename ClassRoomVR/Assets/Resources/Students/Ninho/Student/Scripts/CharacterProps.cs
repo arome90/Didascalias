@@ -26,5 +26,18 @@ public class CharacterProps : ScriptableObject
         public List<MeshMaterialPair> complements = new List<MeshMaterialPair>(); // Meshes with their materials for this bone
     }
 
-    public List<BoneAttachment> boneAttachments = new List<BoneAttachment>(); // Attachments for bones
+    //public List<BoneAttachment> boneAttachments = new List<BoneAttachment>(); // Attachments for bones
+    [System.Serializable]
+    public struct ComplementAttachment
+    {
+        public string BoneName; // The name of the bone for attachment
+        [Range(0f, 100f)]
+        public float Probability; // Probability for this attachment to be used
+        //public List<MeshMaterialPair> complements = new List<MeshMaterialPair>(); // Meshes with their materials for this bone
+        public List<MeshMaterialPair> Complements; // Meshes with their materials for this bone
+    }
+
+    [SerializeField] private List<ComplementAttachment> _boneAttachments; // Complementos para huesos
+
+    public List<ComplementAttachment> BoneAttachments => _boneAttachments;
 }

@@ -80,12 +80,12 @@ public class StudentGenerator : MonoBehaviour
         var bodies = _student.GetGender() == Gender.Women ? _characterAssets.Bodies.Women : _characterAssets.Bodies.Men;
         var item = bodies[Random.Range(0, bodies.Length)];
 
-        AttachMesh(item.Body, item.BodyMat, item.HairMat, _rootBone);
+        AttachMesh(item.Body, item.BodyMat, item.HairMat[Random.Range(0, item.HairMat.Length)], _rootBone);
 
         if (item.Hair != null)
         {
-            AttachMesh(item.Hair, null, null, _rootBone);
-            AdjustBonesPosition(item.Hair, new[] { "Bip001Hair01", "Bip001Hair02", "Bip001Hair03" });
+            AttachMesh(item.Hair[Random.Range(0, item.Hair.Length)], null, null, _rootBone);
+          //  AdjustBonesPosition(item.Hair[Random.Range(0, item.Hair.Length)], new[] { "Bip001Hair01", "Bip001Hair02", "Bip001Hair03" });
         }
 
         AdjustBonesPosition(item.Body, _extraBonesBody);
@@ -100,7 +100,7 @@ public class StudentGenerator : MonoBehaviour
         }
 
         var complement = item.HeadBone.Complements[Random.Range(0, item.HeadBone.Complements.Count)];
-        int colorIndex = Random.Range(0, complement.Color.Length);
+        int colorIndex = Random.Range(0, complement.color.Length);
 
         TrySpawnComplement(_rootBone, item.HeadBone, complement, colorIndex, false);
     }
@@ -211,7 +211,7 @@ public class StudentGenerator : MonoBehaviour
             bool spawnOnRight = DetermineSpawnSide(boneAttachment, isFoot);
             int randomIndex = Random.Range(0, boneAttachment.Complements.Count);
             var complement = boneAttachment.Complements[randomIndex];
-            int color = Random.Range(0, complement.Color.Length);
+            int color = Random.Range(0, complement.color.Length);
 
             SpawnComplement(firstChild, boneAttachment, complement, color, spawnOnRight, isFoot);
         }
@@ -292,13 +292,13 @@ public class StudentGenerator : MonoBehaviour
 
         GameObject propObject = new GameObject(boneName + "_Prop");
         MeshFilter meshFilter = propObject.AddComponent<MeshFilter>();
-        meshFilter.mesh = complement.Mesh;
+        meshFilter.mesh = complement.mesh;
 
         MeshRenderer meshRenderer = propObject.AddComponent<MeshRenderer>();
-        meshRenderer.material = complement.Material;
-        if (complement.Color.Length > 0)
+        meshRenderer.material = complement.material;
+        if (complement.color.Length > 0)
         {
-            meshRenderer.material.SetColor("_BaseColor", complement.Color[color]);
+            meshRenderer.material.SetColor("_BaseColor", complement.color[color]);
         }
 
         propObject.transform.SetParent(bone, false);
