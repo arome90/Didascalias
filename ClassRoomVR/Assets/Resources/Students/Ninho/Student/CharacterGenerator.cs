@@ -75,16 +75,18 @@ public class CharacterGenerator : MonoBehaviour
         // Obtener el elemento en el índice aleatorio
         var item = bodies[randomIndex];
         // Spawnear el SkinnedMeshRenderer
-        AttachItemToPlayer(item.skinnedMesh, rootBone, new Material[] { item.bodyMat, item.HairMat });
+        Material hairColor=  item.HairMat[Random.Range(0, item.HairMat.Length)];
+        AttachItemToPlayer(item.skinnedMesh, rootBone, new Material[] { item.bodyMat, hairColor });
 
         // Si tiene pelo largo, instanciar también el pelo
-        if (item.tienePeloLargo && item.pelo != null)
+     
+        if (item.pelo.Length > 0)
         {
-            AttachItemToPlayer(item.pelo, rootBone, null);
-            AdjustExtraBonesPositionHair(item.pelo);
+            SkinnedMeshRenderer hair = item.pelo[Random.Range(0, item.pelo.Length)];
+            AttachItemToPlayer(hair, rootBone, new Material[] { hairColor });
+            AdjustExtraBonesPositionHair(hair);
 
         }
-
         // Ajustar la posición de los huesos extra entre meshes
         AdjustExtraBonesPositionBody(item.skinnedMesh);
 

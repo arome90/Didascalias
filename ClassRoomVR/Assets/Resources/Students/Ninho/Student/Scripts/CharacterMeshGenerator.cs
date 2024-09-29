@@ -1,6 +1,7 @@
 using ClassRoomVR;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static CharacterSkinnedMeshes;
 
@@ -55,11 +56,12 @@ public class CharacterMeshGenerator : MonoBehaviour
         // Spawnear el SkinnedMeshRenderer
         AttachItemToPlayer(item.skinnedMesh, rootBone); // No necesitamos material, pasamos null
 
-        // Si tiene pelo largo, instanciar también el pelo
-        if (item.tienePeloLargo && item.pelo != null)
+        // Si tiene pelo  instanciar también el pelo
+        if (item.pelo.Length> 0)
         {
-            AttachItemToPlayer(item.pelo, rootBone);
-            AdjustExtraBonesPositionHair(item.pelo);
+            SkinnedMeshRenderer hair = item.pelo[Random.Range(0, item.pelo.Length)] ;
+            AttachItemToPlayer(hair, rootBone);
+            AdjustExtraBonesPositionHair(hair);
 
         }
 

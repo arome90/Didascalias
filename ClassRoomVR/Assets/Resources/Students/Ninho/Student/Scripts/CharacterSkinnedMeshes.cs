@@ -19,14 +19,12 @@ public class CharacterSkinnedMeshes : ScriptableObject
     {
         public string name;
         public SkinnedMeshRenderer skinnedMesh;
-        public bool tienePeloLargo; // Booleana para indicar si el personaje tiene pelo largo
-        public SkinnedMeshRenderer pelo; // SkinnedMeshRenderer para el pelo
+        public SkinnedMeshRenderer[] pelo; // SkinnedMeshRenderer para el pelo
+        public Material[] HairMat;
         public Material bodyMat;
-        public Material HairMat;
         public BoneAttachment headBone;
 
     }
-
 
     [System.Serializable]
     public class ClothingCategory
