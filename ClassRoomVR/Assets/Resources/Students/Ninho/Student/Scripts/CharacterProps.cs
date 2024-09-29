@@ -17,14 +17,14 @@ public class CharacterProps : ScriptableObject
 
     }
 
-    [System.Serializable]
-    public class BoneAttachment
-    {
-        public string boneName; // The name of the bone for attachment
-        [Range(0f, 100f)]
-        public float probability = 100f; // Probability for this attachment to be used
-        public List<MeshMaterialPair> complements = new List<MeshMaterialPair>(); // Meshes with their materials for this bone
-    }
+    //[System.Serializable]
+    //public class BoneAttachment
+    //{
+    //    public string boneName; // The name of the bone for attachment
+    //    [Range(0f, 100f)]
+    //    public float probability = 100f; // Probability for this attachment to be used
+    //    public List<MeshMaterialPair> complements = new List<MeshMaterialPair>(); // Meshes with their materials for this bone
+    //}
 
     //public List<BoneAttachment> boneAttachments = new List<BoneAttachment>(); // Attachments for bones
     [System.Serializable]

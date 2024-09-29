@@ -1,3 +1,4 @@
+using System.Drawing;
 using UnityEngine;
 
 /// <summary>
@@ -23,11 +24,15 @@ public class CharacterPropsSpawner : MonoBehaviour
         {
             bool isFoot = boneAttachment.BoneName.ToLower().Contains("foot");
             bool spawnOnRight = DetermineSpawnSide(boneAttachment, isFoot);
-            int randomIndex = Random.Range(0, boneAttachment.Complements.Count);
-            var complement = boneAttachment.Complements[randomIndex];
-            int colorIndex = Random.Range(0, complement.color.Length);
+            if (boneAttachment.Complements.Count > 0)
+            {
 
-            SpawnComplement(rootBone, boneAttachment, complement, colorIndex, spawnOnRight, isFoot);
+                int randomIndex = Random.Range(0, boneAttachment.Complements.Count);
+                var complement = boneAttachment.Complements[randomIndex];
+                int colorIndex = Random.Range(0, complement.color.Length);
+
+                SpawnComplement(rootBone, boneAttachment, complement, colorIndex, spawnOnRight, isFoot);
+            }
         }
     }
 
@@ -39,7 +44,7 @@ public class CharacterPropsSpawner : MonoBehaviour
     /// <returns>Devuelve verdadero si debe aparecer en el lado derecho.</returns>
     private bool DetermineSpawnSide(CharacterProps.ComplementAttachment boneAttachment, bool isFoot)
     {
-        if (boneAttachment.BoneName.Contains("R") && !isFoot)
+        if (boneAttachment.BoneName.Contains("r") && !isFoot)
         {
             return Random.Range(0, 2) == 0;
         }
@@ -79,8 +84,8 @@ public class CharacterPropsSpawner : MonoBehaviour
     {
         if (Random.Range(0f, 100f) <= boneAttachment.Probability)
         {
-            string boneName = isMirrored && boneAttachment.BoneName.Contains("R")
-                ? boneAttachment.BoneName.Replace("R", "L")
+            string boneName = isMirrored && boneAttachment.BoneName.Contains("r")
+                ? boneAttachment.BoneName.Replace("r", "l")
                 : boneAttachment.BoneName;
 
             SpawnForBone(rootBone, boneName, complement, colorIndex, isMirrored);
@@ -104,6 +109,10 @@ public class CharacterPropsSpawner : MonoBehaviour
             return;
         }
 
+        
+
+
+
         GameObject propObject = new GameObject($"{boneName}_Prop");
         MeshFilter meshFilter = propObject.AddComponent<MeshFilter>();
         meshFilter.mesh = complement.mesh;
@@ -116,14 +125,35 @@ public class CharacterPropsSpawner : MonoBehaviour
         }
 
         propObject.transform.SetParent(bone, false);
+        //if (isMirrored)
+        //{
+        //    propObject.transform.localScale = new Vector3(
+        //        propObject.transform.localScale.x,
+        //        propObject.transform.localScale.y,
+        //        -propObject.transform.localScale.z
+        //    );
+        //}
+
+
+        if (complement.scaleOffset.x != 0 && complement.scaleOffset.y != 0 && complement.scaleOffset.z != 0)
+            propObject.transform.localScale
+                = new Vector3(propObject.transform.localScale.x * complement.scaleOffset.x, propObject.transform.localScale.y * complement.scaleOffset.y, propObject.transform.localScale.z * complement.scaleOffset.z);
+
+        propObject.transform.Rotate(complement.rotationOffset);
+
+
         if (isMirrored)
         {
-            propObject.transform.localScale = new Vector3(
-                propObject.transform.localScale.x,
-                propObject.transform.localScale.y,
-                -propObject.transform.localScale.z
-            );
+            // If the object is on the "L" side, mirror it by scaling in Z-axis
+            propObject.transform.localScale = new Vector3(propObject.transform.localScale.x, propObject.transform.localScale.y, -propObject.transform.localScale.z);
+            propObject.transform.Translate(new Vector3(-complement.positionOffset.x, complement.positionOffset.y, complement.positionOffset.z), Space.World);
+
         }
+        else propObject.transform.Translate(complement.positionOffset, Space.World);
+        // Debug.Log("Spawned mesh for bone '" + boneName + "' with mirrored: " + isMirrored);
+
+
+
     }
 
     /// <summary>
