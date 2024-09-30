@@ -3,7 +3,7 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityTransform
 {
     [TaskCategory("Unity/Transform")]
-    [TaskDescription("Finds a transform by name. Returns Success.")]
+    [TaskDescription("Finds a transform by name. Returns success if an object is found.")]
     public class Find : Action
     {
         [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
@@ -35,7 +35,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityTransform
 
             storeValue.Value = targetTransform.Find(transformName.Value);
 
-            return TaskStatus.Success;
+            return storeValue.Value != null ? TaskStatus.Success : TaskStatus.Failure;
         }
 
         public override void OnReset()

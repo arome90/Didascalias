@@ -3,7 +3,7 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject
 {
     [TaskCategory("Unity/GameObject")]
-    [TaskDescription("Finds a GameObject by name. Returns Success.")]
+    [TaskDescription("Finds a GameObject by name. Returns success if an object is found.")]
     public class Find : Action
     {
         [Tooltip("The GameObject name to find")]
@@ -16,7 +16,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject
         {
             storeValue.Value = GameObject.Find(gameObjectName.Value);
 
-            return TaskStatus.Success;
+            return storeValue.Value != null ? TaskStatus.Success : TaskStatus.Failure;
         }
 
         public override void OnReset()

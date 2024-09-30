@@ -30,7 +30,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnitySphereCollider
                 return TaskStatus.Failure;
             }
 
-            sphereCollider.radius = 0.2f;
+            sphereCollider.radius = radius.Value;
 
             return TaskStatus.Success;
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject
 {
     [TaskCategory("Unity/GameObject")]
-    [TaskDescription("Finds a GameObject by tag. Returns Success.")]
+    [TaskDescription("Finds a GameObject by tag. Returns success if an object is found.")]
     public class FindWithTag : Action
     {
         [Tooltip("The tag of the GameObject to find")]
@@ -18,12 +18,13 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject
         {
             if (random.Value) {
                 var gameObjects = GameObject.FindGameObjectsWithTag(tag.Value);
-                storeValue.Value = gameObjects[Random.Range(0, gameObjects.Length - 1)];
+                if (gameObjects == null || gameObjects.Length == 0) { return TaskStatus.Failure; }
+                storeValue.Value = gameObjects[Random.Range(0, gameObjects.Length)];
             } else {
                 storeValue.Value = GameObject.FindWithTag(tag.Value);
             }
 
-            return TaskStatus.Success;
+            return storeValue.Value != null ? TaskStatus.Success : TaskStatus.Failure;
         }
 
         public override void OnReset()
