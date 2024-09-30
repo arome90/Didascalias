@@ -361,36 +361,33 @@ public enum Positions
     /// </summary>
     Student
 }
+//Indice de las expresiones tiene que coincidir con el indice del blendShape correspondiente del personaje
 
-public enum Expresiones
+public enum Expressions
 {
-    /// <summary>
-    /// Expresión de llorar.
-    /// </summary>
-    LLorar,
+    CloseEyes,
+    Sleep,
+    Smile,
+    Angry,
+    Bored,
+    Cry,
+    EXPRESSIONS_SIZE
+} 
 
-    /// <summary>
-    /// Expresión de estar dormido.
-    /// </summary>
-    Dormido,
-
-    /// <summary>
-    /// Expresión de sonreír.
-    /// </summary>
-    Sonreir,
-
-    /// <summary>
-    /// Expresión de quejarse.
-    /// </summary>
-    Quejarse,
-
-    /// <summary>
-    /// Expresión de estar enfadado.
-    /// </summary>
-    Enfadado,
-
-    /// <summary>
-    /// Expresión de parpadear.
-    /// </summary>
-    Pestañear
+//Indice de las propiedades tiene que coincidir con el indice del blendShape correspondiente del personaje
+public enum ModelingProperties
+{
+    EyeBrownsWidth = Expressions.EXPRESSIONS_SIZE,
+    EyebrowsThickness,
+    EyebrowsRotation,
+    EyesCorner,
+    EyeHeight,
+    EyeLength,
+    NoseWidth,
+    NoseBridgeHeight,
+    NoseRotation,
+    MouthSize,
+    FaceWidth,
+    FaceLength,
+    MODELING_PROPERTIES_SIZE
 }

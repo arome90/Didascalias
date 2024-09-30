@@ -75,11 +75,12 @@ namespace ClassRoomVR
             var bodies = _student.GetGender() == Gender.Women ? _characterAssets.Bodies.Women : _characterAssets.Bodies.Men;
             var selectedBody = bodies[Random.Range(0, bodies.Length)];
 
-            AttachMesh(selectedBody.Body, selectedBody.BodyMat, selectedBody.HairMat[Random.Range(0, selectedBody.HairMat.Length)], _rootBone);
+            int hairColor = Random.Range(0, selectedBody.HairMat.Length);
+            AttachMesh(selectedBody.Body, selectedBody.BodyMat, selectedBody.HairMat[hairColor], _rootBone);
 
-            if (selectedBody.Hair != null)
+            if (selectedBody.Hair != null )
             {
-                AttachMesh(selectedBody.Hair[Random.Range(0, selectedBody.Hair.Length)], null, null, _rootBone);
+                AttachMesh(selectedBody.Hair[Random.Range(0, selectedBody.Hair.Length)], selectedBody.HairMat[hairColor], null, _rootBone);
                // AdjustBonesPosition(selectedBody.Hair, new[] { "Bip001Hair01", "Bip001Hair02", "Bip001Hair03" });
             }
 
@@ -94,10 +95,13 @@ namespace ClassRoomVR
                 }
             }
 
-           // var complement = selectedBody.HeadBone.Complements[Random.Range(0, selectedBody.HeadBone.Complements.Count)];
-        //    int colorIndex = Random.Range(0, complement.color.Length);
+            //Modelar cara aleatoriamente 
+            RandomFaceModeling(selectedBody.Body, -100, 100);
 
-        //    CharacterPropsSpawner.TrySpawnComplement(_rootBone, selectedBody.HeadBone, complement, colorIndex, false);
+            // var complement = selectedBody.HeadBone.Complements[Random.Range(0, selectedBody.HeadBone.Complements.Count)];
+            //    int colorIndex = Random.Range(0, complement.color.Length);
+
+            //    CharacterPropsSpawner.TrySpawnComplement(_rootBone, selectedBody.HeadBone, complement, colorIndex, false);
         }
 
         /// <summary>
@@ -194,5 +198,18 @@ namespace ClassRoomVR
             }
             return null;
         }
+        public void RandomFaceModeling(SkinnedMeshRenderer mesh, float minValue, float maxValue)
+        {
+            for (int i = (int)StudentProperties.Expressions.EXPRESSIONS_SIZE; i < (int)StudentProperties.ModelingProperties.MODELING_PROPERTIES_SIZE; i++)
+            {
+                SetModelBlendShape(mesh, (StudentProperties.ModelingProperties)i, Random.Range(minValue, maxValue));
+            }
+        }
+        public void SetModelBlendShape(SkinnedMeshRenderer mesh, StudentProperties.ModelingProperties prop, float value)
+        {
+            mesh.SetBlendShapeWeight((int)prop, value);
+        }
+
     }
+
 }

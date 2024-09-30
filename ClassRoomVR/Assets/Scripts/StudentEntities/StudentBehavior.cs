@@ -95,7 +95,7 @@ namespace ClassRoomVR
         public void SetAttention()
         {
             _attentionLevel = Mathf.Max(_attentionLevel, 65f);
-            StartCoroutine(ChangeExpression(Expresiones.Sonreir));
+            StartCoroutine(ChangeExpression(Expressions.Smile));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace ClassRoomVR
         {
             while (true)
             {
-                yield return Blink(Expresiones.Pestañear);
+                yield return Blink(Expressions.CloseEyes);
                 yield return new WaitForSeconds(Random.Range(BlinkIntervalMin, BlinkIntervalMax));
             }
         }
@@ -124,7 +124,7 @@ namespace ClassRoomVR
         /// Ejecuta un parpadeo.
         /// </summary>
         /// <param name="expresion">Expresión de parpadeo.</param>
-        private IEnumerator Blink(Expresiones expresion)
+        private IEnumerator Blink(Expressions expresion)
         {
             SetBlendShape(expresion, 100f);
             yield return new WaitForSeconds(0.2f);
@@ -136,7 +136,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="expresion">Expresión de la forma de mezcla.</param>
         /// <param name="value">Valor del peso.</param>
-        public void SetBlendShape(Expresiones expresion, float value)
+        public void SetBlendShape(Expressions expresion, float value)
         {
             if (_meshRenderer != null)
             {
@@ -148,7 +148,7 @@ namespace ClassRoomVR
         /// Cambia la expresión del estudiante suavemente.
         /// </summary>
         /// <param name="exp">Expresión a cambiar.</param>
-        private IEnumerator ChangeExpression(Expresiones exp)
+        private IEnumerator ChangeExpression(Expressions exp)
         {
             int expressionIndex = (int)exp;
             while (_meshRenderer.GetBlendShapeWeight(expressionIndex) < 100f)
