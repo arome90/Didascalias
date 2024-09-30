@@ -55,7 +55,7 @@ public class Tutorial : MonoBehaviour
     private void Start()
     {
         InitializeTutorial();
-        _skipTutorial.onClick.AddListener(GoMenu);
+        // _skipTutorial.onClick.AddListener(GoMenu);
     }
 
     /// <summary>
@@ -105,9 +105,8 @@ public class Tutorial : MonoBehaviour
         string initText = "¡Bienvenido al Tutorial para Classroom VR! Aquí te " +
                           "enseñaremos todo lo que necesitas saber para " +
                           "ser un profesor excepcional en nuestro aula virtual.";
-        TextToSpeech(initText);
-        _tutorialText.text = initText;
-        Invoke(nameof(FirstStep), 10);
+        ModifyTextToSpeech(initText, true);
+        Invoke(nameof(FirstStep), 1);
     }
 
     /// <summary>
@@ -176,7 +175,7 @@ public class Tutorial : MonoBehaviour
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
             ModifyTextToSpeech("Has superado el tutorial.", true);
-            Invoke(nameof(GoMenu), 3f);
+            Invoke(nameof(GoMenu), 1.5f);
         }
         else if (_currentPhase != 0)
         {
@@ -204,6 +203,8 @@ public class Tutorial : MonoBehaviour
         UpdateTutorial();
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
+            _skipTutorial.onClick.RemoveAllListeners();
+            _skipTutorial.onClick.AddListener(GameManager.Instance.LoadMainMenu);
             _nextButton.gameObject.SetActive(false);
         }
     }
@@ -231,8 +232,6 @@ public class Tutorial : MonoBehaviour
     public void FirstStep()
     {
         _speaker.Events.OnPlaybackComplete.AddListener(Finish);
-        ModifyTextToSpeech(_tutorialSteps[_currentPhase].StepText, false);
-        _tutorialText.text = _tutorialSteps[_currentPhase].StepText;
     }
 
     /// <summary>
@@ -297,15 +296,14 @@ public class Tutorial : MonoBehaviour
             _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed -= Action_performed;
             _handIzq.InputActions[(int)VisualAction.Menu].action.performed += Action_performed;
             _handIzq.SetRed(VisualAction.Menu);
-            ModifyTextToSpeech("Activa el menu de mano pulsando sobre el menu", true);
-
+            ModifyTextToSpeech("Activa el menu de mano pulsando sobre el botón 'Menú' del controlador izquierdo", true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 4 && _tutorialSteps[_currentPhase].Objective == 1)
         {
             _tutorialSteps[_currentPhase].Objective = 0;
-            ModifyTextToSpeech("Sal del menú pulsando en resume o usa el boton menú", true);
+            ModifyTextToSpeech("Sal del menú pulsando en 'Resume' o usando el boton menú", true);
         }
-        else if ((!GameManager.Instance.IsPause && _tutorialSteps[_currentPhase].Actual == 4) || (_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
+        else if ((_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
         {
             _handIzq.InputActions[(int)VisualAction.Menu].action.performed -= Action_performed;
             _tutorialSteps[_currentPhase].ConditionMet = true;
@@ -359,7 +357,7 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     public void ModifyTextToSpeech(string text, bool cleanTutorialText)
     {
-        _speaker.Speak(FormatText(text));
+        TextToSpeech(text);
         if(cleanTutorialText)
         {
             _tutorialText.text = text;

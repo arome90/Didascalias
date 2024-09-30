@@ -14,15 +14,14 @@ public class FadeScreen : MonoBehaviour
 
     public float FadeDuration => _fadeDuration;
 
-    private Renderer _renderer;
+    private SpriteRenderer _renderer;
 
     /// <summary>
     /// Initializes the Renderer component and starts the fade-in if specified.
     /// </summary>
     private void Start()
     {
-        _renderer = GetComponent<Renderer>();
-        _renderer.enabled = false;
+        _renderer = GetComponent<SpriteRenderer>();
 
         if (_fadeOnStart)
         {
@@ -66,15 +65,14 @@ public class FadeScreen : MonoBehaviour
     /// <returns>Enumerator for coroutine.</returns>
     private IEnumerator FadeRoutine(float alphaIn, float alphaOut, System.Action onComplete = null)
     {
-        _renderer.enabled = true;
-
         float timer = 0f;
         while (timer <= _fadeDuration)
         {
             Color newColor = _fadeColor;
             newColor.a = Mathf.Lerp(alphaIn, alphaOut, _fadeCurve.Evaluate(timer / _fadeDuration));
+            Debug.Log(newColor.a);
 
-            _renderer.material.SetColor(_colorPropertyName, newColor);
+            _renderer.color = newColor;
 
             timer += Time.deltaTime;
             yield return null;
@@ -82,11 +80,7 @@ public class FadeScreen : MonoBehaviour
 
         Color finalColor = _fadeColor;
         finalColor.a = alphaOut;
-        _renderer.material.SetColor(_colorPropertyName, finalColor);
+        _renderer.color = finalColor;
         onComplete?.Invoke();
-
-        if (alphaOut == 0f)
-            _renderer.enabled = false;
-        
     }
 }
