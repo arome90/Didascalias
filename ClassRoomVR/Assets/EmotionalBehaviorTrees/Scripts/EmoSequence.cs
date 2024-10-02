@@ -9,23 +9,15 @@ namespace BehaviorDesigner.Runtime.Tasks
         private int currentChildIndex = 0;
         // The task status of the last child ran.
         private TaskStatus executionStatus = TaskStatus.Inactive;
-
-        private float priority = 0f;
+        
+        
+        public SharedFloat priority = 0f;
 
         public override float GetPriority()
         {
-            return priority;
+            return priority.Value;
         }
 
-        public override void OnStart()
-        {
-            priority = 1.0f;
-            for (int i = 0; i < children.Count; ++i)
-            {
-                priority *= (1.0f - children[i].GetPriority());
-            }
-            priority = 1.0f - priority;
-        }
 
         public override int CurrentChildIndex()
         {
