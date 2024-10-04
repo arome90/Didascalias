@@ -12,7 +12,9 @@ namespace ClassRoomVR
     {
         [SerializeField] private Button _resumeButton; // Botón para reanudar el juego
         [SerializeField] private Button _quitButton; // Botón para salir del juego
-        
+
+        bool _quitting = false;
+
         private void Start()
         {
             GameManager.Instance.IsPause = false;
@@ -26,14 +28,18 @@ namespace ClassRoomVR
             ResumeGame();
         }
 
+        private void Update()
+        {
+            _quitButton.interactable = GameManager.Instance.IsPause && !_quitting;
+        }
+
         /// <summary>
         /// Reanuda el juego
         /// </summary>
         public void ResumeGame()
         {
-            Time.timeScale = 1.0f;
+            GetComponent<Canvas>().enabled = false;
             GameManager.Instance.Continue();
-            SceneTransitionManager.Singleton.FadeScreen.Fade(0.8f, 0.0f);
         }
 
         /// <summary>
@@ -41,13 +47,7 @@ namespace ClassRoomVR
         /// </summary>
         public void PauseGame()
         {
-            SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, StopTime);
             GameManager.Instance.Pause(false);
-        }
-
-        private void StopTime()
-        {
-            Time.timeScale = 0.0f;
         }
 
         /// <summary>
@@ -70,7 +70,11 @@ namespace ClassRoomVR
         /// </summary>
         private void QuitGame()
         {
-            _quitButton.interactable = false;
+            if(GameManager.Instance.IsPause)
+            {
+                ResumeGame();
+            }
+            _quitting = true;
             GameManager.Instance.LoadMainMenu();
         }
     }

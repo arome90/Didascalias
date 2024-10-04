@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using MathNet.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,7 @@ namespace ClassRoomVR
         {
             ValidateAndAdjustDeskLayout();
 
+            Debug.Log("Número de escritorios: " + settings.NumDesks);
             if (_isUStructure)
             {
                 DeskManager.Instance.CreateCircle(settings.NumDesks, settings.Radius);
@@ -138,9 +140,12 @@ namespace ClassRoomVR
         private void OnEnable()
         {
             settings = GameManager.Instance.GetCurrentSettings();
-            int maxDesks = settings.StructureMode == StructureMode.U
-                ? MaxDesk() / 2
-                : MaxDesk();
+            int maxDesks = MaxDesk();
+            Debug.Log("Numero máximo de escritorios en círculo: " + maxDesks);
+            maxDesks = settings.StructureMode == StructureMode.U
+                ? maxDesks / 2
+                : maxDesks;
+            Debug.Log("Numero máximo de escritorios en setting actual: " + maxDesks);
 
             numDesks.SetMax(maxDesks);
             numDesks.SetMin(settings.NumDesks);
@@ -199,6 +204,7 @@ namespace ClassRoomVR
                 (classroomDimensions.x - deskDimensions.z * 3f) / 2f,
                 (classroomDimensions.z - deskDimensions.z * 3f) / 2f
             );
+            maxRadius = maxRadius.Round(2);
             _radiusOption.SetMax(maxRadius);
 
             float angleOccupied = Mathf.Atan(_deskWithOffset / (2 * maxRadius)) * Mathf.Rad2Deg * 2;

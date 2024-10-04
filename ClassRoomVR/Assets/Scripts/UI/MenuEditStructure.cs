@@ -22,6 +22,7 @@ namespace ClassRoomVR
 
         private void OnEnable()
         {
+            Debug.Log(_settings.StructureMode);
             UpdateStructureVisibility();
         }
 

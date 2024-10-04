@@ -98,7 +98,9 @@ namespace ClassRoomVR
             _desks.Clear();
             DestroyChildren();
 
+            if (numDesks == 1 && degrees == 180f) degrees = 360f;
             float angle = degrees / (numDesks - (degrees > 180 ? 0 : 1));
+
             for (int i = 0; i < numDesks; i++)
             {
                 float xPos = Mathf.Cos(Mathf.Deg2Rad * angle * i) * radius;

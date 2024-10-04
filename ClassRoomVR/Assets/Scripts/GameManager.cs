@@ -11,6 +11,7 @@ namespace ClassRoomVR
     public class GameManager : MonoBehaviour
     {
         public bool IsPause;
+        private bool _connectionLost = false;
 
         private DataSystem savedData;
         private VoiceActivation voice;
@@ -24,8 +25,6 @@ namespace ClassRoomVR
         private int indexCurrentSett;
 
         public static GameManager Instance { get; private set; }
-
-
 
         private void Awake()
         {
@@ -127,7 +126,7 @@ namespace ClassRoomVR
         public bool GetSaveAudio() => saveAudio;
         private void Update()
         {
-            if (IsPause && ConnectionIsAvailable() && IsLoadingBarVisible())
+            if (IsPause && ConnectionIsAvailable() && _connectionLost)
             {
                 HandleReconnection();
             }
@@ -156,15 +155,22 @@ namespace ClassRoomVR
             ToggleLoadingBar(false);
             Continue();
         }
+
         public void Pause(bool lostConnection)
         {
-            if (IsPause) return;
-            IsPause = true;
-
             if (lostConnection)
             {
                 ToggleLoadingBar(true);
             }
+            SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            _connectionLost = lostConnection;
+        }
+
+        private void Pause()
+        {
+            if (IsPause) return;
+            StopTime();
+            IsPause = true;
         }
 
         private void ToggleLoadingBar(bool visible)
@@ -194,8 +200,15 @@ namespace ClassRoomVR
         public void Continue()
         {
             //AudioListener.pause = false;
-            //Time.timeScale = 1f;
+            Time.timeScale = 1.0f;
             IsPause = false;
+            SceneTransitionManager.Singleton.FadeScreen.Fade(0.8f, 0.0f);
+        }
+
+        public void StopTime()
+        {
+            Debug.Log("TIME HAS STOPPED!!");
+            Time.timeScale = 0.0f;
         }
 
         public void SetVoiceExperience(VoiceActivation voice)

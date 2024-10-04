@@ -79,8 +79,8 @@ namespace ClassRoomVR
             _maxStudents = _settings.StructureMode switch
             {
                 StructureMode.Fila => 30,
-                StructureMode.Circular => 15,
-                StructureMode.U => 8,
+                StructureMode.Circular => 12,
+                StructureMode.U => 6,
                 _ => _maxStudents
             };
 

@@ -15,9 +15,9 @@ public class SceneTransitionManager : MonoBehaviour
     public static SceneTransitionManager Singleton { get; private set; }
     public FadeScreen FadeScreen => _fadeScreen;
 
-
     private void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
         // Asegura que solo haya una instancia del gestor de transiciones.
         if (Singleton && Singleton != this)
         {
@@ -27,6 +27,14 @@ public class SceneTransitionManager : MonoBehaviour
         {
             Singleton = this;
             DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(FadeScreen == null)
+        {
+            _fadeScreen = FindFirstObjectByType<FadeScreen>();
         }
     }
 

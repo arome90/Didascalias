@@ -1,3 +1,4 @@
+using ClassRoomVR;
 using System.Collections;
 using UnityEngine;
 
@@ -53,6 +54,7 @@ public class FadeScreen : MonoBehaviour
     /// <param name="onComplete">Callback action to invoke upon completion.</param>
     public void Fade(float alphaIn, float alphaOut, System.Action onComplete = null)
     {
+        gameObject.SetActive(true);
         StartCoroutine(FadeRoutine(alphaIn, alphaOut, onComplete));
     }
 
@@ -70,7 +72,6 @@ public class FadeScreen : MonoBehaviour
         {
             Color newColor = _fadeColor;
             newColor.a = Mathf.Lerp(alphaIn, alphaOut, _fadeCurve.Evaluate(timer / _fadeDuration));
-            Debug.Log(newColor.a);
 
             _renderer.color = newColor;
 
