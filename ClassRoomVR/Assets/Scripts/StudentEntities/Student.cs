@@ -431,17 +431,17 @@ namespace ClassRoomVR
 
         private IEnumerator ChangeBlendParameter()
         {
-            float targetBlendValue = Random.Range(0, 2);
-            float currentBlendValue = _animator.GetFloat("Aburrimiento");
+            //float targetBlendValue = Random.Range(0, 2);
+            //float currentBlendValue = _animator.GetFloat("Aburrimiento");
 
-            while (!Mathf.Approximately(currentBlendValue, targetBlendValue))
-            {
-                // Cambiar gradualmente el valor del parámetro del blend tree
-                currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
-                _animator.SetFloat("Aburrimiento", currentBlendValue);
+            //while (!Mathf.Approximately(currentBlendValue, targetBlendValue))
+            //{
+            //    // Cambiar gradualmente el valor del parámetro del blend tree
+            //    currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
+            //    _animator.SetFloat("Aburrimiento", currentBlendValue);
 
-                yield return null;
-            }
+               yield return null;
+            //}
         }
     }
 }

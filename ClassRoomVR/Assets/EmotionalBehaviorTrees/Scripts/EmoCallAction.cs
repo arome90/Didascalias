@@ -11,17 +11,11 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo
         public SharedGameObject targetGameObject;
         public EventSittingAnimations n;
    
-        private GameObject prevGameObject;
         private StudentActions sActions;
 
         public override void OnStart()
         {
-            var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
-                prevGameObject = currentGameObject;
-            }
-            sActions=prevGameObject.GetComponent<StudentActions>();
+            sActions=GetComponent<StudentActions>();
 
         }
 
@@ -32,7 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo
                 Debug.LogWarning("StudentActions is null");
                 return TaskStatus.Failure;
             }
-            StartCoroutine(sActions.PlaySitAction(n));
+            StartCoroutine(sActions.PlaySitAction(EventSittingAnimations.Yelling));
 
             return TaskStatus.Success;
         }

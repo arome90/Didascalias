@@ -31,15 +31,30 @@ namespace ClassRoomVR
 
             switch (anim)
             {
+                case EventSittingAnimations.Yelling:
+                    {
+                        animator.SetInteger("Action", (int)anim);
+
+                        //  yield return new WaitForSeconds(Random.Range(0.0f, 5.0f));
+
+                        //  student.GenerateText($"Profe, una duda");
+
+                        yield return new WaitForSeconds(5.0f);
+
+                        animator.SetInteger("Action", -1);
+                        animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
+
+                        break;
+                    }
                 case EventSittingAnimations.RiseHand:
                     {
                         animator.SetInteger("Action", (int)anim);
              
-                        yield return new WaitForSeconds(Random.Range(0.0f, 5.0f));
+                      //  yield return new WaitForSeconds(Random.Range(0.0f, 5.0f));
 
-                        student.GenerateText($"Profe, una duda");
+                      //  student.GenerateText($"Profe, una duda");
 
-                        yield return new WaitForSeconds(Random.Range(5.0f, 10.0f)); 
+                        yield return new WaitForSeconds(Random.Range(10.0f, 20.0f)); 
 
                         animator.SetInteger("Action",-1 );
                         animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk );
