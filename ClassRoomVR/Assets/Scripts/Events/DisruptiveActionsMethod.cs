@@ -6,7 +6,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Métodos estáticos para manejar acciones disruptivas de los estudiantes.
     /// </summary>
-    public static class ActionsMethod
+    public static class DisruptiveActionsMethod
     {
         /// <summary>
         /// Reproduce la animación y el audio apropiado para una acción disruptiva, basado en el género del estudiante.
@@ -76,6 +76,30 @@ namespace ClassRoomVR
         }
 
         /// <summary>
+     
+        /// <returns>Retorna un IEnumerator necesario para las corrutinas.</returns>
+        public static IEnumerator RiseHand(Student student, DisruptiveAction action, System.Action onComplete)
+        {
+            //animator.SetInteger("Action", (int)anim);
+
+            //yield return new WaitForSeconds(Random.Range(0.0f, 5.0f));
+
+            //student.GenerateText($"Profe, una duda");
+
+            //yield return new WaitForSeconds(Random.Range(5.0f, 10.0f));
+
+            //animator.SetInteger("Action", -1);
+            //animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
+
+            PlayDisruptiveAction(student, action); // Ejecuta la acción disruptiva.
+            yield return new WaitForSeconds(2f); // Espera 2 segundos.
+            onComplete?.Invoke(); // Llama a la acción final si está definida.
+        }
+
+
+
+
+        /// <summary>
         /// Levanta al estudiante de su asiento y lo mueve a una posición específica.
         /// </summary>
         /// <param name="student">El estudiante que se levantará y moverá.</param>
@@ -87,5 +111,9 @@ namespace ClassRoomVR
             PlayDisruptiveAction(student, action); // Ejecuta la acción disruptiva.
             student.MoveTo(destination, 1f, onComplete); // Mueve al estudiante al destino con una velocidad definida.
         }
+
+
+
+
     }
 }

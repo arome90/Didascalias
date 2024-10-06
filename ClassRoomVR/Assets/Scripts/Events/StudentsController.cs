@@ -199,16 +199,16 @@ namespace ClassRoomVR
                 {
                     case Actions.Insultar:
                         Debug.Log("Insultando");
-                        StartCoroutine(ActionsMethod.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
+                        StartCoroutine(DisruptiveActionsMethod.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
                         break;
                     case Actions.Separados:
                         Debug.Log("Separándonos");
                         GetRandomStudentsSeparate();
-                        StartCoroutine(ActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
+                        StartCoroutine(DisruptiveActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
                         break;
                     case Actions.Levantarse:
                         Debug.Log("Levantándose");
-                        ActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
+                        DisruptiveActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
                         break;
                     default:
                         Debug.LogError(currentAction.name + " action is not implemented or its type is missing. Check it!");

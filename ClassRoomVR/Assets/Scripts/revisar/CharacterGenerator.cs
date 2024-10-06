@@ -80,7 +80,7 @@ namespace ClassRoomVR
 
             if (selectedBody.Hair != null )
             {
-                AttachMesh(selectedBody.Hair[Random.Range(0, selectedBody.Hair.Length)], selectedBody.HairMat[hairColor], null, _rootBone);
+                AttachMesh(selectedBody.Hair[Random.Range(0, selectedBody.Hair.Length)], null, selectedBody.HairMat[hairColor], _rootBone);
                // AdjustBonesPosition(selectedBody.Hair, new[] { "Bip001Hair01", "Bip001Hair02", "Bip001Hair03" });
             }
 
@@ -118,10 +118,12 @@ namespace ClassRoomVR
             newMesh.rootBone = targetBone;
             newMesh.transform.SetParent(transform, false);
 
-            if (bodyMat != null || hairMat != null)
+            if (bodyMat != null && hairMat != null)
             {
                 newMesh.materials = new[] { bodyMat, hairMat };
             }
+            else if (hairMat != null)
+                newMesh.materials = new[] { hairMat };
         }
 
         /// <summary>

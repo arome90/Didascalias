@@ -46,12 +46,12 @@ public enum State
     /// <summary>
     /// Estado sentado.
     /// </summary>
-    Sitting,
+    Sitting=0,
 
     /// <summary>
     /// Estado de pie.
     /// </summary>
-    Standing
+    Standing=1
 }
 
 public enum TalkMode
@@ -77,7 +77,7 @@ public enum TalkMode
     Normal
 }
 
-public enum Allign
+public enum Align
 {
     /// <summary>
     /// Alineación no especificada.
@@ -254,6 +254,36 @@ public enum Animaciones
     SitSinGanas
 }
 
+public enum EventSittingAnimations
+{
+    Yelling,
+    RiseHand
+    
+}
+
+public enum NormalSittingAnimations
+{
+    SitHandsOnDesk,
+    SitHandsOnThigh
+
+}
+
+public enum SittingTransitionAnimations
+{
+    /// <summary>
+    /// Animación de sentarse relajado.
+    /// </summary>
+    SitRelajado,
+
+    /// <summary>
+    /// Animación de sentarse sin ganas.
+    /// </summary>
+    SitSinGanas,
+
+    Levantar
+}
+
+
 public enum AnimacionesStudent
 {
     /// <summary>
@@ -331,7 +361,9 @@ public enum Actions
     /// <summary>
     /// Acción de levantarse.
     /// </summary>
-    Levantarse = 1 << 2  // 4
+    Levantarse = 1 << 2 , // 4
+
+    RiseHand= 1 << 3
 }
 
 public enum Positions

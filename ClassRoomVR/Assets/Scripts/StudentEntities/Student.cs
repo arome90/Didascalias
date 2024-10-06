@@ -274,18 +274,19 @@ namespace ClassRoomVR
         private IEnumerator OnCompleteMove(Vector3 destination, float breakDistance, System.Action onComplete = null)
         {
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
-            while (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
+            while (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Movement Blend Tree"))
                 yield return null;
 
             _state = State.Standing;
             _navMeshAgent.SetDestination(destination);
+            _animator.SetFloat("Speed", Mathf.Clamp01(_navMeshAgent.velocity.magnitude));
 
             while (Distance(transform.position, destination, breakDistance))
                 yield return null;
 
             _rig.layers[0].active = true;
             _navMeshAgent.enabled = false;
-            _animator.Play("Standing");
+            _animator.Play("Idle");
             onComplete?.Invoke();
         }
 
@@ -309,7 +310,7 @@ namespace ClassRoomVR
 
             _navMeshAgent.enabled = false;
             transform.rotation = _desk.transform.rotation;
-            _animator.SetBool("onFoot", false);
+            _animator.SetBool("OnFoot", false);
             _desk.PlayAnimacionMesa(Animaciones.SitRelajado);
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
             Transform pos = _desk.transform.GetChild(0);
@@ -346,7 +347,7 @@ namespace ClassRoomVR
             if (_state == State.Sitting)
             {
                 _desk.SetChairActive(false);
-                _animator.SetBool("onFoot", true);
+                _animator.SetBool("OnFoot", true);
                 _desk.PlayAnimacionMesa(Animaciones.Empujar);
             }
             else
@@ -373,7 +374,7 @@ namespace ClassRoomVR
             else
             {
                 _desk.SetChairActive(false);
-                _animator.SetBool("onFoot", true);
+                _animator.SetBool("OnFoot", true);
                 _desk.PlayAnimacionMesa(Animaciones.Empujar);
                 _desk = d;
                 StartCoroutine(OnCompleteStandChange());
