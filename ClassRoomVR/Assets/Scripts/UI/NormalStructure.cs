@@ -13,8 +13,9 @@ namespace ClassRoomVR
         [SerializeField] private Option _rowsOption; // Opción de UI para establecer el número de filas
         [SerializeField] private Option _columnsOption; // Opción de UI para establecer el número de columnas
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             numDesks.onValueChanged.AddListener(UpdateDeskLayout);
             _rowsOption.onValueChanged.AddListener(UpdateRows);
             _columnsOption.onValueChanged.AddListener(UpdateColumns);

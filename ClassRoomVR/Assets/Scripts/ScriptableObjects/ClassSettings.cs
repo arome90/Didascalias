@@ -48,6 +48,10 @@ namespace ClassRoomVR
         private int _numDesks;
         public int NumDesks { get => _numDesks; set => _numDesks = value; }
 
+        [SerializeField]
+        private bool _fillEmptyDesks = true;
+        public bool FillEmptyDesks { get => _fillEmptyDesks; set => _fillEmptyDesks = value; }
+
         [Range(1.0f, 3.8f)]
         [SerializeField]
         private float _radius;

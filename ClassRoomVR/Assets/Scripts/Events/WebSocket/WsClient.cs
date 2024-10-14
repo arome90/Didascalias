@@ -14,7 +14,7 @@ public class WsClient : GenericSingleton<WsClient>
     private bool actionFlag = false;
 
     // Conexión WebSocket.
-    private static WebSocket ws;
+    private static WebSocket ws = null;
 
     // Mensaje recibido.
     private MessageReceived receivedMessage;
@@ -45,6 +45,8 @@ public class WsClient : GenericSingleton<WsClient>
     {
         try
         {
+            if (ws != null && ws.IsAlive) return;
+            Debug.Log("Creating new WebSocket");
             ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws.OnOpen += HandleOnOpen;
             ws.OnMessage += HandleSessionMessage;
@@ -188,13 +190,14 @@ public class WsClient : GenericSingleton<WsClient>
             return false;
         }
     }
-
+        
     /// <summary>
     /// Desconecta el WebSocket cerrando la conexión de manera segura.
     /// </summary>
     public void Disconnect()
     {
-        ws?.Close();
+        Debug.Log("Disconnecting WebSocket: " + ws.IsAlive);
+        if(ws.IsAlive) ws?.Close();
     }
 
     /// <summary>

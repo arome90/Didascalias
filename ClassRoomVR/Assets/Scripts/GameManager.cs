@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Meta.WitAi;
+using Meta.WitAi.Data.Configuration;
+using Oculus.Voice;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +13,25 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
+        [Serializable]
+        public struct LanguageOption
+        {
+            public string name;
+            public WitConfiguration witApp;
+        }
+        [SerializeField] private LanguageOption[] _languages;
+
+        private WitConfiguration _currentLanguage;
+
+        public WitConfiguration Language { get { return _currentLanguage; } }
+
+        public LanguageOption[] Languages { get { return _languages; } }
+
+        /// <summary>
+        /// Evento llamado cuando se cambia el idioma de la aplicación
+        /// </summary>
+        public UnityEvent OnLanguageChanged;
+
         public bool IsPause;
         private bool _connectionLost = false;
 
@@ -28,20 +50,28 @@ namespace ClassRoomVR
 
         private void Awake()
         {
-            InitializeSingleton();
+            if (!InitializeSingleton()) return;
             IsPause = false;
         }
 
-        private void InitializeSingleton()
+        private void Start()
+        {
+            _currentLanguage = _languages[0].witApp;
+            // Esto significa que crea una instancia en caso de ser nulo.
+            OnLanguageChanged ??= new UnityEvent();
+        }
+
+        private bool InitializeSingleton()
         {
             if (Instance != null)
             {
                 Destroy(this);
-                return;
+                return false;
             }
             Instance = this;
             InitializeData();
             DontDestroyOnLoad(this);
+            return true;
         }
 
         private void InitializeData()
@@ -64,12 +94,12 @@ namespace ClassRoomVR
             currentSettings.NumWomen = data.WomenCount;
         }
 
-
         public ClassInfo GetCurrentClassInfo() => currentClassInfo;
         public VoiceActivation GetVoiceActivation() => voice;
 
         public void LoadMainMenu()
         {
+            WsClient.Instance.Disconnect();
             SceneTransitionManager.Singleton.GoToSceneAsync(0);
 
         }
@@ -101,6 +131,7 @@ namespace ClassRoomVR
 
             }
         }
+
         private void UpdateSavedData()
         {
             savedData.NumStudents = currentSettings.NumStudents;
@@ -109,6 +140,12 @@ namespace ClassRoomVR
             savedData.Mode = currentSettings.Mode;
             savedData.MenCount = currentSettings.NumMen;
             savedData.WomenCount = currentSettings.NumWomen;
+        }
+
+        public void ChangeLanguage(WitConfiguration language)
+        {
+            _currentLanguage = language;
+            OnLanguageChanged.Invoke();
         }
 
         public ClassSettings GetCurrentSettings()

@@ -17,8 +17,9 @@ namespace ClassRoomVR
         private int _lastOption;
         private float _deskWithOffset;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             numDesks.onValueChanged.AddListener(UpdateDeskLayout);
             _radiusOption.onValueChanged.AddListener(UpdateRadius);
             _degreesOption.onValueChanged.AddListener(UpdateDegrees);

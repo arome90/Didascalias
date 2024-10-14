@@ -367,7 +367,7 @@ public enum Expresiones
     /// <summary>
     /// Expresión de llorar.
     /// </summary>
-    LLorar,
+    Llorar,
 
     /// <summary>
     /// Expresión de estar dormido.

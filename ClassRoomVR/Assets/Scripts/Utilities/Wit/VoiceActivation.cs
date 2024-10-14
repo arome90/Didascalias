@@ -155,7 +155,6 @@ namespace ClassRoomVR
             return false;
         }
 
-
         //Gestion de las ordenes del profesor
         //TO DO : CAMBIAR PARA QUE SEA GENERICO
         //  public void UpdateClass(VoiceSession sessionData) 

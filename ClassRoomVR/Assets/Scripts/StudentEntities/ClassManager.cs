@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Palmmedia.ReportGenerator.Core;
 
 namespace ClassRoomVR
 {
@@ -131,7 +132,7 @@ namespace ClassRoomVR
                     break;
             }
 
-            while(deskPos < _studentsPositions.childCount)
+            while(_settings.FillEmptyDesks && deskPos < _studentsPositions.childCount)
             {
                 GenerateRandomStudent(ref deskPos);
             }

@@ -126,9 +126,12 @@ namespace ClassRoomVR
         /// <param name="expresion">Expresión de parpadeo.</param>
         private IEnumerator Blink(Expresiones expresion)
         {
-            SetBlendShape(expresion, 100f);
-            yield return new WaitForSeconds(0.2f);
-            SetBlendShape(expresion, 0f);
+            if (_currentExpression != Expresiones.Dormido)
+            {
+                SetBlendShape(expresion, 100f);
+                yield return new WaitForSeconds(0.2f);
+                SetBlendShape(expresion, 0f);
+            }
         }
 
         /// <summary>
@@ -144,11 +147,13 @@ namespace ClassRoomVR
             }
         }
 
+
+        private Expresiones _currentExpression;
         /// <summary>
         /// Cambia la expresión del estudiante suavemente.
         /// </summary>
         /// <param name="exp">Expresión a cambiar.</param>
-        private IEnumerator ChangeExpression(Expresiones exp)
+        public IEnumerator ChangeExpression(Expresiones exp)
         {
             int expressionIndex = (int)exp;
             while (_meshRenderer.GetBlendShapeWeight(expressionIndex) < 100f)
@@ -159,8 +164,10 @@ namespace ClassRoomVR
                     _blendShapeWeights[i] = Mathf.Clamp(_blendShapeWeights[i] + changeValue, 0f, 100f);
                     _meshRenderer.SetBlendShapeWeight(i, _blendShapeWeights[i]);
                 }
-                yield return new WaitForSeconds(0.5f);
+                // El valor de esto antes era 0.5f. El cambio de expresiones se hace un tanto lento
+                yield return new WaitForSeconds(0.125f);
             }
+            _currentExpression = exp;
         }
     }
 }

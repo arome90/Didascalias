@@ -1,0 +1,793 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7176081971093362950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c2918ba0e7451694416d42d69e0944, type: 3}
+  m_Name: WitComposerData
+  m_EditorClassIdentifier: 
+  canvases: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5a46bda3295124c99b0e6537ac7252, type: 3}
+  m_Name: Didascalias_PT
+  m_EditorClassIdentifier: 
+  _clientAccessToken: UUFUBLNMINLVYVLA56FGZEKHVZQJUJAH
+  _appInfo:
+    name: didascaliaspt
+    id: 836890118307800
+    lang: pt
+    isPrivate: 0
+    createdAt: 2024-10-11T00:48:05-0700
+    trainingStatus: 3
+    lastTrainDuration: 49
+    lastTrainedAt: 2024-10-11T02:08:21-0700
+    nextTrainAt: 2024-10-11T02:12:17-0700
+    intents:
+    - id: 498011286547356
+      name: Advertencia
+      entities: []
+    - id: 3742247649377300
+      name: BajarVoz
+      entities: []
+    - id: 890324496023659
+      name: CambiarAlumno
+      entities: []
+    - id: 850377403751444
+      name: Castigo
+      entities:
+      - name: Castigo:Castigo
+        id: 1083189806700867
+      - name: Posiciones:Posiciones
+        id: 441769141785611
+      - name: wit$contact:student
+        id: 1027692779103939
+    - id: 2585032301705280
+      name: Expulsion
+      entities:
+      - name: Posiciones:Posiciones
+        id: 441769141785611
+      - name: wit$contact:student
+        id: 1027692779103939
+    - id: 1216436282743934
+      name: LlamarAlumno
+      entities: []
+    - id: 331859766651980
+      name: MoverAlumno
+      entities:
+      - name: Posiciones:Posiciones
+        id: 441769141785611
+      - name: wit$contact:student
+        id: 1027692779103939
+    - id: 463551260063105
+      name: Postponer
+      entities: []
+    - id: 889464282729968
+      name: Preguntar
+      entities: []
+    - id: 1714391212680171
+      name: SacarMaterial
+      entities: []
+    - id: 1048131016641230
+      name: Saludos
+      entities: []
+    - id: 571433288561586
+      name: Sentarse
+      entities:
+      - name: Posiciones:Posiciones
+        id: 441769141785611
+      - name: wit$contact:student
+        id: 1027692779103939
+    - id: 1252632002430875
+      name: Silencio
+      entities: []
+    - id: 1705965986846288
+      name: Trabajar
+      entities: []
+    entities:
+    - name: Castigo
+      id: 3075364319269834
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Castigo
+        id: 1083189806700867
+      keywords:
+      - keyword: hora do recreio
+        synonyms:
+        - hora do recreio
+      - keyword: parte grave
+        synonyms:
+        - parte grave
+      - keyword: "voc\xEA fica de p\xE9"
+        synonyms:
+        - "voc\xEA fica de p\xE9"
+        - "voc\xEA fica en p\xE9"
+        - "voc\xEA permanece de p\xE9"
+      - keyword: "voc\xEA fica na aula"
+        synonyms:
+        - ficas aqui
+        - "voc\xEA fica aqui durante o recreio"
+        - "voc\xEA fica na aula"
+    - name: Insultos
+      id: 1202966130760358
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Insultos
+        id: 1211605673388549
+      keywords:
+      - keyword: insultos
+        synonyms:
+        - atrasado
+        - buceta
+        - "cabr\xE3o"
+        - cadela
+        - caralho
+        - fag
+        - filho da puta
+        - idiota
+        - merda
+        - puta
+    - name: Objeto
+      id: 506160962239382
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Objeto
+        id: 1069922508187922
+      keywords:
+      - keyword: "apresenta\xE7ao"
+        synonyms:
+        - "apresenta\xE7ao"
+      - keyword: biros
+        synonyms:
+        - biros
+        - "bir\xF4"
+        - "bir\xF4s"
+        - caneta
+        - "l\xE1pis"
+      - keyword: caderno
+        synonyms:
+        - caderno
+        - notebook
+      - keyword: deveres
+        synonyms:
+        - deveres
+        - "li\xE7ao da casa"
+      - keyword: livro
+        synonyms:
+        - livro
+      - keyword: material
+        synonyms:
+        - materiais escolares
+        - material
+      - keyword: papel
+        synonyms:
+        - papel
+    - name: Posiciones
+      id: 1056902816142534
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Posiciones
+        id: 441769141785611
+      keywords:
+      - keyword: aproxime-se
+        synonyms:
+        - aproxime-se
+        - chegue mais perto
+        - "ven m\xE1is perto"
+        - venha aqu
+        - "venha aqu\xED"
+        - "venha at\xE9 min"
+        - venha perto da min
+      - keyword: aqui
+        synonyms:
+        - aqui
+        - mais perto da min
+        - mais perto de min
+        - "m\xE1is perto"
+        - perto de min
+        - "\xE1 minha mesa"
+      - keyword: essa mesa
+        synonyms:
+        - essa mesa
+        - essa tabela
+      - keyword: fora
+        synonyms:
+        - casa
+        - fora
+        - fora da classe
+        - rua
+      - keyword: fora da clase
+        synonyms:
+        - fora da aula
+        - fora da cl
+        - fora da clase
+        - fora da sala de aula
+      - keyword: gabinete da diretora
+        synonyms:
+        - chefa de estudos
+        - chefe de estudos
+        - "escrit\xF3rio da diretora"
+        - "escrit\xF3rio do diretor"
+        - gabinete da diretora
+        - gabinete do diretor
+        - sala do diretor
+      - keyword: lugar
+        synonyms:
+        - assento
+        - cadeira
+        - lugar
+        - sitio
+      - keyword: mesa
+        synonyms:
+        - escrivaninha
+        - mesa
+        - tabela
+      - keyword: sitio
+        synonyms:
+        - sitio
+    - name: wit$agenda_entry
+      id: 54175655-e50a-4ec6-b35b-8f59009c8946
+      lookups: []
+      roles:
+      - name: agenda_entry
+        id: 1269811937773999
+      keywords: []
+    - name: wit$contact
+      id: 5417565f-1a66-4793-9f52-c33a143c5f9a
+      lookups: []
+      roles:
+      - name: student
+        id: 1027692779103939
+      keywords: []
+    traits: []
+    versionTags: []
+    voices:
+    - name: wit$British Butler
+      locale: en_GB
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cael
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cam
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Carl
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cartoon Baby
+      locale: en_US
+      gender: nonbinary
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cartoon Kid
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cartoon Villain
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Charlie
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cockney Accent
+      locale: en_GB
+      gender: nonbinary
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cody
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Colin
+      locale: en_CA
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Connor
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Cooper
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Disaffected
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Hollywood
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Kenyan Accent
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Overconfident
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Pirate
+      locale: en_GB
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Prospector
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Railey
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Rebecca
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Remi
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Rosie
+      locale: en_CA
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Rubie
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Southern Accent
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Surfer
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Trendy
+      locale: en_US
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Vampire
+      locale: en_US
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Whimsical
+      locale: en_GB
+      gender: female
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+    - name: wit$Wizard
+      locale: en_GB
+      gender: male
+      styles:
+      - default
+      - soft
+      - formal
+      - fast
+      - projected
+      supported_features:
+      - style
+      - pitch
+      - speed
+      - sfx
+      - viseme_events
+      - phoneme_events
+      - word_events
+  _configData:
+  - {fileID: -7176081971093362950}
+  _configurationId: 8eb46ebb-df8e-4de4-b7c7-7cf3b39563f8
+  _requestType: 0
+  _requestTimeoutMs: 10000
+  endpointConfiguration:
+    _uriScheme: 
+    _authority: 
+    _port: 0
+    _witApiVersion: 
+    _message: 
+    _speech: 
+    _dictation: 
+    _synthesize: 
+    _event: 
+    _converse: 
+  isDemoOnly: 0
+  useConduit: 0
+  _manifestLocalPath: ConduitManifest-8157fba3-c943-4283-a421-c5d4e02dece7.json
+  excludedAssemblies:
+  - Oculus.Voice.Demo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - Meta.WitAi.Samples, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  relaxedResolution: 0
