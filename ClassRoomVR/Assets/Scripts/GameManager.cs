@@ -4,8 +4,10 @@ using Oculus.Voice;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Generated.PropertyProviders;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using Utilities.Extensions;
 
@@ -19,13 +21,19 @@ namespace ClassRoomVR
             public string name;
             public WitConfiguration witApp;
         }
-        [SerializeField] private LanguageOption[] _languages;
+        [SerializeField] private LanguageOption[] _witAppsForLanguages;
 
-        private WitConfiguration _currentLanguage;
+        private WitConfiguration _currentWitApp;
 
-        public WitConfiguration Language { get { return _currentLanguage; } }
+        public WitConfiguration Language { get { return _currentWitApp; } }
 
-        public LanguageOption[] Languages { get { return _languages; } }
+        /// <summary>
+        /// DEBE SEGUIR EL MISMO ORDEN QUE EN LAS OPCIONES DE LOCALIZACIÓN
+        /// ESPAÑOL - 0
+        /// PORTUGUÉS br - 1
+        /// ...
+        /// </summary>
+        public LanguageOption[] witAppsForLanguages { get { return _witAppsForLanguages; } }
 
         /// <summary>
         /// Evento llamado cuando se cambia el idioma de la aplicación
@@ -56,9 +64,12 @@ namespace ClassRoomVR
 
         private void Start()
         {
-            _currentLanguage = _languages[0].witApp;
+            _currentWitApp = _witAppsForLanguages[0].witApp;
             // Esto significa que crea una instancia en caso de ser nulo.
             OnLanguageChanged ??= new UnityEvent();
+
+            int localeID = PlayerPrefs.GetInt("LocaleKey", 0);
+            ChangeLanguage(localeID);
         }
 
         private bool InitializeSingleton()
@@ -101,7 +112,6 @@ namespace ClassRoomVR
         {
             WsClient.Instance.Disconnect();
             SceneTransitionManager.Singleton.GoToSceneAsync(0);
-
         }
 
         public void LoadTutorial()
@@ -142,10 +152,33 @@ namespace ClassRoomVR
             savedData.WomenCount = currentSettings.NumWomen;
         }
 
-        public void ChangeLanguage(WitConfiguration language)
+        private bool canChange = true;
+        public void ChangeLanguage(WitConfiguration newWitApp)
         {
-            _currentLanguage = language;
+            if (!canChange) return;
+            _currentWitApp = newWitApp;
+            int i = 0;
+            while (i < _witAppsForLanguages.Length && _currentWitApp != _witAppsForLanguages[i].witApp) ++i;
+            StartCoroutine(SetLocale(i));
             OnLanguageChanged.Invoke();
+        }
+
+        public void ChangeLanguage(int localeID)
+        {
+            if (!canChange) return;
+            _currentWitApp = _witAppsForLanguages[localeID].witApp;
+            int i = 0;
+            StartCoroutine(SetLocale(localeID));
+            OnLanguageChanged.Invoke();
+        }
+
+        private IEnumerator SetLocale(int localeID)
+        {
+            canChange = false;
+            yield return LocalizationSettings.InitializationOperation;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[localeID];
+            Didascalia_LocalizationManager.ChangeLanguage(localeID);
+            canChange = true;
         }
 
         public ClassSettings GetCurrentSettings()

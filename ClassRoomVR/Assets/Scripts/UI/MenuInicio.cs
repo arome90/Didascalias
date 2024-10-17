@@ -86,7 +86,7 @@ namespace ClassRoomVR
         public void LanguageSelector()
         {
             _languageSelector.options.Clear();
-            LanguageOption[] languages = GameManager.Instance.Languages;
+            LanguageOption[] languages = GameManager.Instance.witAppsForLanguages;
             for (int i = 0; i < languages.Length; ++i)
             {
                 _languageDictionary.Add(languages[i].name, languages[i].witApp);

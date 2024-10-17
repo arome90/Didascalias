@@ -196,7 +196,7 @@ public class WsClient : GenericSingleton<WsClient>
     /// </summary>
     public void Disconnect()
     {
-        Debug.Log("Disconnecting WebSocket: " + ws.IsAlive);
+        if (ws == null) return;
         if(ws.IsAlive) ws?.Close();
     }
 

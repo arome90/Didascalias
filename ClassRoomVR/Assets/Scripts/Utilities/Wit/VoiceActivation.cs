@@ -73,7 +73,6 @@ namespace ClassRoomVR
                 if (textMeshPro)
                 {
                     textMeshPro.text = strin;
-                    Debug.Log("texto");
                 }
                 appVoiceExperience.Deactivate();
                 Activate();
@@ -189,7 +188,10 @@ namespace ClassRoomVR
                         st.Resolutions = Actions.Insultar;
                         break;
                     case "Saludos":
-                        st.PlayAllSentence("Buenos días profesor");
+                        Didascalia_LocalizationManager.Instance.GetTranslation("greetingsTeacher",
+                            Didascalia_LocalizationManager.TableCollections.CLASE, Didascalia_LocalizationManager.CurrentLanguage,
+                            out string traduction);
+                        st.PlayAllSentence(traduction);
                         break;
                     default:
                         intentName = "No hay intencion";

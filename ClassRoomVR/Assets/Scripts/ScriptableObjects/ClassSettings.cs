@@ -1,5 +1,9 @@
 using UnityEngine;
 using System;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization;
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,6 +19,10 @@ namespace ClassRoomVR
         [SerializeField]
         private int _numStudents; // Usamos prefijo "_" para variables privadas
         public int NumStudents { get => _numStudents; set => _numStudents = value; }
+
+        [SerializeField]
+        private LocalizedString _name;
+        public LocalizedString Name { get => _name; }
 
         [SerializeField]
         private Age _age;
@@ -80,7 +88,8 @@ namespace ClassRoomVR
             {
                 string[] propertyNames = {
                     "_numStudents", "_numMen", "_numWomen", "_age", "_structureMode",
-                    "_mode", "_students", "_radius", "_degrees", "_columns", "_rows", "_numDesks"
+                    "_mode", "_students", "_radius", "_degrees", "_columns", "_rows", "_numDesks",
+                    "_name"
                 };
                 _properties = new SerializedProperty[propertyNames.Length];
                 for (int i = 0; i < propertyNames.Length; i++)
@@ -96,6 +105,7 @@ namespace ClassRoomVR
 
                 DrawProperty(_properties[3], "Age");
                 DrawProperty(_properties[11], "Number of Desks");
+                DrawProperty(_properties[12], "Name");
 
                 DrawEnumProperty(_properties[4], "Structure", typeof(StructureMode));
                 DrawStructureProperties((StructureMode)_properties[4].enumValueIndex);

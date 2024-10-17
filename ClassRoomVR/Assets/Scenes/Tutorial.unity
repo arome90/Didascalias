@@ -221,14 +221,45 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
+      propertyPath: _witAppsForLanguages.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
       propertyPath: availableSettings.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 699be58334f739c4380f475de9befa65,
         type: 2}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      propertyPath: _witAppsForLanguages.Array.data[0].name
+      value: "Espa\xF1ol"
+      objectReference: {fileID: 0}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      propertyPath: _witAppsForLanguages.Array.data[1].name
+      value: "Portugu\xE9s"
+      objectReference: {fileID: 0}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      propertyPath: _witAppsForLanguages.Array.data[0].witApp
+      value: 
+      objectReference: {fileID: 11400000, guid: 19f6b0532c21147468ac16b4dedcb031,
+        type: 2}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      propertyPath: _witAppsForLanguages.Array.data[1].witApp
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ed2ee9070880264eb30d63ce4829259,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 282804677}
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}
 --- !u!1 &87331318
 GameObject:
@@ -927,6 +958,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b3124b830442d45b9f357ff99b152f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &282804673 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 25366133}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &282804677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282804673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ff1c7c82d82854b8709369c97dbbdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stringTableCollections:
+  - {fileID: 11400000, guid: ad57c44a3767f5a46a6ca1ffa7d8ebfb, type: 2}
+  - {fileID: 11400000, guid: 9da58a69854fc4b4c987a2ca183b8737, type: 2}
+  - {fileID: 11400000, guid: 548c0c33d775bca46883c2a68c73d39e, type: 2}
 --- !u!1 &339871277
 GameObject:
   m_ObjectHideFlags: 0
@@ -2096,8 +2149,1008 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
         type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[17].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[17].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[17].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[17].voice
+      value: en_NZ.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[18].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[18].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[18].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[18].voice
+      value: en_US.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[19].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[19].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[19].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[19].voice
+      value: en_US.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[20].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[20].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[20].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[20].voice
+      value: en_US.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[21].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[21].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[21].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[21].voice
+      value: en_US.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[22].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[22].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[22].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[22].voice
+      value: en_US.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[23].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[23].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[23].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[23].voice
+      value: en_US.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[24].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[24].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[24].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[24].voice
+      value: en_US.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[25].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[25].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[25].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[25].voice
+      value: Skully
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[26].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[26].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[26].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[26].voice
+      value: wit$British Butler
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[27].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[27].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[27].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[27].voice
+      value: wit$Cael
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[28].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[28].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[28].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[28].voice
+      value: wit$Cam
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[29].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[29].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[29].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[29].voice
+      value: wit$Carl
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[30].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[30].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[30].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[30].voice
+      value: wit$Cartoon Baby
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[31].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[31].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[31].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[31].voice
+      value: wit$Cartoon Kid
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[32].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[32].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[32].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[32].voice
+      value: wit$Cartoon Villain
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[33].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[33].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[33].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[33].voice
+      value: wit$Charlie
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[34].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[34].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[34].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[34].voice
+      value: wit$Cockney Accent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[35].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[35].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[35].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[35].voice
+      value: wit$Cody
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[36].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[36].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[36].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[36].voice
+      value: wit$Colin
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[37].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[37].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[37].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[37].voice
+      value: wit$Connor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[38].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[38].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[38].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[38].voice
+      value: wit$Cooper
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[39].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[39].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[39].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[39].voice
+      value: wit$Disaffected
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[40].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[40].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[40].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[40].voice
+      value: wit$Hollywood
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[41].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[41].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[41].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[41].voice
+      value: wit$Kenyan Accent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[42].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[42].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[42].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[42].voice
+      value: wit$Overconfident
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[43].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[43].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[43].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[43].voice
+      value: wit$Pirate
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[44].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[44].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[44].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[44].voice
+      value: wit$Prospector
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[45].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[45].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[45].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[45].voice
+      value: wit$Railey
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[46].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[46].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[46].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[46].voice
+      value: wit$Rebecca
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[47].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[47].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[47].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[47].voice
+      value: wit$Remi
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[48].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[48].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[48].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[48].voice
+      value: wit$Rosie
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[49].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[49].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[49].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[49].voice
+      value: wit$Rubie
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[50].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[50].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[50].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[50].voice
+      value: wit$Southern Accent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[51].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[51].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[51].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[51].voice
+      value: wit$Surfer
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[52].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[52].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[52].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[52].voice
+      value: wit$Trendy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[53].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[53].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[53].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[53].voice
+      value: wit$Vampire
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[54].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[54].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[54].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[54].voice
+      value: wit$Whimsical
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[55].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[55].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[55].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[55].voice
+      value: wit$Wizard
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[56].pitch
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[56].speed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[56].style
+      value: default
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[56].voice
+      value: en_NZ.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
       propertyPath: _presetVoiceSettings.Array.data[16].SettingsId
       value: MARIA
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[17].SettingsId
+      value: EN_NZ.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[18].SettingsId
+      value: EN_US.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[19].SettingsId
+      value: EN_US.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[20].SettingsId
+      value: EN_US.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[21].SettingsId
+      value: EN_US.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[22].SettingsId
+      value: EN_US.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[23].SettingsId
+      value: EN_US.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[24].SettingsId
+      value: EN_US.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[25].SettingsId
+      value: SKULLY
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[26].SettingsId
+      value: WIT$BRITISH BUTLER
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[27].SettingsId
+      value: WIT$CAEL
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[28].SettingsId
+      value: WIT$CAM
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[29].SettingsId
+      value: WIT$CARL
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[30].SettingsId
+      value: WIT$CARTOON BABY
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[31].SettingsId
+      value: WIT$CARTOON KID
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[32].SettingsId
+      value: WIT$CARTOON VILLAIN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[33].SettingsId
+      value: WIT$CHARLIE
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[34].SettingsId
+      value: WIT$COCKNEY ACCENT
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[35].SettingsId
+      value: WIT$CODY
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[36].SettingsId
+      value: WIT$COLIN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[37].SettingsId
+      value: WIT$CONNOR
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[38].SettingsId
+      value: WIT$COOPER
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[39].SettingsId
+      value: WIT$DISAFFECTED
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[40].SettingsId
+      value: WIT$HOLLYWOOD
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[41].SettingsId
+      value: WIT$KENYAN ACCENT
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[42].SettingsId
+      value: WIT$OVERCONFIDENT
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[43].SettingsId
+      value: WIT$PIRATE
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[44].SettingsId
+      value: WIT$PROSPECTOR
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[45].SettingsId
+      value: WIT$RAILEY
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[46].SettingsId
+      value: WIT$REBECCA
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[47].SettingsId
+      value: WIT$REMI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[48].SettingsId
+      value: WIT$ROSIE
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[49].SettingsId
+      value: WIT$RUBIE
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[50].SettingsId
+      value: WIT$SOUTHERN ACCENT
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[51].SettingsId
+      value: WIT$SURFER
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[52].SettingsId
+      value: WIT$TRENDY
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[53].SettingsId
+      value: WIT$VAMPIRE
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[54].SettingsId
+      value: WIT$WHIMSICAL
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[55].SettingsId
+      value: WIT$WIZARD
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852061571279439023, guid: 3e919abfe68b0314aa3fa156a83435f2,
+        type: 3}
+      propertyPath: _presetVoiceSettings.Array.data[56].SettingsId
+      value: EN_NZ.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6163,6 +7216,7 @@ GameObject:
   - component: {fileID: 1830108813}
   - component: {fileID: 1830108815}
   - component: {fileID: 1830108814}
+  - component: {fileID: 1830108816}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -6286,6 +7340,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1830108812}
   m_CullTransparentMesh: 1
+--- !u!114 &1830108816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830108812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:ee314feb8021210499be4928396b27fb
+    m_TableEntryReference:
+      m_KeyId: 3136663404544
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1830108814}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1869378789
 GameObject:
   m_ObjectHideFlags: 0
@@ -6529,6 +7623,21 @@ PrefabInstance:
       propertyPath: presetVoiceID
       value: MARIA
       objectReference: {fileID: 0}
+    - target: {fileID: 3550832292187419423, guid: e7e41a5ed3743804eacae1e009586e72,
+        type: 3}
+      propertyPath: customWitVoiceSettings.pitch
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3550832292187419423, guid: e7e41a5ed3743804eacae1e009586e72,
+        type: 3}
+      propertyPath: customWitVoiceSettings.speed
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3550832292187419423, guid: e7e41a5ed3743804eacae1e009586e72,
+        type: 3}
+      propertyPath: customWitVoiceSettings.voice
+      value: Maria
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6557,6 +7666,7 @@ GameObject:
   - component: {fileID: 1968277873}
   - component: {fileID: 1968277875}
   - component: {fileID: 1968277874}
+  - component: {fileID: 1968277876}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -6681,6 +7791,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968277872}
   m_CullTransparentMesh: 0
+--- !u!114 &1968277876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968277872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:ee314feb8021210499be4928396b27fb
+    m_TableEntryReference:
+      m_KeyId: 896590495744
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1968277874}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1975869055
 GameObject:
   m_ObjectHideFlags: 0
@@ -6920,6 +8070,7 @@ GameObject:
   - component: {fileID: 1999477464}
   - component: {fileID: 1999477466}
   - component: {fileID: 1999477465}
+  - component: {fileID: 1999477467}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -7044,6 +8195,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1999477463}
   m_CullTransparentMesh: 0
+--- !u!114 &1999477467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999477463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:ee314feb8021210499be4928396b27fb
+    m_TableEntryReference:
+      m_KeyId: 1037787545600
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1999477465}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!23 &2027161850 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2101229328401842903, guid: 1392f805216c47742996d4742c80721c,
@@ -7449,6 +8640,7 @@ GameObject:
   - component: {fileID: 6270037563716364926}
   - component: {fileID: 675433189188371237}
   - component: {fileID: 7134606023760249120}
+  - component: {fileID: 7134606023760249121}
   m_Layer: 5
   m_Name: Header
   m_TagString: Untagged
@@ -7832,6 +9024,7 @@ GameObject:
   - component: {fileID: 3730606500397739680}
   - component: {fileID: 7547246821048514859}
   - component: {fileID: 4435579446899222798}
+  - component: {fileID: 7547246821048514860}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -8615,6 +9808,7 @@ GameObject:
   - component: {fileID: 334187404888997356}
   - component: {fileID: 6907316261280279143}
   - component: {fileID: 786119433643539010}
+  - component: {fileID: 6907316261280279144}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -9314,6 +10508,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4084199159186197961}
   m_CullTransparentMesh: 0
+--- !u!114 &6907316261280279144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4084199159186197961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:ee314feb8021210499be4928396b27fb
+    m_TableEntryReference:
+      m_KeyId: 225451524096
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 786119433643539010}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!222 &7061124749388122055
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9460,6 +10694,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7134606023760249121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123815666556369966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:312cde5189ec02245888dd378ea35dce
+    m_TableEntryReference:
+      m_KeyId: 90613039104
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7134606023760249120}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &7167116991623461434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9613,6 +10887,7 @@ GameObject:
   - component: {fileID: 6596500231701494062}
   - component: {fileID: 68548113235439269}
   - component: {fileID: 6179190321806753408}
+  - component: {fileID: 7459582562067155212}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -9620,6 +10895,46 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7459582562067155212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7459582562067155211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:ee314feb8021210499be4928396b27fb
+    m_TableEntryReference:
+      m_KeyId: 6693404672
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6179190321806753408}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!222 &7547246821048514859
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9628,6 +10943,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1138141917273857669}
   m_CullTransparentMesh: 0
+--- !u!114 &7547246821048514860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138141917273857669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:ee314feb8021210499be4928396b27fb
+    m_TableEntryReference:
+      m_KeyId: 817523671040
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4435579446899222798}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &7779193640806105791
 GameObject:
   m_ObjectHideFlags: 0
@@ -9778,17 +11133,14 @@ MonoBehaviour:
   _nextButton: {fileID: 9066662214196682475}
   _tutorialText: {fileID: 1071939484}
   _tutorialSteps:
-  - StepText: "Antes de comenzar, es esencial que conozcas los controles y las interacciones
-      b\xE1sicas. Para empezar, apunta al boton continuar con uno de los controladores
-      y, cuando se encienda, toca el gatillo encendido de rojo"
+  - StepText: 0_TutorialStep
     Action:
       m_PersistentCalls:
         m_Calls: []
     ConditionMet: 0
     Actual: 0
     Objective: 0
-  - StepText: "Para moverte, utiliza el joystick del controlador izquierdo. Prueba
-      a moverte hacia delante unos metros. Luego hacia atr\xE1s."
+  - StepText: 1_TutorialStep
     Action:
       m_PersistentCalls:
         m_Calls:
@@ -9807,7 +11159,7 @@ MonoBehaviour:
     ConditionMet: 0
     Actual: 0
     Objective: 1
-  - StepText: Da vueltas por la clase pasando por todos los puntos rojos.
+  - StepText: 2_TutorialStep
     Action:
       m_PersistentCalls:
         m_Calls:
@@ -9826,8 +11178,7 @@ MonoBehaviour:
     ConditionMet: 0
     Actual: 0
     Objective: 0
-  - StepText: Hora de que tus alumnos te escuchen. Ordena al alumno a irse fuera
-      de clase. Una vez se levante, dile que se siente de nuevo.
+  - StepText: 3_TutorialStep
     Action:
       m_PersistentCalls:
         m_Calls:
@@ -9846,9 +11197,7 @@ MonoBehaviour:
     ConditionMet: 0
     Actual: 0
     Objective: 4
-  - StepText: "Ahora, solo falta que entiendas los botones. Observa los mandos y
-      pulsa los botones que se indican atendiendo a su funcionalidad. Pulsa el bot\xF3n
-      rojo del controlador derecho para activar la pausa."
+  - StepText: 4_TutorialStep
     Action:
       m_PersistentCalls:
         m_Calls:
