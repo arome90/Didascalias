@@ -198,23 +198,23 @@ namespace ClassRoomVR
                 else if(expressionOrAction == 1) // Expresión
                 {
                     int distractedExpression = Random.Range(0, 3);
-                    Expresiones expression;
+                    Expressions expression;
                     switch (distractedExpression)
                     {
                         case 0:
-                            expression = Expresiones.Enfadado;
+                            expression = Expressions.Angry;
                             break;
                         case 1:
-                            expression = Expresiones.Quejarse;
+                            expression = Expressions.Cry;
                             break;
                         case 2:
-                            expression = Expresiones.Dormido;
+                            expression = Expressions.Sleep;
                             break;
                         default:
-                            expression = Expresiones.Dormido;
+                            expression = Expressions.Sleep;
                             break;
                     }
-                    StartCoroutine(_behaviour.ChangeExpression(expression));
+                   // StartCoroutine(_behaviour.ChangeExpression(expression));
                 }
                 
                 StartCoroutine(DistractedActionCooldown());
