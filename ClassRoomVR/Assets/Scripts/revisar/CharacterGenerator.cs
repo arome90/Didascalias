@@ -91,7 +91,7 @@ namespace ClassRoomVR
                 if (category.Items.Count > 0)
                 {
                     var selectedItem = category.Items[Random.Range(0, category.Items.Count)];
-                    AttachClothing(selectedItem.Cloth, selectedBody.BodyMat, selectedItem.Colors);
+                    AttachClothing(selectedItem.Cloth, selectedItem.Materials[Random.Range(0, selectedItem.Materials.Length)], selectedBody.BodyMat, selectedItem.Colors);
                 }
             }
 
@@ -132,7 +132,7 @@ namespace ClassRoomVR
         /// <param name="mesh">Mesh de la ropa.</param>
         /// <param name="bodyMat">Material del cuerpo.</param>
         /// <param name="colors">Colores disponibles.</param>
-        private void AttachClothing(SkinnedMeshRenderer mesh, Material bodyMat, Color[] colors)
+        private void AttachClothing(SkinnedMeshRenderer mesh, Material clothMat, Material bodyMat, Color[] colors)
         {
             var newMesh = Instantiate(mesh);
             newMesh.bones = SetupBones(mesh.bones);
@@ -140,8 +140,8 @@ namespace ClassRoomVR
             newMesh.transform.SetParent(_rootBone.parent, false);
 
             int colorIndex = Random.Range(0, colors.Length);
-            newMesh.materials[1].SetColor("_Color", colors[colorIndex]);
-            newMesh.materials = new[] { newMesh.materials[1], bodyMat };
+            newMesh.materials = new[] { clothMat, bodyMat };
+            newMesh.materials[0].SetColor("_Color", colors[colorIndex]);
         }
 
         /// <summary>
@@ -202,12 +202,12 @@ namespace ClassRoomVR
         }
         public void RandomFaceModeling(SkinnedMeshRenderer mesh, float minValue, float maxValue)
         {
-            for (int i = (int)StudentProperties.Expressions.EXPRESSIONS_SIZE; i < (int)StudentProperties.ModelingProperties.MODELING_PROPERTIES_SIZE; i++)
+            for (int i = (int)Expressions.EXPRESSIONS_SIZE; i < (int)ModelingProperties.MODELING_PROPERTIES_SIZE; i++)
             {
-                SetModelBlendShape(mesh, (StudentProperties.ModelingProperties)i, Random.Range(minValue, maxValue));
+                SetModelBlendShape(mesh, (ModelingProperties)i, Random.Range(minValue, maxValue));
             }
         }
-        public void SetModelBlendShape(SkinnedMeshRenderer mesh, StudentProperties.ModelingProperties prop, float value)
+        public void SetModelBlendShape(SkinnedMeshRenderer mesh, ModelingProperties prop, float value)
         {
             mesh.SetBlendShapeWeight((int)prop, value);
         }

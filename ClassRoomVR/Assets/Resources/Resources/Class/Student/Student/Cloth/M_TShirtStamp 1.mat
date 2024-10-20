@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Hoodie
-  m_Shader: {fileID: -6465566751694194690, guid: a891994b59736674283bbf527e3ece83,
+  m_Name: M_TShirtStamp 1
+  m_Shader: {fileID: -6465566751694194690, guid: 5900b6dd6e4e31748a7d164ed15be371,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -30,7 +30,7 @@ Material:
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2009
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -41,16 +41,32 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: be6a67e29471b8943b7b90a688a28850, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Base_Color:
         m_Texture: {fileID: 2800000, guid: 6b2eb5d8d616dd24ca1e727c0987e4e8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 1a6e422652b9f8340b68a86ae33c2e14, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 2800000, guid: 8bc2d0f55fe2596429be0fdac7f2a884, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: f0c8395df25fd6c4bbc9eea3fc215196, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3b6224dfd23e23945b3d667a479f2d15, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Roughness:
         m_Texture: {fileID: 8400000, guid: ec344cf2384237c4e9e06c2c30073b2e, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StampMask:
+        m_Texture: {fileID: 2800000, guid: 1120468719ec2f94b8da7c4b68d6ce4a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -67,9 +83,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Glossiness: 0.5
     - _Metallic: 0.05
+    - _NormalStrentgh: 1
     - _QueueControl: 0
-    - _QueueOffset: 0
+    - _QueueOffset: 9
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
