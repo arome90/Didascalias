@@ -221,6 +221,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
+      propertyPath: _witAppsForLanguages.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
       propertyPath: availableSettings.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 29f6f364e7b4552458c1333c05ef1a22,
@@ -230,6 +235,17 @@ PrefabInstance:
       propertyPath: availableSettings.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: 8cf36a907bde6604f87feaafcdafa1fd,
+        type: 2}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      propertyPath: _witAppsForLanguages.Array.data[0].name
+      value: tts
+      objectReference: {fileID: 0}
+    - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      propertyPath: _witAppsForLanguages.Array.data[0].witApp
+      value: 
+      objectReference: {fileID: 11400000, guid: 6329e25e1005d4845b580a523e588979,
         type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2072,7 +2088,6 @@ MonoBehaviour:
   _player: {fileID: 3625330677312976098}
   _body: {fileID: 7509973540603057216, guid: f7f04ba306373a446aa0057cb96c6935, type: 3}
   _generateOnStart: 1
-  studentSittingPlaceOffset: {x: 0, y: 0, z: -0.23}
 --- !u!4 &1472140262
 Transform:
   m_ObjectHideFlags: 0
