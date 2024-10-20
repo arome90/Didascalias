@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Meta.WitAi;
+using Meta.WitAi.Data.Configuration;
+using Oculus.Voice;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Generated.PropertyProviders;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using Utilities.Extensions;
 
@@ -10,7 +15,33 @@ namespace ClassRoomVR
 {
     public class GameManager : MonoBehaviour
     {
+        [Serializable]
+        public struct LanguageOption
+        {
+            public string name;
+            public WitConfiguration witApp;
+        }
+        [SerializeField] private LanguageOption[] _witAppsForLanguages;
+
+        private WitConfiguration _currentWitApp;
+
+        public WitConfiguration Language { get { return _currentWitApp; } }
+
+        /// <summary>
+        /// DEBE SEGUIR EL MISMO ORDEN QUE EN LAS OPCIONES DE LOCALIZACIÓN
+        /// ESPAÑOL - 0
+        /// PORTUGUÉS br - 1
+        /// ...
+        /// </summary>
+        public LanguageOption[] witAppsForLanguages { get { return _witAppsForLanguages; } }
+
+        /// <summary>
+        /// Evento llamado cuando se cambia el idioma de la aplicación
+        /// </summary>
+        public UnityEvent OnLanguageChanged;
+
         public bool IsPause;
+        private bool _connectionLost = false;
 
         private DataSystem savedData;
         private VoiceActivation voice;
@@ -25,24 +56,33 @@ namespace ClassRoomVR
 
         public static GameManager Instance { get; private set; }
 
-
-
         private void Awake()
         {
-            InitializeSingleton();
+            if (!InitializeSingleton()) return;
             IsPause = false;
         }
 
-        private void InitializeSingleton()
+        private void Start()
+        {
+            _currentWitApp = _witAppsForLanguages[0].witApp;
+            // Esto significa que crea una instancia en caso de ser nulo.
+            OnLanguageChanged ??= new UnityEvent();
+
+            int localeID = PlayerPrefs.GetInt("LocaleKey", 0);
+            ChangeLanguage(localeID);
+        }
+
+        private bool InitializeSingleton()
         {
             if (Instance != null)
             {
                 Destroy(this);
-                return;
+                return false;
             }
             Instance = this;
             InitializeData();
             DontDestroyOnLoad(this);
+            return true;
         }
 
         private void InitializeData()
@@ -65,14 +105,13 @@ namespace ClassRoomVR
             currentSettings.NumWomen = data.WomenCount;
         }
 
-
         public ClassInfo GetCurrentClassInfo() => currentClassInfo;
         public VoiceActivation GetVoiceActivation() => voice;
 
         public void LoadMainMenu()
         {
+            WsClient.Instance.Disconnect();
             SceneTransitionManager.Singleton.GoToSceneAsync(0);
-
         }
 
         public void LoadTutorial()
@@ -102,6 +141,7 @@ namespace ClassRoomVR
 
             }
         }
+
         private void UpdateSavedData()
         {
             savedData.NumStudents = currentSettings.NumStudents;
@@ -110,6 +150,35 @@ namespace ClassRoomVR
             savedData.Mode = currentSettings.Mode;
             savedData.MenCount = currentSettings.NumMen;
             savedData.WomenCount = currentSettings.NumWomen;
+        }
+
+        private bool canChange = true;
+        public void ChangeLanguage(WitConfiguration newWitApp)
+        {
+            if (!canChange) return;
+            _currentWitApp = newWitApp;
+            int i = 0;
+            while (i < _witAppsForLanguages.Length && _currentWitApp != _witAppsForLanguages[i].witApp) ++i;
+            StartCoroutine(SetLocale(i));
+            OnLanguageChanged.Invoke();
+        }
+
+        public void ChangeLanguage(int localeID)
+        {
+            if (!canChange) return;
+            _currentWitApp = _witAppsForLanguages[localeID].witApp;
+            int i = 0;
+            StartCoroutine(SetLocale(localeID));
+            OnLanguageChanged.Invoke();
+        }
+
+        private IEnumerator SetLocale(int localeID)
+        {
+            canChange = false;
+            yield return LocalizationSettings.InitializationOperation;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[localeID];
+            Didascalia_LocalizationManager.ChangeLanguage(localeID);
+            canChange = true;
         }
 
         public ClassSettings GetCurrentSettings()
@@ -127,7 +196,7 @@ namespace ClassRoomVR
         public bool GetSaveAudio() => saveAudio;
         private void Update()
         {
-            if (IsPause && ConnectionIsAvailable() && IsLoadingBarVisible())
+            if (IsPause && ConnectionIsAvailable() && _connectionLost)
             {
                 HandleReconnection();
             }
@@ -156,15 +225,22 @@ namespace ClassRoomVR
             ToggleLoadingBar(false);
             Continue();
         }
+
         public void Pause(bool lostConnection)
         {
-            if (IsPause) return;
-            IsPause = true;
-
             if (lostConnection)
             {
                 ToggleLoadingBar(true);
             }
+            SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            _connectionLost = lostConnection;
+        }
+
+        private void Pause()
+        {
+            if (IsPause) return;
+            StopTime();
+            IsPause = true;
         }
 
         private void ToggleLoadingBar(bool visible)
@@ -194,8 +270,15 @@ namespace ClassRoomVR
         public void Continue()
         {
             //AudioListener.pause = false;
-            //Time.timeScale = 1f;
+            Time.timeScale = 1.0f;
             IsPause = false;
+            SceneTransitionManager.Singleton.FadeScreen.Fade(0.8f, 0.0f);
+        }
+
+        public void StopTime()
+        {
+            Debug.Log("TIME HAS STOPPED!!");
+            Time.timeScale = 0.0f;
         }
 
         public void SetVoiceExperience(VoiceActivation voice)

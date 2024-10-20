@@ -15,6 +15,21 @@ namespace ClassRoomVR
     [System.Serializable]
     public class Student : MonoBehaviour
     {
+        public enum Actions
+        {
+            // Distraído
+            BALANCEARSE,
+            MOVIL,
+            GIRARSE,
+            // Atento
+            ABRIR,
+            ESCRIBIR,
+            TABLET,
+            LEVANTAR_MANO,
+            COGER_OBJETO,
+            LANZAR_OBJETO
+        }
+
         // Variables privadas para referencias de componentes y estado del estudiante
         private FieldOfVision _vision;
         [SerializeField] private FieldOfVision _distracted;
@@ -33,7 +48,7 @@ namespace ClassRoomVR
         private Vector3 _actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> _targets;
         [SerializeField] private MultiAimConstraint _headConstraint;
-        private StudentBehavior _behavior;
+        private StudentBehavior _behaviour;
         private Transform _player;
         private ResponseStudent _response;
         private JawMove _jaw;
@@ -46,7 +61,7 @@ namespace ClassRoomVR
         public bool IsProblematicStudent() => _problematic;
         public AudioSource GetAudioSource() => _audioSource;
         public NavMeshAgent GetNavMeshAgent() => _navMeshAgent;
-        public StudentBehavior GetBehavior() => _behavior;
+        public StudentBehavior GetBehavior() => _behaviour;
         public State GetState() => _state;
 
         #endregion
@@ -60,7 +75,7 @@ namespace ClassRoomVR
             _animator = GetComponent<Animator>();
             _audioSource = GetComponent<AudioSource>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
-            _behavior = GetComponent<StudentBehavior>();
+            _behaviour = GetComponent<StudentBehavior>();
             _jaw = GetComponent<JawMove>();
             _state = State.Sitting;
             _distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
@@ -125,7 +140,7 @@ namespace ClassRoomVR
         /// </summary>
         public void PayAttention()
         {
-            _behavior.SetAttention();
+            _behaviour.SetAttention();
             SetDirection(FieldOfVision.Teacher);
         }
 
@@ -144,7 +159,70 @@ namespace ClassRoomVR
 
             UpdateTargetPosition();
             if (_attentionText != null)
-                _attentionText.text = _behavior.AttentionLevel.ToString("0.##");
+                _attentionText.text = _behaviour.AttentionLevel.ToString("0.##");
+            PerformAction();
+        }
+
+        // Variables privadas para comenzar animaciones cuando no se está atendiendo a clase.
+        private bool _canPerformDistractedAction = true;
+        private float _attetionThresholdDistracted = 25f; // Nivel de atención a partir del cual comenzarán acciones
+        // Los valores que NO son de Debug son: 7.5f y 15f
+        private float _minCooldownDistractedAction = 7.5f; // Mínimo tiempo entre acciones distraídas
+        private float _maxCooldownDistractedAction = 15f; // Máximo tiempo entre acciones distraídas
+        private float _distractedActionCooldown; // Valor aletorio entre mínimo y máximo de cooldown
+
+        private IEnumerator DistractedActionCooldown()
+        {
+            _canPerformDistractedAction = false;
+            _distractedActionCooldown = Random.Range(_minCooldownDistractedAction, _maxCooldownDistractedAction);
+            yield return new WaitForSeconds(_distractedActionCooldown);
+            _canPerformDistractedAction = true;
+        }
+
+        private void PerformAction()
+        {
+            // Para pruebas, lo ponemos en 40f, pero el valor debería ser algo parecido a 20-25f.
+            if (_canPerformDistractedAction && _behaviour.AttentionLevel <= _attetionThresholdDistracted)
+            {
+                // Valor sin debug: Random.Range(0, 2);
+                int expressionOrAction = Random.Range(1, 2);
+                if(expressionOrAction == 0) // acción
+                {
+                    int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.GIRARSE + 1);
+                    if (distractedAction == (int)Actions.MOVIL)
+                    {
+                        SetDirection(FieldOfVision.Down);
+                    }
+                    _animator.SetInteger("Accion", distractedAction);
+                }
+                else if(expressionOrAction == 1) // Expresión
+                {
+                    int distractedExpression = Random.Range(0, 3);
+                    Expresiones expression;
+                    switch (distractedExpression)
+                    {
+                        case 0:
+                            expression = Expresiones.Enfadado;
+                            break;
+                        case 1:
+                            expression = Expresiones.Quejarse;
+                            break;
+                        case 2:
+                            expression = Expresiones.Dormido;
+                            break;
+                        default:
+                            expression = Expresiones.Dormido;
+                            break;
+                    }
+                    StartCoroutine(_behaviour.ChangeExpression(expression));
+                }
+                
+                StartCoroutine(DistractedActionCooldown());
+            }
+            else if (_behaviour.AttentionLevel > 75f)
+            {
+                // Hacer cosas guays, como escribir o así, como si estuvieran tomando apuntes.
+            }
         }
 
         // Variables privadas para la animación de movimiento
@@ -250,8 +328,6 @@ namespace ClassRoomVR
         /// <returns>Devuelve verdadero si el estudiante está dentro del campo de visión.</returns>
         public bool IsStudentInFieldOfVision()
         {
-
-
             Plane[] cameraFrustum = GeometryUtility.CalculateFrustumPlanes(Camera.main);
             var bounds = _collider.bounds;
             bounds.center += new Vector3(0, 1f, 0);

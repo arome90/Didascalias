@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Palmmedia.ReportGenerator.Core;
 
 namespace ClassRoomVR
 {
@@ -122,21 +123,18 @@ namespace ClassRoomVR
         private void GenerateStudents()
         {
             int deskPos = 0;
-            int totalStudentsToGenerate = _settings.NumStudents;
 
             switch (_settings.Mode)
             {
                 case GenerateMode.Gender:
-                    GenerateStudentsByGender(ref deskPos, Gender.Women, _settings.NumWomen);
-                    GenerateStudentsByGender(ref deskPos, Gender.Men, _settings.NumMen);
+                    GenerateStudentsByGender(ref deskPos);
                     break;
                 case GenerateMode.Personalized:
                     GeneratePersonalizedStudents(ref deskPos);
-                    totalStudentsToGenerate -= deskPos;
                     break;
             }
 
-            for (int i = 0; i < totalStudentsToGenerate && deskPos < _studentsPositions.childCount; i++)
+            while(_settings.FillEmptyDesks && deskPos < _studentsPositions.childCount)
             {
                 GenerateRandomStudent(ref deskPos);
             }
@@ -190,11 +188,34 @@ namespace ClassRoomVR
         /// <param name="deskPos">Posición del escritorio en el que se ubicará el estudiante.</param>
         /// <param name="gender">Género de los estudiantes a generar.</param>
         /// <param name="numberOfStudents">Número de estudiantes a generar.</param>
-        private void GenerateStudentsByGender(ref int deskPos, Gender gender, int numberOfStudents)
+        private void GenerateStudentsByGender(ref int deskPos)
         {
-            for (int i = 0; i < numberOfStudents; i++)
+            int generatedMen = 0;
+            int generatedWomen = 0;
+            for (int i = 0; i < _settings.NumStudents; ++i)
             {
+                Gender gender;
+                if (_settings.NumWomen > generatedWomen && _settings.NumMen > generatedMen)
+                {
+                    gender = (Gender)Random.Range(0, 2);
+                }
+                else if (_settings.NumWomen <= generatedWomen)
+                {
+                    gender = Gender.Men;
+                }
+                else
+                {
+                    gender = Gender.Women;
+                }
                 GenerateStudent(ref deskPos, gender);
+                if (gender == Gender.Women)
+                {
+                    ++generatedWomen;
+                }
+                else
+                {
+                    ++generatedMen;
+                }
             }
         }
 
@@ -204,6 +225,7 @@ namespace ClassRoomVR
         /// <param name="deskPos">Posición del escritorio en el que se ubicará el estudiante.</param>
         private void GeneratePersonalizedStudents(ref int deskPos)
         {
+            Debug.Log("Num Students Generated: " + _settings.Students.Length);
             foreach (var studentInfo in _settings.Students)
             {
                 GenerateStudent(ref deskPos, studentInfo.Gender, studentInfo.Name);

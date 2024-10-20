@@ -1,5 +1,11 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System;
+using Meta.WitAi.Data.Configuration;
+using TMPro;
+using static ClassRoomVR.GameManager;
 
 namespace ClassRoomVR
 {
@@ -11,10 +17,14 @@ namespace ClassRoomVR
         [SerializeField] private Button _enter; // Botón para entrar
         [SerializeField] private Button _tutorial; // Botón para el tutorial
         [SerializeField] private Button _quitButton; // Botón para salir
+        [SerializeField] private TMP_Dropdown _languageSelector; // Selector de idioma
+
         [SerializeField] private GameObject _nextScreen; // Pantalla siguiente
         [SerializeField] private Vector3 _playerDestination; // Destino del jugador
         [SerializeField] private Vector3 _playerInitialPosition; // Posición inicial del jugador
         [SerializeField] private Transform _player; // Transform del jugador
+
+        Dictionary<string, WitConfiguration> _languageDictionary = new Dictionary<string, WitConfiguration>();
 
         private void Start()
         {
@@ -31,6 +41,7 @@ namespace ClassRoomVR
             _enter.onClick.AddListener(OnEnterButtonClick);
             _tutorial.onClick.AddListener(OnTutorialButtonClick);
             _quitButton.onClick.AddListener(QuitButton);
+            LanguageSelector();
         }
 
         /// <summary>
@@ -70,6 +81,30 @@ namespace ClassRoomVR
 #else
             Application.Quit();
 #endif
+        }
+
+        public void LanguageSelector()
+        {
+            _languageSelector.options.Clear();
+            LanguageOption[] languages = GameManager.Instance.witAppsForLanguages;
+            for (int i = 0; i < languages.Length; ++i)
+            {
+                _languageDictionary.Add(languages[i].name, languages[i].witApp);
+
+                _languageSelector.options.Add(new TMP_Dropdown.OptionData() { text = languages[i].name });
+            }
+
+            ChangeLanguage(_languageSelector);
+
+            _languageSelector.onValueChanged.AddListener(delegate { ChangeLanguage(_languageSelector); });
+            _languageSelector.RefreshShownValue();
+        }
+
+        private void ChangeLanguage(TMP_Dropdown dropdown)
+        {
+            string currentLanguage = dropdown.options[dropdown.value].text;
+
+            GameManager.Instance.ChangeLanguage(_languageDictionary[currentLanguage]);
         }
 
         /// <summary>

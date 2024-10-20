@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 namespace ClassRoomVR
@@ -64,9 +65,13 @@ namespace ClassRoomVR
         private List<string> GetDropdownOptions(ClassSettings[] classes)
         {
             List<string> dropdownOptions = new List<string>(classes.Length - 1);
+            int currentLocale = LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale);
             for (int i = 0; i < classes.Length - 1; i++)
             {
-                dropdownOptions.Add(classes[i].name); // Añade el nombre de cada configuración a la lista de opciones
+                string _name;
+                _name = classes[i].Name.GetLocalizedString();
+                    
+                dropdownOptions.Add(_name); // Añade el nombre de cada configuración a la lista de opciones
             }
             return dropdownOptions;
         }

@@ -55,7 +55,6 @@ public class Tutorial : MonoBehaviour
     private void Start()
     {
         InitializeTutorial();
-        _skipTutorial.onClick.AddListener(GoMenu);
     }
 
     /// <summary>
@@ -91,7 +90,6 @@ public class Tutorial : MonoBehaviour
         {
             Toggle toggle = t.GetComponent<Toggle>();
             _tutorialToggles.Add(toggle);
-            t.GetChild(0).GetComponent<TextMeshProUGUI>().text = t.name;
             toggle.isOn = t.GetSiblingIndex() < _currentPhase;
             toggle.interactable = t.GetSiblingIndex() <= _currentPhase;
         }
@@ -102,12 +100,9 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     private void InitializeFirstStep()
     {
-        string initText = "¡Bienvenido al Tutorial para Classroom VR! Aquí te " +
-                          "enseñaremos todo lo que necesitas saber para " +
-                          "ser un profesor excepcional en nuestro aula virtual.";
-        TextToSpeech(initText);
-        _tutorialText.text = initText;
-        Invoke(nameof(FirstStep), 10);
+        string initText = "initialTextTTS";
+        ModifyTextToSpeech(TranslatedText(initText), true);
+        Invoke(nameof(FirstStep), 1);
     }
 
     /// <summary>
@@ -155,8 +150,10 @@ public class Tutorial : MonoBehaviour
         UpdateToggles();
         if (_currentPhase < _tutorialSteps.Length)
         {
-            ModifyTextToSpeech(_tutorialSteps[_currentPhase].StepText, true);
-            _tutorialText.text = _tutorialSteps[_currentPhase].StepText;
+            string key = _tutorialSteps[_currentPhase].StepText;
+            string text = TranslatedText(key);
+            ModifyTextToSpeech(text, true);
+            _tutorialText.text = TranslatedText(key);
             _nextButton.interactable = false;
             await CurrentState();
             _nextButton.interactable = true;
@@ -175,8 +172,8 @@ public class Tutorial : MonoBehaviour
         }
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
-            ModifyTextToSpeech("Has superado el tutorial.", true);
-            Invoke(nameof(GoMenu), 3f);
+            ModifyTextToSpeech(TranslatedText("winTTS"), true);
+            Invoke(nameof(GoMenu), 1.5f);
         }
         else if (_currentPhase != 0)
         {
@@ -184,14 +181,15 @@ public class Tutorial : MonoBehaviour
         }
     }
 
-    private string[] _nextText = { "Genial. Vamos con el siguiente paso.", "Ahora vamos con el siguiente paso." };
+    private string[] _nextText = { "tutorialStepCompleted_TTS_0", "tutorialStepCompleted_TTS_1" };
 
     /// <summary>
     /// Devuelve un mensaje aleatorio para continuar con el siguiente paso.
     /// </summary>
     private string GetNextText()
     {
-        return _nextText[UnityEngine.Random.Range(0, _nextText.Length)];
+        string key = _nextText[UnityEngine.Random.Range(0, _nextText.Length)];
+        return TranslatedText(key);
     }
 
     /// <summary>
@@ -204,6 +202,8 @@ public class Tutorial : MonoBehaviour
         UpdateTutorial();
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
+            _skipTutorial.onClick.RemoveAllListeners();
+            _skipTutorial.onClick.AddListener(GameManager.Instance.LoadMainMenu);
             _nextButton.gameObject.SetActive(false);
         }
     }
@@ -231,8 +231,6 @@ public class Tutorial : MonoBehaviour
     public void FirstStep()
     {
         _speaker.Events.OnPlaybackComplete.AddListener(Finish);
-        ModifyTextToSpeech(_tutorialSteps[_currentPhase].StepText, false);
-        _tutorialText.text = _tutorialSteps[_currentPhase].StepText;
     }
 
     /// <summary>
@@ -247,7 +245,7 @@ public class Tutorial : MonoBehaviour
             {
                 _tutorialSteps[_currentPhase].Objective *= -1;
                 _tutorialSteps[_currentPhase].Actual = 0;
-                ModifyTextToSpeech("Ahora haz lo mismo pero hacia atrás.", false);
+                ModifyTextToSpeech(TranslatedText("moveBackTTS"), false);
             }
         }
         else if (_tutorialSteps[_currentPhase].Objective < 0)
@@ -289,7 +287,7 @@ public class Tutorial : MonoBehaviour
         {
             _tutorialSteps[_currentPhase].Objective = 0;
             _handDer.SetRed(VisualAction.PrimaryButton);
-            ModifyTextToSpeech("Observa que ya no puedes moverte, vuelve a pulsar el botón para volver a la normalidad", true);
+            ModifyTextToSpeech(TranslatedText("cantMoveTTS"), true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 3 && _tutorialSteps[_currentPhase].Objective == 1)
         {
@@ -297,15 +295,14 @@ public class Tutorial : MonoBehaviour
             _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed -= Action_performed;
             _handIzq.InputActions[(int)VisualAction.Menu].action.performed += Action_performed;
             _handIzq.SetRed(VisualAction.Menu);
-            ModifyTextToSpeech("Activa el menu de mano pulsando sobre el menu", true);
-
+            ModifyTextToSpeech(TranslatedText("menuActivationTTS"), true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 4 && _tutorialSteps[_currentPhase].Objective == 1)
         {
             _tutorialSteps[_currentPhase].Objective = 0;
-            ModifyTextToSpeech("Sal del menú pulsando en resume o usa el boton menú", true);
+            ModifyTextToSpeech(TranslatedText("closeMenuTTS"), true);
         }
-        else if ((!GameManager.Instance.IsPause && _tutorialSteps[_currentPhase].Actual == 4) || (_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
+        else if ((_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
         {
             _handIzq.InputActions[(int)VisualAction.Menu].action.performed -= Action_performed;
             _tutorialSteps[_currentPhase].ConditionMet = true;
@@ -329,7 +326,7 @@ public class Tutorial : MonoBehaviour
             case 1:
                 if (!_student.GetNavMeshAgent().enabled && Vector2.Distance(_student.transform.position, _studentControl.Door.position) < 0.2)
                 {
-                    ModifyTextToSpeech("Vuelve a mandar al alumno a sentarse", true);
+                    ModifyTextToSpeech(TranslatedText("studentSitTTS"), true);
                     _tutorialSteps[_currentPhase].Actual = 2;
                 }
                 break;
@@ -359,7 +356,7 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     public void ModifyTextToSpeech(string text, bool cleanTutorialText)
     {
-        _speaker.Speak(FormatText(text));
+        TextToSpeech(text);
         if(cleanTutorialText)
         {
             _tutorialText.text = text;
@@ -386,4 +383,14 @@ public class Tutorial : MonoBehaviour
         }
         return result;
     }
+
+    private string TranslatedText(string key)
+    {
+        string translation;
+        Didascalia_LocalizationManager.Instance.GetTranslation(key,
+            Didascalia_LocalizationManager.TableCollections.TUTORIAL,
+            Didascalia_LocalizationManager.CurrentLanguage, out translation);
+        return translation;
+    }
+
 }
