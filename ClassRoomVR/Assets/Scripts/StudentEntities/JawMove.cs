@@ -70,9 +70,11 @@ namespace ClassRoomVR
         {
             while (_audioSource.isPlaying || _response.IsSpeaking)
             {
+
                 UpdateJaw();
                 yield return new WaitForSeconds(_timeUpdate);
             }
+           // Debug.Log("cERRAR");
             _jaw.localRotation = Quaternion.Euler(_initialJawAngles.x, _initialJawAngles.y, _initialJawAngles.z);
         }
     }

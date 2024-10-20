@@ -257,8 +257,13 @@ public enum Animaciones
 public enum EventSittingAnimations
 {
     Yelling,
-    RiseHand
-    
+    RiseHand,
+    PlayingPhone,
+    Swinging,
+    Sleeping,
+    Attending,
+    None
+
 }
 
 public enum NormalSittingAnimations

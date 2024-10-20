@@ -11,9 +11,7 @@ namespace ClassRoomVR
     {
         private const float AttentionMin = 0f;
         private const float AttentionMax = 100f;
-        private const int SkinnedMeshIndex = 5;
-        private const float BlinkIntervalMin = 2f;
-        private const float BlinkIntervalMax = 3f;
+
 
         private float _attentionLevel = 50.0f; // >50 atento, <50 distraído
         public float AttentionLevel => _attentionLevel;
@@ -29,30 +27,19 @@ namespace ClassRoomVR
         private Student _student;
         private Transform _player;
         private RunningStatistics _statistics;
-        private SkinnedMeshRenderer _meshRenderer;
-        private float[] _blendShapeWeights;
+
 
         private void Start()
         {
             _statistics = new RunningStatistics();
             _student = GetComponent<Student>();
             _player = Camera.main.transform;
-            _blendShapeWeights = new float[6];
-
-            StartCoroutine(CallLineAfterDelay());
-
+       
             InvokeRepeating(nameof(MakeDecision), _decisionTime, _decisionTime);
-            StartCoroutine(RandomBlink());
+           
         }
 
-        /// <summary>
-        /// Espera un segundo para obtener el componente SkinnedMeshRenderer.
-        /// </summary>
-        private IEnumerator CallLineAfterDelay()
-        {
-            yield return new WaitForSeconds(1f);
-            _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
-        }
+   
 
         private void MakeDecision()
         {
@@ -95,7 +82,7 @@ namespace ClassRoomVR
         public void SetAttention()
         {
             _attentionLevel = Mathf.Max(_attentionLevel, 65f);
-            StartCoroutine(ChangeExpression(Expressions.Smile));
+          //  StartCoroutine(ChangeExpression(Expressions.Smile));
         }
 
         /// <summary>
@@ -108,59 +95,5 @@ namespace ClassRoomVR
             return _statistics.Mean;
         }
 
-        /// <summary>
-        /// Maneja el parpadeo aleatorio del estudiante.
-        /// </summary>
-        private IEnumerator RandomBlink()
-        {
-            while (true)
-            {
-                yield return Blink(Expressions.CloseEyes);
-                yield return new WaitForSeconds(Random.Range(BlinkIntervalMin, BlinkIntervalMax));
-            }
-        }
-
-        /// <summary>
-        /// Ejecuta un parpadeo.
-        /// </summary>
-        /// <param name="expresion">Expresión de parpadeo.</param>
-        private IEnumerator Blink(Expressions expresion)
-        {
-            SetBlendShape(expresion, 100f);
-            yield return new WaitForSeconds(0.2f);
-            SetBlendShape(expresion, 0f);
-        }
-
-        /// <summary>
-        /// Establece el peso de una forma de mezcla en el renderizador.
-        /// </summary>
-        /// <param name="expresion">Expresión de la forma de mezcla.</param>
-        /// <param name="value">Valor del peso.</param>
-        public void SetBlendShape(Expressions expresion, float value)
-        {
-            if (_meshRenderer != null)
-            {
-                _meshRenderer.SetBlendShapeWeight((int)expresion, value);
-            }
-        }
-
-        /// <summary>
-        /// Cambia la expresión del estudiante suavemente.
-        /// </summary>
-        /// <param name="exp">Expresión a cambiar.</param>
-        private IEnumerator ChangeExpression(Expressions exp)
-        {
-            int expressionIndex = (int)exp;
-            while (_meshRenderer.GetBlendShapeWeight(expressionIndex) < 100f)
-            {
-                for (int i = 0; i < _blendShapeWeights.Length; i++)
-                {
-                    float changeValue = i == expressionIndex ? 15f : -20f;
-                    _blendShapeWeights[i] = Mathf.Clamp(_blendShapeWeights[i] + changeValue, 0f, 100f);
-                    _meshRenderer.SetBlendShapeWeight(i, _blendShapeWeights[i]);
-                }
-                yield return new WaitForSeconds(0.5f);
-            }
-        }
     }
 }

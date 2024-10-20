@@ -26,7 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo
                 Debug.LogWarning("StudentActions is null");
                 return TaskStatus.Failure;
             }
-            StartCoroutine(sActions.PlaySitAction(EventSittingAnimations.Yelling));
+            StartCoroutine(sActions.PlaySitAction(EventSittingAnimations.Sleeping));
 
             return TaskStatus.Success;
         }
