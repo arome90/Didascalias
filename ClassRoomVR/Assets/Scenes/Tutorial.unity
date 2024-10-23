@@ -238,7 +238,7 @@ PrefabInstance:
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
       propertyPath: _witAppsForLanguages.Array.data[1].name
-      value: "Portugu\xE9s"
+      value: "Portugu\xEAs"
       objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
@@ -7132,7 +7132,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8194037973328525635}
         m_TargetAssemblyTypeName: Tutorial, Assembly-CSharp
-        m_MethodName: NextStep
+        m_MethodName: Skip
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9830,13 +9830,13 @@ RectTransform:
   m_Children:
   - {fileID: 887810707698076238}
   - {fileID: 4949248905333487548}
-  - {fileID: 4662713322772160412}
   - {fileID: 2814672475070643673}
+  - {fileID: 4662713322772160412}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 3.71, y: 3.22}
+  m_AnchoredPosition: {x: 4.08, y: 3.22}
   m_SizeDelta: {x: 512, y: 440}
   m_Pivot: {x: 0.5, y: 0.935}
 --- !u!114 &4189475626292154528
@@ -10046,7 +10046,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102462476442757993}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10473,6 +10473,7 @@ GameObject:
   - component: {fileID: 7811000736685580384}
   - component: {fileID: 8194037973328525635}
   - component: {fileID: 8194037973328525636}
+  - component: {fileID: 8194037973328525637}
   m_Layer: 5
   m_Name: Nav Panel
   m_TagString: Untagged
@@ -11223,6 +11224,37 @@ MonoBehaviour:
   _handDer: {fileID: 347510963}
   _speaker: {fileID: 1963423316}
   _dateId: '[DATE]'
+  _clipsByLanguage:
+  - clips:
+    - {fileID: 8300000, guid: 67690b418211bba41b5fbf48bd999a0f, type: 3}
+    - {fileID: 8300000, guid: 021d647734314a74e9348a2b646a6107, type: 3}
+    - {fileID: 8300000, guid: 2fab4ae022260624a8d49c6762a4db6f, type: 3}
+    - {fileID: 8300000, guid: f1c83dd5b4107c44fb63e425a165f168, type: 3}
+    - {fileID: 8300000, guid: 0d36410c2023c3346a02778f307e1603, type: 3}
+    - {fileID: 8300000, guid: e10bb7069e5a702438f966647ac062ef, type: 3}
+    - {fileID: 8300000, guid: cb7bc775095d30d4d8632c9d9175f1fb, type: 3}
+    - {fileID: 8300000, guid: c6d022aa85539194e9bda41292c5f317, type: 3}
+    - {fileID: 8300000, guid: 935ebf4d19f9ffe4b97d8cbd220a823e, type: 3}
+    - {fileID: 8300000, guid: 9fd0d0113a7859d4f8cafa6004484484, type: 3}
+    - {fileID: 8300000, guid: 9a6e191c87e8cbb488700b6c9ccb743c, type: 3}
+    - {fileID: 8300000, guid: 04d8713b3cd406d449ab6b5f75b3ade6, type: 3}
+    - {fileID: 8300000, guid: 9aab6dc9e94bd42498e85073b9ec38ef, type: 3}
+    - {fileID: 8300000, guid: 5ebd714f98a98604a89208559297572a, type: 3}
+  - clips:
+    - {fileID: 8300000, guid: 957f81aa662380340b4bfa94de957bd9, type: 3}
+    - {fileID: 8300000, guid: b690dea9e75111145a9914b9e9cc39e2, type: 3}
+    - {fileID: 8300000, guid: 33f1a19a3f604fd4c8db8508f0a33e24, type: 3}
+    - {fileID: 8300000, guid: d00be148d861c1040a72ebf297771375, type: 3}
+    - {fileID: 8300000, guid: df7ecf6fb68dc414189032905934d986, type: 3}
+    - {fileID: 8300000, guid: 9f95b16d37874c247beb49c72cdc6e76, type: 3}
+    - {fileID: 8300000, guid: 6eb0e38e7821d8d4ba7e1066929543ce, type: 3}
+    - {fileID: 8300000, guid: fc3f4eddbff165a4fb7535e24cf6fa21, type: 3}
+    - {fileID: 8300000, guid: c149c3cc183f9d149b40d9a468fd839a, type: 3}
+    - {fileID: 8300000, guid: 654ea9e9f1217b94b9a9d055f0953da2, type: 3}
+    - {fileID: 8300000, guid: 2c19ca43ec334154c8489c2566d94354, type: 3}
+    - {fileID: 8300000, guid: 330fee295bc9a1c4f97c1b4ad507c4a7, type: 3}
+    - {fileID: 8300000, guid: ded5496353710d24fbdd23d4f17502d2, type: 3}
+    - {fileID: 8300000, guid: cbcf3f80c8b26bf4297d0e9918ec8b1f, type: 3}
 --- !u!114 &8194037973328525636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11236,6 +11268,102 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextButton: {fileID: 9066662214196682475}
+--- !u!82 &8194037973328525637
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6627122057439592994}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8650430979239354242
 GameObject:
   m_ObjectHideFlags: 0

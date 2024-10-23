@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Localization;
-using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
-using UnityEngine.Localization.SmartFormat;
+using UnityEngine;
 using UnityEngine.Localization.Tables;
 
 public class Didascalia_LocalizationManager : MonoBehaviour
@@ -48,7 +45,7 @@ public class Didascalia_LocalizationManager : MonoBehaviour
 
 
     [Tooltip("Debe seguir el orden del enumerado TABLE_COLLECTIONS:\nMENU = 0\nSPANISH = 1\n")]
-    [SerializeField] private StringTableCollection[] _stringTableCollections;
+    [SerializeField] private LocalizedStringTable[] _stringTableCollections;
 
     private StringTable _lastTable;
 
@@ -72,9 +69,8 @@ public class Didascalia_LocalizationManager : MonoBehaviour
     {
         traduction = "ERROR";
 
-        StringTableCollection c = _stringTableCollections[(int)collection];
+        StringTable table = _stringTableCollections[(int)collection].GetTable();
 
-        var table = c.StringTables[(int)targetLanguage];
         StringTableEntry entry = table.GetEntry(key);
         traduction = entry.LocalizedValue;
 

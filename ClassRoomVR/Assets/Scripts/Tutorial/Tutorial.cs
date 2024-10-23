@@ -12,6 +12,10 @@ using Meta.WitAi.TTS.Data;
 using MathNet.Numerics;
 using UnityEngine.InputSystem;
 using MathNet.Numerics.Distributions;
+using NUnit.Framework.Constraints;
+using System.Collections;
+using BehaviorDesigner.Runtime.Tasks;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Representa un paso en el tutorial.
@@ -49,12 +53,53 @@ public class Tutorial : MonoBehaviour
     private Student _student;  // Estudiante que participa en el tutorial
     private StudentsController _studentControl;  // Controlador de los estudiantes
 
+    bool _phaseSkipped = false;
+
+    AudioSource explanationSrc = null;
+
+    [Serializable]
+    private class LanguageClips
+    {
+        public List<AudioClip> clips = new List<AudioClip>();
+    }
+    [SerializeField, UnityEngine.Tooltip("Please sort by the Language enum present in Didascalia_LocalizationManager")]
+    List<LanguageClips> _clipsByLanguage = new List<LanguageClips>();
+    // List<AudioClip> _ptClips = new List<AudioClip>();
+    Dictionary<string, AudioClip> _actualLanguageClips = new Dictionary<string, AudioClip>();
+    bool _playingExplanationAudio = false;
+
     /// <summary>
     /// Método que se ejecuta al iniciar el tutorial.
     /// </summary>
     private void Start()
     {
+        ChangeLanguageClips();
+
+        explanationSrc = GetComponent<AudioSource>();
+        explanationSrc ??= gameObject.AddComponent<AudioSource>();
+        explanationSrc.playOnAwake = false;
+
         InitializeTutorial();
+    }
+
+    private void OnEnable()
+    {
+        GameManager.Instance.OnLanguageChanged.AddListener(ChangeLanguageClips);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnLanguageChanged.RemoveListener(ChangeLanguageClips);
+    }
+
+    private void ChangeLanguageClips()
+    {
+        _actualLanguageClips.Clear();
+        var clips = _clipsByLanguage[(int)Didascalia_LocalizationManager.CurrentLanguage].clips;
+        foreach (AudioClip clip in clips)
+        {
+            _actualLanguageClips.Add(clip.name, clip);
+        }
     }
 
     /// <summary>
@@ -101,8 +146,8 @@ public class Tutorial : MonoBehaviour
     private void InitializeFirstStep()
     {
         string initText = "initialTextTTS";
-        ModifyTextToSpeech(TranslatedText(initText), true);
-        Invoke(nameof(FirstStep), 1);
+        ModifyTextToSpeech(initText, true);
+        FirstStep();
     }
 
     /// <summary>
@@ -125,12 +170,11 @@ public class Tutorial : MonoBehaviour
             _tutorialToggles[i].interactable = i <= _currentPhase;
         }
     }
-
-    /// <summary>
-    /// Finaliza la fase actual del tutorial y actualiza el estado.
-    /// </summary>
-    private void Finish(TTSSpeaker speaker, TTSClipData data)
+    bool finish = false;
+    private void Finish()
     {
+        if (finish) return;
+        finish = true;
         _handIzq.SetRed(VisualAction.Activate);
         _handDer.SetRed(VisualAction.Activate);
         _handIzq.transform.parent.GetChild(3).SetActive(true);
@@ -139,6 +183,14 @@ public class Tutorial : MonoBehaviour
         _speaker.Events.OnPlaybackComplete.RemoveListener(Finish);
         Debug.Log("FINISHED TTS");
         UpdateTutorial();
+    }
+
+    /// <summary>
+    /// Finaliza la fase actual del tutorial y actualiza el estado.
+    /// </summary>
+    private void Finish(TTSSpeaker speaker, TTSClipData data)
+    {
+        Finish();
     }
 
     /// <summary>
@@ -151,29 +203,32 @@ public class Tutorial : MonoBehaviour
         if (_currentPhase < _tutorialSteps.Length)
         {
             string key = _tutorialSteps[_currentPhase].StepText;
-            string text = TranslatedText(key);
-            ModifyTextToSpeech(text, true);
-            _tutorialText.text = TranslatedText(key);
+            ModifyTextToSpeech(key, true);
+            // _tutorialText.text = TranslatedText(key);
             _nextButton.interactable = false;
             await CurrentState();
-            _nextButton.interactable = true;
+            if (_phaseSkipped) { 
+                _nextButton.onClick.Invoke();
+                _phaseSkipped = false;
+            } 
+            else _nextButton.interactable = true;
         }
     }
 
     /// <summary>
     /// Verifica el estado actual del paso del tutorial.
     /// </summary>
-    private async Task CurrentState()
+    private async System.Threading.Tasks.Task CurrentState()
     {
         while (!_tutorialSteps[_currentPhase].ConditionMet)
         {
             _tutorialSteps[_currentPhase].Action.Invoke();
-            await Task.Delay(1000);
+            await System.Threading.Tasks.Task.Delay(10);
         }
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
-            ModifyTextToSpeech(TranslatedText("winTTS"), true);
-            Invoke(nameof(GoMenu), 1.5f);
+            ModifyTextToSpeech("winTTS", true);
+            Invoke(nameof(GoMenu), 3.5f);
         }
         else if (_currentPhase != 0)
         {
@@ -188,8 +243,32 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     private string GetNextText()
     {
-        string key = _nextText[UnityEngine.Random.Range(0, _nextText.Length)];
-        return TranslatedText(key);
+        return _nextText[UnityEngine.Random.Range(0, _nextText.Length)];
+    }
+
+    public void Skip()
+    {
+        if (_currentPhase == 0 && !finish)
+        {
+            Finish();
+        }
+        else {
+            if(_currentPhase == _tutorialSteps.Length - 1)
+            {
+                Debug.Log("Finalmente");
+            }
+            if(_nextButton.interactable == false)
+            {
+                _tutorialSteps[_currentPhase].ConditionMet = true;
+                _phaseSkipped = true;
+            }
+            else
+            {
+                _nextButton.onClick.Invoke();
+            }
+
+            // _nextButton.onClick.Invoke();
+        }
     }
 
     /// <summary>
@@ -230,7 +309,14 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     public void FirstStep()
     {
-        _speaker.Events.OnPlaybackComplete.AddListener(Finish);
+        StartCoroutine(EndFirstStep());
+        //_speaker.Events.OnPlaybackComplete.AddListener(Finish);
+    }
+
+    IEnumerator EndFirstStep()
+    {
+        while (_currentPhase == 0 && _playingExplanationAudio) yield return new WaitForEndOfFrame();
+        Finish();
     }
 
     /// <summary>
@@ -245,7 +331,7 @@ public class Tutorial : MonoBehaviour
             {
                 _tutorialSteps[_currentPhase].Objective *= -1;
                 _tutorialSteps[_currentPhase].Actual = 0;
-                ModifyTextToSpeech(TranslatedText("moveBackTTS"), false);
+                ModifyTextToSpeech("moveBackTTS", false);
             }
         }
         else if (_tutorialSteps[_currentPhase].Objective < 0)
@@ -287,7 +373,7 @@ public class Tutorial : MonoBehaviour
         {
             _tutorialSteps[_currentPhase].Objective = 0;
             _handDer.SetRed(VisualAction.PrimaryButton);
-            ModifyTextToSpeech(TranslatedText("cantMoveTTS"), true);
+            ModifyTextToSpeech("cantMoveTTS", true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 3 && _tutorialSteps[_currentPhase].Objective == 1)
         {
@@ -295,12 +381,12 @@ public class Tutorial : MonoBehaviour
             _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed -= Action_performed;
             _handIzq.InputActions[(int)VisualAction.Menu].action.performed += Action_performed;
             _handIzq.SetRed(VisualAction.Menu);
-            ModifyTextToSpeech(TranslatedText("menuActivationTTS"), true);
+            ModifyTextToSpeech("menuActivationTTS", true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 4 && _tutorialSteps[_currentPhase].Objective == 1)
         {
             _tutorialSteps[_currentPhase].Objective = 0;
-            ModifyTextToSpeech(TranslatedText("closeMenuTTS"), true);
+            ModifyTextToSpeech("closeMenuTTS", true);
         }
         else if ((_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
         {
@@ -326,7 +412,7 @@ public class Tutorial : MonoBehaviour
             case 1:
                 if (!_student.GetNavMeshAgent().enabled && Vector2.Distance(_student.transform.position, _studentControl.Door.position) < 0.2)
                 {
-                    ModifyTextToSpeech(TranslatedText("studentSitTTS"), true);
+                    ModifyTextToSpeech("studentSitTTS", true);
                     _tutorialSteps[_currentPhase].Actual = 2;
                 }
                 break;
@@ -339,7 +425,6 @@ public class Tutorial : MonoBehaviour
                 }
                 break;
         }
-
     }
 
     private void Action_performed(InputAction.CallbackContext obj)
@@ -354,9 +439,9 @@ public class Tutorial : MonoBehaviour
     /// <summary>
     /// Genera texto de audio.
     /// </summary>
-    public void ModifyTextToSpeech(string text, bool cleanTutorialText)
+    public void ModifyTextToSpeech(string key, bool cleanTutorialText)
     {
-        TextToSpeech(text);
+        string text = TextToSpeech(key);
         if(cleanTutorialText)
         {
             _tutorialText.text = text;
@@ -364,9 +449,28 @@ public class Tutorial : MonoBehaviour
         else _tutorialText.text += '\n'+text;
     }
 
-    public void TextToSpeech(string text)
+    public string TextToSpeech(string key)
     {
-        _speaker.Speak(FormatText(text));
+        string translation = TranslatedText(key);
+        Didascalia_LocalizationManager.Languages language = Didascalia_LocalizationManager.CurrentLanguage;
+        AudioClip clip = _actualLanguageClips[key];
+        if (explanationSrc.clip != clip)
+        {
+            StopCoroutine(PlayAudio(explanationSrc.clip));
+            explanationSrc.clip = clip;
+            StartCoroutine(PlayAudio(explanationSrc.clip));
+        }
+        //_speaker.Speak(FormatText(translation));
+        return translation;
+    }
+
+    IEnumerator PlayAudio(AudioClip clip)
+    {
+        _playingExplanationAudio = true;
+        explanationSrc.Play();
+        yield return new WaitForSeconds(clip.length);
+        if(explanationSrc.clip == clip) explanationSrc.Stop();
+        _playingExplanationAudio = false;
     }
 
     /// <summary>

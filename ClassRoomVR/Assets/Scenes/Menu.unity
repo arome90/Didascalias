@@ -249,7 +249,7 @@ PrefabInstance:
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
       propertyPath: _witAppsForLanguages.Array.data[1].name
-      value: "Portugu\xE9s"
+      value: "Portugu\xEAs"
       objectReference: {fileID: 0}
     - target: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
         type: 3}
@@ -2307,18 +2307,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1086119899}
   m_CullTransparentMesh: 1
---- !u!114 &1096627054 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9179661390788717391, guid: d32c2f24d2e11a846b94503881728d3e,
-    type: 3}
-  m_PrefabInstance: {fileID: 25366133}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992660649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e35dc135878645345912afb513dc07cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1103175110
 GameObject:
   m_ObjectHideFlags: 0
@@ -2812,19 +2800,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1303743681}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1096627054}
-        m_TargetAssemblyTypeName: ClassRoomVR.GameManager, Assembly-CSharp
-        m_MethodName: LoadTutorial
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1373241818 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6077624082470947191, guid: 0e369159e386f074c9d848fee68b2efa,
@@ -3730,9 +3706,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stringTableCollections:
-  - {fileID: 11400000, guid: ad57c44a3767f5a46a6ca1ffa7d8ebfb, type: 2}
-  - {fileID: 11400000, guid: 9da58a69854fc4b4c987a2ca183b8737, type: 2}
-  - {fileID: 11400000, guid: 548c0c33d775bca46883c2a68c73d39e, type: 2}
+  - m_TableReference:
+      m_TableCollectionName: GUID:312cde5189ec02245888dd378ea35dce
+  - m_TableReference:
+      m_TableCollectionName: GUID:5df22a87b1cda194b9c7212da8e13438
+  - m_TableReference:
+      m_TableCollectionName: GUID:ee314feb8021210499be4928396b27fb
 --- !u!114 &78136765783008307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5011,7 +4990,6 @@ MonoBehaviour:
   _editDeskPositionButton: {fileID: 7860514874402560979}
   _boysOption: {fileID: 4169417868821345869}
   _girlsOption: {fileID: 8419819408468853573}
-  _translationTable: {fileID: 11400000, guid: 9da58a69854fc4b4c987a2ca183b8737, type: 2}
 --- !u!114 &1019937148329667777
 MonoBehaviour:
   m_ObjectHideFlags: 0
