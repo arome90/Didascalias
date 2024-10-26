@@ -186,7 +186,7 @@ namespace ClassRoomVR
                         break;
                     case "Saludos":
                         Didascalia_LocalizationManager.Instance.GetTranslation("greetingsTeacher",
-                            Didascalia_LocalizationManager.TableCollections.CLASE, Didascalia_LocalizationManager.CurrentLanguage,
+                            Didascalia_LocalizationManager.TableCollections.AUDIO,
                             out string traduction);
                         st.PlayAllSentence(traduction);
                         break;

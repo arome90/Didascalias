@@ -32,14 +32,18 @@ MonoBehaviour:
     lang: pt
     isPrivate: 0
     createdAt: 2024-10-11T00:48:05-0700
-    trainingStatus: 3
-    lastTrainDuration: 49
-    lastTrainedAt: 2024-10-11T02:08:21-0700
-    nextTrainAt: 2024-10-11T02:12:17-0700
+    trainingStatus: 1
+    lastTrainDuration: 57
+    lastTrainedAt: 2024-10-11T02:47:24-0700
+    nextTrainAt: 2024-10-11T02:46:27-0700
     intents:
     - id: 498011286547356
       name: Advertencia
-      entities: []
+      entities:
+      - name: Objeto:Objeto
+        id: 1069922508187922
+      - name: Posiciones:Posiciones
+        id: 441769141785611
     - id: 3742247649377300
       name: BajarVoz
       entities: []
@@ -64,7 +68,9 @@ MonoBehaviour:
         id: 1027692779103939
     - id: 1216436282743934
       name: LlamarAlumno
-      entities: []
+      entities:
+      - name: wit$contact:student
+        id: 1027692779103939
     - id: 331859766651980
       name: MoverAlumno
       entities:
@@ -74,13 +80,17 @@ MonoBehaviour:
         id: 1027692779103939
     - id: 463551260063105
       name: Postponer
-      entities: []
+      entities:
+      - name: Posiciones:Posiciones
+        id: 441769141785611
     - id: 889464282729968
       name: Preguntar
       entities: []
     - id: 1714391212680171
       name: SacarMaterial
-      entities: []
+      entities:
+      - name: Objeto:Objeto
+        id: 1069922508187922
     - id: 1048131016641230
       name: Saludos
       entities: []
@@ -96,7 +106,9 @@ MonoBehaviour:
       entities: []
     - id: 1705965986846288
       name: Trabajar
-      entities: []
+      entities:
+      - name: Objeto:Objeto
+        id: 1069922508187922
     entities:
     - name: Castigo
       id: 3075364319269834
@@ -190,6 +202,9 @@ MonoBehaviour:
       - name: Posiciones
         id: 441769141785611
       keywords:
+      - keyword: Venha
+        synonyms:
+        - venha
       - keyword: aproxime-se
         synonyms:
         - aproxime-se
@@ -207,10 +222,17 @@ MonoBehaviour:
         - "m\xE1is perto"
         - perto de min
         - "\xE1 minha mesa"
+      - keyword: "atr\xE1s"
+        synonyms:
+        - "atr\xE1s"
       - keyword: essa mesa
         synonyms:
         - essa mesa
         - essa tabela
+      - keyword: final da clase
+        synonyms:
+        - final da clase
+        - final da classe
       - keyword: fora
         synonyms:
         - casa
@@ -223,6 +245,9 @@ MonoBehaviour:
         - fora da cl
         - fora da clase
         - fora da sala de aula
+      - keyword: "f\xF3ra da clase"
+        synonyms:
+        - "f\xF3ra da clase"
       - keyword: gabinete da diretora
         synonyms:
         - chefa de estudos

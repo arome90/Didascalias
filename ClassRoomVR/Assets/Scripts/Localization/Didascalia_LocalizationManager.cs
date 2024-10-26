@@ -34,17 +34,18 @@ public class Didascalia_LocalizationManager : MonoBehaviour
         MENU = 0,
         SPANISH = 1,
         TUTORIAL = 2,
-        CLASE = 3
+        WEB = 3,
+        AUDIO = 4
     }
 
     public enum Languages
     {
         SPANISH,
-        PORTUGUESE
+        PORTUGUESE,
+        ENGLISH
     }
 
-
-    [Tooltip("Debe seguir el orden del enumerado TABLE_COLLECTIONS:\nMENU = 0\nSPANISH = 1\n")]
+    [Tooltip("Debe seguir el orden del enumerado TABLE_COLLECTIONS:\nMENU = 0\nSPANISH = 1\nTUTORIAL = 2\nWEB = 3\nAUDIO = 4")]
     [SerializeField] private LocalizedStringTable[] _stringTableCollections;
 
     private StringTable _lastTable;
@@ -61,11 +62,9 @@ public class Didascalia_LocalizationManager : MonoBehaviour
     /// </summary>
     /// <param name="key"> Clave que identifica el texto a traducir </param>
     /// <param name="collection"> Colleción de String Tables a utilizar para traducir </param>
-    /// <param name="targetLanguage"> Idioma objetivo de la traducción </param>
     /// <param name="traduction"> Traducción resultante; o descripción del error en caso de haberlo </param>
     /// <returns>"false" si ha fallado la traducción; "true" en caso contrario</returns>
-    public bool GetTranslation(string key, TableCollections collection,
-        Languages targetLanguage, out string traduction)
+    public bool GetTranslation(string key, TableCollections collection, out string traduction)
     {
         traduction = "ERROR";
 

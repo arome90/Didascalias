@@ -47,8 +47,7 @@ namespace ClassRoomVR
             for (int i = 0; i < structure.Length; i++) {
                 string traduction = "";
                 Didascalia_LocalizationManager.Instance.GetTranslation(structure[i],
-                    Didascalia_LocalizationManager.TableCollections.SPANISH, 
-                    Didascalia_LocalizationManager.CurrentLanguage, out traduction);
+                    Didascalia_LocalizationManager.TableCollections.SPANISH, out traduction);
 
                 options.Add(traduction);
             }

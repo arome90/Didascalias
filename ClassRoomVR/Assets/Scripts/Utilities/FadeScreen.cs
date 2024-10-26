@@ -30,6 +30,16 @@ public class FadeScreen : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
     /// <summary>
     /// Initiates the fade-in effect.
     /// </summary>

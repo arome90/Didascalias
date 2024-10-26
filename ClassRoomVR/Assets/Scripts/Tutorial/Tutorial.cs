@@ -492,8 +492,7 @@ public class Tutorial : MonoBehaviour
     {
         string translation;
         Didascalia_LocalizationManager.Instance.GetTranslation(key,
-            Didascalia_LocalizationManager.TableCollections.TUTORIAL,
-            Didascalia_LocalizationManager.CurrentLanguage, out translation);
+            Didascalia_LocalizationManager.TableCollections.TUTORIAL, out translation);
         return translation;
     }
 

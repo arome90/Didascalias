@@ -152,19 +152,27 @@ namespace ClassRoomVR
         /// <returns>Devuelve los datos iniciales para el mensaje</returns>
         private static InitialMessageData CreateInitialMessageData()
         {
+            Didascalia_LocalizationManager l = Didascalia_LocalizationManager.Instance;
+            l.GetTranslation("student1", Didascalia_LocalizationManager.TableCollections.WEB, out string student1);
+            l.GetTranslation("student2", Didascalia_LocalizationManager.TableCollections.WEB, out string student2);
             AlumnoInit[] posiciones = new AlumnoInit[]
             {
-                new AlumnoInit { nombre = "Alumno1", posicion = new VectorJson(1.0f, 0.0f) },
-                new AlumnoInit { nombre = "Alumno2", posicion = new VectorJson(0.5f, 1.0f) }
+                new AlumnoInit { nombre = student1, posicion = new VectorJson(1.0f, 0.0f) },
+                new AlumnoInit { nombre = student2, posicion = new VectorJson(0.5f, 1.0f) }
             };
+            l.GetTranslation("disrespectButton", Didascalia_LocalizationManager.TableCollections.WEB, out string disrespectButton);
+            l.GetTranslation("fightButton", Didascalia_LocalizationManager.TableCollections.WEB, out string fightButton);
+            l.GetTranslation("insultButton", Didascalia_LocalizationManager.TableCollections.WEB, out string insultButton);
+            l.GetTranslation("sitButton", Didascalia_LocalizationManager.TableCollections.WEB, out string sitButton);
+            l.GetTranslation("standButton", Didascalia_LocalizationManager.TableCollections.WEB, out string standButton);
 
             string hora = GetFormattedCurrentTime();
             long sesion = GetCurrentUnixTimestamp();
 
             var catalogo = new CatalogoOpciones
             {
-                opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse" },
-                opcionesIndividuales = new string[] { "Pelear", "Insultar" }
+                opcionesGlobales = new string[] { disrespectButton, sitButton, standButton },
+                opcionesIndividuales = new string[] { fightButton, insultButton }
             };
 
             return new InitialMessageData(posiciones, hora, sesion, catalogo);

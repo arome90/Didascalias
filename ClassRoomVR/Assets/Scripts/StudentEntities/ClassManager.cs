@@ -63,11 +63,12 @@ namespace ClassRoomVR
             _asientosOcupados = new bool[_studentsPositions.childCount];
             _students = new Dictionary<string, Student>();
             _classInfo = GameManager.Instance.GetCurrentClassInfo();
-            _names = new List<List<string>>
-            {
-                _classInfo.FemaleStudentNames.ToList(),
-                _classInfo.MaleStudentNames.ToList()
-            };
+            _names = new List<List<string>>();
+
+            List<ClassInfo.NamesLanguage> a = _classInfo.GetNames();
+                
+            _names.Add(a[(int)Didascalia_LocalizationManager.CurrentLanguage].femaleNames);
+            _names.Add(a[(int)Didascalia_LocalizationManager.CurrentLanguage].maleNames);
         }
 
         /// <summary>
