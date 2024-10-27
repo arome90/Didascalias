@@ -1,4 +1,4 @@
-using System.Drawing;
+
 using UnityEngine;
 
 /// <summary>
@@ -29,7 +29,7 @@ public class CharacterPropsSpawner : MonoBehaviour
 
                 int randomIndex = Random.Range(0, boneAttachment.Complements.Count);
                 var complement = boneAttachment.Complements[randomIndex];
-                int colorIndex = Random.Range(0, complement.color.Length);
+                Color colorIndex = complement.color[Random.Range(0, complement.color.Length)];
 
                 SpawnComplement(rootBone, boneAttachment, complement, colorIndex, spawnOnRight, isFoot);
             }
@@ -60,7 +60,7 @@ public class CharacterPropsSpawner : MonoBehaviour
     /// <param name="colorIndex">Índice del color para el complemento.</param>
     /// <param name="spawnOnRight">Indica si el complemento debe aparecer en el lado derecho.</param>
     /// <param name="isFoot">Indica si el hueso es para el pie.</param>
-    private void SpawnComplement(Transform rootBone, CharacterProps.ComplementAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, int colorIndex, bool spawnOnRight, bool isFoot)
+    private void SpawnComplement(Transform rootBone, CharacterProps.ComplementAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, Color colorIndex, bool spawnOnRight, bool isFoot)
     {
         if (spawnOnRight || isFoot)
         {
@@ -80,7 +80,7 @@ public class CharacterPropsSpawner : MonoBehaviour
     /// <param name="complement">Información del complemento.</param>
     /// <param name="colorIndex">Índice del color para el complemento.</param>
     /// <param name="isMirrored">Indica si el complemento debe ser espejado.</param>
-    public static void TrySpawnComplement(Transform rootBone, CharacterProps.ComplementAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, int colorIndex, bool isMirrored)
+    public static void TrySpawnComplement(Transform rootBone, CharacterProps.ComplementAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, Color colorIndex, bool isMirrored)
     {
         if (Random.Range(0f, 100f) <= boneAttachment.Probability)
         {
@@ -100,7 +100,7 @@ public class CharacterPropsSpawner : MonoBehaviour
     /// <param name="complement">Información del complemento.</param>
     /// <param name="colorIndex">Índice del color para el complemento.</param>
     /// <param name="isMirrored">Indica si el complemento debe ser espejado.</param>
-    private static void SpawnForBone(Transform rootBone, string boneName, CharacterProps.MeshMaterialPair complement, int colorIndex, bool isMirrored)
+    private static void SpawnForBone(Transform rootBone, string boneName, CharacterProps.MeshMaterialPair complement, Color colorIndex, bool isMirrored)
     {
         Transform bone = FindBoneInChildren(rootBone, boneName);
         if (bone == null)
@@ -119,9 +119,9 @@ public class CharacterPropsSpawner : MonoBehaviour
 
         MeshRenderer meshRenderer = propObject.AddComponent<MeshRenderer>();
         meshRenderer.material = complement.material;
-        if (complement.material.HasProperty("_BaseColor"))
+        if (complement.material.HasProperty("_Color"))
         {
-            meshRenderer.material.SetColor("_BaseColor", complement.material.GetColor("_BaseColor"));
+            meshRenderer.material.SetColor("_Color", complement.material.GetColor("_Color"));
         }
 
         propObject.transform.SetParent(bone, false);
