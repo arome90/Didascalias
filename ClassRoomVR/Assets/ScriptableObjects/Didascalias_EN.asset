@@ -33,22 +33,28 @@ MonoBehaviour:
     isPrivate: 0
     createdAt: 2024-10-23T03:05:35-0700
     trainingStatus: 1
-    lastTrainDuration: 18
-    lastTrainedAt: 2024-10-26T03:56:32-0700
-    nextTrainAt: 2024-10-26T03:56:14-0700
+    lastTrainDuration: 59
+    lastTrainedAt: 2024-10-28T03:19:59-0700
+    nextTrainAt: 2024-10-28T03:19:00-0700
     intents:
     - id: 1087624256697879
       name: Advertencia
       entities: []
     - id: 1063504538581355
       name: BajarVoz
-      entities: []
+      entities:
+      - name: wit$contact:student
+        id: 8687463044671293
     - id: 995280105973063
       name: CambiarAlumno
-      entities: []
+      entities:
+      - name: wit$contact:student
+        id: 8687463044671293
     - id: 1067107804964108
       name: Castigo
       entities:
+      - name: Castigo:Castigo
+        id: 573860521673405
       - name: Posiciones:Posiciones
         id: 508953715450155
     - id: 905909274935498
@@ -56,9 +62,13 @@ MonoBehaviour:
       entities:
       - name: Posiciones:Posiciones
         id: 508953715450155
+      - name: wit$contact:student
+        id: 8687463044671293
     - id: 1255430202260677
       name: LLamarAlumno
-      entities: []
+      entities:
+      - name: wit$contact:student
+        id: 8687463044671293
     - id: 1493142751386041
       name: MoverAlumno
       entities: []
@@ -67,7 +77,9 @@ MonoBehaviour:
       entities: []
     - id: 1233182494636166
       name: Preguntar
-      entities: []
+      entities:
+      - name: wit$contact:student
+        id: 8687463044671293
     - id: 1093308535640870
       name: SacarMaterial
       entities:
@@ -80,13 +92,21 @@ MonoBehaviour:
       entities: []
     - id: 1476043289772989
       name: Sentarse
-      entities: []
+      entities:
+      - name: Posiciones:Posiciones
+        id: 508953715450155
+      - name: wit$contact:student
+        id: 8687463044671293
     - id: 851899397142718
       name: Silencio
       entities: []
     - id: 925903342779264
       name: Trabajar
-      entities: []
+      entities:
+      - name: Objetos:Objetos
+        id: 1772589313553889
+      - name: wit$contact:student
+        id: 8687463044671293
     entities:
     - name: Castigo
       id: 3888106811445255
@@ -99,8 +119,9 @@ MonoBehaviour:
       keywords:
       - keyword: You stay standing
         synonyms:
-        - You stay standing
+        - stay standin
         - stay standing
+        - you stay standing
       - keyword: severe part
         synonyms:
         - severe part
@@ -149,6 +170,9 @@ MonoBehaviour:
         synonyms:
         - book
         - notebook
+      - keyword: page
+        synonyms:
+        - page
       - keyword: pen
         synonyms:
         - pen
@@ -203,6 +227,9 @@ MonoBehaviour:
         - corridor
         - hall
         - out of class
+      - keyword: outside
+        synonyms:
+        - outside
       - keyword: place
         synonyms:
         - chair
@@ -212,6 +239,9 @@ MonoBehaviour:
         synonyms:
         - that desk
         - that table
+      - keyword: up
+        synonyms:
+        - up
     - name: wit$contact
       id: 535a8111-9b01-4678-80ae-53a22ef0bf5b
       lookups: []

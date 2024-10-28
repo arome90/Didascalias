@@ -6,6 +6,7 @@ using System;
 using Meta.WitAi.Data.Configuration;
 using TMPro;
 using static ClassRoomVR.GameManager;
+using System.IO;
 
 namespace ClassRoomVR
 {
@@ -49,6 +50,7 @@ namespace ClassRoomVR
         /// </summary>
         private void OnEnterButtonClick()
         {
+            Instance.SetLastUsedSettings();
             PlayButton();
             GoNextScreen();
         }
@@ -59,7 +61,7 @@ namespace ClassRoomVR
         private void OnTutorialButtonClick()
         {
             _tutorial.interactable = false;
-            GameManager.Instance.LoadTutorial();
+            Instance.LoadTutorial();
         }
 
         /// <summary>
@@ -86,15 +88,14 @@ namespace ClassRoomVR
         public void LanguageSelector()
         {
             _languageSelector.options.Clear();
-            LanguageOption[] languages = GameManager.Instance.witAppsForLanguages;
+            LanguageOption[] languages = Instance.witAppsForLanguages;
             for (int i = 0; i < languages.Length; ++i)
             {
                 _languageDictionary.Add(languages[i].name, languages[i].witApp);
 
                 _languageSelector.options.Add(new TMP_Dropdown.OptionData() { text = languages[i].name });
             }
-
-            ChangeLanguage(_languageSelector);
+            _languageSelector.value = (int)Didascalia_LocalizationManager.CurrentLanguage;
 
             _languageSelector.onValueChanged.AddListener(delegate { ChangeLanguage(_languageSelector); });
             _languageSelector.RefreshShownValue();
@@ -102,9 +103,14 @@ namespace ClassRoomVR
 
         private void ChangeLanguage(TMP_Dropdown dropdown)
         {
-            string currentLanguage = dropdown.options[dropdown.value].text;
+            ChangeLanguage(dropdown, dropdown.value);
+        }
 
-            GameManager.Instance.ChangeLanguage(_languageDictionary[currentLanguage]);
+        private void ChangeLanguage(TMP_Dropdown dropdown, int value)
+        {
+            string currentLanguage = dropdown.options[value].text;
+
+            Instance.ChangeLanguage(_languageDictionary[currentLanguage]);
         }
 
         /// <summary>

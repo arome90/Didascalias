@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Generated.PropertyProviders;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization.Settings;
@@ -54,6 +55,7 @@ namespace ClassRoomVR
         [SerializeField] private bool saveAudio = false;
         private int indexCurrentSett;
 
+        private int lastSettingsUsed;
         public static GameManager Instance { get; private set; }
 
         private void Awake()
@@ -64,6 +66,21 @@ namespace ClassRoomVR
 
         private void Start()
         {
+            int language = PlayerPrefs.GetInt("Language", 0);
+            ChangeLanguage(language);
+
+            ClassSettings[] settings = availableSettings;
+            int index = 0;
+            foreach (var setting in settings)
+            {
+                if (setting.name == "Personalizado")
+                {
+                    break;
+                }
+                index++;
+            }
+            Instance.SetCurrentSettings(index);
+
             _currentWitApp = _witAppsForLanguages[0].witApp;
             // Esto significa que crea una instancia en caso de ser nulo.
             OnLanguageChanged ??= new UnityEvent();
@@ -128,8 +145,17 @@ namespace ClassRoomVR
 
         public void SetCurrentSettings(int index)
         {
+            lastSettingsUsed = index;
             currentSettings = availableSettings[index];
             indexCurrentSett = index;
+        }
+
+        /// <summary>
+        /// Se seleccionan las últimas opciones de clase usadas que no fueran la del tutorial.
+        /// </summary>
+        public void SetLastUsedSettings()
+        {
+            currentSettings = availableSettings[lastSettingsUsed];
         }
 
         private void OnApplicationQuit()
@@ -175,6 +201,7 @@ namespace ClassRoomVR
         private IEnumerator SetLocale(int localeID)
         {
             canChange = false;
+            PlayerPrefs.SetInt("Language", localeID);
             yield return LocalizationSettings.InitializationOperation;
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[localeID];
             Didascalia_LocalizationManager.ChangeLanguage(localeID);

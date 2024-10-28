@@ -66,9 +66,8 @@ namespace ClassRoomVR
             _names = new List<List<string>>();
 
             List<ClassInfo.NamesLanguage> a = _classInfo.GetNames();
-                
-            _names.Add(a[(int)Didascalia_LocalizationManager.CurrentLanguage].femaleNames);
-            _names.Add(a[(int)Didascalia_LocalizationManager.CurrentLanguage].maleNames);
+            _names.Add(new List<string>(a[(int)Didascalia_LocalizationManager.CurrentLanguage].femaleNames));
+            _names.Add(new List<string>(a[(int)Didascalia_LocalizationManager.CurrentLanguage].maleNames));
         }
 
         /// <summary>
