@@ -1,15 +1,9 @@
-﻿using Meta.WitAi;
-using Meta.WitAi.Data.Configuration;
-using Oculus.Voice;
+﻿using Meta.WitAi.Data.Configuration;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.Generated.PropertyProviders;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization.Settings;
-using UnityEngine.SceneManagement;
 using Utilities.Extensions;
 
 namespace ClassRoomVR
@@ -81,12 +75,8 @@ namespace ClassRoomVR
             }
             Instance.SetCurrentSettings(index);
 
-            _currentWitApp = _witAppsForLanguages[0].witApp;
             // Esto significa que crea una instancia en caso de ser nulo.
             OnLanguageChanged ??= new UnityEvent();
-
-            int localeID = PlayerPrefs.GetInt("LocaleKey", 0);
-            ChangeLanguage(localeID);
         }
 
         private bool InitializeSingleton()

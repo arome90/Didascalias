@@ -7,6 +7,8 @@ using Meta.WitAi.Data.Configuration;
 using TMPro;
 using static ClassRoomVR.GameManager;
 using System.IO;
+using System.Collections;
+using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
@@ -95,10 +97,23 @@ namespace ClassRoomVR
 
                 _languageSelector.options.Add(new TMP_Dropdown.OptionData() { text = languages[i].name });
             }
+
+            StartCoroutine(ChangeDropdownValue());
+        }
+
+        public void OnDestroy()
+        {
+            StopAllCoroutines();
+        }
+
+        IEnumerator ChangeDropdownValue()
+        {
+            yield return new WaitForSeconds(0.2f);
             _languageSelector.value = (int)Didascalia_LocalizationManager.CurrentLanguage;
 
             _languageSelector.onValueChanged.AddListener(delegate { ChangeLanguage(_languageSelector); });
             _languageSelector.RefreshShownValue();
+
         }
 
         private void ChangeLanguage(TMP_Dropdown dropdown)
