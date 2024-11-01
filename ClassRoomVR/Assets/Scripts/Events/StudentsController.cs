@@ -25,6 +25,7 @@ namespace ClassRoomVR
 
         // Diccionario de estudiantes
         private Dictionary<string, Student> _students;
+        private List<Student> _raisedHandStudents;
 
         // Jugador
         private GameObject _player;
@@ -50,7 +51,22 @@ namespace ClassRoomVR
         {
             _player = player;
             _students = students;
+            foreach (var item in _students)
+            {
+                item.Value.SetController(this);
+            }
             studentList = null;
+        }
+
+        public void AddHandRaisedStudent(Student student)
+        {
+            if(!_raisedHandStudents.Contains(student)) 
+                _raisedHandStudents.Add(student);
+        }
+        public void RemoveHandRaisedStudent(Student student)
+        {
+            if (_raisedHandStudents.Contains(student))
+                _raisedHandStudents.Remove(student);
         }
 
         // Método para cambiar a dos estudiantes de lugar
@@ -136,13 +152,14 @@ namespace ClassRoomVR
         {
             student.PayAttention();
             student.SetColor(Color.blue);
+            student.HandleCallOnRaisedHand();
             StartCoroutine(ReturnColor(student));
         }
 
         // Corutina para devolver el color original al estudiante después de 5 segundos
         IEnumerator ReturnColor(Student student)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(3.2f);
             student.SetColor(Color.white);
         }
 
@@ -281,8 +298,18 @@ namespace ClassRoomVR
         // Reproduce una oración aleatoria con un estudiante
         public void PlaySentence(string text)
         {
-            int randomStudentIndex = UnityEngine.Random.Range(0, _students.Count);
-            _students.ElementAt(randomStudentIndex).Value.GenerateText(text);
+            if(_raisedHandStudents.Count == 0)
+            {
+                int randomStudentIndex = UnityEngine.Random.Range(0, _students.Count);
+                _students.ElementAt(randomStudentIndex).Value.GenerateText(text);
+            }
+            else
+            {
+                Student st = _raisedHandStudents[0];
+                st.GenerateText(text);
+                st.HandDown();
+                _raisedHandStudents.Remove(st);
+            }
         }
 
         // Reproduce una oración con todos los estudiantes
@@ -297,6 +324,7 @@ namespace ClassRoomVR
         private void Start()
         {
             //Invoke(nameof(doso), 2);
+            _raisedHandStudents = new List<Student>();  
         }
 
         //private void doso()

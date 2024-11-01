@@ -134,6 +134,7 @@ namespace ClassRoomVR
                         {
                             studentsSelected.Clear();
                         }
+                        // Esta lista siempre es un único estudiante, lo cual no está muy bien xd
                         studentsSelected.Add(s);
                         st.HandleCall(s);
                     }
@@ -189,6 +190,10 @@ namespace ClassRoomVR
                             Didascalia_LocalizationManager.TableCollections.AUDIO,
                             out string traduction);
                         st.PlayAllSentence(traduction);
+                        break;
+                    case "LLamarAlumno":
+                        studentsSelected[0].HandleCallOnRaisedHand();
+
                         break;
                     default:
                         intentName = "No hay intencion";

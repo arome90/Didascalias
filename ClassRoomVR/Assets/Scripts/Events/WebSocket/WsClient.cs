@@ -166,6 +166,7 @@ public class WsClient : GenericSingleton<WsClient>
         }
         else
         {
+            Debug.Log("MENASJE DESDE SERVIDOR!!!OO!O!O!!");
             // Mensajes escritos desde servidor
             studentController.PlaySentence(receivedMessage.data.ToString());
         }

@@ -78,7 +78,7 @@ namespace ClassRoomVR
         /// Reproduce la animación del escritorio según el clip especificado.
         /// </summary>
         /// <param name="anim">Enum que representa el clip de animación a reproducir.</param>
-        public void PlayAnimacionMesa(Animaciones anim)
+        public void PlayDeskAnimation(Animaciones anim)
         {
             if (_deskAnimation != null)
             {
@@ -89,7 +89,7 @@ namespace ClassRoomVR
         /// <summary>
         /// Reproduce la animación de la silla.
         /// </summary>
-        public void RockChair()
+        public void PlayChairAnimation()
         {
             if (_chairAnimation != null)
             {

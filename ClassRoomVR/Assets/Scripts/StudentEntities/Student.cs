@@ -6,6 +6,7 @@ using UnityEngine.AI;
 using System.Linq;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Samples.Hands;
 
 namespace ClassRoomVR
 {
@@ -21,14 +22,16 @@ namespace ClassRoomVR
             BALANCEARSE,
             MOVIL,
             GIRARSE,
+            LANZAR_OBJETO,
             // Atento
             ABRIR,
             ESCRIBIR,
             TABLET,
-            LEVANTAR_MANO,
             COGER_OBJETO,
-            LANZAR_OBJETO
+            LEVANTAR_MANO,
         }
+
+        private bool _handRaised = false;
 
         // Variables privadas para referencias de componentes y estado del estudiante
         private FieldOfVision _vision;
@@ -39,16 +42,22 @@ namespace ClassRoomVR
         [SerializeField] private bool _problematic = false;
         [SerializeField] private TextMeshProUGUI _studentNameText;
         [SerializeField] private TextMeshProUGUI _attentionText;
+
         private Desk _desk;
         private Animator _animator;
         private AudioSource _audioSource;
         private NavMeshAgent _navMeshAgent;
         private new BoxCollider _collider;
+
         [SerializeField] private Transform _target;
         private Vector3 _actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> _targets;
+        
         [SerializeField] private MultiAimConstraint _headConstraint;
+        
         private StudentBehavior _behaviour;
+        private StudentsController _controller;
+
         private Transform _player;
         private ResponseStudent _response;
         private JawMove _jaw;
@@ -62,7 +71,14 @@ namespace ClassRoomVR
         public AudioSource GetAudioSource() => _audioSource;
         public NavMeshAgent GetNavMeshAgent() => _navMeshAgent;
         public StudentBehavior GetBehavior() => _behaviour;
+        public StudentsController GetController() => _controller;
         public State GetState() => _state;
+
+        #endregion
+
+        #region Setters
+
+        public void SetController(StudentsController controller) => _controller = controller;
 
         #endregion
 
@@ -163,34 +179,51 @@ namespace ClassRoomVR
         }
 
         // Variables privadas para comenzar animaciones cuando no se está atendiendo a clase.
-        private bool _canPerformDistractedAction = true;
+        private bool _actionCooldownHasPassed = true;
         private float _attetionThresholdDistracted = 25f; // Nivel de atención a partir del cual comenzarán acciones
         // Los valores que NO son de Debug son: 7.5f y 15f
-        private float _minCooldownDistractedAction = 7.5f; // Mínimo tiempo entre acciones distraídas
-        private float _maxCooldownDistractedAction = 15f; // Máximo tiempo entre acciones distraídas
-        private float _distractedActionCooldown; // Valor aletorio entre mínimo y máximo de cooldown
+        private float _minCDAction = 7.5f; // Mínimo tiempo entre acciones distraídas
+        private float _maxCDAction = 15f; // Máximo tiempo entre acciones distraídas
+        private float _actionCD; // Valor aletorio entre mínimo y máximo de cooldown
 
-        private IEnumerator DistractedActionCooldown()
+        private IEnumerator PerformActionCooldown()
         {
-            _canPerformDistractedAction = false;
-            _distractedActionCooldown = Random.Range(_minCooldownDistractedAction, _maxCooldownDistractedAction);
-            yield return new WaitForSeconds(_distractedActionCooldown);
-            _canPerformDistractedAction = true;
+            _actionCooldownHasPassed = false;
+            _actionCD = Random.Range(_minCDAction, _maxCDAction);
+            yield return new WaitForSeconds(_actionCD);
+            _actionCooldownHasPassed = true;
         }
 
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
+        }
+
+        /// <summary>
+        /// Llamado en el Update. Comprueba si un estudiante puede hacer una acción según su nivel de atención
+        /// Si su atención es baja, hará una acción distraída, como cambiar su expresión, ver el móvil o balancearse.
+        /// Si su atención es alta, hará una acción atenta, como escribir en su libreta.
+        /// </summary>
         private void PerformAction()
         {
-            // Para pruebas, lo ponemos en 40f, pero el valor debería ser algo parecido a 20-25f.
-            if (_canPerformDistractedAction && _behaviour.AttentionLevel <= _attetionThresholdDistracted)
+            // Bajamos la mano si ha bajado nuestro nivel de atención
+            if(_handRaised && _behaviour.AttentionLevel < 65f)
             {
-                // Valor sin debug: Random.Range(0, 2);
-                int expressionOrAction = Random.Range(1, 2);
+                HandDown();
+            }
+            if (_actionCooldownHasPassed && _behaviour.AttentionLevel <= _attetionThresholdDistracted)
+            {
+                int expressionOrAction = Random.Range(0, 2);
                 if(expressionOrAction == 0) // acción
                 {
-                    int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.GIRARSE + 1);
+                    int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.LANZAR_OBJETO + 1);
                     if (distractedAction == (int)Actions.MOVIL)
                     {
                         SetDirection(FieldOfVision.Down);
+                    }
+                    if(distractedAction == (int)Actions.BALANCEARSE)
+                    {
+                        _desk.PlayChairAnimation();
                     }
                     _animator.SetInteger("Accion", distractedAction);
                 }
@@ -216,13 +249,70 @@ namespace ClassRoomVR
                     StartCoroutine(_behaviour.ChangeExpression(expression));
                 }
                 
-                StartCoroutine(DistractedActionCooldown());
+                StartCoroutine(PerformActionCooldown());
             }
-            else if (_behaviour.AttentionLevel > 75f)
+            else if (_actionCooldownHasPassed && _behaviour.AttentionLevel > 75f)
             {
                 // Hacer cosas guays, como escribir o así, como si estuvieran tomando apuntes.
+                // int attentionAction = Random.Range((int)Actions.ABRIR, (int)Actions.LEVANTAR_MANO + 1);
+                int attentionAction = Random.Range(0, 101);
+                
+                if(attentionAction < 5) // un 10% de las veces, hacemos que el/la alumn@ levante la mano
+                {
+                    RaiseHand();
+                }
+                else
+                {
+                    StartCoroutine(PerformActionCooldown());
+                }
+                _actionCooldownHasPassed = false;
             }
+            _actionCooldownHasPassed = _actionCooldownHasPassed && !_handRaised;
         }
+
+        #region Behavior
+
+        /// <summary>
+        /// Genera texto hablado por el estudiante.
+        /// </summary>
+        /// <param name="text">Texto a hablar.</param>
+        public void GenerateText(string text)
+        {
+            _response.SpeakText(text);
+        }
+
+        /// <summary>
+        /// Se levanta la mano
+        /// </summary>
+        public void RaiseHand()
+        {
+            _controller.AddHandRaisedStudent(this);
+            _handRaised = true;
+            _animator.SetBool("HandRaised", _handRaised);
+            _animator.SetInteger("Accion", (int)Actions.LEVANTAR_MANO);
+
+        }
+        /// <summary>
+        /// Se baja la mano
+        /// </summary>
+        public void HandDown()
+        {
+            _controller.RemoveHandRaisedStudent(this);
+            _handRaised = false;
+            _animator.SetBool("HandRaised", _handRaised);
+            StartCoroutine(PerformActionCooldown());
+        }
+
+        public void HandleCallOnRaisedHand()
+        {
+            if (!_handRaised) return;
+
+            GenerateText("¿Podrías repetir lo último que has dicho?");
+
+            HandDown();
+        }
+
+        #endregion
 
         // Variables privadas para la animación de movimiento
         private float _smoothTime = 0.15f;
@@ -385,7 +475,7 @@ namespace ClassRoomVR
             _navMeshAgent.enabled = false;
             transform.rotation = _desk.transform.rotation;
             _animator.SetBool("onFoot", false);
-            _desk.PlayAnimacionMesa(Animaciones.SitRelajado);
+            _desk.PlayDeskAnimation(Animaciones.SitRelajado);
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
             Transform pos = _desk.transform.GetChild(0);
             transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
@@ -422,7 +512,7 @@ namespace ClassRoomVR
             {
                 _desk.SetChairActive(false);
                 _animator.SetBool("onFoot", true);
-                _desk.PlayAnimacionMesa(Animaciones.Empujar);
+                _desk.PlayDeskAnimation(Animaciones.Empujar);
             }
             else
             {
@@ -449,7 +539,7 @@ namespace ClassRoomVR
             {
                 _desk.SetChairActive(false);
                 _animator.SetBool("onFoot", true);
-                _desk.PlayAnimacionMesa(Animaciones.Empujar);
+                _desk.PlayDeskAnimation(Animaciones.Empujar);
                 _desk = d;
                 StartCoroutine(OnCompleteStandChange());
             }
@@ -466,19 +556,6 @@ namespace ClassRoomVR
                 yield return null;
 
             SitBack();
-        }
-
-        #endregion
-
-        #region Behavior
-
-        /// <summary>
-        /// Genera texto hablado por el estudiante.
-        /// </summary>
-        /// <param name="text">Texto a hablar.</param>
-        public void GenerateText(string text)
-        {
-            _response.SpeakText(text);
         }
 
         #endregion
