@@ -5,8 +5,6 @@ using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
 using System.Linq;
 using TMPro;
-using UnityEngine.InputSystem;
-using UnityEngine.XR.Interaction.Toolkit.Samples.Hands;
 
 namespace ClassRoomVR
 {
@@ -31,7 +29,17 @@ namespace ClassRoomVR
             LEVANTAR_MANO,
         }
 
-        private bool _handRaised = false;
+        private enum AnimationState
+        {
+            WRITING,
+            HAND_RAISED,
+
+
+
+            NONE
+        }
+
+        private AnimationState _animPlaying = AnimationState.NONE;
 
         // Variables privadas para referencias de componentes y estado del estudiante
         private FieldOfVision _vision;
@@ -207,9 +215,18 @@ namespace ClassRoomVR
         private void PerformAction()
         {
             // Bajamos la mano si ha bajado nuestro nivel de atención
-            if(_handRaised && _behaviour.AttentionLevel < 65f)
+            if(_animPlaying != AnimationState.NONE && _behaviour.AttentionLevel < 65f)
             {
-                HandDown();
+                switch (_animPlaying)
+                {
+                    case AnimationState.WRITING:
+                        EndWriting();
+                        break;
+
+                    case AnimationState.HAND_RAISED:
+                        HandDown();
+                        break;
+                }
             }
             if (_actionCooldownHasPassed && _behaviour.AttentionLevel <= _attetionThresholdDistracted)
             {
@@ -256,10 +273,14 @@ namespace ClassRoomVR
                 // Hacer cosas guays, como escribir o así, como si estuvieran tomando apuntes.
                 // int attentionAction = Random.Range((int)Actions.ABRIR, (int)Actions.LEVANTAR_MANO + 1);
                 int attentionAction = Random.Range(0, 101);
-                
-                if(attentionAction < 5) // un 10% de las veces, hacemos que el/la alumn@ levante la mano
+
+                if (attentionAction < 5) // un 5% de las veces, hacemos que el/la alumn@ levante la mano
                 {
                     RaiseHand();
+                }
+                else if (attentionAction < 70) // un 65% de las veces, hacemos que el/la alumn@ escriba durante un rato
+                {
+                    StartWriting();
                 }
                 else
                 {
@@ -267,10 +288,10 @@ namespace ClassRoomVR
                 }
                 _actionCooldownHasPassed = false;
             }
-            _actionCooldownHasPassed = _actionCooldownHasPassed && !_handRaised;
+            _actionCooldownHasPassed = _actionCooldownHasPassed && _animPlaying == AnimationState.NONE;
         }
 
-        #region Behavior
+        #region Behaviour
 
         /// <summary>
         /// Genera texto hablado por el estudiante.
@@ -281,14 +302,15 @@ namespace ClassRoomVR
             _response.SpeakText(text);
         }
 
+        #region Raise Hand
         /// <summary>
         /// Se levanta la mano
         /// </summary>
         public void RaiseHand()
         {
             _controller.AddHandRaisedStudent(this);
-            _handRaised = true;
-            _animator.SetBool("HandRaised", _handRaised);
+            _animPlaying = AnimationState.HAND_RAISED;
+            _animator.SetBool("HandRaised", true);
             _animator.SetInteger("Accion", (int)Actions.LEVANTAR_MANO);
 
         }
@@ -298,20 +320,42 @@ namespace ClassRoomVR
         public void HandDown()
         {
             _controller.RemoveHandRaisedStudent(this);
-            _handRaised = false;
-            _animator.SetBool("HandRaised", _handRaised);
+            _animPlaying = AnimationState.NONE;
+            _animator.SetBool("HandRaised", false);
             StartCoroutine(PerformActionCooldown());
         }
 
         public void HandleCallOnRaisedHand()
         {
-            if (!_handRaised) return;
+            if (_animPlaying != AnimationState.HAND_RAISED) return;
 
             GenerateText("¿Podrías repetir lo último que has dicho?");
 
             HandDown();
         }
+        #endregion
+        #region Write
+        private void StartWriting()
+        {
+            _animPlaying = AnimationState.WRITING;
+            _animator.SetBool("Writing", true);
+            _animator.SetInteger("Accion", (int)Actions.ESCRIBIR);
+            StartCoroutine(WriteForSeconds(UnityEngine.Random.Range(3.0f, 7.5f)));
+        }
 
+        IEnumerator WriteForSeconds(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            EndWriting();
+        }
+
+        private void EndWriting()
+        {
+            _animPlaying = AnimationState.NONE;
+            _animator.SetBool("Writing", false);
+            StartCoroutine(PerformActionCooldown());
+        }
+        #endregion
         #endregion
 
         // Variables privadas para la animación de movimiento

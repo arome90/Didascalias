@@ -1,7 +1,5 @@
 using UnityEngine;
 
-
-
 namespace ClassRoomVR
 {
     /// <summary>
