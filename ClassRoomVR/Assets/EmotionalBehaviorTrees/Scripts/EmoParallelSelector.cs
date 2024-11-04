@@ -5,7 +5,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                      "If one tasks returns success the parallel selector task will end all of the child tasks and return success. " +
                      "If every child task returns failure then the parallel selector task will return failure.")]
     [TaskIcon("{SkinColor}ParallelSelectorIcon.png")]
-    public class EmoParallelSelector : Composite
+    public class EmoParallelSelector : EmoComposite
     {
         // The index of the child that is currently running or is about to run.
         private int currentChildIndex;

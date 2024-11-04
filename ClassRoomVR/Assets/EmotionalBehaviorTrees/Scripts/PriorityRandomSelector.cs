@@ -15,13 +15,24 @@ namespace BehaviorDesigner.Runtime.Tasks
         [Tooltip("Do we want to use the seed?")]
         public bool useSeed = false;
 
+        [Tooltip("")]
+        public SharedFloat Openness;
+        [Tooltip("")]
+        public SharedFloat Conscientiousness;
+        [Tooltip("")]
+        public SharedFloat Extraversion;
+        [Tooltip("")]
+        public SharedFloat Agreeableness;
+        [Tooltip("")]
+        public SharedFloat Neuroticism;
+
         // The index of the child that is currently running or is about to run.
         private int currentChildIndex = 0;
         // The task status of every child task.
         private TaskStatus executionStatus = TaskStatus.Inactive;
         // The order to run its children in. 
         private List<int> childrenExecutionOrder = new List<int>();
-
+        public EmoComposite[] actions;
 
         public override void OnAwake()
         {
@@ -45,9 +56,25 @@ namespace BehaviorDesigner.Runtime.Tasks
 
             // Loop through each child task and determine its priority. The higher the priority the lower it goes within the list. The task with the highest
             // priority will be first in the list and will be executed first.
-            for (int i = 0; i < children.Count; ++i)
+            //for (int i = 0; i < children.Count; ++i)
+            //{
+            //    float priority = children[i].GetPriority();
+            //    int insertIndex = childrenExecutionOrder.Count;
+            //    for (int j = 0; j < childrenExecutionOrder.Count; ++j)
+            //    {
+            //        if (children[childrenExecutionOrder[j]].GetPriority() < priority)
+            //        {
+            //            insertIndex = j;
+            //            break;
+            //        }
+            //    }
+            //    childrenExecutionOrder.Insert(insertIndex, i);
+            //}
+
+            for (int i = 0; i < actions.Length; ++i)
             {
-                float priority = children[i].GetPriority();
+                float priority = calculatePersonalityModifier(actions[i]);
+
                 int insertIndex = childrenExecutionOrder.Count;
                 for (int j = 0; j < childrenExecutionOrder.Count; ++j)
                 {
@@ -70,6 +97,18 @@ namespace BehaviorDesigner.Runtime.Tasks
             }
             currentChildIndex = k - 1;
 
+        }
+
+        private float calculatePersonalityModifier(EmoComposite c)
+        {
+            float ret = 0f;
+            ret += Openness.Value * c.GetOpennessInfluence();
+            ret += Conscientiousness.Value * c.GetConscientiousnessInfluence();
+            ret += Extraversion.Value * c.GetExtraversionInfluence();
+            ret += Agreeableness.Value * c.GetAgreeablenessInfluence();
+            ret += Neuroticism.Value * c.GetNeuroticismInfluence();
+
+            return ret;
         }
 
         public override int CurrentChildIndex()

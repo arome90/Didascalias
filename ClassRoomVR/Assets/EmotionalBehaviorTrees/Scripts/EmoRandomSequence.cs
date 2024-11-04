@@ -10,7 +10,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                      "as soon as a single task ends in failure. On a task failure it will stop executing all of the child tasks and return failure. " +
                      "If no child returns failure then it will return success.")]
     [TaskIcon("{SkinColor}RandomSequenceIcon.png")]
-    public class EmoRandomSequence : Composite
+    public class EmoRandomSequence : EmoComposite
     {
         [Tooltip("Seed the random number generator to make things easier to debug")]
         public int seed = 0;

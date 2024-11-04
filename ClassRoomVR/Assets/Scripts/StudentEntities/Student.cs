@@ -30,6 +30,14 @@ namespace ClassRoomVR
             LANZAR_OBJETO
         }
 
+        // Based on the big 5 personality traits model
+        [System.Serializable]
+        struct Personality
+        {
+            [Range(0f, 1f)]
+            private float Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism;
+        }
+
         // Variables privadas para referencias de componentes y estado del estudiante
         private FieldOfVision _vision;
         [SerializeField] private FieldOfVision _distracted;

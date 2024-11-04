@@ -5,7 +5,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                      "Like the sequence class, the parallel task will return success once all of its children tasks have return success. " +
                      "If one tasks returns failure the parallel task will end all of the child tasks and return failure.")]
     [TaskIcon("{SkinColor}ParallelIcon.png")]
-    public class EmoParallel : Composite
+    public class EmoParallel : EmoComposite
     {
         // The index of the child that is currently running or is about to run.
         private int currentChildIndex;

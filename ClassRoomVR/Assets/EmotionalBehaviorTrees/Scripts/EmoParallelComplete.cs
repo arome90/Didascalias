@@ -3,7 +3,7 @@ namespace BehaviorDesigner.Runtime.Tasks
     [TaskDescription("Similar to the parallel selector task, except the parallel complete task will return the child status as soon as the child returns success or failure." +
                      "The child tasks are executed simultaneously.")]
     [TaskIcon("{SkinColor}ParallelCompleteIcon.png")]
-    public class EmoParallelComplete : Composite
+    public class EmoParallelComplete : EmoComposite
     {
         // The index of the child that is currently running or is about to run.
         private int currentChildIndex;

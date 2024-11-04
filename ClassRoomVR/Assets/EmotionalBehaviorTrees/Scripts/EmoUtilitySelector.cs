@@ -6,7 +6,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                      "at that particular time. The task with the highest utility value will be selected and the existing running task will be aborted. The utility selector " +
                      "task reevaluates its children every tick.")]
     [TaskIcon("{SkinColor}UtilitySelectorIcon.png")]
-    public class EmoUtilitySelector : Composite
+    public class EmoUtilitySelector : EmoComposite
     {
         // The index of the child that is currently running or is about to run.
         private int currentChildIndex = 0;

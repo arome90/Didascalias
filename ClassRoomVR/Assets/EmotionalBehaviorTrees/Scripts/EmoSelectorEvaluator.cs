@@ -5,7 +5,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                      "The selector evaluator will return success as soon as the first child returns success otherwise it will keep trying higher priority children. This task mimics " +
                      "the conditional abort functionality except the child tasks don't always have to be conditional tasks.")]
     [TaskIcon("{SkinColor}SelectorEvaluatorIcon.png")]
-    public class EmoSelectorEvaluator : Composite
+    public class EmoSelectorEvaluator : EmoComposite
     {
         // The index of the child that is currently running or is about to run.
         private int currentChildIndex = 0;
