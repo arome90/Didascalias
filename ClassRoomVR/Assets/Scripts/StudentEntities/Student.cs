@@ -30,13 +30,8 @@ namespace ClassRoomVR
             LANZAR_OBJETO
         }
 
-        // Based on the big 5 personality traits model
-        [System.Serializable]
-        struct Personality
-        {
-            [Range(0f, 1f)]
-            private float Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism;
-        }
+        private Personality _personality;
+        private Emotion _emotion;
 
         // Variables privadas para referencias de componentes y estado del estudiante
         private FieldOfVision _vision;
@@ -72,6 +67,10 @@ namespace ClassRoomVR
         public StudentBehavior GetBehavior() => _behaviour;
         public State GetState() => _state;
 
+        public Personality getPersonality() => _personality;
+
+        public Emotion GetEmotion() => _emotion;
+
         #endregion
 
         private void Awake()
@@ -105,6 +104,9 @@ namespace ClassRoomVR
             transform.name = name;
             _studentNameText.text = name;
             _gender = gender;
+            _personality = new Personality();
+            _emotion= new Emotion();
+            _emotion.InitializeEmotions(0.2f);
         }
 
         /// <summary>
