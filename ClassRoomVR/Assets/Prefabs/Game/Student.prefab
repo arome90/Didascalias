@@ -2489,7 +2489,7 @@ GameObject:
   - component: {fileID: 3688080226689136329}
   - component: {fileID: 7014386623587385495}
   - component: {fileID: 6474379660071257}
-  - component: {fileID: 6340529644768285596}
+  - component: {fileID: 2166182782530620160}
   m_Layer: 0
   m_Name: Student
   m_TagString: Untagged
@@ -2964,7 +2964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b98eacd08740ef4ab2d7d6bfa958d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6340529644768285596
+--- !u!114 &2166182782530620160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2983,7 +2983,7 @@ MonoBehaviour:
   logTaskChanges: 0
   group: 0
   resetValuesOnRestart: 0
-  externalBehavior: {fileID: 0}
+  externalBehavior: {fileID: 11400000, guid: 9c9bec56fbff15444ad38450f35945fa, type: 2}
   mBehaviorSource:
     behaviorName: Behavior
     behaviorDescription: 
@@ -2992,11 +2992,7 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(469,30)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-11,150)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Cooldown","NodeData":{"Offset":"(10,120)"},"ID":2,"Name":"Cooldown","Instant":true,"SharedFloatduration":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":5},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.PriorityRandomSelector","NodeData":{"Offset":"(0,210)"},"ID":3,"Name":"Priority
-        Random Selector","Instant":true,"Singleprobability":0.5,"Int32seed":0,"BooleanuseSeed":false,"SharedFloatOpenness":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0.5},"SharedFloatConscientiousness":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0.5},"SharedFloatExtraversion":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0.5},"SharedFloatAgreeableness":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0.5},"SharedFloatNeuroticism":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0.5},"EmoComposite[]actions":[4,6],"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.EmoSetPrioritySequence","NodeData":{"Offset":"(-212.402618,197.105591)"},"ID":4,"Name":"Emo
-        Set Priority Sequence","Instant":true,"Singlepriority":0.8,"SingleOpennessInfluence":0.5,"SingleConscientiousnessInfluence":0.5,"SingleExtraversionInfluence":0.5,"SingleAgreeablenessInfluence":0.5,"SingleNeuroticismInfluence":0.5,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Wait","NodeData":{"Offset":"(4.35402775,163.1629)"},"ID":5,"Name":"Wait","Instant":true,"SharedFloatwaitTime":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1},"SharedBoolrandomWait":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedFloatrandomWaitMin":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1},"SharedFloatrandomWaitMax":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.EmoSetPrioritySequence","NodeData":{"Offset":"(260.570251,197.105591)"},"ID":6,"Name":"Emo
-        Set Priority Sequence","Instant":true,"Singlepriority":0.5,"SingleOpennessInfluence":0,"SingleConscientiousnessInfluence":0,"SingleExtraversionInfluence":0,"SingleAgreeablenessInfluence":0,"SingleNeuroticismInfluence":0,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Emo.EmoCallAction","NodeData":{"Offset":"(-38.8640671,169.617)"},"ID":7,"Name":"Emo
-        Call Action","Instant":true,"SharedGameObjecttargetGameObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":null},"EventSittingAnimationsn":"RiseHand"}]}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"Openness","IsShared":true,"SinglemValue":0.5},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"Conscientiousness","IsShared":true,"SinglemValue":0.5},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"Extraversion","IsShared":true,"SinglemValue":0.5},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"Agreeableness","IsShared":true,"SinglemValue":0.5},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"Neuroticism","IsShared":true,"SinglemValue":0.5}]}'
+      JSONSerialization: 
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -3005,7 +3001,7 @@ MonoBehaviour:
         unityObjects: []
         byteData: 
         byteDataArray: 
-      Version: 1.7.9
+      Version: 
   gizmoViewMode: 2
   showBehaviorDesignerGizmo: 1
 --- !u!1 &5831688827198029842

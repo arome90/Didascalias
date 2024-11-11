@@ -1,12 +1,12 @@
 using ClassRoomVR;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
 
     [TaskDescription("Determine Influence.")]
-    //[TaskIcon("{SkinColor}CooldownIcon.png")]
-
+    [TaskIcon("{SkinColor}CooldownIcon.png")]
     public class EmoInfluence : Decorator
     {
         [Range(0, 1)]
@@ -34,9 +34,12 @@ namespace BehaviorDesigner.Runtime.Tasks
         [Range(0, 1)]
         public float DisgustInfluence = 0;
 
+        public bool onlyPriority;
+        private TaskStatus executionStatus = TaskStatus.Inactive;
 
         public override float GetPriority()
         {
+            if(onlyPriority) return _priority;
 
             GameObject targetGameObject = this.gameObject;
             //para generalizar se puede crear un componente especifico TODO
@@ -53,6 +56,28 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 
             return (emotionInfluence+personalityInfluence)*_priority/ (cont1+cont2);
+        }
+
+        public override bool CanExecute()
+        {
+            return executionStatus == TaskStatus.Inactive;
+        }
+
+
+
+        public override void OnChildExecuted(TaskStatus childStatus)
+        {
+            executionStatus = childStatus;
+        }
+
+        public override TaskStatus OnUpdate()
+        {
+            return TaskStatus.Failure;
+        }
+
+        public override void OnEnd()
+        {
+            executionStatus = TaskStatus.Inactive;
         }
     }
 }
