@@ -185,7 +185,12 @@ public enum FieldOfVision
     /// <summary>
     /// Visión hacia el profesor.
     /// </summary>
-    Teacher = 64
+    Teacher = 64,
+
+    /// <summary>
+    /// Hacia delante
+    /// </summary>
+    Front = 128
 }
 
 [Flags]

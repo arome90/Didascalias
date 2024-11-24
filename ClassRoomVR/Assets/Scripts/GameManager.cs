@@ -207,8 +207,8 @@ namespace ClassRoomVR
         {
             return indexCurrentSett;
         }
-        public ClassSettings[] GetAvailableSettings() => availableSettings;
 
+        public ClassSettings[] GetAvailableSettings() => availableSettings;
 
         public bool GetSaveAudio() => saveAudio;
         private void Update()

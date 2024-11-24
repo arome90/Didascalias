@@ -5,6 +5,8 @@ using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
 using System.Linq;
 using TMPro;
+using Unity.Tutorials.Core.Editor;
+using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
@@ -19,8 +21,8 @@ namespace ClassRoomVR
             // Distraído
             BALANCEARSE,
             MOVIL,
-            GIRARSE,
             LANZAR_OBJETO,
+            GIRARSE,
             // Atento
             ABRIR,
             ESCRIBIR,
@@ -33,7 +35,7 @@ namespace ClassRoomVR
         {
             WRITING,
             HAND_RAISED,
-
+            TURNED_AROUND,
 
 
             NONE
@@ -51,11 +53,17 @@ namespace ClassRoomVR
         [SerializeField] private TextMeshProUGUI _studentNameText;
         [SerializeField] private TextMeshProUGUI _attentionText;
 
+        [SerializeField] private AudioClip[] _smallConversationClips;
+        [SerializeField] private AudioClip[] _maleLaughterClips;
+        [SerializeField] private AudioClip[] _femaleLaughterClips;
+
         private Desk _desk;
         private Animator _animator;
         private AudioSource _audioSource;
+        private AudioSource _loopSource = null;
+        private AudioSource _oneShootSource = null;
         private NavMeshAgent _navMeshAgent;
-        private new BoxCollider _collider;
+        private BoxCollider _collider;
 
         [SerializeField] private Transform _target;
         private Vector3 _actualTargetPosition;
@@ -107,6 +115,20 @@ namespace ClassRoomVR
                 .ToArray();
             var stateAnim = _animator.GetCurrentAnimatorStateInfo(0);
             _animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
+
+            _oneShootSource = gameObject.AddComponent<AudioSource>();
+            _oneShootSource.loop = false;
+            _oneShootSource.clip = null;
+            _oneShootSource.volume = .4f;
+            _oneShootSource.spatialBlend = 1.0f;
+
+            _loopSource = gameObject.AddComponent<AudioSource>();
+            _loopSource.loop = true;
+            _loopSource.clip = null;
+            _loopSource.volume = .4f;
+            _loopSource.spatialBlend = 1.0f;
+
+            _audioSource.spatialBlend = 1.0f;
         }
 
         /// <summary>
@@ -155,7 +177,8 @@ namespace ClassRoomVR
                 { FieldOfVision.Left, -transform.right },
                 { FieldOfVision.Window, transforms[0].position },
                 { FieldOfVision.Door, transforms[1].position },
-                { FieldOfVision.Teacher, Vector3.zero }
+                { FieldOfVision.Teacher, Vector3.zero },
+                { FieldOfVision.Front, transform.forward }
             };
         }
 
@@ -166,14 +189,6 @@ namespace ClassRoomVR
         {
             _behaviour.SetAttention();
             SetDirection(FieldOfVision.Teacher);
-        }
-
-        /// <summary>
-        /// Hace que el estudiante se distraiga.
-        /// </summary>
-        public void GetDistracted()
-        {
-            SetDirection(_distractedArray[Random.Range(0, _distractedArray.Length)]);
         }
 
         private void Update()
@@ -187,24 +202,139 @@ namespace ClassRoomVR
         }
 
         // Variables privadas para comenzar animaciones cuando no se está atendiendo a clase.
-        private bool _actionCooldownHasPassed = true;
+        private bool _outOfActionCooldown = true;
+        private bool _blockActions = false;
+        private bool _performingBadAction = false; // Variable usada para acciones que tienen
+                                                   // varias partes o continúan en el tiempo
+                                                   // Como "GIRARSE"
         private float _attetionThresholdDistracted = 25f; // Nivel de atención a partir del cual comenzarán acciones
+        private float _stopAttentionActionThreshold = 60.0f;
+        private float _atenttionActionThreshold = 65.0f;
         // Los valores que NO son de Debug son: 7.5f y 15f
         private float _minCDAction = 7.5f; // Mínimo tiempo entre acciones distraídas
         private float _maxCDAction = 15f; // Máximo tiempo entre acciones distraídas
         private float _actionCD; // Valor aletorio entre mínimo y máximo de cooldown
 
-        private IEnumerator PerformActionCooldown()
+        public IEnumerator PerformActionCooldown()
         {
-            _actionCooldownHasPassed = false;
+            _outOfActionCooldown = false;
             _actionCD = Random.Range(_minCDAction, _maxCDAction);
             yield return new WaitForSeconds(_actionCD);
-            _actionCooldownHasPassed = true;
+            _outOfActionCooldown = true;
         }
 
         private void OnDestroy()
         {
             StopAllCoroutines();
+        }
+
+        void EndGoodAction()
+        {
+            Desk.MATERIAL_STATE mState = _desk.getState();
+            switch (_animPlaying)
+            {
+                case AnimationState.HAND_RAISED:
+                    HandDown();
+                    break;
+                default: break;
+            }
+
+            switch (mState)
+            {
+                case Desk.MATERIAL_STATE.NOTEBOOK_OPENED:
+                    Close(true);
+                    break;
+                case Desk.MATERIAL_STATE.BOOK_AND_NOTEBOOK_OPENED:
+                    Close(true);
+                    break;
+                default: break;
+            }
+        }
+
+        void PerformBadAction()
+        {
+            // Si la clase no es en fila, no se tiene en cuenta la acción "GIRARSE"
+            ClassSettings settings = ClassManager.Instance.GetSettings();
+            int distractedAction = Random.Range((int)Actions.BALANCEARSE,
+                // Si estamos o no en modo fila, se añade la opción de "GIRARSE". Si no, no se añade.
+                settings.StructureMode == StructureMode.Fila ?
+                (int)Actions.GIRARSE + 1 : (int)Actions.LANZAR_OBJETO + 1);
+            if (distractedAction == (int)Actions.MOVIL)
+            {
+                SetDirection(FieldOfVision.Down);
+                // Ponemos un cooldown a la acción realizada antes de realizar cualquier otra
+                StartCoroutine(PerformActionCooldown());
+                PlayActionAnimation(distractedAction);
+            }
+            else if (distractedAction == (int)Actions.BALANCEARSE)
+            {
+                _desk.PlayChairAnimation();
+                // Ponemos un cooldown a la acción realizada antes de realizar cualquier otra
+                StartCoroutine(PerformActionCooldown());
+                PlayActionAnimation(distractedAction);
+            }
+            else if (distractedAction == (int)Actions.GIRARSE)
+            {
+                // Aquí vamos a poner que se gire y "bloquee" la acción del estudiante que tenga detrás
+                _performingBadAction = true;
+                _controller.HandleStudentTurning(this);
+            }
+        }
+
+        void PerformGoodAction()
+        { // Hacer cosas guays, como escribir o así, como si estuvieran tomando apuntes.
+          // int attentionAction = Random.Range((int)Actions.ABRIR, (int)Actions.LEVANTAR_MANO + 1);
+            if (_animPlaying != AnimationState.NONE) return;
+            int attentionAction = Random.Range(0, 101);
+            if (attentionAction < 3) // un 3% de las veces, hacemos que el/la alumn@ levante la mano
+            {
+                RaiseHand();
+            }
+            else if (!_desk.IsNotebookOpened() && attentionAction < 50)
+            {
+                Open(true);
+            }
+            else if (_desk.IsNotebookOpened()
+                && attentionAction < 70) // hacemos que el/la alumn@ escriba durante un rato
+            {
+                StartWriting();
+            }
+            // No se hace el Cooldown por defecto porque 
+            // las demás acciones de esta lista llevan su propio Cooldown
+            // cuando deban acabar
+            else StartCoroutine(PerformActionCooldown());
+        }
+
+        void ChangeToBadExpression()
+        {
+            int distractedExpression = Random.Range(0, 3);
+            Expresiones expression;
+            switch (distractedExpression)
+            {
+                case 0:
+                    expression = Expresiones.Enfadado;
+                    break;
+                case 1:
+                    expression = Expresiones.Quejarse;
+                    break;
+                case 2:
+                    expression = Expresiones.Dormido;
+                    break;
+                default:
+                    expression = Expresiones.Dormido;
+                    break;
+            }
+            StartCoroutine(_behaviour.ChangeExpression(expression));
+        }
+
+        private bool CanDoBadAction()
+        {
+            return _outOfActionCooldown && _behaviour.AttentionLevel <= _attetionThresholdDistracted;
+        }
+
+        private bool ShouldDismissGoodAction()
+        {
+            return _behaviour.AttentionLevel < _stopAttentionActionThreshold;
         }
 
         /// <summary>
@@ -214,85 +344,48 @@ namespace ClassRoomVR
         /// </summary>
         private void PerformAction()
         {
-            // Bajamos la mano si ha bajado nuestro nivel de atención
-            if(_animPlaying != AnimationState.NONE && _behaviour.AttentionLevel < 65f)
-            {
-                switch (_animPlaying)
-                {
-                    case AnimationState.WRITING:
-                        EndWriting();
-                        break;
+            if (_blockActions) 
+                return;
 
-                    case AnimationState.HAND_RAISED:
-                        HandDown();
-                        break;
-                }
-            }
-            if (_actionCooldownHasPassed && _behaviour.AttentionLevel <= _attetionThresholdDistracted)
+            // Si nuestro nivel de atención ha disminuído, pararemos
+            // aquellas acciones que tengan que ver con un alto nivel de atención
+            // como escribir, tener la libreta abierta, la mano levantada, etc.
+            if (ShouldDismissGoodAction())
+                EndGoodAction();
+
+            if (CanDoBadAction())
             {
-                int expressionOrAction = Random.Range(0, 2);
-                if(expressionOrAction == 0) // acción
+                if(_behaviour.AttentionLevel < 35.0f) // acción
+                    PerformBadAction();
+                else // Expresión
+                    ChangeToBadExpression();
+            }
+            else if (_performingBadAction && (_behaviour.AttentionLevel > 40.0f))
+            {
+                switch(_animPlaying)
                 {
-                    int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.LANZAR_OBJETO + 1);
-                    if (distractedAction == (int)Actions.MOVIL)
-                    {
-                        SetDirection(FieldOfVision.Down);
-                    }
-                    if(distractedAction == (int)Actions.BALANCEARSE)
-                    {
-                        _desk.PlayChairAnimation();
-                    }
-                    _animator.SetInteger("Accion", distractedAction);
+                    case AnimationState.TURNED_AROUND:
+                        BackFromTurning();
+                        _controller.HandleStudentBackFromTurning(this);
+                        break;
+                    default: break;
                 }
-                else if(expressionOrAction == 1) // Expresión
-                {
-                    int distractedExpression = Random.Range(0, 3);
-                    Expresiones expression;
-                    switch (distractedExpression)
-                    {
-                        case 0:
-                            expression = Expresiones.Enfadado;
-                            break;
-                        case 1:
-                            expression = Expresiones.Quejarse;
-                            break;
-                        case 2:
-                            expression = Expresiones.Dormido;
-                            break;
-                        default:
-                            expression = Expresiones.Dormido;
-                            break;
-                    }
-                    StartCoroutine(_behaviour.ChangeExpression(expression));
-                }
-                
+                _performingBadAction = false;
+                // Ponemos un cooldown a la acción realizada antes de realizar cualquier otra
                 StartCoroutine(PerformActionCooldown());
             }
-            else if (_actionCooldownHasPassed && _behaviour.AttentionLevel > 75f)
-            {
-                // Hacer cosas guays, como escribir o así, como si estuvieran tomando apuntes.
-                // int attentionAction = Random.Range((int)Actions.ABRIR, (int)Actions.LEVANTAR_MANO + 1);
-                int attentionAction = Random.Range(0, 101);
+            // AQUÍ HAY QUE HACER QUE SE VUELVE A SU POSICIÓN CUANDO ESTÁ GIRADO. PROBABLEMENTE CON OTRO
+            // THRESHOLD.
+            // HABRÍA QUE REFACTORIZAR TODA LA MOVIDIÑA
 
-                if (attentionAction < 5) // un 5% de las veces, hacemos que el/la alumn@ levante la mano
-                {
-                    RaiseHand();
-                }
-                else if (attentionAction < 70) // un 65% de las veces, hacemos que el/la alumn@ escriba durante un rato
-                {
-                    StartWriting();
-                }
-                else
-                {
-                    StartCoroutine(PerformActionCooldown());
-                }
-                _actionCooldownHasPassed = false;
+            else if (_outOfActionCooldown && _behaviour.AttentionLevel > _atenttionActionThreshold)
+            {
+                PerformGoodAction();
             }
-            _actionCooldownHasPassed = _actionCooldownHasPassed && _animPlaying == AnimationState.NONE;
+            _outOfActionCooldown = _outOfActionCooldown && _animPlaying == AnimationState.NONE;
         }
 
         #region Behaviour
-
         /// <summary>
         /// Genera texto hablado por el estudiante.
         /// </summary>
@@ -302,7 +395,92 @@ namespace ClassRoomVR
             _response.SpeakText(text);
         }
 
+        #region Turn
+        /// <summary>
+        /// Girarse para hablar con el compañero de detrás
+        /// </summary>
+        public void Turn(Student other)
+        {
+            _animator.SetBool("Turned", true);
+            _animPlaying = AnimationState.TURNED_AROUND;
+            PlayActionAnimation(Actions.GIRARSE);
+            StartCoroutine(PlayConversationSounds(other));
+        }
+
+        IEnumerator PlayConversationSounds(Student other)
+        {
+            yield return new WaitForSeconds(1.0f);
+
+            _loopSource.clip = _smallConversationClips[Random.Range(0, _smallConversationClips.Length)];
+            _loopSource.loop = true;
+            _loopSource.Play();
+
+            while(_animPlaying == AnimationState.TURNED_AROUND)
+            {
+                yield return new WaitForSeconds(Random.Range(5.0f, 20.0f));
+                int id = Laugh();
+                if (other.GetGender() == _gender) other.Laugh(id);
+                else other.Laugh();
+            }
+
+            _loopSource.Stop();
+            _loopSource.clip = null;
+        }
+
+        public int Laugh(int idNotAvaliable = -1)
+        {
+            AudioClip[] clips;
+
+            if (_gender == Gender.Men) { clips = _maleLaughterClips; }
+            else { clips = _femaleLaughterClips; }
+
+            int length = clips.Length;
+
+            int rand;
+            if (idNotAvaliable == -1) rand = Random.Range(0, _maleLaughterClips.Length);
+            else rand = Random.Range(idNotAvaliable, idNotAvaliable + length) % length;
+
+            _oneShootSource.clip = clips[rand];
+            _oneShootSource.loop = false;
+            _oneShootSource.Play();
+
+            return rand;
+        } 
+
+        IEnumerator StopTurnAfterSeconds(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            BackFromTurning();
+        }
+
+        public void LockOnOtherStudentTurn(Student student)
+        {
+            if(_behaviour.AttentionLevel > 40f)
+            {
+                // no le atiende y se enfada
+                StartCoroutine(_behaviour.ChangeExpression(Expresiones.Enfadado));
+                StartCoroutine(student.StopTurnAfterSeconds(2.0f));
+            }
+            else
+            {
+                // le atiende
+                SetDirection(FieldOfVision.Front);
+                LockActions();
+            }
+        }
+
+        /// <summary>
+        /// Volver a la posición de sentado original
+        /// </summary>
+        public void BackFromTurning()
+        {
+            _animPlaying = AnimationState.NONE;
+            _animator.SetBool("Turned", false);
+        }
+        #endregion
+
         #region Raise Hand
+
         /// <summary>
         /// Se levanta la mano
         /// </summary>
@@ -310,10 +488,10 @@ namespace ClassRoomVR
         {
             _controller.AddHandRaisedStudent(this);
             _animPlaying = AnimationState.HAND_RAISED;
+            PlayActionAnimation(Actions.LEVANTAR_MANO);
             _animator.SetBool("HandRaised", true);
-            _animator.SetInteger("Accion", (int)Actions.LEVANTAR_MANO);
-
         }
+
         /// <summary>
         /// Se baja la mano
         /// </summary>
@@ -328,18 +506,84 @@ namespace ClassRoomVR
         public void HandleCallOnRaisedHand()
         {
             if (_animPlaying != AnimationState.HAND_RAISED) return;
-
-            GenerateText("¿Podrías repetir lo último que has dicho?");
+            Didascalia_LocalizationManager.Instance.GetTranslation("handRaisedDoubt", Didascalia_LocalizationManager.TableCollections.AUDIO, out string traduction);
+            GenerateText(traduction);
 
             HandDown();
         }
         #endregion
+
+        #region OpenBook
+
+        bool isNotebook = false;
+        bool wantToOpen = true;
+
+        /// <summary>
+        /// Método que inicia la animación de abrir.
+        /// Para configurar qué se quiere abrir, usamos un parámetro en "Open".
+        /// "isNotebook" a true o false dependiendo de si abriremos una
+        /// libreta o un libro.
+        /// </summary>
+        public void Open(bool _isNotebook)
+        {
+            isNotebook = _isNotebook;
+            wantToOpen = true;
+            PlayActionAnimation(Actions.ABRIR);
+            StartCoroutine(PerformActionCooldown());
+        }
+        /// <summary>
+        /// Lo mismo que Open(bool), pero para cerrar.
+        /// </summary>
+        public void Close(bool _isNotebook)
+        {
+            isNotebook = _isNotebook;
+            wantToOpen = false;
+            PlayActionAnimation(Actions.ABRIR);
+        }
+
+        /// <summary>
+        /// Abrir o cerrar un libro o libreta.
+        /// Se llama desde un evento de animación 
+        /// al comenzar las animaciones de 
+        /// CerrarLibro y AbrirLibro del Estudiante
+        /// </summary>
+        public void CloseOrOpenBook()
+        {
+            if(wantToOpen)
+            {
+                if (isNotebook) _desk.OpenNoteBook();
+                else _desk.OpenBook();
+            }
+            else
+            {
+                if (isNotebook) _desk.CloseNoteBook();
+                else _desk.CloseBook();
+            }
+            
+            StartCoroutine(PerformActionCooldown());
+        }
+
+        public void CloseBook()
+        {
+            PlayActionAnimation(Actions.ABRIR);
+            _desk.CloseBook();
+            StartCoroutine(PerformActionCooldown());
+        }
+
+        public void CloseNoteBook()
+        {
+            PlayActionAnimation(Actions.ABRIR);
+            _desk.CloseNoteBook();
+            StartCoroutine(PerformActionCooldown());
+        }
+        #endregion
+
         #region Write
         private void StartWriting()
         {
             _animPlaying = AnimationState.WRITING;
             _animator.SetBool("Writing", true);
-            _animator.SetInteger("Accion", (int)Actions.ESCRIBIR);
+            PlayActionAnimation(Actions.ESCRIBIR);
             StartCoroutine(WriteForSeconds(UnityEngine.Random.Range(3.0f, 7.5f)));
         }
 
@@ -408,13 +652,14 @@ namespace ClassRoomVR
             _actualTargetPosition = transform.position + _targets[fieldOfVision] + transform.forward;
         }
 
-        /// <summary>
-        /// Reproduce una animación dada.
-        /// </summary>
-        /// <param name="stateName">Nombre del estado de la animación.</param>
-        public void PlayAnimation(string stateName)
+        private void PlayActionAnimation(int action)
         {
-            _animator.Play(stateName);
+            _animator.SetInteger("Accion", action);
+        }
+
+        private void PlayActionAnimation(Actions action)
+        {
+            PlayActionAnimation((int)action);
         }
 
         /// <summary>
@@ -637,6 +882,16 @@ namespace ClassRoomVR
 
                 yield return null;
             }
+        }
+
+        public void LockActions()
+        {
+            _blockActions = true;
+        }
+
+        public void UnlockActions()
+        {
+            _blockActions = false;
         }
     }
 }

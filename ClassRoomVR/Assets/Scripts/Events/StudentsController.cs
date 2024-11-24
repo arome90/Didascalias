@@ -1,12 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Text;
-using System.Globalization;
-using System;
 using System.Linq;
 using System.Collections;
-using MathNet.Numerics.Distributions;
-using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
@@ -327,9 +322,54 @@ namespace ClassRoomVR
             _raisedHandStudents = new List<Student>();  
         }
 
-        //private void doso()
-        //{
-        //    DoSomethingDisruptive(1);
-        //}
+        private void Update()
+        {
+            Debug.Log(_students);
+        }
+
+        public void OpenBooks()
+        {
+            foreach(KeyValuePair<string, Student> st in _students)
+            {
+                if(st.Value.GetComponent<StudentBehavior>().AttentionLevel > 25.0f)
+                {
+                    // este false indica que se quiere abrir el libro y no la libreta
+                    // refactorización tremendamente necesaria para decidir qué queremos abrir?
+                    // por supuesto.
+                    st.Value.Open(false);
+                }
+            }
+        }
+
+        // Parejas de estudiantes que están charlando.
+        // El estudiante Key está girado y hablando con el estudiando Value que
+        // tiene físicamente detrás
+        Dictionary<Student, Student> _turningPairs = new Dictionary<Student, Student>();
+
+        public void HandleStudentBackFromTurning(Student student)
+        {
+            if (_turningPairs.ContainsKey(student))
+            {
+                _turningPairs[student].UnlockActions();
+                _turningPairs.Remove(student);
+            }
+            else return;
+        }
+
+        public void HandleStudentTurning(Student student)
+        {
+            ClassSettings settings = ClassManager.Instance.GetSettings();
+            List<Student> st = _students.Values.ToList();
+            int index = st.IndexOf(student);
+            if (index > (_students.Count - 1) - settings.Columns) 
+            {
+                student.StartCoroutine(student.PerformActionCooldown());
+                return; 
+            }
+            Student targetStudent = st[index + settings.Columns];
+            student.Turn(targetStudent);
+            targetStudent.LockOnOtherStudentTurn(student);
+            _turningPairs.Add(student, targetStudent);
+        }
     }
 }

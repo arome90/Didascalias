@@ -193,7 +193,9 @@ namespace ClassRoomVR
                         break;
                     case "LLamarAlumno":
                         studentsSelected[0].HandleCallOnRaisedHand();
-
+                        break;
+                    case "SacarMaterial":
+                        st.OpenBooks();
                         break;
                     default:
                         intentName = "No hay intencion";

@@ -25,6 +25,8 @@ namespace ClassRoomVR
         private List<List<string>> _names;
         private ClassSettings _settings;
 
+        public ClassSettings GetSettings() { return _settings; }
+
         /// <summary>
         /// Método llamado al iniciar el script. Configura el entorno y, si es necesario, genera la clase.
         /// </summary>

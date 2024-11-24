@@ -9,9 +9,27 @@ namespace ClassRoomVR
     /// </summary>
     public class Desk : MonoBehaviour
     {
+        public enum MATERIAL_STATE
+        {
+            BOOK_OPENED,
+            NOTEBOOK_OPENED,
+            // esto seguro que se puede hacer con cosas de bits y sumando valores 
+            // por ejemplo:
+            // BOOK_OPENED = 0b01
+            // NOTEBOOK_OPENED = 0b10
+            // NONE = 0b00
+            // Entonces para comprobar si algo está abierto, se hace con la máscara de bits correspondiente.
+            // Se verá.
+            BOOK_AND_NOTEBOOK_OPENED,
+
+            NONE
+        }
+
         [SerializeField] private Animation _deskAnimation; // Referencia a la animación del escritorio
         [SerializeField] private Animation _chairAnimation; // Referencia a la animación de la silla
         [SerializeField] private NavMeshObstacle _chairObstacle; // Referencia al obstáculo de la silla
+
+        [SerializeField] private MaterialManager _materialManager;
 
         private int _deskId; // Número de identificación del escritorio
 
@@ -23,6 +41,8 @@ namespace ClassRoomVR
             get => _deskId;
             set => _deskId = value;
         }
+
+        MATERIAL_STATE _state;
 
         /// <summary>
         /// Evento que se invoca cuando ocurre una colisión con otro escritorio.
@@ -47,15 +67,64 @@ namespace ClassRoomVR
         private void Start()
         {
             // Llena la lista de nombres de clips de animación del escritorio
-            if (_deskAnimation != null)
+            if (!_deskAnimation)
             {
                 foreach (AnimationState animationState in _deskAnimation)
                 {
                     _deskAnimationClipNames.Add(animationState.name);
                 }
             }
+
+            if(!_materialManager)
+            {
+                // Esto no es muy eficiente para la carga de escenas, intentaremos que siempre está
+                // asignado desde el inspector
+                _materialManager = GetComponentInChildren<MaterialManager>();
+            }
         }
 
+        public bool IsNotebookOpened()
+        {
+            return (_state == MATERIAL_STATE.NOTEBOOK_OPENED || _state == MATERIAL_STATE.BOOK_AND_NOTEBOOK_OPENED);
+        }
+        public MATERIAL_STATE getState() { return _state; }
+
+        /// <summary>
+        /// Comienza la animación de abrir el libro que está sobre la mesa.
+        /// </summary>
+        public void OpenBook()
+        {
+            _state = MATERIAL_STATE.BOOK_OPENED;
+            _materialManager.GetBook().Open();
+        }
+
+        public void OpenNoteBook()
+        {
+            if(_state == MATERIAL_STATE.BOOK_OPENED)
+            {
+                _state = MATERIAL_STATE.BOOK_AND_NOTEBOOK_OPENED;
+            }
+            else _state = MATERIAL_STATE.NOTEBOOK_OPENED;
+            _materialManager.GetNotebook().Open();
+        }
+        public void CloseBook()
+        {
+            if (_state == MATERIAL_STATE.BOOK_AND_NOTEBOOK_OPENED)
+            {
+                _state = MATERIAL_STATE.NOTEBOOK_OPENED;
+            }
+            else _state = MATERIAL_STATE.NONE;
+            _materialManager.GetBook().Close();
+        }
+        public void CloseNoteBook()
+        {
+            if (_state == MATERIAL_STATE.BOOK_AND_NOTEBOOK_OPENED)
+            {
+                _state = MATERIAL_STATE.BOOK_OPENED;
+            }
+            else _state = MATERIAL_STATE.NONE;
+            _materialManager.GetNotebook().Close();
+        }
         /// <summary>
         /// Obtiene la posición del estudiante que está sentado en el escritorio.
         /// </summary>
