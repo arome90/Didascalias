@@ -5,8 +5,6 @@ using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
 using System.Linq;
 using TMPro;
-using Unity.Tutorials.Core.Editor;
-using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
@@ -418,9 +416,12 @@ namespace ClassRoomVR
             while(_animPlaying == AnimationState.TURNED_AROUND)
             {
                 yield return new WaitForSeconds(Random.Range(5.0f, 20.0f));
-                int id = Laugh();
-                if (other.GetGender() == _gender) other.Laugh(id);
-                else other.Laugh();
+                if(_animPlaying == AnimationState.TURNED_AROUND)
+                {
+                    int id = Laugh();
+                    if (other.GetGender() == _gender) other.Laugh(id);
+                    else other.Laugh();
+                }
             }
 
             _loopSource.Stop();
