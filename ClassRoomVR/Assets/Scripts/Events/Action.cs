@@ -52,7 +52,7 @@ namespace ClassRoomVR
 
             if (_disruptiveAction.Laughter)
             {
-                Invoke(nameof(PlayLaughter), 2.0f);
+                Invoke(nameof(PlayLaughter), 4.0f);
             }
 
             if (_textMeshPro != null)
@@ -118,7 +118,7 @@ namespace ClassRoomVR
         /// <summary>
         /// Método para controlar el camino de acercarse y hablar bien.
         /// </summary>
-        public void Approach()
+        public void Near()
         {
             _problematicStudents.ForEach(student =>
             {

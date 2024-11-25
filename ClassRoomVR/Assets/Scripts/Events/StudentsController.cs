@@ -322,11 +322,6 @@ namespace ClassRoomVR
             _raisedHandStudents = new List<Student>();  
         }
 
-        private void Update()
-        {
-            Debug.Log(_students);
-        }
-
         public void OpenBooks()
         {
             foreach(KeyValuePair<string, Student> st in _students)
@@ -358,6 +353,8 @@ namespace ClassRoomVR
 
         public void HandleStudentTurning(Student student)
         {
+            if (_turningPairs.ContainsKey(student)) return;
+            if (student.GetState() != State.Sitting) return;
             ClassSettings settings = ClassManager.Instance.GetSettings();
             List<Student> st = _students.Values.ToList();
             int index = st.IndexOf(student);
@@ -367,6 +364,8 @@ namespace ClassRoomVR
                 return; 
             }
             Student targetStudent = st[index + settings.Columns];
+            if(targetStudent.GetState() != State.Sitting) { return; }
+
             student.Turn(targetStudent);
             targetStudent.LockOnOtherStudentTurn(student);
             _turningPairs.Add(student, targetStudent);

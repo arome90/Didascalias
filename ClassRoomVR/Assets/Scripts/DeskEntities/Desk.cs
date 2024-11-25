@@ -67,12 +67,9 @@ namespace ClassRoomVR
         private void Start()
         {
             // Llena la lista de nombres de clips de animación del escritorio
-            if (!_deskAnimation)
+            foreach (AnimationState animationState in _deskAnimation)
             {
-                foreach (AnimationState animationState in _deskAnimation)
-                {
-                    _deskAnimationClipNames.Add(animationState.name);
-                }
+                _deskAnimationClipNames.Add(animationState.name);
             }
 
             if(!_materialManager)

@@ -342,7 +342,7 @@ namespace ClassRoomVR
         /// </summary>
         private void PerformAction()
         {
-            if (_blockActions) 
+            if (_blockActions || _state != State.Sitting) 
                 return;
 
             // Si nuestro nivel de atención ha disminuído, pararemos
