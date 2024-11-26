@@ -10,7 +10,7 @@ public class Emotion
     public float Surprise { get;  set; }
     public float Disgust { get;  set; }
 
-    private System.Random random;
+    private Random random;
 
     public Emotion()
     {
@@ -19,7 +19,7 @@ public class Emotion
 
     public void InitializeEmotions(float max)
     {
-        Joy = (float)random.NextDouble()*max;
+        Joy = (float)random.NextDouble() * max;
         Sadness = (float)random.NextDouble() * max;
         Fear = (float)random.NextDouble() * max;
         Anger = (float)random.NextDouble() * max;

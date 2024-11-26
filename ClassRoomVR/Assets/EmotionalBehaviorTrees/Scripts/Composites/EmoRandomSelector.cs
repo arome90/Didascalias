@@ -9,7 +9,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                      "execution in a random order. Other than that the random selector class is the same as the selector class. It will continue running tasks " +
                      "until a task completes successfully. If no child tasks return success then it will return failure.")]
     [TaskIcon("{SkinColor}RandomSelectorIcon.png")]
-    public class EmoRandomSelector : EmoComposite
+    public class EmoRandomSelector : Composite
     {
         [Tooltip("Seed the random number generator to make things easier to debug")]
         public int seed = 0;
@@ -23,7 +23,7 @@ namespace BehaviorDesigner.Runtime.Tasks
         // The task status of the last child ran.
         private TaskStatus executionStatus = TaskStatus.Inactive;
         [Tooltip("Do we want to use the seed?")]
-        public EmoComposite childs;
+        //public EmoComposite childs;
 
         private float priority = 0f;
 
@@ -54,7 +54,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             priority = 1.0f;
             for (int i = 0; i < children.Count; ++i)
             {
-                priority *= (1.0f - children[i].GetPriority());
+                priority *= 1.0f - children[i].GetPriority();
             }
             priority = 1.0f - priority;
             // Randomize the indecies

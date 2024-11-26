@@ -5,7 +5,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 {
     [TaskCategory("Unity/Animator")]
     [TaskDescription("Sets the int parameter on an animator. Returns Success.")]
-    public class SetIntegerParameter : Action
+    public class ExecuteBehavior : Action
     {
         [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
@@ -23,7 +23,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject) {
+            if (currentGameObject != prevGameObject)
+            {
                 animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
             }
@@ -31,7 +32,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
         public override TaskStatus OnUpdate()
         {
-            if (animator == null) {
+            if (animator == null)
+            {
                 Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
@@ -40,7 +42,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
             int prevValue = animator.GetInteger(hashID);
             animator.SetInteger(hashID, intValue.Value);
-            if (setOnce) {
+            if (setOnce)
+            {
                 StartCoroutine(ResetValue(prevValue));
             }
 

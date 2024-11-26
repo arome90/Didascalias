@@ -12,9 +12,9 @@ namespace BehaviorDesigner.Runtime.Tasks
         [Range(0, 1)]
         public float _priority = 1;
         [Range(0, 1)]
-        public float OpennessInfluence=0;
+        public float OpennessInfluence = 0;
         [Range(0, 1)]
-        public float ConscientiousnessInfluence=0;
+        public float ConscientiousnessInfluence = 0;
         [Range(0, 1)]
         public float ExtraversionInfluence = 0;
         [Range(0, 1)]
@@ -39,12 +39,12 @@ namespace BehaviorDesigner.Runtime.Tasks
 
         public override float GetPriority()
         {
-            if(onlyPriority) return _priority;
+            if (onlyPriority) return _priority;
 
-            GameObject targetGameObject = this.gameObject;
+            GameObject targetGameObject = gameObject;
             //para generalizar se puede crear un componente especifico TODO
             Emotion emotion = targetGameObject.GetComponent<Student>().GetEmotion();
-            Personality personality= targetGameObject.GetComponent<Student>().getPersonality();
+            Personality personality = targetGameObject.GetComponent<Student>().getPersonality();
             float emotionInfluence = emotion.Joy * JoyInfluence + emotion.Sadness * SadnessInfluence +
                 emotion.Fear * FearInfluence + emotion.Anger * AngerInfluence +
                 emotion.Surprise * SurpriseInfluence + emotion.Disgust * DisgustInfluence;
@@ -55,7 +55,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             float cont2 = OpennessInfluence + AgreeablenessInfluence + ConscientiousnessInfluence + ExtraversionInfluence + NeuroticismInfluence;
 
 
-            return (emotionInfluence+personalityInfluence)*_priority/ (cont1+cont2);
+            return (emotionInfluence + personalityInfluence) * _priority / (cont1 + cont2);
         }
 
         public override bool CanExecute()
