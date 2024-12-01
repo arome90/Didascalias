@@ -8,6 +8,11 @@ public class CharacterPropsSpawner : MonoBehaviour
 {
     [SerializeField] private CharacterProps _characterProps; // Propiedades de los complementos del personaje
 
+    public CharacterProps GetCharacterProps()
+    {
+       return  _characterProps;
+    }
+
     private void Start()
     {
         SpawnProps();

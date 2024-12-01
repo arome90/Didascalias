@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using ClassRoomVR;
 
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 {
@@ -18,10 +19,12 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
         private int hashID;
         private Animator animator;
+        private StudentActions action;
         private GameObject prevGameObject;
 
         public override void OnStart()
         {
+            action = GetComponent<StudentActions>();
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject) {
                 animator = currentGameObject.GetComponent<Animator>();
@@ -31,15 +34,17 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
         public override TaskStatus OnUpdate()
         {
-            if (animator == null) {
-                Debug.LogWarning("Animator is null");
+            if (action == null) {
+                Debug.LogWarning("Action is null");
                 return TaskStatus.Failure;
             }
 
             hashID = Animator.StringToHash(paramaterName.Value);
 
-            int prevValue = animator.GetInteger(hashID);
-            animator.SetInteger(hashID, intValue.Value);
+            int prevValue = action.getAction();
+            action.PlaySitAction((EventSittingAnimations)(intValue.Value));
+
+            // animator.SetInteger(hashID, intValue.Value);
             if (setOnce) {
                 StartCoroutine(ResetValue(prevValue));
             }
@@ -50,7 +55,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
         public IEnumerator ResetValue(int origVale)
         {
             yield return null;
-            animator.SetInteger(hashID, origVale);
+            action.PlaySitAction((EventSittingAnimations)(origVale));
+           // animator.SetInteger(hashID, origVale);
         }
 
         public override void OnReset()

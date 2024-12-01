@@ -2,6 +2,7 @@ using BehaviorDesigner.Runtime.Tasks.Unity.Math;
 using MathNet.Numerics.Distributions;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ClassRoomVR
@@ -12,6 +13,7 @@ namespace ClassRoomVR
     public class StudentActions : MonoBehaviour
     {
         private Student student;
+        private Vector3 studentTr;
         private Animator animator;
         private const float BlinkIntervalMin = 2f;
         private const float BlinkIntervalMax = 3f;
@@ -19,14 +21,23 @@ namespace ClassRoomVR
         private float[] _blendShapeWeights;
         private const int SkinnedMeshIndex = 5;
         EventSittingAnimations sittingAnim;
+        [SerializeField]
+        private GameObject phone;
         private void Start()
         {
+            studentTr =GetComponent<Transform>().transform.position;
             student = GetComponent<Student>();
             animator = GetComponent<Animator>();
             StartCoroutine(RandomBlink());
             _blendShapeWeights = new float[6];
             sittingAnim = EventSittingAnimations.None;
             StartCoroutine(CallLineAfterDelay());
+            phone.SetActive(false);
+
+            //REFACTOR
+            //props.GetCharacterProps().BoneAttachments[1].Complements[0].mesh.GameObject().SetActive(false);
+            _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
+            SetBlendShape(Expressions.Sleep, 0);
 
         }
         /// <summary>
@@ -35,7 +46,7 @@ namespace ClassRoomVR
         private IEnumerator CallLineAfterDelay()
         {
             yield return new WaitForSeconds(1f);
-            _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
+           // _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
         }
         /// <summary>
         /// 
@@ -43,82 +54,59 @@ namespace ClassRoomVR
 
         /// <param name="onComplete">Acción a ejecutar al finalizar la corrutina.</param>
         /// <returns>Retorna un IEnumerator necesario para las corrutinas.</returns>
-        public IEnumerator PlaySitAction(EventSittingAnimations anim)
+        public void PlaySitAction(EventSittingAnimations anim)
         {
             sittingAnim = anim;
 
             switch (anim)
             {
-                case EventSittingAnimations.Yelling:
+                case EventSittingAnimations.None:
                     {
-                        animator.SetInteger("Action", (int)anim);
-
-                        yield return new WaitForSeconds(5.0f);
-
+                        phone.SetActive(false);
                         animator.SetInteger("Action", -1);
                         animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
                         sittingAnim = EventSittingAnimations.None;
+                        SetBlendShape(Expressions.Sleep, 0);
+                        StartCoroutine(RandomBlink());;
+                        GetComponent<Transform>().SetPositionAndRotation(studentTr, Quaternion.identity);
+                        Debug.Log("backToNormal");
+
+                        break;
+                    }
+                case EventSittingAnimations.Yelling:
+                    {
+                        animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.RiseHand:
                     {
                         animator.SetInteger("Action", (int)anim);
-
-                        //  yield return new WaitForSeconds(Random.Range(0.0f, 5.0f));
-
-                        //  student.GenerateText($"Profe, una duda");
-
-                        yield return new WaitForSeconds(Random.Range(10.0f, 20.0f));
-
-                        animator.SetInteger("Action", -1);
-                        animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
-                        sittingAnim = EventSittingAnimations.None;
                         break;
                     }
                 case EventSittingAnimations.PlayingPhone:
                     {
                         animator.SetInteger("Action", (int)anim);
-
-                        yield return new WaitForSeconds(Random.Range(10.0f, 20.0f));
-
-                        animator.SetInteger("Action", -1);
-                        animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
-                        sittingAnim = EventSittingAnimations.None;
+                        phone.SetActive(true);
                         break;
                     }
                 case EventSittingAnimations.Swinging:
                     {
-                        animator.SetInteger("Action", (int)anim);
+                        animator.SetInteger("Action", (int)anim); 
                       
-                        yield return new WaitForSeconds(Random.Range(10.0f, 20.0f));
-
-                        animator.SetInteger("Action", -1);
-                        animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
-                        sittingAnim = EventSittingAnimations.None;
                         break;
                     }
                 case EventSittingAnimations.Sleeping:
                     {
                         animator.SetInteger("Action", (int)anim);
-                        SetBlendShape(Expressions.CloseEyes, 100f);
-                        yield return new WaitForSeconds(Random.Range(10.0f, 20.0f));
+                        SetBlendShape(Expressions.Sleep, 100f);
 
-                        animator.SetInteger("Action", -1);
-                        animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
-                        sittingAnim = EventSittingAnimations.None;
-                        SetBlendShape(Expressions.CloseEyes, 0f);
-                        StartCoroutine(RandomBlink());
+
+                        Debug.Log("sleep");
                         break;
                     }
                 case EventSittingAnimations.Attending:
                     {
                         animator.SetInteger("Action", (int)anim);
-
-                        yield return new WaitForSeconds(Random.Range(10.0f, 20.0f));
-
-                        animator.SetInteger("Action", -1);
-                        animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
-                        sittingAnim = EventSittingAnimations.None;
                         break;
                     }
             }
@@ -126,6 +114,10 @@ namespace ClassRoomVR
 
         }
 
+        public int getAction()
+        {
+            return (int)sittingAnim;
+        }
 
         /// <summary>
         /// Maneja el parpadeo aleatorio del estudiante.
