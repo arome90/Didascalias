@@ -58,18 +58,18 @@ namespace ClassRoomVR
         {
             sittingAnim = anim;
 
+            phone.SetActive(false);
+            SetBlendShape(Expressions.Sleep, 0);
+            StartCoroutine(RandomBlink());
+            //GetComponent<Transform>().SetPositionAndRotation(studentTr, Quaternion.identity);
+            Debug.Log(gameObject.name + " " + anim.ToString());
             switch (anim)
             {
                 case EventSittingAnimations.None:
                     {
-                        phone.SetActive(false);
                         animator.SetInteger("Action", -1);
                         animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
                         sittingAnim = EventSittingAnimations.None;
-                        SetBlendShape(Expressions.Sleep, 0);
-                        StartCoroutine(RandomBlink());;
-                        GetComponent<Transform>().SetPositionAndRotation(studentTr, Quaternion.identity);
-                        Debug.Log("backToNormal");
 
                         break;
                     }
@@ -100,8 +100,6 @@ namespace ClassRoomVR
                         animator.SetInteger("Action", (int)anim);
                         SetBlendShape(Expressions.Sleep, 100f);
 
-
-                        Debug.Log("sleep");
                         break;
                     }
                 case EventSittingAnimations.Attending:

@@ -159,7 +159,6 @@ namespace ClassRoomVR
         /// </summary>
         public void GetDistracted()
         {
-            Debug.Log(_distractedArray.Length);
             SetDirection(_distractedArray[Random.Range(0, _distractedArray.Length)]);
         }
 
