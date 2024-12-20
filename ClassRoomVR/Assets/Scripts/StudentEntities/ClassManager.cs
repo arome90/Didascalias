@@ -25,6 +25,8 @@ namespace ClassRoomVR
         private ClassInfo _classInfo;
         private List<List<string>> _names;
         private ClassSettings _settings;
+       
+
 
         [SerializeField] Vector3 studentSittingPlaceOffset = new Vector3(0f, 0f, -0.15f);
 
@@ -49,6 +51,8 @@ namespace ClassRoomVR
         {
             SetupClassroom();
             GenerateStudents();
+            Debug.Log("fhttthdfffffffffffffffffff");
+            ClimateManager.Instance.SetStudents(_students);
             StartClass();
         }
 
@@ -71,6 +75,7 @@ namespace ClassRoomVR
                 _classInfo.FemaleStudentNames.ToList(),
                 _classInfo.MaleStudentNames.ToList()
             };
+           
         }
 
         /// <summary>
