@@ -1932,6 +1932,7 @@ GameObject:
   - component: {fileID: 1472140260}
   - component: {fileID: 1472140259}
   - component: {fileID: 1472140258}
+  - component: {fileID: 1472140263}
   m_Layer: 0
   m_Name: Students
   m_TagString: Untagged
@@ -2088,6 +2089,7 @@ MonoBehaviour:
   _player: {fileID: 3625330677312976098}
   _body: {fileID: 7509973540603057216, guid: f7f04ba306373a446aa0057cb96c6935, type: 3}
   _generateOnStart: 1
+  studentSittingPlaceOffset: {x: 0, y: 0, z: -0.15}
 --- !u!4 &1472140262
 Transform:
   m_ObjectHideFlags: 0
@@ -2103,6 +2105,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1472140263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472140257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 126cb956b9cb52a43915be55a3ed3ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sittingBehaviorsJsonPath: jsonResources/SittingBehaviors.json
 --- !u!1001 &1491266296
 PrefabInstance:
   m_ObjectHideFlags: 0

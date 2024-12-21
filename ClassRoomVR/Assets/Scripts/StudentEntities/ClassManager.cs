@@ -51,7 +51,6 @@ namespace ClassRoomVR
         {
             SetupClassroom();
             GenerateStudents();
-            Debug.Log("fhttthdfffffffffffffffffff");
             ClimateManager.Instance.SetStudents(_students);
             StartClass();
         }

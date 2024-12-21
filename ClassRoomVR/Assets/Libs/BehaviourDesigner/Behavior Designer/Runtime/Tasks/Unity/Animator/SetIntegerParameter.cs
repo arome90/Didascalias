@@ -21,6 +21,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
         private Animator animator;
         private StudentActions action;
         private GameObject prevGameObject;
+        string studentName;
 
         public override void OnStart()
         {
@@ -43,7 +44,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
             int prevValue = action.getAction();
             action.PlaySitAction((EventSittingAnimations)(intValue.Value));
-
+            ClimateManager.Instance.SetWeight(gameObject.name, (EventSittingAnimations)(intValue.Value));
             // animator.SetInteger(hashID, intValue.Value);
             if (setOnce) {
                 StartCoroutine(ResetValue(prevValue));

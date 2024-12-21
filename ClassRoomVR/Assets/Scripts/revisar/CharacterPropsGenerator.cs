@@ -114,9 +114,6 @@ public class CharacterPropsSpawner : MonoBehaviour
             return;
         }
 
-        
-
-
 
         GameObject propObject = new GameObject($"{boneName}_Prop");
         MeshFilter meshFilter = propObject.AddComponent<MeshFilter>();
@@ -124,9 +121,12 @@ public class CharacterPropsSpawner : MonoBehaviour
 
         MeshRenderer meshRenderer = propObject.AddComponent<MeshRenderer>();
         meshRenderer.material = complement.material;
+        Debug.Log("sd");
         if (complement.material.HasProperty("_Color"))
         {
-            meshRenderer.material.SetColor("_Color", complement.material.GetColor("_Color"));
+            Debug.Log("aaaaa");
+
+            meshRenderer.material.SetColor("_Color", colorIndex);
         }
 
         propObject.transform.SetParent(bone, false);
