@@ -1,3 +1,5 @@
+using BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityParticleSystem;
 using ClassRoomVR;
 using System.Collections;
 using UnityEngine;
@@ -42,8 +44,8 @@ public class FadeScreen : MonoBehaviour
     /// Initiates the fade-out effect.
     /// </summary>
     public void FadeOut()
-    {
-        Fade(0f, 1f);
+    {//TODO
+       // Fade(0f, 1f);
     }
 
     /// <summary>
@@ -54,8 +56,10 @@ public class FadeScreen : MonoBehaviour
     /// <param name="onComplete">Callback action to invoke upon completion.</param>
     public void Fade(float alphaIn, float alphaOut, System.Action onComplete = null)
     {
+     
         gameObject.SetActive(true);
-        StartCoroutine(FadeRoutine(alphaIn, alphaOut, onComplete));
+        if (gameObject.active)
+            StartCoroutine(FadeRoutine(alphaIn, alphaOut, onComplete));
     }
 
     /// <summary>
