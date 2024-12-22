@@ -23,6 +23,11 @@ namespace ClassRoomVR
         [SerializeField] private float _attentionSubtraction = 20f;
         [SerializeField] private float _distanceFactorAddition = 2.1f;
         [SerializeField] private float _distanceFactorSubtraction = 2.0f;
+        
+        [SerializeField] private float _conscientiousnessInfluence = 1f;
+        [SerializeField] private float _agreeablenessInfluence = 0.4f;
+        [SerializeField] private float _neuroticismInfluence = 0.2f;
+        [SerializeField] private float range = 20f;
 
         private Student _student;
         private Transform _player;
@@ -40,11 +45,11 @@ namespace ClassRoomVR
 
         public void InitializeAttention(Personality personality)
         {
-            _attentionLevel += (personality.Conscientiousness < 0.5 ? -personality.Conscientiousness : personality.Conscientiousness) * _attentionAddition;
-            _attentionLevel += (personality.Agreeableness < 0.5 ? -personality.Agreeableness : personality.Agreeableness) * _attentionAddition * 0.4f;
-            _attentionLevel += (personality.Neuroticism < 0.5 ? -personality.Neuroticism : personality.Neuroticism) * _attentionAddition * 0.2f;
+            _attentionLevel += (personality.Conscientiousness < 0.5 ? -personality.Conscientiousness : personality.Conscientiousness) * _attentionAddition * _conscientiousnessInfluence;
+            _attentionLevel += (personality.Agreeableness < 0.5 ? -personality.Agreeableness : personality.Agreeableness) * _attentionAddition * _agreeablenessInfluence;
+            _attentionLevel += (personality.Neuroticism < 0.5 ? -personality.Neuroticism : personality.Neuroticism) * _attentionAddition * _neuroticismInfluence;
 
-            _attentionLevel += Random.Range(-1.0f, 1.0f) * 20f;
+            _attentionLevel += Random.Range(-1.0f, 1.0f) * range;
             _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }
 

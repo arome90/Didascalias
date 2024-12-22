@@ -2576,6 +2576,10 @@ MonoBehaviour:
   _attentionSubtraction: 20
   _distanceFactorAddition: 2.1
   _distanceFactorSubtraction: 2
+  _conscientiousnessInfluence: 1
+  _agreeablenessInfluence: 0.4
+  _neuroticismInfluence: 0.2
+  range: 0.2
 --- !u!195 &8089880809311193109
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2983,7 +2987,7 @@ MonoBehaviour:
   pauseWhenDisabled: 0
   restartWhenComplete: 0
   logTaskChanges: 0
-  group: 0
+  group: -1
   resetValuesOnRestart: 0
   externalBehavior: {fileID: 11400000, guid: 9c9bec56fbff15444ad38450f35945fa, type: 2}
   mBehaviorSource:

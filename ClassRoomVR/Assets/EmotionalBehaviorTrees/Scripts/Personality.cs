@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using ClassRoomVR;
+using UnityEngine;
 
 // Based on the big 5 personality traits model
 public class Personality
@@ -13,11 +14,13 @@ public class Personality
     public float Neuroticism { get; private set; }
     public float Openness { get; private set; }
 
-    private Random random;
+    private System.Random random;
+    [SerializeField]
+    private float attentionThreshold = 0.3f;
 
     public Personality()
     {
-        random = new Random();
+        random = new System.Random();
         InitializePersonality();
     }
 
@@ -32,7 +35,7 @@ public class Personality
 
     public void InfluenceEmotions(Emotion emotion, StudentBehavior studentBehavior)
     {
-        if (studentBehavior.AttentionLevel < 0.3f) return;
+        if (studentBehavior.AttentionLevel < attentionThreshold) return;
         emotion.Joy = Extraversion * 0.9f + Agreeableness * 0.6f + Conscientiousness * 0.6f + (1 - Neuroticism) * 0.8f + Openness * 0.6f;
         emotion.Sadness = Neuroticism * 0.8f + (1 - Extraversion) * 0.3f;
         emotion.Fear = Neuroticism * 0.8f + (1 - Extraversion) * 0.3f;
