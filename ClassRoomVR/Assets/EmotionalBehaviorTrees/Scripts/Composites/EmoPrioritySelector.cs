@@ -6,7 +6,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                       "Instead of running the tasks sequentially from left to right within the tree, the priority selector will ask the task what its priority is to determine the order. " +
                       "The higher priority tasks have a higher chance at being run first.")]
     [TaskIcon("{SkinColor}PrioritySelectorIcon.png")]
-    public class EmoPrioritySelector : EmoComposite
+    public class EmoPrioritySelector : Composite
     {
         // The index of the child that is currently running or is about to run.
         private int currentChildIndex = 0;

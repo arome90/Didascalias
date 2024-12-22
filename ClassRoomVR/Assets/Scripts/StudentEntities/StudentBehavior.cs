@@ -36,10 +36,17 @@ namespace ClassRoomVR
             _player = Camera.main.transform;
        
             InvokeRepeating(nameof(MakeDecision), _decisionTime, _decisionTime);
-           
         }
 
-   
+        public void InitializeAttention(Personality personality)
+        {
+            _attentionLevel += (personality.Conscientiousness < 0.5 ? -personality.Conscientiousness : personality.Conscientiousness) * _attentionAddition;
+            _attentionLevel += (personality.Agreeableness < 0.5 ? -personality.Agreeableness : personality.Agreeableness) * _attentionAddition * 0.4f;
+            _attentionLevel += (personality.Neuroticism < 0.5 ? -personality.Neuroticism : personality.Neuroticism) * _attentionAddition * 0.2f;
+
+            _attentionLevel += Random.Range(-1.0f, 1.0f) * 20f;
+            _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
+        }
 
         private void MakeDecision()
         {

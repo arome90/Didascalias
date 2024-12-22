@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using ClassRoomVR;
 
 // Based on the big 5 personality traits model
 public class Personality
@@ -29,8 +30,9 @@ public class Personality
         Openness = (float)random.NextDouble();
     }
 
-    public void InfluenceEmotions(Emotion emotion)
+    public void InfluenceEmotions(Emotion emotion, StudentBehavior studentBehavior)
     {
+        if (studentBehavior.AttentionLevel < 0.3f) return;
         emotion.Joy = Extraversion * 0.9f + Agreeableness * 0.6f + Conscientiousness * 0.6f + (1 - Neuroticism) * 0.8f + Openness * 0.6f;
         emotion.Sadness = Neuroticism * 0.8f + (1 - Extraversion) * 0.3f;
         emotion.Fear = Neuroticism * 0.8f + (1 - Extraversion) * 0.3f;

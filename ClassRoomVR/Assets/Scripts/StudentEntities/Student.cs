@@ -107,6 +107,7 @@ namespace ClassRoomVR
             _personality = new Personality();
             _emotion= new Emotion();
             _emotion.InitializeEmotions(0.2f);
+            _behaviour.InitializeAttention(_personality);
         }
 
         /// <summary>
