@@ -24,6 +24,7 @@ namespace ClassRoomVR
         [SerializeField] private string sittingBehaviorsJsonPath;
         void Start()
         {
+            SetStudents(ClassManager.Instance.getStudents());
             _environmentalClimate = 0.0f;
             LoadBehaviorValues();
 
@@ -86,7 +87,7 @@ namespace ClassRoomVR
         public void SetWeight(string studentName, EventSittingAnimations behavior)
         {
             // Si el estudiante existe en el diccionario
-            if (studentBehaviorWeights.ContainsKey(studentName))
+            if (studentBehaviorWeights!=null && studentBehaviorWeights.ContainsKey(studentName))
             {
                 float weight = GetBehaviorValue(behavior);
                 // Ajustar el peso del estudiante

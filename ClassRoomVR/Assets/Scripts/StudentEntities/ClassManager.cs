@@ -30,6 +30,11 @@ namespace ClassRoomVR
 
         [SerializeField] Vector3 studentSittingPlaceOffset = new Vector3(0f, 0f, -0.15f);
 
+        public Dictionary<string, Student> getStudents()
+        {
+            return _students;
+        }
+
         /// <summary>
         /// Método llamado al iniciar el script. Configura el entorno y, si es necesario, genera la clase.
         /// </summary>
@@ -51,7 +56,7 @@ namespace ClassRoomVR
         {
             SetupClassroom();
             GenerateStudents();
-            ClimateManager.Instance.SetStudents(_students);
+            //ClimateManager.Instance.SetStudents(_students);
             StartClass();
         }
 
