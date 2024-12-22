@@ -38,6 +38,7 @@ namespace ClassRoomVR
             //props.GetCharacterProps().BoneAttachments[1].Complements[0].mesh.GameObject().SetActive(false);
             _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
             SetBlendShape(Expressions.Sleep, 0);
+            StartCoroutine(RandomBlink());
 
         }
         /// <summary>
@@ -56,11 +57,12 @@ namespace ClassRoomVR
         /// <returns>Retorna un IEnumerator necesario para las corrutinas.</returns>
         public void PlaySitAction(EventSittingAnimations anim)
         {
+            if(sittingAnim== EventSittingAnimations.Sleeping) StartCoroutine(RandomBlink());
             sittingAnim = anim;
 
             phone.SetActive(false);
             SetBlendShape(Expressions.Sleep, 0);
-            StartCoroutine(RandomBlink());
+            
             //GetComponent<Transform>().SetPositionAndRotation(studentTr, Quaternion.identity);
             Debug.Log(gameObject.name + " " + anim.ToString());
             switch (anim)
