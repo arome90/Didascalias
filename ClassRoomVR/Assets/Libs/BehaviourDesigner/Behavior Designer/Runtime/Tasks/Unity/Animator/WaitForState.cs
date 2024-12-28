@@ -30,7 +30,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
                 prevGameObject = currentGameObject;
 
                 if (!animator.HasState(layer.Value, stateHash)) {
-                    //Debug.LogError("Error: The Animator does not have the state " + stateName.Value + " on layer " + layer.Value);
+                    Debug.LogError("Error: The Animator does not have the state " + stateName.Value + " on layer " + layer.Value);
                 }
             }
         }

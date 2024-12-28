@@ -79,7 +79,7 @@ namespace ClassRoomVR
             if (_student.IsStudentInFieldOfVision())
             {
                 _attentionLevel += _attentionAddition * _distanceFactorAddition * (1 - factor);
-                Debug.Log(_attentionAddition);
+                //Debug.Log(_attentionAddition);
             }
             else
             {

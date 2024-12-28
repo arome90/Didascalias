@@ -16,7 +16,6 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo
         public override void OnStart()
         {
             sActions=GetComponent<StudentActions>();
-
         }
 
         public override TaskStatus OnUpdate()

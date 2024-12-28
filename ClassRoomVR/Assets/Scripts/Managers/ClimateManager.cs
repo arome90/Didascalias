@@ -14,7 +14,7 @@ namespace ClassRoomVR
     public class ClimateManager : GenericSingleton<ClimateManager>
     {
         //influido por el comportamiento del estudiante
-        private float _environmentalClimate; // [-1,1]
+        public float environmentalClimate { get; private set; } // [-1,1]
 
         private Dictionary<string, float> studentBehaviorWeights;
 
@@ -25,7 +25,7 @@ namespace ClassRoomVR
         void Start()
         {
             SetStudents(ClassManager.Instance.getStudents());
-            _environmentalClimate = 0.0f;
+            environmentalClimate = 0.0f;
             LoadBehaviorValues();
 
         }
@@ -114,8 +114,8 @@ namespace ClassRoomVR
                 newEnvironmentalClimate += s.Value;
             }
 
-            _environmentalClimate = newEnvironmentalClimate / studentBehaviorWeights.Count;
-            Debug.Log("ACTUAL CLIMATE: "+ _environmentalClimate);
+            environmentalClimate = newEnvironmentalClimate / studentBehaviorWeights.Count;
+            Debug.Log("ACTUAL CLIMATE: "+ environmentalClimate);
         }
     }
 }

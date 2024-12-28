@@ -121,10 +121,10 @@ public class CharacterPropsSpawner : MonoBehaviour
 
         MeshRenderer meshRenderer = propObject.AddComponent<MeshRenderer>();
         meshRenderer.material = complement.material;
-        Debug.Log("sd");
+        //Debug.Log("sd");
         if (complement.material.HasProperty("_Color"))
         {
-            Debug.Log("aaaaa");
+            //Debug.Log("aaaaa");
 
             meshRenderer.material.SetColor("_Color", colorIndex);
         }
