@@ -16,11 +16,11 @@ namespace ClassRoomVR
         private float _attentionLevel = 50.0f; // >50 atento, <50 distraído
         public float AttentionLevel => _attentionLevel;
 
-        [SerializeField] private float _decisionTime = 2.5f;
+        [SerializeField] private float _decisionTime = 4f;
         public float DecisionTime => _decisionTime;
 
-        [SerializeField] private float _attentionAddition = 30f;
-        [SerializeField] private float _attentionSubtraction = 20f;
+        [SerializeField] private float _attentionAddition = 0f;
+        [SerializeField] private float _attentionSubtraction = 2f;
         [SerializeField] private float _distanceFactorAddition = 2.1f;
         [SerializeField] private float _distanceFactorSubtraction = 2.0f;
         
@@ -79,13 +79,14 @@ namespace ClassRoomVR
             if (_student.IsStudentInFieldOfVision())
             {
                 _attentionLevel += _attentionAddition * _distanceFactorAddition * (1 - factor);
+                Debug.Log(_attentionAddition);
             }
             else
             {
                 _attentionLevel -= _attentionSubtraction * _distanceFactorSubtraction * (1 + factor);
             }
 
-            _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
+            //_attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }
 
         /// <summary>
