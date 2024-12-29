@@ -51,20 +51,20 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo
                 return TaskStatus.Failure;
             }
 
-            float climate = ClimateManager.Instance.environmentalClimate;
+            //float climate = ClimateManager.Instance.environmentalClimate;
 
-            emotion.Joy += climate * JoyInfluence;
-            emotion.Sadness += climate * SadnessInfluence;
-            emotion.Fear += climate * FearInfluence;
-            emotion.Anger += climate * AngerInfluence;
-            emotion.Sadness += climate * SurpriseInfluence;
-            emotion.Disgust += climate * DisgustInfluence;
+            //emotion.Joy += climate * JoyInfluence;
+            //emotion.Sadness += climate * SadnessInfluence;
+            //emotion.Fear += climate * FearInfluence;
+            //emotion.Anger += climate * AngerInfluence;
+            //emotion.Sadness += climate * SurpriseInfluence;
+            //emotion.Disgust += climate * DisgustInfluence;
 
-            emotion.AnxietyConfidence += climate * AnxietyConfidenceInfluence;
-            emotion.BoredomFascination += climate * BoredomFascinationInfluence;
-            emotion.FrustrationEuphoria += climate * FrustrationEuphoriaInfluence;
-            emotion.DispiritedEncouraged += climate * DispiritedEncouragedInfluence;
-            emotion.TerrorEnchantment += climate * TerrorEnchantmentInfluence;
+            //emotion.AnxietyConfidence += climate * AnxietyConfidenceInfluence;
+            //emotion.BoredomFascination += climate * BoredomFascinationInfluence;
+            //emotion.FrustrationEuphoria += climate * FrustrationEuphoriaInfluence;
+            //emotion.DispiritedEncouraged += climate * DispiritedEncouragedInfluence;
+            //emotion.TerrorEnchantment += climate * TerrorEnchantmentInfluence;
 
             return TaskStatus.Success;
         }

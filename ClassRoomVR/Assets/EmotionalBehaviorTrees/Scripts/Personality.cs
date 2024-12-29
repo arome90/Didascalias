@@ -7,42 +7,71 @@ using UnityEngine;
 // Based on the big 5 personality traits model
 public class Personality
 {
-
-    public float Extraversion { get; private set; }
-    public float Agreeableness { get; private set; }
-    public float Conscientiousness { get; private set; }
-    public float Neuroticism { get; private set; }
-    public float Openness { get; private set; }
-
+    // Array para almacenar los rasgos de personalidad
+    private float[] _traits;
     private System.Random random;
+
+    // Umbral de atención
     [SerializeField]
     private float attentionThreshold = 0.3f;
 
+    // Constructor
     public Personality()
     {
+        int traitCount = System.Enum.GetValues(typeof(PersonalityType)).Length;
+        _traits = new float[traitCount]; // Crea un array para los rasgos
         random = new System.Random();
         InitializePersonality();
     }
 
+    // Inicializa los rasgos de personalidad con valores aleatorios entre 0 y 1
     private void InitializePersonality()
     {
-        Extraversion = (float)random.NextDouble();
-        Agreeableness = (float)random.NextDouble();
-        Conscientiousness = (float)random.NextDouble();
-        Neuroticism = (float)random.NextDouble();
-        Openness = (float)random.NextDouble();
+        for (int i = 0; i < _traits.Length; i++)
+        {
+            _traits[i] = (float)random.NextDouble(); // Rellenar con valores aleatorios entre 0 y 1
+        }
     }
 
+    // Obtener el valor de un rasgo de personalidad
+    public float GetTraitValue(PersonalityType trait)
+    {
+        return _traits[(int)trait];
+    }
+
+    // Establecer el valor de un rasgo de personalidad
+    public void SetTraitValue(PersonalityType trait, float value)
+    {
+        _traits[(int)trait] = Mathf.Clamp(value, 0f, 1f); // Limita el valor entre 0 y 1
+    }
+
+    // Método que influye en las emociones de un estudiante según su personalidad
     public void InfluenceEmotions(Emotion emotion, StudentBehavior studentBehavior)
     {
         if (studentBehavior.AttentionLevel < attentionThreshold) return;
-        emotion.Joy = Extraversion * 0.9f + Agreeableness * 0.6f + Conscientiousness * 0.6f + (1 - Neuroticism) * 0.8f + Openness * 0.6f;
-        emotion.Sadness = Neuroticism * 0.8f + (1 - Extraversion) * 0.3f;
-        emotion.Fear = Neuroticism * 0.8f + (1 - Extraversion) * 0.3f;
-        emotion.Anger = Neuroticism * 0.7f + (1 - Agreeableness) * 0.3f;
-        emotion.Surprise = Extraversion * 0.8f + Openness * 0.8f;
-        emotion.Disgust = Neuroticism * 0.7f + (1 - Agreeableness) * 0.3f;
+
+        emotion.SetEmotionValue(EmotionType.Joy, GetTraitValue(PersonalityType.Extraversion) * 0.9f +
+                      GetTraitValue(PersonalityType.Agreeableness) * 0.6f +
+                      GetTraitValue(PersonalityType.Conscientiousness) * 0.6f +
+                      (1 - GetTraitValue(PersonalityType.Neuroticism)) * 0.8f +
+                      GetTraitValue(PersonalityType.Openness) * 0.6f);
+
+        emotion.SetEmotionValue(EmotionType.Sadness, GetTraitValue(PersonalityType.Neuroticism) * 0.8f +
+                          (1 - GetTraitValue(PersonalityType.Extraversion)) * 0.3f);
+
+        emotion.SetEmotionValue(EmotionType.Fear, GetTraitValue(PersonalityType.Neuroticism) * 0.8f +
+                       (1 - GetTraitValue(PersonalityType.Extraversion)) * 0.3f);
+       
+        emotion.SetEmotionValue(EmotionType.Anger, GetTraitValue(PersonalityType.Neuroticism) * 0.7f +
+                        (1 - GetTraitValue(PersonalityType.Agreeableness)) * 0.3f);
+
+        emotion.SetEmotionValue(EmotionType.Surprise, GetTraitValue(PersonalityType.Extraversion) * 0.8f +
+                           GetTraitValue(PersonalityType.Openness) * 0.8f);
+      
+        emotion.SetEmotionValue(EmotionType.Disgust, GetTraitValue(PersonalityType.Neuroticism) * 0.7f +
+                          (1 - GetTraitValue(PersonalityType.Agreeableness)) * 0.3f);
+
     }
-
-
 }
+
+

@@ -33,7 +33,6 @@ namespace ClassRoomVR
         private Transform _player;
         private RunningStatistics _statistics;
 
-
         private void Start()
         {
             _statistics = new RunningStatistics();
@@ -45,9 +44,9 @@ namespace ClassRoomVR
 
         public void InitializeAttention(Personality personality)
         {
-            _attentionLevel += (personality.Conscientiousness < 0.5 ? -personality.Conscientiousness : personality.Conscientiousness) * _attentionAddition * _conscientiousnessInfluence;
-            _attentionLevel += (personality.Agreeableness < 0.5 ? -personality.Agreeableness : personality.Agreeableness) * _attentionAddition * _agreeablenessInfluence;
-            _attentionLevel += (personality.Neuroticism < 0.5 ? -personality.Neuroticism : personality.Neuroticism) * _attentionAddition * _neuroticismInfluence;
+            _attentionLevel += (personality.GetTraitValue(PersonalityType.Conscientiousness) < 0.5 ? -personality.GetTraitValue(PersonalityType.Conscientiousness) : personality.GetTraitValue(PersonalityType.Conscientiousness)) * _attentionAddition * _conscientiousnessInfluence;
+            _attentionLevel += (personality.GetTraitValue(PersonalityType.Agreeableness) < 0.5 ? -personality.GetTraitValue(PersonalityType.Agreeableness) : personality.GetTraitValue(PersonalityType.Agreeableness)) * _attentionAddition * _agreeablenessInfluence;
+            _attentionLevel += (personality.GetTraitValue(PersonalityType.Neuroticism) < 0.5 ? -personality.GetTraitValue(PersonalityType.Neuroticism) : personality.GetTraitValue(PersonalityType.Neuroticism)) * _attentionAddition * _neuroticismInfluence;
 
             _attentionLevel += Random.Range(-1.0f, 1.0f) * range;
             _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
@@ -86,7 +85,7 @@ namespace ClassRoomVR
                 _attentionLevel -= _attentionSubtraction * _distanceFactorSubtraction * (1 + factor);
             }
 
-            //_attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
+            _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }
 
         /// <summary>

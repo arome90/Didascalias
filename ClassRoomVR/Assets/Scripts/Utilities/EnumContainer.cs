@@ -428,3 +428,33 @@ public enum ModelingProperties
     FaceLength,
     MODELING_PROPERTIES_SIZE
 }
+
+public enum ExternalForces
+{
+    TeacherTalksTooMuch,
+    TeacherSilentTooLong,
+    TeacherTooLoud,
+    TeacherTooQuiet
+}
+public enum EmotionType
+{
+    Joy,
+    Sadness,
+    Fear,
+    Anger,
+    Surprise,
+    Disgust,
+    AnxietyConfidence,
+    BoredomFascination ,
+    FrustrationEuphoria,
+    DispiritedEncouraged,
+    TerrorEnchantment
+}
+public enum PersonalityType
+{
+    Extraversion,
+    Agreeableness,
+    Conscientiousness,
+    Neuroticism,
+    Openness
+}

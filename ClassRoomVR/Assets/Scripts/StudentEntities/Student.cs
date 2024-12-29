@@ -68,7 +68,7 @@ namespace ClassRoomVR
         public State GetState() => _state;
 
         public Personality getPersonality() => _personality;
-
+    
         public Emotion GetEmotion() => _emotion;
 
         #endregion
@@ -109,6 +109,18 @@ namespace ClassRoomVR
             _emotion.InitializeEmotions(0.2f);
             _behaviour.InitializeAttention(_personality);
         }
+
+        public void ModifyEmotion(EmotionType emotion, float impactValue)
+        {
+            float currentValue = _emotion.GetEmotionValue(emotion);
+            _emotion.SetEmotionValue(emotion, currentValue + impactValue);
+        }
+
+        public float[] GetEmotions()
+        {
+            return _emotion.GetAllEmotions();
+        }
+        
 
         /// <summary>
         /// Marca al estudiante como problemático.

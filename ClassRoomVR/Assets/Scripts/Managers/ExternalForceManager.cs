@@ -1,0 +1,115 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using System.Linq;
+using ClassRoomVR;
+
+/// <summary>
+/// Maneja fuerzas externas que afectan a los estudiantes.
+/// Hereda de <see cref="GenericSingleton{ExternalForceManager}"/>.
+/// </summary>
+public class ExternalForceManager : GenericSingleton<ExternalForceManager>
+{
+    private Dictionary<ExternalForces, Dictionary<EmotionType, float>> externalForceImpacts;
+    private Dictionary<string, Student> _students;
+
+    [SerializeField] private string externalForcesJsonPath;
+
+    void Start()
+    {
+        LoadExternalForcesFromJson();
+        _students = ClassManager.Instance.getStudents();
+
+        // Aplicar una fuerza de ejemplo al inicio
+        ApplyExternalForce(ExternalForces.TeacherTooQuiet);
+    }
+
+    /// <summary>
+    /// Carga las definiciones de fuerzas externas desde un archivo JSON.
+    /// </summary>
+    private void LoadExternalForcesFromJson()
+    {
+        string filePath = Path.Combine(Application.dataPath, externalForcesJsonPath);
+
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+
+            try
+            {
+                // Deserializar el JSON a la estructura de datos
+                EntryKeyValueDictionaryWrapper wrapper = JsonUtility.FromJson<EntryKeyValueDictionaryWrapper>(json);
+                Dictionary<string, Dictionary<string, float>> tempImpacts = wrapper.ToDictionary();
+
+                // Convertir claves a enumeradores
+                externalForceImpacts = new Dictionary<ExternalForces, Dictionary<EmotionType, float>>();
+
+                foreach (var kvp in tempImpacts)
+                {
+                    if (System.Enum.TryParse(kvp.Key, out ExternalForces force))
+                    {
+                        var emotionImpacts = new Dictionary<EmotionType, float>();
+
+                        foreach (var emotionKvp in kvp.Value)
+                        {
+                            if (System.Enum.TryParse(emotionKvp.Key, out EmotionType emotion))
+                            {
+                                emotionImpacts[emotion] = emotionKvp.Value;
+                            }
+                        }
+
+                        externalForceImpacts[force] = emotionImpacts;
+                    }
+                }
+
+                Debug.Log("External forces loaded successfully.");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Error parsing JSON file: {ex.Message}");
+            }
+        }
+        else
+        {
+            Debug.LogError($"External forces file not found at path: {filePath}");
+        }
+    }
+
+    /// <summary>
+    /// Aplica una fuerza externa a las emociones de todos los estudiantes.
+    /// </summary>
+    /// <param name="force">Fuerza externa a aplicar.</param>
+    public void ApplyExternalForce(ExternalForces force)
+    {
+        if (externalForceImpacts == null || externalForceImpacts.Count == 0)
+        {
+            Debug.LogError("External forces have not been loaded.");
+            return;
+        }
+
+        if (externalForceImpacts.TryGetValue(force, out var emotionImpacts))
+        {
+            foreach (var kvp in _students)
+            {
+                Student student = kvp.Value;
+                Emotion studentEmotion = student.GetEmotion();
+
+                foreach (var emotionImpact in emotionImpacts)
+                {
+                    EmotionType emotionType = emotionImpact.Key;
+                    float impactValue = emotionImpact.Value;
+
+                    // Modificar la emoción del estudiante
+                    float currentValue = studentEmotion.GetEmotionValue(emotionType);
+                    studentEmotion.SetEmotionValue(emotionType, currentValue + impactValue);
+                }
+            }
+
+            Debug.Log($"Applied external force '{force}' to all students.");
+        }
+        else
+        {
+            Debug.LogWarning($"External force '{force}' has no defined impacts.");
+        }
+    }
+}

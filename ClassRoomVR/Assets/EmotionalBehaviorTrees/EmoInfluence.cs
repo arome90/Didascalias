@@ -45,13 +45,13 @@ namespace BehaviorDesigner.Runtime.Tasks
             //para generalizar se puede crear un componente especifico TODO
             Emotion emotion = targetGameObject.GetComponent<Student>().GetEmotion();
             Personality personality = targetGameObject.GetComponent<Student>().getPersonality();
-            float emotionInfluence = emotion.Joy * JoyInfluence + emotion.Sadness * SadnessInfluence +
-                emotion.Fear * FearInfluence + emotion.Anger * AngerInfluence +
-                emotion.Surprise * SurpriseInfluence + emotion.Disgust * DisgustInfluence;
+            float emotionInfluence = emotion.GetEmotionValue(EmotionType.Joy) * JoyInfluence + emotion.GetEmotionValue(EmotionType.Sadness) * SadnessInfluence +
+                emotion.GetEmotionValue(EmotionType.Fear) * FearInfluence + emotion.GetEmotionValue(EmotionType.Anger) * AngerInfluence +
+               emotion.GetEmotionValue(EmotionType.Surprise) * SurpriseInfluence + emotion.GetEmotionValue(EmotionType.Disgust) * DisgustInfluence;
             float cont1 = (JoyInfluence + SadnessInfluence + FearInfluence + AngerInfluence + SurpriseInfluence + DisgustInfluence);
 
-            float personalityInfluence = personality.Openness * OpennessInfluence + personality.Agreeableness * AgreeablenessInfluence +
-                personality.Conscientiousness * ConscientiousnessInfluence + personality.Extraversion * ExtraversionInfluence + personality.Neuroticism * NeuroticismInfluence;
+            float personalityInfluence = personality.GetTraitValue(PersonalityType.Openness) * OpennessInfluence + personality.GetTraitValue(PersonalityType.Agreeableness) * AgreeablenessInfluence +
+               personality.GetTraitValue(PersonalityType.Conscientiousness) * ConscientiousnessInfluence + personality.GetTraitValue(PersonalityType.Extraversion) * ExtraversionInfluence + personality.GetTraitValue(PersonalityType.Neuroticism) * NeuroticismInfluence;
             float cont2 = OpennessInfluence + AgreeablenessInfluence + ConscientiousnessInfluence + ExtraversionInfluence + NeuroticismInfluence;
 
 

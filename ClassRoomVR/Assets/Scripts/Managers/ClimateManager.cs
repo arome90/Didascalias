@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System.IO;
+using UnityEngine.InputSystem;
 namespace ClassRoomVR
 {
     /// <summary>
@@ -41,7 +42,7 @@ namespace ClassRoomVR
                 string json = File.ReadAllText(filePath);
 
                 // Deserializar el JSON en un diccionario
-                Dictionary<string, float> tempValues = JsonUtility.FromJson<Wrapper>(json).ToDictionary();
+                Dictionary<string, float> tempValues = JsonUtility.FromJson<KeyValueWrapper>(json).ToDictionary();
 
                 // Convertir las claves a enumeradores
                 behaviorValues = new Dictionary<EventSittingAnimations, float>();
