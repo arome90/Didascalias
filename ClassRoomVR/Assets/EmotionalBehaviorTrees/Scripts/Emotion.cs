@@ -10,7 +10,7 @@ public class Emotion
 
     public Emotion()
     {
-        int emotionCount = System.Enum.GetValues(typeof(EmotionType)).Length;
+        int emotionCount = Enum.GetValues(typeof(EmotionType)).Length;
         _emotions = new float[emotionCount]; // Crea un array para todas las emociones
         random = new System.Random();
     }
@@ -20,7 +20,7 @@ public class Emotion
     {
         for (int i = 0; i < _emotions.Length; i++)
         {
-            _emotions[i] = ((float)random.NextDouble() * 2) - 1;
+            _emotions[i] = (float)((random.NextDouble() * 2) - 1);
         }
     }
 

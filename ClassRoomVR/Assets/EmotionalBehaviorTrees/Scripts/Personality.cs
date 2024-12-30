@@ -29,7 +29,7 @@ public class Personality
     {
         for (int i = 0; i < _traits.Length; i++)
         {
-            _traits[i] = (float)random.NextDouble(); // Rellenar con valores aleatorios entre 0 y 1
+            _traits[i] = (float)((random.NextDouble()* 2) - 1); // Rellenar con valores aleatorios entre -1 y 1
         }
     }
 
