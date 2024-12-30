@@ -73,6 +73,16 @@ namespace ClassRoomVR
 
         #endregion
 
+        #region Debug
+
+        public void getPersonalityString(StringWrapper s)
+        {
+            _personality.getString(ref s.Value);
+        }
+
+        #endregion
+
+
         private void Awake()
         {
             // Inicializa referencias y componentes

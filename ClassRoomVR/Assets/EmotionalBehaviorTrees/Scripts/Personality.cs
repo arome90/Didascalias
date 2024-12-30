@@ -72,6 +72,15 @@ public class Personality
                           (1 - GetTraitValue(PersonalityType.Agreeableness)) * 0.3f);
 
     }
+
+    public void getString(ref string s)
+    {
+        for (int i = 0;i<_traits.Length;i++)
+        {
+            s += ((PersonalityType)(i)).ToString();
+            s += ": " + _traits[i] + "\n";
+        }
+    }
 }
 
 
