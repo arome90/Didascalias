@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using ClassRoomVR;
 
-namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
+namespace BehaviorDesigner.Runtime.Tasks.Emo.Unity.UnityAnimator
 {
-    [TaskCategory("Unity/Animator")]
+    [TaskCategory("Emo/Unity/Animator")]
     [TaskDescription("Sets the int parameter on an animator. Returns Success.")]
     public class SetIntegerParameter : Action
     {
@@ -18,10 +19,13 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
         private int hashID;
         private Animator animator;
+        private StudentActions action;
         private GameObject prevGameObject;
+        string studentName;
 
         public override void OnStart()
         {
+            action = GetComponent<StudentActions>();
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject)
             {
@@ -32,16 +36,18 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
         public override TaskStatus OnUpdate()
         {
-            if (animator == null)
+            if (action == null)
             {
-                Debug.LogWarning("Animator is null");
+                Debug.LogWarning("Action is null");
                 return TaskStatus.Failure;
             }
 
-            hashID = UnityEngine.Animator.StringToHash(paramaterName.Value);
+            hashID = Animator.StringToHash(paramaterName.Value);
 
-            int prevValue = animator.GetInteger(hashID);
-            animator.SetInteger(hashID, intValue.Value);
+            int prevValue = action.getAction();
+            action.PlaySitAction((EventSittingAnimations)(intValue.Value));
+            ClimateManager.Instance.SetWeight(gameObject.name, (EventSittingAnimations)(intValue.Value));
+            // animator.SetInteger(hashID, intValue.Value);
             if (setOnce)
             {
                 StartCoroutine(ResetValue(prevValue));
@@ -53,7 +59,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
         public IEnumerator ResetValue(int origVale)
         {
             yield return null;
-            animator.SetInteger(hashID, origVale);
+            action.PlaySitAction((EventSittingAnimations)(origVale));
+            // animator.SetInteger(hashID, origVale);
         }
 
         public override void OnReset()

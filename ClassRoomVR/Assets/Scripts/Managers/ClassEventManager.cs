@@ -1,3 +1,4 @@
+using ClassRoomVR;
 using Oculus.Interaction;
 using System;
 using System.Collections;
@@ -14,6 +15,13 @@ public class ClassEventManager : MonoBehaviour
     {
         listeners = new HashSet<ClassEventListener>();
         events = new List<ClassEvent>();
+    }
+
+    public void Start()
+    {
+        foreach (var s in ClassManager.Instance.getStudents()) { 
+            s.Value.gameObject.GetComponent<ClassEventListener>().setManager(this);
+        }
     }
 
     // Update is called once per frame
