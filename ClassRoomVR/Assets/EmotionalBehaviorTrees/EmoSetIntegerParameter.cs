@@ -10,8 +10,6 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo.Unity.UnityAnimator
     {
         [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]
         public SharedGameObject targetGameObject;
-        [Tooltip("The name of the parameter")]
-        public SharedString paramaterName;
         [Tooltip("The value of the int parameter")]
         public SharedInt intValue;
         [Tooltip("Should the value be reverted back to its original value after it has been set?")]
@@ -42,7 +40,6 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo.Unity.UnityAnimator
                 return TaskStatus.Failure;
             }
 
-            hashID = Animator.StringToHash(paramaterName.Value);
 
             int prevValue = action.getAction();
             action.PlaySitAction((EventSittingAnimations)(intValue.Value));
@@ -66,7 +63,6 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo.Unity.UnityAnimator
         public override void OnReset()
         {
             targetGameObject = null;
-            paramaterName = "";
             intValue = 0;
         }
     }

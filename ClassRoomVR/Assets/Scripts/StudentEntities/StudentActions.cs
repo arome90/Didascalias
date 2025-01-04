@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime.Tasks.Unity.Math;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityRigidbody;
 using MathNet.Numerics.Distributions;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace ClassRoomVR
             sittingAnim = anim;
 
             phone.SetActive(false);
-            SetBlendShape(Expressions.Sleep, 0);
+            //SetBlendShape(Expressions.Sleep, 0);
             
             //GetComponent<Transform>().SetPositionAndRotation(studentTr, Quaternion.identity);
             Debug.Log(gameObject.name + " " + anim.ToString());
@@ -72,7 +73,7 @@ namespace ClassRoomVR
                         animator.SetInteger("Action", -1);
                         animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
                         sittingAnim = EventSittingAnimations.None;
-
+                        ClearExpression();
                         break;
                     }
                 case EventSittingAnimations.Yelling:
@@ -106,6 +107,24 @@ namespace ClassRoomVR
                     }
                 case EventSittingAnimations.Attending:
                     {
+                        SetBlendShape(Expressions.Smile, 100);
+                        animator.SetInteger("Action", (int)anim);
+                        break;
+                    }
+                case EventSittingAnimations.Attending2:
+                    {
+                        animator.SetInteger("Action", (int)anim);
+                        break;
+                    }
+                case EventSittingAnimations.Bored:
+                    {
+                        SetBlendShape(Expressions.Bored, 100f);
+                        animator.SetInteger("Action", (int)anim);
+                        break;
+                    }
+                case EventSittingAnimations.Drawing:
+                    {
+                        SetBlendShape(Expressions.Smile, 100);
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
@@ -155,6 +174,14 @@ namespace ClassRoomVR
             }
         }
 
+        private void  ClearExpression()
+        {
+            for (int i = (int)Expressions.Sleep; i < (int)Expressions.EXPRESSIONS_SIZE; i++)
+            {
+                SetBlendShape((Expressions)i, 0);
+            }
+        }
+
         /// <summary>
         /// Cambia la expresión del estudiante suavemente.
         /// </summary>
@@ -164,7 +191,7 @@ namespace ClassRoomVR
             int expressionIndex = (int)exp;
             while (_meshRenderer.GetBlendShapeWeight(expressionIndex) < 100f)
             {
-                for (int i = 0; i < _blendShapeWeights.Length; i++)
+                for (int i = 0; i < (int)Expressions.EXPRESSIONS_SIZE; i++)
                 {
                     float changeValue = i == expressionIndex ? 15f : -20f;
                     _blendShapeWeights[i] = Mathf.Clamp(_blendShapeWeights[i] + changeValue, 0f, 100f);
