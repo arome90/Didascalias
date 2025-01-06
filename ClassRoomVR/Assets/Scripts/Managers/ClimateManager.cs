@@ -21,7 +21,6 @@ namespace ClassRoomVR
 
         private Dictionary<EventSittingAnimations, float> behaviorValues;
 
-        // Start is called before the first frame update
         [SerializeField] private string sittingBehaviorsJsonPath;
         void Start()
         {

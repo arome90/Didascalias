@@ -13,7 +13,7 @@ public class Personality
 
     // Umbral de atención
     [SerializeField]
-    private float attentionThreshold = 0.3f;
+    private float attentionThreshold = -0.6f;
 
     // Constructor
     public Personality()
@@ -42,7 +42,7 @@ public class Personality
     // Establecer el valor de un rasgo de personalidad
     public void SetTraitValue(PersonalityType trait, float value)
     {
-        _traits[(int)trait] = Mathf.Clamp(value, 0f, 1f); // Limita el valor entre 0 y 1
+        _traits[(int)trait] = Mathf.Clamp(value, -1f, 1f); // Limita el valor entre 0 y 1
     }
 
     // Método que influye en las emociones de un estudiante según su personalidad
