@@ -22,23 +22,11 @@ namespace ClassRoomVR
         [SerializeField] private float _decisionTime = 4f;
         public float DecisionTime => _decisionTime;
 
-        //[SerializeField] private float _attentionAddition = 0f;
-        //[SerializeField] private float _attentionSubtraction = 2f;
-        //[SerializeField] private float _distanceFactorAddition = 2.1f;
-        //[SerializeField] private float _distanceFactorSubtraction = 2.0f;
-        
-        //[SerializeField] private float _extraversionInfluence = 0f;
-        //[SerializeField] private float _agreeablenessInfluence = 0.4f;
-        //[SerializeField] private float _conscientiousnessInfluence = 1f;
-        //[SerializeField] private float _neuroticismInfluence = 0.2f;
-        //[SerializeField] private float _opennessInfluence = 0f;
-        //[SerializeField] private float range = 20f;
-
         private Student _student;
         private Transform _player;
         private RunningStatistics _statistics;
 
-        private Dictionary<studentBehaviorPrams, float> studentBehavoirValues;
+        private Dictionary<studentBehaviorParams, float> studentBehavoirValues;
         [SerializeField] private string studentBehavoirJsonPath;
 
         private void Start()
@@ -61,11 +49,11 @@ namespace ClassRoomVR
                 Dictionary<string, float> tempValues = JsonUtility.FromJson<KeyValueWrapper>(json).ToDictionary();
 
                 // Convertir las claves a enumeradores
-                studentBehavoirValues = new Dictionary<studentBehaviorPrams, float>();
+                studentBehavoirValues = new Dictionary<studentBehaviorParams, float>();
 
                 foreach (var kvp in tempValues)
                 {
-                    if (System.Enum.TryParse(kvp.Key, out studentBehaviorPrams param))
+                    if (System.Enum.TryParse(kvp.Key, out studentBehaviorParams param))
                     {
                         studentBehavoirValues[param] = kvp.Value;
                     }
@@ -83,14 +71,14 @@ namespace ClassRoomVR
         {
             LoadStudentBehavoirValues();
 
-            float _attentionAddition = studentBehavoirValues[studentBehaviorPrams.attentionAddition];
-            _attentionLevel += personality.GetTraitValue(PersonalityType.Extraversion) * _attentionAddition * studentBehavoirValues[studentBehaviorPrams.extraversionInfluence];
-            _attentionLevel += personality.GetTraitValue(PersonalityType.Conscientiousness) * _attentionAddition * studentBehavoirValues[studentBehaviorPrams.conscientiousnessInfluence];
-            _attentionLevel += personality.GetTraitValue(PersonalityType.Agreeableness) * _attentionAddition * studentBehavoirValues[studentBehaviorPrams.agreeablenessInfluence];
-            _attentionLevel += personality.GetTraitValue(PersonalityType.Neuroticism) * _attentionAddition * studentBehavoirValues[studentBehaviorPrams.neuroticismInfluence];
-            _attentionLevel += personality.GetTraitValue(PersonalityType.Openness) * _attentionAddition * studentBehavoirValues[studentBehaviorPrams.opennessInfluence];
+            float _attentionAddition = studentBehavoirValues[studentBehaviorParams.attentionAddition];
+            _attentionLevel += personality.GetTraitValue(PersonalityType.Extraversion) * _attentionAddition * studentBehavoirValues[studentBehaviorParams.extraversionInfluence];
+            _attentionLevel += personality.GetTraitValue(PersonalityType.Conscientiousness) * _attentionAddition * studentBehavoirValues[studentBehaviorParams.conscientiousnessInfluence];
+            _attentionLevel += personality.GetTraitValue(PersonalityType.Agreeableness) * _attentionAddition * studentBehavoirValues[studentBehaviorParams.agreeablenessInfluence];
+            _attentionLevel += personality.GetTraitValue(PersonalityType.Neuroticism) * _attentionAddition * studentBehavoirValues[studentBehaviorParams.neuroticismInfluence];
+            _attentionLevel += personality.GetTraitValue(PersonalityType.Openness) * _attentionAddition * studentBehavoirValues[studentBehaviorParams.opennessInfluence];
 
-            _attentionLevel += Random.Range(-1.0f, 1.0f) * studentBehavoirValues[studentBehaviorPrams.range];
+            _attentionLevel += Random.Range(-1.0f, 1.0f) * studentBehavoirValues[studentBehaviorParams.range];
             _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }
 
@@ -119,15 +107,15 @@ namespace ClassRoomVR
         {
             if (_student.IsStudentInFieldOfVision())
             {
-                _attentionLevel += studentBehavoirValues[studentBehaviorPrams.attentionAddition] * studentBehavoirValues[studentBehaviorPrams.distanceFactorAddition] * (1 - factor);
+                _attentionLevel += studentBehavoirValues[studentBehaviorParams.attentionAddition] * studentBehavoirValues[studentBehaviorParams.distanceFactorAddition] * (1 - factor);
                 //Debug.Log(_attentionAddition);
             }
             else
             {
-                _attentionLevel -= studentBehavoirValues[studentBehaviorPrams.attentionSubtraction] * studentBehavoirValues[studentBehaviorPrams.distanceFactorSubtraction] * (1 + factor);
+                _attentionLevel -= studentBehavoirValues[studentBehaviorParams.attentionSubtraction] * studentBehavoirValues[studentBehaviorParams.distanceFactorSubtraction] * (1 + factor);
             }
 
-            _attentionLevel += ClimateManager.Instance.environmentalClimate * studentBehavoirValues[studentBehaviorPrams.climateInfluence];
+            _attentionLevel += ClimateManager.Instance.environmentalClimate * studentBehavoirValues[studentBehaviorParams.climateInfluence];
 
             _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }

@@ -462,3 +462,18 @@ public enum PersonalityType
     Neuroticism,
     Openness
 }
+
+public enum studentBehaviorParams
+{
+    extraversionInfluence,
+    agreeablenessInfluence,
+    conscientiousnessInfluence,
+    neuroticismInfluence,
+    opennessInfluence,
+    attentionAddition,
+    attentionSubtraction,
+    distanceFactorAddition,
+    distanceFactorSubtraction,
+    climateInfluence,
+    range
+}
