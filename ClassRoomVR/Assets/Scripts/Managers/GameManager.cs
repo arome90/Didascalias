@@ -167,7 +167,6 @@ namespace ClassRoomVR
         {
             if (!canChange) return;
             _currentWitApp = _witAppsForLanguages[localeID].witApp;
-            int i = 0;
             StartCoroutine(SetLocale(localeID));
             OnLanguageChanged.Invoke();
         }

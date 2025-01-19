@@ -368,12 +368,16 @@ namespace UnityEngine.AI
                 return false;
 
             // Prefab parent owns the asset reference
-            var prefabType = UnityEditor.PrefabUtility.GetPrefabType(this);
-            if (prefabType == UnityEditor.PrefabType.Prefab)
+            var prefabAssetType = UnityEditor.PrefabUtility.GetPrefabAssetType(this);
+            var prefabInstanceStatus = UnityEditor.PrefabUtility.GetPrefabInstanceStatus(this);
+
+            if (prefabAssetType == UnityEditor.PrefabAssetType.Regular && prefabInstanceStatus == UnityEditor.PrefabInstanceStatus.NotAPrefab)
+            {
                 return false;
+            }
 
             // An instance can share asset reference only with its prefab parent
-            var prefab = UnityEditor.PrefabUtility.GetPrefabParent(this) as NavMeshSurface;
+            var prefab = UnityEditor.PrefabUtility.GetCorrespondingObjectFromSource<NavMeshSurface>(this);
             if (prefab != null && prefab.navMeshData == navMeshData)
                 return false;
 

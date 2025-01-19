@@ -13,7 +13,7 @@ public class FadeScreen : MonoBehaviour
     [SerializeField] private float _fadeDuration = 2f;
     [SerializeField] private Color _fadeColor = Color.black;
     [SerializeField] private AnimationCurve _fadeCurve;
-    [SerializeField] private string _colorPropertyName = "_Color";
+    //[SerializeField] private string _colorPropertyName = "_Color";
 
     public float FadeDuration => _fadeDuration;
 
@@ -58,8 +58,10 @@ public class FadeScreen : MonoBehaviour
     {
      
         gameObject.SetActive(true);
-        if (gameObject.active)
+        if (gameObject.activeSelf)
+        {
             StartCoroutine(FadeRoutine(alphaIn, alphaOut, onComplete));
+        }
     }
 
     /// <summary>

@@ -49,7 +49,7 @@ namespace ClassRoomVR
         private Animator _animator;
         private AudioSource _audioSource;
         private NavMeshAgent _navMeshAgent;
-        private new BoxCollider _collider;
+        private BoxCollider _collider;
         [SerializeField] private Transform _target;
         private Vector3 _actualTargetPosition;
         private Dictionary<FieldOfVision, Vector3> _targets;
@@ -233,22 +233,22 @@ namespace ClassRoomVR
                 else if (expressionOrAction == 1) // Expresión
                 {
                     int distractedExpression = Random.Range(0, 3);
-                    Expressions expression;
-                    switch (distractedExpression)
-                    {
-                        case 0:
-                            expression = Expressions.Angry;
-                            break;
-                        case 1:
-                            expression = Expressions.Cry;
-                            break;
-                        case 2:
-                            expression = Expressions.Sleep;
-                            break;
-                        default:
-                            expression = Expressions.Sleep;
-                            break;
-                    }
+                    //Expressions expression; //TODO
+                    //switch (distractedExpression)
+                    //{
+                    //    case 0:
+                    //        expression = Expressions.Angry;
+                    //        break;
+                    //    case 1:
+                    //        expression = Expressions.Cry;
+                    //        break;
+                    //    case 2:
+                    //        expression = Expressions.Sleep;
+                    //        break;
+                    //    default:
+                    //        expression = Expressions.Sleep;
+                    //        break;
+                    //}
                     // StartCoroutine(_behaviour.ChangeExpression(expression));
                 }
 
@@ -563,7 +563,7 @@ namespace ClassRoomVR
         }
 
         // Variables privadas para el cambio de blend tree
-        private int _blendChangeSpeed = 2;
+        //private int _blendChangeSpeed = 2;
         private Coroutine _changeAnimationCoroutine;
 
         private IEnumerator ChangeBlendParameter()

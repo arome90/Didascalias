@@ -20,8 +20,6 @@ namespace BehaviorDesigner.Runtime.Tasks
 
         private float _priority = 0f;
 
-        private float attentionThreshold = 0.22f;
-
         public override float GetPriority()
         {
             return _priority;
@@ -29,7 +27,6 @@ namespace BehaviorDesigner.Runtime.Tasks
 
         public override void OnStart()
         {
-            //if (gameObject.GetComponent<StudentBehavior>().AttentionLevel > attentionThreshold) return;
             // Make sure the list is empty before we add child indexes to it.
             childrenExecutionOrder.Clear();
 

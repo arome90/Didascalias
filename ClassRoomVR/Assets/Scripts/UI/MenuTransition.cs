@@ -24,8 +24,9 @@ namespace ClassRoomVR
 
         private bool _isTextVisible; // Estado de visibilidad del texto de ayuda
 
-        private void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _backButton.onClick.AddListener(GoBackScreen);
             _startButton.onClick.AddListener(GoStart);
             WsClient.Instance.StartConnection();
