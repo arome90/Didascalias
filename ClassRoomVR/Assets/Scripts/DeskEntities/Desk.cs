@@ -89,14 +89,15 @@ namespace ClassRoomVR
         /// <summary>
         /// Reproduce la animación de la silla.
         /// </summary>
-        public void RockChair()
+        public void PlayChairAnim(string animation)
         {
             if (_chairAnimation != null)
             {
-                _chairAnimation.Play();
+                _chairAnimation.Play(animation);
             }
         }
-
+        
+      
         /// <summary>
         /// Activa o desactiva el obstáculo de la silla en el NavMesh.
         /// </summary>

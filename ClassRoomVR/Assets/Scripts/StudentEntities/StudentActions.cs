@@ -65,7 +65,7 @@ namespace ClassRoomVR
             //SetBlendShape(Expressions.Sleep, 0);
             
             //GetComponent<Transform>().SetPositionAndRotation(studentTr, Quaternion.identity);
-            Debug.Log(gameObject.name + " " + anim.ToString());
+            //Debug.Log(gameObject.name + " " + anim.ToString());
             switch (anim)
             {
                 case EventSittingAnimations.None:

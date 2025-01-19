@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Linq;
 using System.IO;
 using UnityEngine.InputSystem;
+using Oculus.Platform.Models;
 namespace ClassRoomVR
 {
     /// <summary>
@@ -20,7 +21,7 @@ namespace ClassRoomVR
         private Dictionary<string, float> studentBehaviorWeights;
 
         private Dictionary<EventSittingAnimations, float> behaviorValues;
-
+        public Transform puerta;
         [SerializeField] private string sittingBehaviorsJsonPath;
         void Start()
         {
@@ -82,6 +83,14 @@ namespace ClassRoomVR
         public void SetStudents(Dictionary<string, Student> students)
         {
             studentBehaviorWeights = students.Keys.ToDictionary(key => key, value => 0f);
+            students["María"].MoveTo(puerta.position, 10);
+            students["Andrea"].MoveTo(puerta.position, 10);
+            students["Julia"].MoveTo(puerta.position, 10);
+            students["Irene"].MoveTo(puerta.position, 10);
+            students["Patricia"].MoveTo(puerta.position, 10);
+            students["Rafael"].MoveTo(puerta.position, 10);
+            students["Andrés"].MoveTo(puerta.position, 10);
+
         }
 
         public void SetWeight(string studentName, EventSittingAnimations behavior)

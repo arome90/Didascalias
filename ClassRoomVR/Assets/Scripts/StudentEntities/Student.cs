@@ -6,6 +6,8 @@ using UnityEngine.AI;
 using System.Linq;
 using TMPro;
 using UnityEngine.InputSystem;
+using System.Security.Cryptography;
+using UnityEngine.XR.Content.Animation;
 
 namespace ClassRoomVR
 {
@@ -13,8 +15,9 @@ namespace ClassRoomVR
     /// Clase que representa a un estudiante en la simulación de aula.
     /// </summary>
     [System.Serializable]
-    public class Student : MonoBehaviour
+    public class Student : MonoBehaviour, IAnimationEventActionFinished
     {
+
         public enum Actions
         {
             // Distraído
@@ -68,7 +71,7 @@ namespace ClassRoomVR
         public State GetState() => _state;
 
         public Personality getPersonality() => _personality;
-    
+
         public Emotion GetEmotion() => _emotion;
 
         #endregion
@@ -115,7 +118,7 @@ namespace ClassRoomVR
             _studentNameText.text = name;
             _gender = gender;
             _personality = new Personality();
-            _emotion= new Emotion();
+            _emotion = new Emotion();
             _emotion.InitializeEmotions(0.2f);
             _behaviour.InitializeAttention(_personality);
         }
@@ -130,7 +133,7 @@ namespace ClassRoomVR
         {
             return _emotion.GetAllEmotions();
         }
-        
+
 
         /// <summary>
         /// Marca al estudiante como problemático.
@@ -218,7 +221,7 @@ namespace ClassRoomVR
             {
                 // Valor sin debug: Random.Range(0, 2);
                 int expressionOrAction = Random.Range(1, 2);
-                if(expressionOrAction == 0) // acción
+                if (expressionOrAction == 0) // acción
                 {
                     int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.GIRARSE + 1);
                     if (distractedAction == (int)Actions.MOVIL)
@@ -227,7 +230,7 @@ namespace ClassRoomVR
                     }
                     _animator.SetInteger("Accion", distractedAction);
                 }
-                else if(expressionOrAction == 1) // Expresión
+                else if (expressionOrAction == 1) // Expresión
                 {
                     int distractedExpression = Random.Range(0, 3);
                     Expressions expression;
@@ -246,9 +249,9 @@ namespace ClassRoomVR
                             expression = Expressions.Sleep;
                             break;
                     }
-                   // StartCoroutine(_behaviour.ChangeExpression(expression));
+                    // StartCoroutine(_behaviour.ChangeExpression(expression));
                 }
-                
+
                 StartCoroutine(DistractedActionCooldown());
             }
             else if (_behaviour.AttentionLevel > 75f)
@@ -382,20 +385,35 @@ namespace ClassRoomVR
         private IEnumerator OnCompleteMove(Vector3 destination, float breakDistance, System.Action onComplete = null)
         {
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
-            while (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Movement Blend Tree"))
+            while (_state != State.Standing)
                 yield return null;
+            
 
-            _state = State.Standing;
             _navMeshAgent.SetDestination(destination);
-            _animator.SetFloat("Speed", Mathf.Clamp01(_navMeshAgent.velocity.magnitude));
-
-            while (Distance(transform.position, destination, breakDistance))
+            _animator.SetFloat("Speed", Mathf.Clamp01(_navMeshAgent.speed));
+            while (Distance(transform.position, destination, 1.5f)) {
+                Debug.Log(Distance(transform.position, destination, 1.5f));
                 yield return null;
+            }
 
             _rig.layers[0].active = true;
+            _animator.SetFloat("Speed",0);
             _navMeshAgent.enabled = false;
-            _animator.Play("Idle");
             onComplete?.Invoke();
+            SitBack();
+
+        }
+        public void ActionFinished(string label)
+        {
+            if (label == "StandUp")
+            {
+                _state = State.Standing;
+            }
+            else if (label == "SitDown")
+            {
+                _state = State.Sitting;
+            }
+
         }
 
         private bool Distance(Vector3 position, Vector3 destination, float breakDistance)
@@ -413,20 +431,22 @@ namespace ClassRoomVR
         {
             while (Distance(transform.position, _desk.GetStudentPosition(), 0.07f))
             {
+                _animator.SetFloat("Speed", Mathf.Clamp01(_navMeshAgent.speed));
+
                 yield return null;
             }
 
             _navMeshAgent.enabled = false;
             transform.rotation = _desk.transform.rotation;
             _animator.SetBool("OnFoot", false);
-            _desk.PlayAnimacionMesa(Animaciones.SitRelajado);
+            //_desk.PlayAnimacionMesa(Animaciones.SitRelajado);
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
             Transform pos = _desk.transform.GetChild(0);
             transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
-            transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
-            _state = State.Sitting;
+            transform.Translate(-new Vector3(0f, 0f, 0.12f), Space.Self);
             _rig.layers[0].active = true;
             _desk.SetChairActive(true);
+            _desk.PlayChairAnim("ChairPushedFront");
         }
 
         /// <summary>
@@ -454,9 +474,7 @@ namespace ClassRoomVR
 
             if (_state == State.Sitting)
             {
-                _desk.SetChairActive(false);
-                _animator.SetBool("OnFoot", true);
-                _desk.PlayAnimacionMesa(Animaciones.Empujar);
+                StandUp();
             }
             else
             {
@@ -464,6 +482,17 @@ namespace ClassRoomVR
             }
 
             StartCoroutine(OnCompleteMove(destination, breakDistance, onComplete));
+        }
+        /// <summary>
+        /// Levantarse de la silla
+        public void StandUp()
+        {
+             _desk.SetChairActive(false);
+            _animator.SetBool("OnFoot", true);
+            _animator.SetInteger("Action", -1);
+            _desk.PlayChairAnim("ChairPushedBack");
+            //_desk.PlayAnimacionMesa(Animaciones.Empujar);
+
         }
 
         /// <summary>
@@ -548,7 +577,7 @@ namespace ClassRoomVR
             //    currentBlendValue = Mathf.MoveTowards(currentBlendValue, targetBlendValue, 0.5f * Time.deltaTime);
             //    _animator.SetFloat("Aburrimiento", currentBlendValue);
 
-               yield return null;
+            yield return null;
             //}
         }
     }
