@@ -120,6 +120,13 @@ namespace ClassRoomVR
             _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }
 
+        public void ExternalForceInfluence(float ef)
+        {
+            _attentionLevel += ClimateManager.Instance.environmentalClimate * studentBehavoirValues[studentBehaviorParams.climateInfluence];
+
+            _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
+        }
+
         /// <summary>
         /// Establece un nivel mínimo de atención y cambia la expresión.
         /// </summary>

@@ -10,10 +10,12 @@ using ClassRoomVR;
 /// </summary>
 public class ExternalForceManager : GenericSingleton<ExternalForceManager>
 {
-    private Dictionary<ExternalForces, Dictionary<EmotionType, float>> externalForceImpacts;
+    private Dictionary<ExternalForces, Dictionary<EmotionType, float>> externalForceEmotionImpacts;
+    private Dictionary<ExternalForces, float> externalForceAttentionImpact;
     private Dictionary<string, Student> _students;
 
-    [SerializeField] private string externalForcesJsonPath;
+    [SerializeField] private string externalForcesEmotionJsonPath;
+    [SerializeField] private string externalForcesAttentionJsonPath;
 
     void Start()
     {
@@ -29,7 +31,7 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
     /// </summary>
     private void LoadExternalForcesFromJson()
     {
-        string filePath = Path.Combine(Application.dataPath, externalForcesJsonPath);
+        string filePath = Path.Combine(Application.dataPath, externalForcesEmotionJsonPath);
 
         if (File.Exists(filePath))
         {
@@ -42,7 +44,7 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
                 Dictionary<string, Dictionary<string, float>> tempImpacts = wrapper.ToDictionary();
 
                 // Convertir claves a enumeradores
-                externalForceImpacts = new Dictionary<ExternalForces, Dictionary<EmotionType, float>>();
+                externalForceEmotionImpacts = new Dictionary<ExternalForces, Dictionary<EmotionType, float>>();
 
                 foreach (var kvp in tempImpacts)
                 {
@@ -58,7 +60,42 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
                             }
                         }
 
-                        externalForceImpacts[force] = emotionImpacts;
+                        externalForceEmotionImpacts[force] = emotionImpacts;
+                    }
+                }
+
+                Debug.Log("External forces loaded successfully.");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Error parsing JSON file: {ex.Message}");
+            }
+        }
+        else
+        {
+            Debug.LogError($"External forces file not found at path: {filePath}");
+        }
+
+        filePath = Path.Combine(Application.dataPath, externalForcesAttentionJsonPath);
+
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+
+            try
+            {
+                // Deserializar el JSON a la estructura de datos
+                KeyValueWrapper wrapper = JsonUtility.FromJson<KeyValueWrapper>(json);
+                Dictionary<string, float> tempImpacts = wrapper.ToDictionary();
+
+                // Convertir claves a enumeradores
+                externalForceAttentionImpact = new Dictionary<ExternalForces, float>();
+
+                foreach (var kvp in tempImpacts)
+                {
+                    if(System.Enum.TryParse(kvp.Key, out ExternalForces force))
+                    {
+                        externalForceAttentionImpact[force] = kvp.Value;
                     }
                 }
 
@@ -81,35 +118,47 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
     /// <param name="force">Fuerza externa a aplicar.</param>
     public void ApplyExternalForce(ExternalForces force)
     {
-        if (externalForceImpacts == null || externalForceImpacts.Count == 0)
+        if (externalForceEmotionImpacts == null || externalForceEmotionImpacts.Count == 0)
         {
             Debug.LogError("External forces have not been loaded.");
             return;
         }
 
-        if (externalForceImpacts.TryGetValue(force, out var emotionImpacts))
+        if (externalForceEmotionImpacts.TryGetValue(force, out var emotionImpacts))
         {
-            foreach (var kvp in _students)
+            if (externalForceAttentionImpact.TryGetValue(force, out var attentionImpact))
             {
-                Student student = kvp.Value;
-                Emotion studentEmotion = student.GetEmotion();
-
-                foreach (var emotionImpact in emotionImpacts)
+                foreach (var kvp in _students)
                 {
-                    EmotionType emotionType = emotionImpact.Key;
-                    float impactValue = emotionImpact.Value;
+                    Student student = kvp.Value;
+                    Emotion studentEmotion = student.GetEmotion();
+                    StudentBehavior studentAttention = student.GetBehavior();
 
-                    // Modificar la emoción del estudiante
-                    float currentValue = studentEmotion.GetEmotionValue(emotionType);
-                    studentEmotion.SetEmotionValue(emotionType, currentValue + impactValue);
+                    foreach (var emotionImpact in emotionImpacts)
+                    {
+                        EmotionType emotionType = emotionImpact.Key;
+                        float impactValue = emotionImpact.Value;
+
+                        // Modificar la emoción del estudiante
+                        float currentValue = studentEmotion.GetEmotionValue(emotionType);
+                        studentEmotion.SetEmotionValue(emotionType, currentValue + impactValue);
+                    }
+
+                    studentAttention.ExternalForceInfluence(attentionImpact);
                 }
+                Debug.Log($"Applied external force '{force}' to all students.");
+
+            }
+            else
+            {
+                Debug.LogWarning($"External force '{force}' has no defined attention impacts.");
             }
 
-            Debug.Log($"Applied external force '{force}' to all students.");
         }
         else
         {
-            Debug.LogWarning($"External force '{force}' has no defined impacts.");
+            Debug.LogWarning($"External force '{force}' has no defined emotional impacts.");
         }
+
     }
 }
