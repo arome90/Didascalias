@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using System.Security.Cryptography;
 using UnityEngine.XR.Content.Animation;
+using MathNet.Numerics.Distributions;
 
 namespace ClassRoomVR
 {
@@ -15,7 +16,7 @@ namespace ClassRoomVR
     /// Clase que representa a un estudiante en la simulación de aula.
     /// </summary>
     [System.Serializable]
-    public class Student : MonoBehaviour, IAnimationEventActionFinished
+    public class Student : MonoBehaviour, IAnimationEventActionFinished, IAnimationEventActionBegin
     {
 
         public enum Actions
@@ -59,7 +60,8 @@ namespace ClassRoomVR
         private ResponseStudent _response;
         private JawMove _jaw;
         private RigBuilder _rig;
-
+        private Vector3 _studentSittingPlaceOffset;
+        private Transform _studentSittingPlace;
         #region Getters
 
         public Desk GetDesk() => _desk;
@@ -111,7 +113,7 @@ namespace ClassRoomVR
         /// <param name="player">Transform del jugador.</param>
         /// <param name="name">Nombre del estudiante.</param>
         /// <param name="gender">Género del estudiante.</param>
-        public void SetParameters(Transform player, string name, Gender gender)
+        public void SetParameters(Transform player, string name, Gender gender, Vector3 studentSittingPlaceOffset)
         {
             _player = player;
             transform.name = name;
@@ -121,6 +123,7 @@ namespace ClassRoomVR
             _emotion = new Emotion();
             _emotion.InitializeEmotions(0.2f);
             _behaviour.InitializeAttention(_personality);
+            _studentSittingPlaceOffset = studentSittingPlaceOffset;
         }
 
         public void ModifyEmotion(EmotionType emotion, float impactValue)
@@ -228,7 +231,7 @@ namespace ClassRoomVR
                     {
                         SetDirection(FieldOfVision.Down);
                     }
-                    _animator.SetInteger("Accion", distractedAction);
+                    _animator.SetInteger("Action", distractedAction);
                 }
                 else if (expressionOrAction == 1) // Expresión
                 {
@@ -385,14 +388,13 @@ namespace ClassRoomVR
         private IEnumerator OnCompleteMove(Vector3 destination, float breakDistance, System.Action onComplete = null)
         {
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
-            while (_state != State.Standing)
+            while (_state != State.StandUp)
                 yield return null;
             
 
             _navMeshAgent.SetDestination(destination);
             _animator.SetFloat("Speed", Mathf.Clamp01(_navMeshAgent.speed));
             while (Distance(transform.position, destination, 1.5f)) {
-                Debug.Log(Distance(transform.position, destination, 1.5f));
                 yield return null;
             }
 
@@ -405,17 +407,27 @@ namespace ClassRoomVR
         }
         public void ActionFinished(string label)
         {
-            if (label == "StandUp")
-            {
-                _state = State.Standing;
-            }
-            else if (label == "SitDown")
+          
+            if (label == "SitDown")
             {
                 _state = State.Sitting;
             }
+            else if (label == "StandUp")
+            {
+                _studentSittingPlace = transform;
+                _state = State.StandUp;
+            }
 
+        } 
+        public void ActionBegin(string label)
+        {
+            if (label == "Standing")
+            {
+                _state = State.Standing;
+                _desk.PlayChairAnim("ChairPushedBack");
+
+            }
         }
-
         private bool Distance(Vector3 position, Vector3 destination, float breakDistance)
         {
             Vector2 projectedPoint1 = new Vector2(position.x, position.z);
@@ -441,9 +453,12 @@ namespace ClassRoomVR
             _animator.SetBool("OnFoot", false);
             //_desk.PlayAnimacionMesa(Animaciones.SitRelajado);
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
-            Transform pos = _desk.transform.GetChild(0);
-            transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
-            transform.Translate(-new Vector3(0f, 0f, 0.12f), Space.Self);
+
+            Transform seatPosition = _desk.transform.GetChild(0);
+            transform.SetPositionAndRotation(seatPosition.position, seatPosition.parent.rotation);
+            transform.Translate(_studentSittingPlaceOffset/2-new Vector3(0,0,-0.03f), Space.Self);
+         //   transform.Translate(new Vector3(0,), Space.Self);
+
             _rig.layers[0].active = true;
             _desk.SetChairActive(true);
             _desk.PlayChairAnim("ChairPushedFront");
@@ -457,7 +472,6 @@ namespace ClassRoomVR
             _navMeshAgent.enabled = true;
             _rig.layers[0].active = false;
             _navMeshAgent.SetDestination(_desk.GetStudentPosition());
-            _animator.Play("Walking");
             StartCoroutine(OnCompleteSitBack());
         }
 
@@ -476,11 +490,7 @@ namespace ClassRoomVR
             {
                 StandUp();
             }
-            else
-            {
-                _animator.Play("Walking");
-            }
-
+          
             StartCoroutine(OnCompleteMove(destination, breakDistance, onComplete));
         }
         /// <summary>
@@ -490,11 +500,10 @@ namespace ClassRoomVR
              _desk.SetChairActive(false);
             _animator.SetBool("OnFoot", true);
             _animator.SetInteger("Action", -1);
-            _desk.PlayChairAnim("ChairPushedBack");
-            //_desk.PlayAnimacionMesa(Animaciones.Empujar);
+            //
 
         }
-
+     
         /// <summary>
         /// Cambia el escritorio del estudiante.
         /// </summary>

@@ -82,14 +82,8 @@ namespace ClassRoomVR
         /// </summary>
         public void SetStudents(Dictionary<string, Student> students)
         {
-            studentBehaviorWeights = students.Keys.ToDictionary(key => key, value => 0f);
-            students["María"].MoveTo(puerta.position, 10);
-            students["Andrea"].MoveTo(puerta.position, 10);
-            students["Julia"].MoveTo(puerta.position, 10);
-            students["Irene"].MoveTo(puerta.position, 10);
-            students["Patricia"].MoveTo(puerta.position, 10);
-            students["Rafael"].MoveTo(puerta.position, 10);
-            students["Andrés"].MoveTo(puerta.position, 10);
+          studentBehaviorWeights = students.Keys.ToDictionary(key => key, value => 0f);
+ 
 
         }
 

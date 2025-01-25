@@ -49,9 +49,14 @@ public enum State
     Sitting=0,
 
     /// <summary>
-    /// Estado de pie.
+    /// Lavantandose
     /// </summary>
-    Standing=1
+    Standing=1,
+
+    /// <summary>
+    /// De pie
+    /// </summary>
+    StandUp = 2
 }
 
 public enum TalkMode

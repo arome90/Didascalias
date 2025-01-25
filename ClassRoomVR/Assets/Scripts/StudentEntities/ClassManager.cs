@@ -158,7 +158,7 @@ namespace ClassRoomVR
         private Student CreateStudent(string name, Gender gender)
         {
             Student pickedStudent = Instantiate(_body, transform);
-            pickedStudent.SetParameters(_player.transform, name, gender);
+            pickedStudent.SetParameters(_player.transform, name, gender, studentSittingPlaceOffset);
             _students.Add(name, pickedStudent);
             return pickedStudent;
         }
