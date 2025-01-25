@@ -85,6 +85,11 @@ namespace ClassRoomVR
             _personality.getString(ref s.Value);
         }
 
+        public void getEmotionlityString(StringWrapper s)
+        {
+            s.Value += _emotion.ToString();
+        }
+
         #endregion
 
 
