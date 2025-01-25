@@ -22,17 +22,15 @@ namespace BehaviorDesigner.Runtime.Tasks
         [Range(0, 1)]
         public float NeuroticismInfluence = 0;
         [Range(0, 1)]
-        public float JoyInfluence = 0;
+        public float BoredomFascinationInfluence = 0;
         [Range(0, 1)]
-        public float SadnessInfluence = 0;
+        public float DispiritedEncouragedInfluence = 0;
         [Range(0, 1)]
-        public float FearInfluence = 0;
+        public float TerrorEnchantmentInfluence = 0;
         [Range(0, 1)]
-        public float AngerInfluence = 0;
+        public float FrustrationEuphoriaInfluence = 0;
         [Range(0, 1)]
-        public float SurpriseInfluence = 0;
-        [Range(0, 1)]
-        public float DisgustInfluence = 0;
+        public float AnxietyConfidenceInfluence = 0;
 
         public bool onlyPriority;
         private TaskStatus executionStatus = TaskStatus.Inactive;
@@ -45,10 +43,10 @@ namespace BehaviorDesigner.Runtime.Tasks
             //para generalizar se puede crear un componente especifico TODO
             Emotion emotion = targetGameObject.GetComponent<Student>().GetEmotion();
             Personality personality = targetGameObject.GetComponent<Student>().getPersonality();
-            float emotionInfluence = emotion.GetEmotionValue(EmotionType.Joy) * JoyInfluence + emotion.GetEmotionValue(EmotionType.Sadness) * SadnessInfluence +
-                emotion.GetEmotionValue(EmotionType.Fear) * FearInfluence + emotion.GetEmotionValue(EmotionType.Anger) * AngerInfluence +
-               emotion.GetEmotionValue(EmotionType.Surprise) * SurpriseInfluence + emotion.GetEmotionValue(EmotionType.Disgust) * DisgustInfluence;
-            float cont1 = (JoyInfluence + SadnessInfluence + FearInfluence + AngerInfluence + SurpriseInfluence + DisgustInfluence);
+            float emotionInfluence = emotion.GetEmotionValue(EmotionType.BoredomFascination) * BoredomFascinationInfluence + emotion.GetEmotionValue(EmotionType.DispiritedEncouraged) * DispiritedEncouragedInfluence +
+                emotion.GetEmotionValue(EmotionType.TerrorEnchantment) * TerrorEnchantmentInfluence + emotion.GetEmotionValue(EmotionType.FrustrationEuphoria) * FrustrationEuphoriaInfluence +
+               emotion.GetEmotionValue(EmotionType.AnxietyConfidence) * AnxietyConfidenceInfluence;
+            float cont1 = (BoredomFascinationInfluence + DispiritedEncouragedInfluence + TerrorEnchantmentInfluence + FrustrationEuphoriaInfluence + AnxietyConfidenceInfluence);
 
             float personalityInfluence = personality.GetTraitValue(PersonalityType.Openness) * OpennessInfluence + personality.GetTraitValue(PersonalityType.Agreeableness) * AgreeablenessInfluence +
                personality.GetTraitValue(PersonalityType.Conscientiousness) * ConscientiousnessInfluence + personality.GetTraitValue(PersonalityType.Extraversion) * ExtraversionInfluence + personality.GetTraitValue(PersonalityType.Neuroticism) * NeuroticismInfluence;

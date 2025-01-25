@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 using System.Security.Cryptography;
 using UnityEngine.XR.Content.Animation;
 using MathNet.Numerics.Distributions;
+using BehaviorDesigner.Runtime;
 
 namespace ClassRoomVR
 {
@@ -125,7 +126,7 @@ namespace ClassRoomVR
             _studentNameText.text = name;
             _gender = gender;
             _personality = new Personality();
-            _emotion = new Emotion();
+            _emotion = new Emotion(GetComponent<BehaviorTree>());
             _emotion.InitializeEmotions(0.2f);
             _behaviour.InitializeAttention(_personality);
             _studentSittingPlaceOffset = studentSittingPlaceOffset;

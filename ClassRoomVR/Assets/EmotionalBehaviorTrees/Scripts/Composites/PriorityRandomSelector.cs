@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using System.Drawing.Printing;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
@@ -28,7 +30,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             // If specified, use the seed provided.
             if (useSeed)
             {
-                Random.InitState(seed);
+                UnityEngine.Random.InitState(seed);
             }
         }
 
@@ -61,7 +63,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             }
 
             float end_num = probability * Mathf.Pow(1 - probability, children.Count - 1);
-            float aux = Random.Range(0, 1 - end_num);
+            float aux = UnityEngine.Random.Range(0, 1 - end_num);
             int k = 0;
             while (aux > 0)
             {
@@ -75,7 +77,8 @@ namespace BehaviorDesigner.Runtime.Tasks
         public override int CurrentChildIndex()
         {
             // Use the execution order list in order to determine the current child index.
-            return childrenExecutionOrder[currentChildIndex];
+            //quitar el Clamp cuando se soplucione el error
+            return childrenExecutionOrder[Math.Clamp(currentChildIndex, 0, childrenExecutionOrder.Count - 1)];
         }
 
         public override bool CanExecute()

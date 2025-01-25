@@ -25,7 +25,7 @@ namespace ClassRoomVR
         [SerializeField] private string sittingBehaviorsJsonPath;
         void Start()
         {
-            SetStudents(ClassManager.Instance.getStudents());
+            //SetStudents(ClassManager.Instance.getStudents());
             environmentalClimate = 0.0f;
             LoadBehaviorValues();
 

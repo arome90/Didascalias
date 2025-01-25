@@ -50,27 +50,23 @@ public class Personality
     {
         if (studentBehavior.AttentionLevel < attentionThreshold) return;
 
-        emotion.SetEmotionValue(EmotionType.Joy, GetTraitValue(PersonalityType.Extraversion) * 0.9f +
+        emotion.SetEmotionValue(EmotionType.AnxietyConfidence, GetTraitValue(PersonalityType.Extraversion) * 0.9f +
                       GetTraitValue(PersonalityType.Agreeableness) * 0.6f +
                       GetTraitValue(PersonalityType.Conscientiousness) * 0.6f +
                       (1 - GetTraitValue(PersonalityType.Neuroticism)) * 0.8f +
                       GetTraitValue(PersonalityType.Openness) * 0.6f);
 
-        emotion.SetEmotionValue(EmotionType.Sadness, GetTraitValue(PersonalityType.Neuroticism) * 0.8f +
+        emotion.SetEmotionValue(EmotionType.DispiritedEncouraged, GetTraitValue(PersonalityType.Neuroticism) * 0.8f +
                           (1 - GetTraitValue(PersonalityType.Extraversion)) * 0.3f);
 
-        emotion.SetEmotionValue(EmotionType.Fear, GetTraitValue(PersonalityType.Neuroticism) * 0.8f +
+        emotion.SetEmotionValue(EmotionType.TerrorEnchantment, GetTraitValue(PersonalityType.Neuroticism) * 0.8f +
                        (1 - GetTraitValue(PersonalityType.Extraversion)) * 0.3f);
        
-        emotion.SetEmotionValue(EmotionType.Anger, GetTraitValue(PersonalityType.Neuroticism) * 0.7f +
+        emotion.SetEmotionValue(EmotionType.AnxietyConfidence, GetTraitValue(PersonalityType.Neuroticism) * 0.7f +
                         (1 - GetTraitValue(PersonalityType.Agreeableness)) * 0.3f);
 
-        emotion.SetEmotionValue(EmotionType.Surprise, GetTraitValue(PersonalityType.Extraversion) * 0.8f +
+        emotion.SetEmotionValue(EmotionType.BoredomFascination, GetTraitValue(PersonalityType.Extraversion) * 0.8f +
                            GetTraitValue(PersonalityType.Openness) * 0.8f);
-      
-        emotion.SetEmotionValue(EmotionType.Disgust, GetTraitValue(PersonalityType.Neuroticism) * 0.7f +
-                          (1 - GetTraitValue(PersonalityType.Agreeableness)) * 0.3f);
-
     }
 
     public void getString(ref string s)

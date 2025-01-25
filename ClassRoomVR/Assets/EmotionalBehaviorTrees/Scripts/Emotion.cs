@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 using System.Linq;
+using BehaviorDesigner.Runtime;
 public class Emotion
 {
     private float[] _emotions;
     private System.Random random;
+    private BehaviorTree _behaviorTree;
 
-    public Emotion()
+    public Emotion(BehaviorTree bt = null)
     {
         int emotionCount = Enum.GetValues(typeof(EmotionType)).Length;
         _emotions = new float[emotionCount]; // Crea un array para todas las emociones
         random = new System.Random();
+        _behaviorTree = bt;
     }
 
     // Inicializa las emociones con valores aleatorios entre 0 y max
@@ -33,7 +34,11 @@ public class Emotion
     // Establece un nuevo valor para una emoci�n
     public void SetEmotionValue(EmotionType emotion, float value)
     {
-        _emotions[(int)emotion] = Mathf.Clamp(value, -1, 1); 
+        _emotions[(int)emotion] = Mathf.Clamp(value, -1, 1);
+        //Debug.Log("UWUWUWUWUWUWUWUW");
+
+        //Se notifica de que ha cambiado el estado emocional si el BehaviorTree no es null
+        _behaviorTree?.SendEvent("EmoChange");
     }
 
     // Devuelve todas las emociones como un array

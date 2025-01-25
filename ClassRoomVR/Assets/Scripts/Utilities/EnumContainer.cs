@@ -447,12 +447,6 @@ public enum ExternalForces
 }
 public enum EmotionType
 {
-    Joy,
-    Sadness,
-    Fear,
-    Anger,
-    Surprise,
-    Disgust,
     AnxietyConfidence,
     BoredomFascination ,
     FrustrationEuphoria,
