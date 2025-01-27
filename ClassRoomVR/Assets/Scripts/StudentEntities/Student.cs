@@ -91,6 +91,15 @@ namespace ClassRoomVR
             s.Value += _emotion.ToString();
         }
 
+        [SerializeField]
+        private Animator animator;
+
+        public void getAnimatorActioon(StringWrapper s)
+        {
+            s.Value += "Action: ";
+            s.Value += animator.GetInteger("Action");
+        }
+
         #endregion
 
 
