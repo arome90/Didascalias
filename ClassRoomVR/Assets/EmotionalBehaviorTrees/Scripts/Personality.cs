@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using ClassRoomVR;
 using UnityEngine;
+using System.IO;
 
 // Based on the big 5 personality traits model
 public class Personality
@@ -15,6 +16,9 @@ public class Personality
     [SerializeField]
     private float attentionThreshold = -0.6f;
 
+
+    private Dictionary<PersonalityType, Dictionary<EmotionType, float>> personalityEmotionInfluence;
+
     // Constructor
     public Personality()
     {
@@ -22,6 +26,54 @@ public class Personality
         _traits = new float[traitCount]; // Crea un array para los rasgos
         random = new System.Random();
         InitializePersonality();
+    }
+
+    public void LoadPersonalityFromJson(string personalityEmotionJsonPath)
+    {
+        string filePath = Path.Combine(Application.dataPath, personalityEmotionJsonPath);
+
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+
+            try
+            {
+                // Deserializar el JSON a la estructura de datos
+                EntryKeyValueDictionaryWrapper wrapper = JsonUtility.FromJson<EntryKeyValueDictionaryWrapper>(json);
+                Dictionary<string, Dictionary<string, float>> tempImpacts = wrapper.ToDictionary();
+
+                // Convertir claves a enumeradores
+                personalityEmotionInfluence = new Dictionary<PersonalityType, Dictionary<EmotionType, float>>();
+
+                foreach (var kvp in tempImpacts)
+                {
+                    if (System.Enum.TryParse(kvp.Key, out PersonalityType p))
+                    {
+                        var emotionImpacts = new Dictionary<EmotionType, float>();
+
+                        foreach (var emotionKvp in kvp.Value)
+                        {
+                            if (System.Enum.TryParse(emotionKvp.Key, out EmotionType emotion))
+                            {
+                                emotionImpacts[emotion] = emotionKvp.Value;
+                            }
+                        }
+
+                        personalityEmotionInfluence[p] = emotionImpacts;
+                    }
+                }
+
+                Debug.Log("Personality loaded successfully.");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Error parsing JSON file: {ex.Message}");
+            }
+        }
+        else
+        {
+            Debug.LogError($"EPersonality file not found at path: {filePath}");
+        }
     }
 
     // Inicializa los rasgos de personalidad con valores aleatorios entre 0 y 1
@@ -43,6 +95,16 @@ public class Personality
     public void SetTraitValue(PersonalityType trait, float value)
     {
         _traits[(int)trait] = Mathf.Clamp(value, -1f, 1f); // Limita el valor entre 0 y 1
+    }
+
+    public float GetInfluenceEmotion(EmotionType emotion)
+    {
+        float value = 1.0f;
+        foreach (PersonalityType personality in Enum.GetValues(typeof(PersonalityType)))
+        {
+            value += (_traits[(int)personality] - 0.5f)* personalityEmotionInfluence[personality][emotion];
+        }
+        return value;
     }
 
     // Método que influye en las emociones de un estudiante según su personalidad

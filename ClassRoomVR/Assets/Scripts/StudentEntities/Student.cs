@@ -34,7 +34,8 @@ namespace ClassRoomVR
             COGER_OBJETO,
             LANZAR_OBJETO
         }
-
+        [SerializeField]
+        private string personalityEmotionJsonPath;
         private Personality _personality;
         private Emotion _emotion;
 
@@ -135,6 +136,7 @@ namespace ClassRoomVR
             _studentNameText.text = name;
             _gender = gender;
             _personality = new Personality();
+            _personality.LoadPersonalityFromJson(personalityEmotionJsonPath);
             _emotion = new Emotion(GetComponent<BehaviorTree>());
             _emotion.InitializeEmotions(0.2f);
             _behaviour.InitializeAttention(_personality);
@@ -144,7 +146,9 @@ namespace ClassRoomVR
         public void ModifyEmotion(EmotionType emotion, float impactValue)
         {
             float currentValue = _emotion.GetEmotionValue(emotion);
-            _emotion.SetEmotionValue(emotion, currentValue + impactValue);
+            
+
+            _emotion.SetEmotionValue(emotion, currentValue + impactValue* _personality.GetInfluenceEmotion(emotion));
         }
 
         public float[] GetEmotions()
