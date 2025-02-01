@@ -17,6 +17,8 @@ namespace ClassRoomVR
         [SerializeField] private Button _enter; // Botón para entrar
         [SerializeField] private Button _tutorial; // Botón para el tutorial
         [SerializeField] private Button _quitButton; // Botón para salir
+        [SerializeField] private Button _model1Button; //
+        [SerializeField] private Button _model2Button; //
         [SerializeField] private TMP_Dropdown _languageSelector; // Selector de idioma
 
         [SerializeField] private GameObject _nextScreen; // Pantalla siguiente
@@ -41,6 +43,9 @@ namespace ClassRoomVR
             _enter.onClick.AddListener(OnEnterButtonClick);
             _tutorial.onClick.AddListener(OnTutorialButtonClick);
             _quitButton.onClick.AddListener(QuitButton);
+            _quitButton.onClick.AddListener(QuitButton);
+            _model1Button.onClick.AddListener(OnModel1ButtonClicked);
+            _model2Button.onClick.AddListener(OnModel2ButtonClicked);
             LanguageSelector();
         }
 
@@ -60,6 +65,16 @@ namespace ClassRoomVR
         {
             _tutorial.interactable = false;
             GameManager.Instance.LoadTutorial();
+        }
+        private void OnModel1ButtonClicked()
+        {
+            PlayerPrefs.SetInt("TreeModel", 1);
+            OnEnterButtonClick();
+        }
+        private void OnModel2ButtonClicked()
+        {
+            PlayerPrefs.SetInt("TreeModel",2);
+            OnEnterButtonClick();
         }
 
         /// <summary>

@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using UnityEngine.XR.Content.Animation;
 using MathNet.Numerics.Distributions;
 using BehaviorDesigner.Runtime;
+using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
@@ -64,6 +65,9 @@ namespace ClassRoomVR
         private RigBuilder _rig;
         private Vector3 _studentSittingPlaceOffset;
         private Transform _studentSittingPlace;
+        private BehaviorTree _behaviorTree;
+        //PRUEBA
+        [SerializeField] private ExternalBehaviorTree model1, model2;
         #region Getters
 
         public Desk GetDesk() => _desk;
@@ -114,6 +118,7 @@ namespace ClassRoomVR
             _audioSource = GetComponent<AudioSource>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _behaviour = GetComponent<StudentBehavior>();
+            _behaviorTree= GetComponent<BehaviorTree>();
             _jaw = GetComponent<JawMove>();
             _state = State.Sitting;
             _distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
@@ -121,6 +126,20 @@ namespace ClassRoomVR
                 .ToArray();
             var stateAnim = _animator.GetCurrentAnimatorStateInfo(0);
             _animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
+
+
+            //PRUEBA
+            if (PlayerPrefs.GetInt("TreeModel") == 0) {
+                _behaviorTree.SetActive(false);
+            }
+            else if (PlayerPrefs.GetInt("TreeModel") == 1)
+            {
+                _behaviorTree.ExternalBehavior= model1;
+            }
+            else if (PlayerPrefs.GetInt("TreeModel") == 2)
+            {
+                _behaviorTree.ExternalBehavior = model2;
+            }
         }
 
         /// <summary>
