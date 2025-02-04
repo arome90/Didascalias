@@ -161,7 +161,7 @@ namespace ClassRoomVR
             }
             else if (index == 3)
             {
-                if (max < 0) SetBlendShape(Expressions.Cry, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+                if (max < 0) SetBlendShape(Expressions.Bored, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
                 else SetBlendShape(Expressions.Smile, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
 
             }
