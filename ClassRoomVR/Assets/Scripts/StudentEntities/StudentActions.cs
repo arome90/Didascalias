@@ -1,11 +1,13 @@
 using BehaviorDesigner.Runtime.Tasks.Unity.Math;
 using BehaviorDesigner.Runtime.Tasks.Unity.UnityRigidbody;
 using MathNet.Numerics.Distributions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using System.Linq;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 namespace ClassRoomVR
 {
     /// <summary>
@@ -22,24 +24,23 @@ namespace ClassRoomVR
         private float[] _blendShapeWeights;
         private const int SkinnedMeshIndex = 5;
         EventSittingAnimations sittingAnim;
-        [SerializeField]
-        private GameObject phone;
+
         private void Start()
         {
-            studentTr =GetComponent<Transform>().transform.position;
+            studentTr = GetComponent<Transform>().transform.position;
             student = GetComponent<Student>();
             animator = GetComponent<Animator>();
             StartCoroutine(RandomBlink());
             _blendShapeWeights = new float[6];
             sittingAnim = EventSittingAnimations.None;
             StartCoroutine(CallLineAfterDelay());
-            phone.SetActive(false);
 
             //REFACTOR
             //props.GetCharacterProps().BoneAttachments[1].Complements[0].mesh.GameObject().SetActive(false);
             _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
             SetBlendShape(Expressions.Sleep, 0);
             StartCoroutine(RandomBlink());
+            SetFacialEmotion();
 
         }
         /// <summary>
@@ -48,7 +49,7 @@ namespace ClassRoomVR
         private IEnumerator CallLineAfterDelay()
         {
             yield return new WaitForSeconds(1f);
-           // _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
+            // _meshRenderer = transform.GetChild(SkinnedMeshIndex).GetComponent<SkinnedMeshRenderer>();
         }
         /// <summary>
         /// 
@@ -58,12 +59,12 @@ namespace ClassRoomVR
         /// <returns>Retorna un IEnumerator necesario para las corrutinas.</returns>
         public void PlaySitAction(EventSittingAnimations anim)
         {
-            if(sittingAnim== EventSittingAnimations.Sleeping) StartCoroutine(RandomBlink());
+            if (sittingAnim == EventSittingAnimations.Sleeping) StartCoroutine(RandomBlink());
             sittingAnim = anim;
+            SetFacialEmotion();
 
-            phone.SetActive(false);
             //SetBlendShape(Expressions.Sleep, 0);
-            
+
             //GetComponent<Transform>().SetPositionAndRotation(studentTr, Quaternion.identity);
             //Debug.Log(gameObject.name + " " + anim.ToString());
             switch (anim)
@@ -89,13 +90,12 @@ namespace ClassRoomVR
                 case EventSittingAnimations.PlayingPhone:
                     {
                         animator.SetInteger("Action", (int)anim);
-                        phone.SetActive(true);
                         break;
                     }
                 case EventSittingAnimations.Swinging:
                     {
-                        animator.SetInteger("Action", (int)anim); 
-                      
+                        animator.SetInteger("Action", (int)anim);
+
                         break;
                     }
                 case EventSittingAnimations.Sleeping:
@@ -107,7 +107,6 @@ namespace ClassRoomVR
                     }
                 case EventSittingAnimations.Attending:
                     {
-                        SetBlendShape(Expressions.Smile, 100);
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
@@ -118,13 +117,11 @@ namespace ClassRoomVR
                     }
                 case EventSittingAnimations.Bored:
                     {
-                        SetBlendShape(Expressions.Bored, 100f);
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.Drawing:
                     {
-                        SetBlendShape(Expressions.Smile, 100);
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
@@ -133,20 +130,61 @@ namespace ClassRoomVR
 
         }
 
-        public int getAction()
+
+
+        public int GetAction()
         {
             return (int)sittingAnim;
+        }
+        public void SetFacialEmotion()
+        {
+            float[] emotions = student.GetEmotions();
+            float max = emotions.Max();
+
+            int index = Array.IndexOf(emotions, emotions.First(x => Math.Abs(x) == Math.Abs(max)));
+            if (index == 0)
+            {
+                if (max < 0) SetBlendShape(Expressions.Cry, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+                else SetBlendShape(Expressions.Smile, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+            }
+            else if (index == 1)
+            {
+                if (max < 0) SetBlendShape(Expressions.Bored, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+                else SetBlendShape(Expressions.Smile, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+
+            }
+            else if (index == 2)
+            {
+                if (max < 0) SetBlendShape(Expressions.Angry, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+                else SetBlendShape(Expressions.Smile, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+
+            }
+            else if (index == 3)
+            {
+                if (max < 0) SetBlendShape(Expressions.Cry, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+                else SetBlendShape(Expressions.Smile, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+
+            }
+            else if (index == 4)
+            {
+                if (max < 0) SetBlendShape(Expressions.Cry, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+                else SetBlendShape(Expressions.Smile, (float)Math.Clamp(Math.Abs(max) * 100f, 0, 100f));
+
+            }
+
+
+
         }
 
         /// <summary>
         /// Maneja el parpadeo aleatorio del estudiante.
         /// </summary>
-        private IEnumerator RandomBlink()
+        public IEnumerator RandomBlink()
         {
-            while (sittingAnim!= EventSittingAnimations.Sleeping)
+            while (sittingAnim != EventSittingAnimations.Sleeping)
             {
                 yield return Blink(Expressions.CloseEyes);
-                yield return new WaitForSeconds(Random.Range(BlinkIntervalMin, BlinkIntervalMax));
+                yield return new WaitForSeconds(UnityEngine.Random.Range(BlinkIntervalMin, BlinkIntervalMax));
             }
         }
 
@@ -174,7 +212,7 @@ namespace ClassRoomVR
             }
         }
 
-        private void  ClearExpression()
+        public void ClearExpression()
         {
             for (int i = (int)Expressions.Sleep; i < (int)Expressions.EXPRESSIONS_SIZE; i++)
             {
@@ -186,7 +224,7 @@ namespace ClassRoomVR
         /// Cambia la expresión del estudiante suavemente.
         /// </summary>
         /// <param name="exp">Expresión a cambiar.</param>
-        private IEnumerator ChangeExpression(Expressions exp)
+        public IEnumerator ChangeExpression(Expressions exp)
         {
             int expressionIndex = (int)exp;
             while (_meshRenderer.GetBlendShapeWeight(expressionIndex) < 100f)

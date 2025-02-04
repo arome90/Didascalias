@@ -66,6 +66,8 @@ namespace ClassRoomVR
         private Vector3 _studentSittingPlaceOffset;
         private Transform _studentSittingPlace;
         private BehaviorTree _behaviorTree;
+        [SerializeField]
+        private GameObject phone;
         //PRUEBA
         [SerializeField] private ExternalBehaviorTree model1, model2;
         #region Getters
@@ -126,6 +128,7 @@ namespace ClassRoomVR
                 .ToArray();
             var stateAnim = _animator.GetCurrentAnimatorStateInfo(0);
             _animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
+            phone.SetActive(false);
 
 
             //PRUEBA
@@ -455,6 +458,10 @@ namespace ClassRoomVR
                 _studentSittingPlace = transform;
                 _state = State.StandUp;
             }
+            else if (label == "PlayPhone")
+            {
+               phone.SetActive(false);
+            }
 
         } 
         public void ActionBegin(string label)
@@ -464,6 +471,10 @@ namespace ClassRoomVR
                 _state = State.Standing;
                 _desk.PlayChairAnim("ChairPushedBack");
 
+            }
+            else if (label == "PlayPhone")
+            {
+                phone.SetActive(true);
             }
         }
         private bool Distance(Vector3 position, Vector3 destination, float breakDistance)

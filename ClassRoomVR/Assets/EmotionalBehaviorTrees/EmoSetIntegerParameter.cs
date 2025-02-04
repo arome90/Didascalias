@@ -41,7 +41,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo.Unity.UnityAnimator
             }
 
 
-            int prevValue = action.getAction();
+            int prevValue = action.GetAction();
             action.PlaySitAction((EventSittingAnimations)(intValue.Value));
             ClimateManager.Instance.SetWeight(gameObject.name, (EventSittingAnimations)(intValue.Value));
             // animator.SetInteger(hashID, intValue.Value);
