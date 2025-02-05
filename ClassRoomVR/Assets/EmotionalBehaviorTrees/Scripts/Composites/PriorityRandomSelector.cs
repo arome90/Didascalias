@@ -2,14 +2,17 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Drawing.Printing;
+using ClassRoomVR;
+using System.IO;
+using System.Linq;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("Ordenar de acuerdo con los pesos y asociar un probi de probabilidad a cada Nodo secundario ")]
     [TaskIcon("{SkinColor}PrioritySelectorIcon.png")]
-    public class PriorityRandomSelector : Composite
+    public class PriorityRandomSelector : Action
     {
-        [Tooltip("Probability factor [0.5,1]")]
+        [Tooltip("Probability factor [0,1]")]
         public float probability = 0.5f;
 
         [Tooltip("Seed the random number generator to make things easier to debug")]
@@ -17,14 +20,14 @@ namespace BehaviorDesigner.Runtime.Tasks
         [Tooltip("Do we want to use the seed?")]
         public bool useSeed = false;
 
-        // The index of the child that is currently running or is about to run.
-        private int currentChildIndex = 0;
-        // The task status of every child task.
-        private TaskStatus executionStatus = TaskStatus.Inactive;
+        [Tooltip("The value of the int parameter")]
+        public SharedInt intValue;
         // The order to run its children in. 
-        private List<int> childrenExecutionOrder = new List<int>();
+        // first is priority, second is index id
+        private SortedDictionary<float, int> executionOrder = new SortedDictionary<float, int>();
 
-
+        private List<Dictionary<BehaviorInfluences, float>> behaviorInfluences;
+        private string behaviorInfluencesJsonPath = "jsonResources/BehaviorInfluences.json";
         public override void OnAwake()
         {
             // If specified, use the seed provided.
@@ -32,37 +35,14 @@ namespace BehaviorDesigner.Runtime.Tasks
             {
                 UnityEngine.Random.InitState(seed);
             }
-        }
-
-        public override float GetPriority()
-        {
-            if (children.Count == 0) return 0;
-            return children[childrenExecutionOrder[0]].GetPriority();
+            LoadExternalForcesFromJson();
         }
 
         public override void OnStart()
-        {
-            // Make sure the list is empty before we add child indexes to it.
-            childrenExecutionOrder.Clear();
+        {            
+            ComputeBehaviorPriorities();
 
-            // Loop through each child task and determine its priority. The higher the priority the lower it goes within the list. The task with the highest
-            // priority will be first in the list and will be executed first.
-            for (int i = 0; i < children.Count; ++i)
-            {
-                float priority = children[i].GetPriority();
-                int insertIndex = childrenExecutionOrder.Count;
-                for (int j = 0; j < childrenExecutionOrder.Count; ++j)
-                {
-                    if (children[childrenExecutionOrder[j]].GetPriority() < priority)
-                    {
-                        insertIndex = j;
-                        break;
-                    }
-                }
-                childrenExecutionOrder.Insert(insertIndex, i);
-            }
-
-            float end_num = probability * Mathf.Pow(1 - probability, children.Count - 1);
+            float end_num = probability * Mathf.Pow(1 - probability, behaviorInfluences.Count - 1);
             float aux = UnityEngine.Random.Range(0, 1 - end_num);
             int k = 0;
             while (aux > 0)
@@ -70,40 +50,106 @@ namespace BehaviorDesigner.Runtime.Tasks
                 k++;
                 aux -= probability * Mathf.Pow(1 - probability, k - 1);
             }
-            currentChildIndex = k - 1;
-
-        }
-
-        public override int CurrentChildIndex()
-        {
-            // Use the execution order list in order to determine the current child index.
-            //quitar el Clamp cuando se soplucione el error
-            return childrenExecutionOrder[Math.Clamp(currentChildIndex, 0, childrenExecutionOrder.Count - 1)];
-        }
-
-        public override bool CanExecute()
-        {
-            // We can continue to execuate as long as we have children that haven't been executed and no child has returned success.
-            return executionStatus != TaskStatus.Success && executionStatus != TaskStatus.Failure;
-        }
-
-        public override void OnChildExecuted(TaskStatus childStatus)
-        {
-            executionStatus = childStatus;
-        }
-
-        public override void OnConditionalAbort(int childIndex)
-        {
-            // Set the current child index to the index that caused the abort
-            currentChildIndex = childIndex;
-            executionStatus = TaskStatus.Inactive;
+            intValue = k - 1;
         }
 
         public override void OnEnd()
         {
             // All of the children have run. Reset the variables back to their starting values.
-            executionStatus = TaskStatus.Inactive;
-            currentChildIndex = 0;
+            intValue = 0;
+        }
+
+        private void ComputeBehaviorPriorities()
+        {
+            // Make sure the list is empty before we add child indexes to it.
+            executionOrder.Clear();
+
+            // Loop through each child task and determine its priority. The higher the priority the lower it goes within the list. The task with the highest
+            // priority will be first in the list and will be executed first.
+            for (int i = 0; i < behaviorInfluences.Count; ++i)
+            {
+                executionOrder.Add(ComputePriority(behaviorInfluences[i]), i);
+            }
+        }
+
+        private float ComputePriority(Dictionary<BehaviorInfluences, float> behavior)
+        {
+            GameObject targetGameObject = gameObject;
+            //para generalizar se puede crear un componente especifico TODO
+            Emotion emotion = targetGameObject.GetComponent<Student>().GetEmotion();
+            Personality personality = targetGameObject.GetComponent<Student>().getPersonality();
+            float emotionInfluence = emotion.GetEmotionValue(EmotionType.BoredomFascination) * behavior[BehaviorInfluences.BoredomFascination] +
+                emotion.GetEmotionValue(EmotionType.DispiritedEncouraged) * behavior[BehaviorInfluences.DispiritedEncouraged] +
+                emotion.GetEmotionValue(EmotionType.TerrorEnchantment) * behavior[BehaviorInfluences.TerrorEnchantment] +
+                emotion.GetEmotionValue(EmotionType.FrustrationEuphoria) * behavior[BehaviorInfluences.FrustrationEuphoria] +
+                emotion.GetEmotionValue(EmotionType.AnxietyConfidence) * behavior[BehaviorInfluences.AnxietyConfidence];
+
+            float cont1 = (behavior[BehaviorInfluences.BoredomFascination] + behavior[BehaviorInfluences.DispiritedEncouraged] +
+                behavior[BehaviorInfluences.TerrorEnchantment] + behavior[BehaviorInfluences.FrustrationEuphoria] +
+                behavior[BehaviorInfluences.AnxietyConfidence]);
+
+            float personalityInfluence = personality.GetTraitValue(PersonalityType.Openness) * behavior[BehaviorInfluences.Openness] +
+                personality.GetTraitValue(PersonalityType.Agreeableness) * behavior[BehaviorInfluences.Agreeableness] +
+               personality.GetTraitValue(PersonalityType.Conscientiousness) * behavior[BehaviorInfluences.Conscientiousness] +
+               personality.GetTraitValue(PersonalityType.Extraversion) * behavior[BehaviorInfluences.Extraversion] +
+               personality.GetTraitValue(PersonalityType.Neuroticism) * behavior[BehaviorInfluences.Neuroticism];
+
+            float cont2 = behavior[BehaviorInfluences.Openness] + behavior[BehaviorInfluences.Agreeableness] + behavior[BehaviorInfluences.Conscientiousness] +
+                behavior[BehaviorInfluences.Extraversion] + behavior[BehaviorInfluences.Neuroticism];
+
+
+            return (emotionInfluence + personalityInfluence) * behavior[BehaviorInfluences.Priority] / (cont1 + cont2);
+        }
+
+        /// <summary>
+        /// Carga las definiciones de fuerzas externas desde un archivo JSON.
+        /// </summary>
+        private void LoadExternalForcesFromJson()
+        {
+            string filePath = Path.Combine(Application.dataPath, behaviorInfluencesJsonPath);
+
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+
+                try
+                {
+                    // Deserializar el JSON a la estructura de datos
+                    EntryKeyValueDictionaryWrapper wrapper = JsonUtility.FromJson<EntryKeyValueDictionaryWrapper>(json);
+                    Dictionary<string, Dictionary<string, float>> tempImpacts = wrapper.ToDictionary();
+
+                    // Convertir claves a enumeradores
+                    behaviorInfluences = new List<Dictionary<BehaviorInfluences, float>>();
+
+                    foreach (var kvp in tempImpacts)
+                    {
+                        if (System.Enum.TryParse(kvp.Key, out ExternalForces force))
+                        {
+                            var behaviorImpacts = new Dictionary<BehaviorInfluences, float>();
+
+                            foreach (var emotionKvp in kvp.Value)
+                            {
+                                if (System.Enum.TryParse(emotionKvp.Key, out BehaviorInfluences emotion))
+                                {
+                                    behaviorImpacts[emotion] = emotionKvp.Value;
+                                }
+                            }
+
+                            behaviorInfluences.Add(behaviorImpacts);
+                        }
+                    }
+
+                    Debug.Log("External forces loaded successfully.");
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"Error parsing JSON file: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.LogError($"External forces file not found at path: {filePath}");
+            }
         }
     }
 }

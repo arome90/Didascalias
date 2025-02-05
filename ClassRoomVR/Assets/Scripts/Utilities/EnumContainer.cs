@@ -476,3 +476,18 @@ public enum studentBehaviorParams
     climateInfluence,
     range
 }
+
+public enum BehaviorInfluences
+{
+    Priority,
+    Extraversion,
+    Agreeableness,
+    Conscientiousness,
+    Neuroticism,
+    Openness,
+    AnxietyConfidence,
+    BoredomFascination,
+    FrustrationEuphoria,
+    DispiritedEncouraged,
+    TerrorEnchantment
+}
