@@ -132,17 +132,17 @@ namespace ClassRoomVR
 
 
             //PRUEBA
-            if (PlayerPrefs.GetInt("TreeModel") == 0) {
-                _behaviorTree.SetActive(false);
-            }
-            else if (PlayerPrefs.GetInt("TreeModel") == 1)
-            {
-                _behaviorTree.ExternalBehavior= model1;
-            }
-            else if (PlayerPrefs.GetInt("TreeModel") == 2)
-            {
-                _behaviorTree.ExternalBehavior = model2;
-            }
+            //if (PlayerPrefs.GetInt("TreeModel") == 0) {
+            //    _behaviorTree.SetActive(false);
+            //}
+            //else if (PlayerPrefs.GetInt("TreeModel") == 1)
+            //{
+            //    _behaviorTree.ExternalBehavior= model1;
+            //}
+            //else if (PlayerPrefs.GetInt("TreeModel") == 2)
+            //{
+            //    _behaviorTree.ExternalBehavior = model2;
+            //}
         }
 
         /// <summary>
