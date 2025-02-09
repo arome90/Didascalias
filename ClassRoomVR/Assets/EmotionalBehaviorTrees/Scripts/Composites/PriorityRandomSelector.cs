@@ -24,7 +24,8 @@ namespace BehaviorDesigner.Runtime.Tasks
         public SharedInt intValue;
         // The order to run its children in. 
         // first is priority, second is index id
-        private SortedDictionary<float, int> executionOrder = new SortedDictionary<float, int>();
+        //private SortedDictionary<float, int> executionOrder = new SortedDictionary<float, int>();
+        private List<KeyValuePair<float, int>> executionOrder = new List<KeyValuePair<float, int>>();
 
         private List<Dictionary<BehaviorInfluences, float>> behaviorInfluences;
         private string behaviorInfluencesJsonPath = "jsonResources/BehaviorInfluences.json";
@@ -41,6 +42,7 @@ namespace BehaviorDesigner.Runtime.Tasks
         public override void OnStart()
         {            
             ComputeBehaviorPriorities();
+            executionOrder.Sort((x, y) => x.Key.CompareTo(y.Key));
 
             float end_num = probability * Mathf.Pow(1 - probability, behaviorInfluences.Count - 1);
             float aux = UnityEngine.Random.Range(0, 1 - end_num);
@@ -68,7 +70,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             // priority will be first in the list and will be executed first.
             for (int i = 0; i < behaviorInfluences.Count; ++i)
             {
-                executionOrder.Add(ComputePriority(behaviorInfluences[i]), i);
+                executionOrder.Add(new KeyValuePair<float, int>(ComputePriority(behaviorInfluences[i]), i));
             }
         }
 
@@ -123,23 +125,22 @@ namespace BehaviorDesigner.Runtime.Tasks
 
                     foreach (var kvp in tempImpacts)
                     {
-                        if (System.Enum.TryParse(kvp.Key, out ExternalForces force))
+
+                        var behaviorImpacts = new Dictionary<BehaviorInfluences, float>();
+
+                        foreach (var emotionKvp in kvp.Value)
                         {
-                            var behaviorImpacts = new Dictionary<BehaviorInfluences, float>();
-
-                            foreach (var emotionKvp in kvp.Value)
+                            if (System.Enum.TryParse(emotionKvp.Key, out BehaviorInfluences emotion))
                             {
-                                if (System.Enum.TryParse(emotionKvp.Key, out BehaviorInfluences emotion))
-                                {
-                                    behaviorImpacts[emotion] = emotionKvp.Value;
-                                }
+                                behaviorImpacts[emotion] = emotionKvp.Value;
                             }
-
-                            behaviorInfluences.Add(behaviorImpacts);
                         }
+
+                        behaviorInfluences.Add(behaviorImpacts);
+                        
                     }
 
-                    Debug.Log("External forces loaded successfully.");
+                    Debug.Log("Behavior influences loaded successfully.");
                 }
                 catch (System.Exception ex)
                 {
