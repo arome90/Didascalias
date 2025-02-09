@@ -92,7 +92,7 @@ namespace ClassRoomVR
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
-                case EventSittingAnimations.Swinging:
+                case EventSittingAnimations.ConstantMoving:
                     {
                         animator.SetInteger("Action", (int)anim);
 
@@ -121,6 +121,11 @@ namespace ClassRoomVR
                         break;
                     }
                 case EventSittingAnimations.Drawing:
+                    {
+                        animator.SetInteger("Action", (int)anim);
+                        break;
+                    }
+                case EventSittingAnimations.Terrified:
                     {
                         animator.SetInteger("Action", (int)anim);
                         break;

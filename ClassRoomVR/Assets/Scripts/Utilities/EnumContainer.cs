@@ -265,12 +265,13 @@ public enum EventSittingAnimations
     Yelling,
     RiseHand,
     PlayingPhone,
-    Swinging,
+    ConstantMoving,
     Sleeping,
     Attending,
     Attending2,
     Bored,
-    Drawing
+    Drawing,
+    Terrified
     
 
 }
