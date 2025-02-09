@@ -52,13 +52,13 @@ namespace BehaviorDesigner.Runtime.Tasks
                 k++;
                 aux -= probability * Mathf.Pow(1 - probability, k - 1);
             }
-            intValue.Value = k - 1;
+            intValue.SetValue(k - 1);
         }
 
         public override void OnEnd()
         {
             // All of the children have run. Reset the variables back to their starting values.
-            intValue.Value =-1;
+            //intValue.Value =-1;
         }
 
         private void ComputeBehaviorPriorities()

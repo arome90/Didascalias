@@ -15,11 +15,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo.Unity.UnityAnimator
         [Tooltip("Should the value be reverted back to its original value after it has been set?")]
         public bool setOnce;
 
-        private int hashID;
-        private Animator animator;
         private StudentActions action;
         private GameObject prevGameObject;
-        string studentName;
 
         public override void OnStart()
         {
@@ -27,7 +24,6 @@ namespace BehaviorDesigner.Runtime.Tasks.Emo.Unity.UnityAnimator
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
             if (currentGameObject != prevGameObject)
             {
-                animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
             }
         }
