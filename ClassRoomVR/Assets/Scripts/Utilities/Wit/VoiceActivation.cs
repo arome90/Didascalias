@@ -7,6 +7,7 @@ using Meta.WitAi.Composer.Integrations;
 using MathNet.Numerics.Distributions;
 using Utilities.Extensions;
 using Meta.WitAi.Composer;
+using Meta.WitAi.Json;
 
 namespace ClassRoomVR
 {
@@ -18,7 +19,8 @@ namespace ClassRoomVR
         [SerializeField] TMPro.TextMeshProUGUI textMeshPro;
         List<Student> studentsSelected;
 
-        public float silenceThreshold = 15.0f;
+        [SerializeField]
+        private float silenceThreshold = -35.0f;
 
         List<float> volumeList;
 
@@ -99,20 +101,25 @@ namespace ClassRoomVR
 
         public float getLevelAudio()
         {
-            return (float)volumeList.Mean();
+            if(volumeList.Count == 0) return silenceThreshold;
+            return (float)volumeList.Maximum();
         }
 
         public void OnMicLevelChanged(float a)
         {
-            float db = 20 * Mathf.Log10(a*1000);
-            //Debug.Log("DB: "+db);
-            //Debug.Log(":"+a);
+            float dB = 20 * Mathf.Log10(a);  //LUFS
+            //Debug.Log("Volumen de voz: " + dB + " dB");
 
-            if (db > silenceThreshold)
+            if (dB > silenceThreshold)
             {
-                volumeList.Add(db);
+                volumeList.Add(dB);
             }
 
+        }
+
+        public void clearVolumeList()
+        {
+            volumeList.Clear();
         }
 
         public void OnValidatePartialResponse(Meta.WitAi.Data.VoiceSession sessionData)

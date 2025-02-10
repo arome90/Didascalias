@@ -1005,7 +1005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appVoiceExperience: {fileID: 825419208}
   textMeshPro: {fileID: 1188461553}
-  silenceThreshold: 10
+  silenceThreshold: -35
 --- !u!4 &825419210
 Transform:
   m_ObjectHideFlags: 0
@@ -2736,7 +2736,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3441993382796792756, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3625330677312976107}
+      addedObject: {fileID: 3625330677312976115}
   m_SourcePrefab: {fileID: 100100000, guid: a2a7f9524fec97d4cb29ad24e487ae1c, type: 3}
 --- !u!1 &3625330677312976097 stripped
 GameObject:
@@ -2762,7 +2762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14434a86025dd7241bdc5137b2dac0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3625330677312976107
+--- !u!114 &3625330677312976115
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2771,14 +2771,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3625330677312976097}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2460cf722f2900547b516a414bda60e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 5855e4d18a7bbd745a402a9e3a6fa3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  silenceThreshold: 15
-  whisperThreshold: 20
-  normalThreshold: 40
-  shoutThreshold: 70
+  silenceThreshold: -35
+  whisperThreshold: -25
+  normalThreshold: -12
+  shoutThreshold: 0
   targetTime: 10
+  silenceTime: 10
+  talksTooMuchTime: 15
   voiceActivation: {fileID: 825419209}
   externalForceManager: {fileID: 1472140264}
 --- !u!114 &6943276494513768921 stripped
