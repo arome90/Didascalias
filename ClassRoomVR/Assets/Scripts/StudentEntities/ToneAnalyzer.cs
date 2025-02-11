@@ -66,12 +66,12 @@ namespace ClassRoomVR
             else
             {
                 talksTooMuchTimeCounter += Time.deltaTime;
-                externalForceManager.ApplyExternalForce(ExternalForces.TeacherTalksTooMuch);
             }
 
             if(talksTooMuchTimeCounter > talksTooMuchTime)
             {
-                talksTooMuchTimeCounter=0.0f;
+                externalForceManager.ApplyExternalForce(ExternalForces.TeacherTalksTooMuch);
+                talksTooMuchTimeCounter = 0.0f;
 
             }
 
