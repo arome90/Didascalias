@@ -12,9 +12,7 @@ public class Personality
     private float[] _traits;
     private System.Random random;
 
-    // Umbral de atención
-    [SerializeField]
-    private float attentionThreshold = -0.6f;
+
 
 
     private Dictionary<PersonalityType, Dictionary<EmotionType, float>> personalityEmotionInfluence;
@@ -110,8 +108,6 @@ public class Personality
     // Método que influye en las emociones de un estudiante según su personalidad
     public void InfluenceEmotions(Emotion emotion, StudentBehavior studentBehavior)
     {
-        if (studentBehavior.AttentionLevel < attentionThreshold) return;
-
         emotion.SetEmotionValue(EmotionType.AnxietyConfidence, GetTraitValue(PersonalityType.Extraversion) * 0.9f +
                       GetTraitValue(PersonalityType.Agreeableness) * 0.6f +
                       GetTraitValue(PersonalityType.Conscientiousness) * 0.6f +
