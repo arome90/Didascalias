@@ -145,8 +145,8 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
                             float impactValue = emotionImpact.Value;
 
                             // Modificar la emoción del estudiante
-                            float currentValue = studentEmotion.GetEmotionValue(emotionType);
-                            studentEmotion.SetEmotionValue(emotionType, currentValue + impactValue);
+                         
+                            student.ModifyEmotion(emotionType,impactValue);
                         }
                     }
                 }
