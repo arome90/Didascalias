@@ -133,7 +133,8 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
                     Student student = kvp.Value;
                     Emotion studentEmotion = student.GetEmotion();
                     StudentBehavior studentAttention = student.GetBehavior();
-
+                    studentAttention.ExternalForceInfluence(attentionImpact);
+                    
                     foreach (var emotionImpact in emotionImpacts)
                     {
                         EmotionType emotionType = emotionImpact.Key;
@@ -144,7 +145,6 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
                         studentEmotion.SetEmotionValue(emotionType, currentValue + impactValue);
                     }
 
-                    studentAttention.ExternalForceInfluence(attentionImpact);
                 }
                 Debug.Log($"Applied external force '{force}' to all students.");
 
