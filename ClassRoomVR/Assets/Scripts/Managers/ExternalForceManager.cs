@@ -14,6 +14,9 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
     private Dictionary<ExternalForces, float> externalForceAttentionImpact;
     private Dictionary<string, Student> _students;
 
+    // Umbral de atención
+    [SerializeField]
+    private float attentionThreshold = -0.6f;
     [SerializeField] private string externalForcesEmotionJsonPath;
     [SerializeField] private string externalForcesAttentionJsonPath;
 
@@ -134,17 +137,18 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
                     Emotion studentEmotion = student.GetEmotion();
                     StudentBehavior studentAttention = student.GetBehavior();
                     studentAttention.ExternalForceInfluence(attentionImpact);
-                    
-                    foreach (var emotionImpact in emotionImpacts)
+                    if (studentAttention.AttentionLevel >= attentionThreshold)
                     {
-                        EmotionType emotionType = emotionImpact.Key;
-                        float impactValue = emotionImpact.Value;
+                        foreach (var emotionImpact in emotionImpacts)
+                        {
+                            EmotionType emotionType = emotionImpact.Key;
+                            float impactValue = emotionImpact.Value;
 
-                        // Modificar la emoción del estudiante
-                        float currentValue = studentEmotion.GetEmotionValue(emotionType);
-                        studentEmotion.SetEmotionValue(emotionType, currentValue + impactValue);
+                            // Modificar la emoción del estudiante
+                            float currentValue = studentEmotion.GetEmotionValue(emotionType);
+                            studentEmotion.SetEmotionValue(emotionType, currentValue + impactValue);
+                        }
                     }
-
                 }
                 Debug.Log($"Applied external force '{force}' to all students.");
 
