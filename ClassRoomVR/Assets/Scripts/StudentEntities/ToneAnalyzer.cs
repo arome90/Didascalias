@@ -56,7 +56,7 @@ namespace ClassRoomVR
             }
 
             // Verifica si se ha hablado demasiado
-            if (dB < silenceThreshold)
+            if (dB <= silenceThreshold)
             {
                 // Reinicia el contador de hablar demasiado si hay silencio prolongado
                 if (silencetimeCounter> 5.0f) {
