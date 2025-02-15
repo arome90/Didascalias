@@ -77,11 +77,7 @@ namespace ClassRoomVR
                         ClearExpression();
                         break;
                     }
-                case EventSittingAnimations.Yelling:
-                    {
-                        animator.SetInteger("Action", (int)anim);
-                        break;
-                    }
+               
                 case EventSittingAnimations.RiseHand:
                     {
                         animator.SetInteger("Action", (int)anim);

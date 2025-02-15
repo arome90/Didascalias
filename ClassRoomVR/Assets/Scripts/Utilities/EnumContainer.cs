@@ -262,7 +262,7 @@ public enum Animaciones
 public enum EventSittingAnimations
 {
     None,
-    Yelling,
+    Terrified,
     RiseHand,
     PlayingPhone,
     ConstantMoving,
@@ -270,8 +270,8 @@ public enum EventSittingAnimations
     Attending,
     Attending2,
     Bored,
-    Drawing,
-    Terrified
+    Drawing
+   
     
 
 }
