@@ -27,6 +27,7 @@ namespace ClassRoomVR
         {
             //SetStudents(ClassManager.Instance.getStudents());
             environmentalClimate = 0.0f;
+            SetStudents(ClassManager.Instance.getStudents());
             LoadBehaviorValues();
 
         }
@@ -83,14 +84,12 @@ namespace ClassRoomVR
         public void SetStudents(Dictionary<string, Student> students)
         {
           studentBehaviorWeights = students.Keys.ToDictionary(key => key, value => 0f);
- 
-
         }
 
         public void SetWeight(string studentName, EventSittingAnimations behavior)
         {
             // Si el estudiante existe en el diccionario
-            if (studentBehaviorWeights!=null && studentBehaviorWeights.ContainsKey(studentName))
+            if (studentBehaviorWeights != null && studentBehaviorWeights.ContainsKey(studentName))
             {
                 float weight = GetBehaviorValue(behavior);
                 // Ajustar el peso del estudiante
