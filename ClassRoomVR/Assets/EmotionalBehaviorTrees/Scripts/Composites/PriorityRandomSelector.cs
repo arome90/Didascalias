@@ -40,9 +40,9 @@ namespace BehaviorDesigner.Runtime.Tasks
         }
 
         public override void OnStart()
-        {            
+        {
             ComputeBehaviorPriorities();
-            executionOrder.Sort((x, y) => x.Key.CompareTo(y.Key));
+            executionOrder.Sort((x, y) => y.Key.CompareTo(x.Key));
 
             float end_num = probability * Mathf.Pow(1 - probability, behaviorInfluences.Count - 1);
             float aux = UnityEngine.Random.Range(0, 1 - end_num);
@@ -137,7 +137,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                         }
 
                         behaviorInfluences.Add(behaviorImpacts);
-                        
+
                     }
 
                     Debug.Log("Behavior influences loaded successfully.");
