@@ -52,7 +52,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                 k++;
                 aux -= probability * Mathf.Pow(1 - probability, k - 1);
             }
-            intValue.SetValue(k - 1);
+            intValue.SetValue(executionOrder[k - 1]);
         }
 
         public override void OnEnd()
@@ -100,7 +100,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                 behavior[BehaviorInfluences.Extraversion] + behavior[BehaviorInfluences.Neuroticism];
 
 
-            return (emotionInfluence + personalityInfluence) * behavior[BehaviorInfluences.Priority] / (cont1 + cont2);
+            return (emotionInfluence + personalityInfluence) * behavior[BehaviorInfluences.Priority];
         }
 
         /// <summary>
