@@ -52,7 +52,7 @@ namespace BehaviorDesigner.Runtime.Tasks
                 k++;
                 aux -= probability * Mathf.Pow(1 - probability, k - 1);
             }
-            intValue.SetValue(executionOrder[k - 1]);
+            intValue.SetValue(executionOrder[k - 1].Value);
         }
 
         public override void OnEnd()
