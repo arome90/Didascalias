@@ -19,7 +19,7 @@ namespace ClassRoomVR
         private float _attentionLevel = 50.0f; // >50 atento, <50 distraído
         public float AttentionLevel => _attentionLevel;
 
-        [SerializeField] private float _decisionTime = 4f;
+        [SerializeField] private float _decisionTime = 10.0f;
         public float DecisionTime => _decisionTime;
 
         private Student _student;
@@ -107,7 +107,7 @@ namespace ClassRoomVR
 
         public void ExternalForceInfluence(float ef)
         {
-            _attentionLevel += ClimateManager.Instance.environmentalClimate * studentBehavoirValues[studentBehaviorParams.climateInfluence];
+            //_attentionLevel += ClimateManager.Instance.environmentalClimate * studentBehavoirValues[studentBehaviorParams.climateInfluence];
             _attentionLevel += ef*(AttentionMax-AttentionMin);
             _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }

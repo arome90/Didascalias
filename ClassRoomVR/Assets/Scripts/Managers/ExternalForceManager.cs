@@ -26,7 +26,7 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
         _students = ClassManager.Instance.getStudents();
 
         // Aplicar una fuerza de ejemplo al inicio
-        ApplyExternalForce(ExternalForces.TeacherTooQuiet);
+        //ApplyExternalForce(ExternalForces.TeacherTooQuiet);
     }
 
     /// <summary>
