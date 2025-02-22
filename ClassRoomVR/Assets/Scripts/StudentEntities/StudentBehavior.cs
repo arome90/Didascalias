@@ -39,32 +39,17 @@ namespace ClassRoomVR
 
         private void LoadStudentBehavoirValues()
         {
-            string filePath = Path.Combine(Application.dataPath, studentBehavoirJsonPath);
-
-            if (File.Exists(filePath))
+            if (LoadManager.Instance.GetObject("studentBehavoir", ref studentBehavoirValues))
             {
-                string json = File.ReadAllText(filePath);
-
-                // Deserializar el JSON en un diccionario
-                Dictionary<string, float> tempValues = JsonUtility.FromJson<KeyValueWrapper>(json).ToDictionary();
-
-                // Convertir las claves a enumeradores
-                studentBehavoirValues = new Dictionary<studentBehaviorParams, float>();
-
-                foreach (var kvp in tempValues)
-                {
-                    if (System.Enum.TryParse(kvp.Key, out studentBehaviorParams param))
-                    {
-                        studentBehavoirValues[param] = kvp.Value;
-                    }
-                }
-
                 Debug.Log("Behavior values loaded successfully.");
+                return;
             }
-            else
-            {
-                Debug.LogError($"File not found: {filePath}");
-            }
+            Dictionary<string, float> tempImpacts = LoadManager.Instance.LoadDataFromJson<string,float>(studentBehavoirJsonPath);
+            if (tempImpacts == null) return;
+            // Convertir claves a enumeradores
+            studentBehavoirValues = LoadManager.Instance.ConvertDictionary<studentBehaviorParams,float>(tempImpacts);
+            LoadManager.Instance.SaveObject("studentBehavoir", studentBehavoirValues);
+            Debug.Log("Behavior values loaded successfully.");
         }
 
         public void InitializeAttention(Personality personality)

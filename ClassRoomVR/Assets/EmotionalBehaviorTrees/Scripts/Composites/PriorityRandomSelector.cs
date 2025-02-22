@@ -5,6 +5,7 @@ using System.Drawing.Printing;
 using ClassRoomVR;
 using System.IO;
 using System.Linq;
+using OVRSimpleJSON;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
@@ -108,49 +109,32 @@ namespace BehaviorDesigner.Runtime.Tasks
         /// </summary>
         private void LoadExternalForcesFromJson()
         {
-            string filePath = Path.Combine(Application.dataPath, behaviorInfluencesJsonPath);
-
-            if (File.Exists(filePath))
+            if (LoadManager.Instance.GetObject("behaviorInfluences", ref behaviorInfluences))
             {
-                string json = File.ReadAllText(filePath);
+                Debug.Log("Behavior influences loaded successfully.");
+                return;
+            }
+            Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(behaviorInfluencesJsonPath);
+            if (tempImpacts == null) return;
 
-                try
+            // Convertir claves a enumeradores
+            behaviorInfluences = new List<Dictionary<BehaviorInfluences, float>>();
+
+            foreach (var kvp in tempImpacts)
+            {
+                var behaviorImpacts = new Dictionary<BehaviorInfluences, float>();
+                foreach (var emotionKvp in kvp.Value)
                 {
-                    // Deserializar el JSON a la estructura de datos
-                    EntryKeyValueDictionaryWrapper wrapper = JsonUtility.FromJson<EntryKeyValueDictionaryWrapper>(json);
-                    Dictionary<string, Dictionary<string, float>> tempImpacts = wrapper.ToDictionary();
-
-                    // Convertir claves a enumeradores
-                    behaviorInfluences = new List<Dictionary<BehaviorInfluences, float>>();
-
-                    foreach (var kvp in tempImpacts)
+                    if (System.Enum.TryParse(emotionKvp.Key, out BehaviorInfluences emotion))
                     {
-
-                        var behaviorImpacts = new Dictionary<BehaviorInfluences, float>();
-
-                        foreach (var emotionKvp in kvp.Value)
-                        {
-                            if (System.Enum.TryParse(emotionKvp.Key, out BehaviorInfluences emotion))
-                            {
-                                behaviorImpacts[emotion] = emotionKvp.Value;
-                            }
-                        }
-
-                        behaviorInfluences.Add(behaviorImpacts);
-
+                        behaviorImpacts[emotion] = emotionKvp.Value;
                     }
+                }
+                behaviorInfluences.Add(behaviorImpacts);
+            }
+            LoadManager.Instance.SaveObject("behaviorInfluences", behaviorInfluences);        
+            Debug.Log("Behavior influences loaded successfully.");
 
-                    Debug.Log("Behavior influences loaded successfully.");
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError($"Error parsing JSON file: {ex.Message}");
-                }
-            }
-            else
-            {
-                Debug.LogError($"External forces file not found at path: {filePath}");
-            }
         }
     }
 }

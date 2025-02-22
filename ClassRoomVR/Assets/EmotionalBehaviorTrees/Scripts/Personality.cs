@@ -4,6 +4,7 @@ using System;
 using ClassRoomVR;
 using UnityEngine;
 using System.IO;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 
 // Based on the big 5 personality traits model
 public class Personality
@@ -11,10 +12,6 @@ public class Personality
     // Array para almacenar los rasgos de personalidad
     private float[] _traits;
     private System.Random random;
-
-
-
-
     private Dictionary<PersonalityType, Dictionary<EmotionType, float>> personalityEmotionInfluence;
 
     // Constructor
@@ -28,50 +25,17 @@ public class Personality
 
     public void LoadPersonalityFromJson(string personalityEmotionJsonPath)
     {
-        string filePath = Path.Combine(Application.dataPath, personalityEmotionJsonPath);
-
-        if (File.Exists(filePath))
+        if (LoadManager.Instance.GetObject("personalityEmotionInfluence", ref personalityEmotionInfluence))
         {
-            string json = File.ReadAllText(filePath);
-
-            try
-            {
-                // Deserializar el JSON a la estructura de datos
-                EntryKeyValueDictionaryWrapper wrapper = JsonUtility.FromJson<EntryKeyValueDictionaryWrapper>(json);
-                Dictionary<string, Dictionary<string, float>> tempImpacts = wrapper.ToDictionary();
-
-                // Convertir claves a enumeradores
-                personalityEmotionInfluence = new Dictionary<PersonalityType, Dictionary<EmotionType, float>>();
-
-                foreach (var kvp in tempImpacts)
-                {
-                    if (System.Enum.TryParse(kvp.Key, out PersonalityType p))
-                    {
-                        var emotionImpacts = new Dictionary<EmotionType, float>();
-
-                        foreach (var emotionKvp in kvp.Value)
-                        {
-                            if (System.Enum.TryParse(emotionKvp.Key, out EmotionType emotion))
-                            {
-                                emotionImpacts[emotion] = emotionKvp.Value;
-                            }
-                        }
-
-                        personalityEmotionInfluence[p] = emotionImpacts;
-                    }
-                }
-
-                Debug.Log("Personality loaded successfully.");
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"Error parsing JSON file: {ex.Message}");
-            }
+            Debug.Log("Personality loaded successfully.");
+            return;
         }
-        else
-        {
-            Debug.LogError($"EPersonality file not found at path: {filePath}");
-        }
+        Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(personalityEmotionJsonPath);
+        if (tempImpacts == null) return;
+        // Convertir claves a enumeradores
+        personalityEmotionInfluence = LoadManager.Instance.ConvertDictionary<PersonalityType, EmotionType,float>(tempImpacts);
+        LoadManager.Instance.SaveObject("personalityEmotionInfluence", personalityEmotionInfluence);
+        Debug.Log("Personality loaded successfully.");
     }
 
     // Inicializa los rasgos de personalidad con valores aleatorios entre 0 y 1
@@ -79,7 +43,7 @@ public class Personality
     {
         for (int i = 0; i < _traits.Length; i++)
         {
-            _traits[i] = (float)((random.NextDouble()* 2) - 1); // Rellenar con valores aleatorios entre -1 y 1
+            _traits[i] = (float)((random.NextDouble() * 2) - 1); // Rellenar con valores aleatorios entre -1 y 1
         }
     }
 
@@ -100,7 +64,7 @@ public class Personality
         float value = 1.0f;
         foreach (PersonalityType personality in Enum.GetValues(typeof(PersonalityType)))
         {
-            value += (_traits[(int)personality] - 0.5f)* personalityEmotionInfluence[personality][emotion];
+            value += (_traits[(int)personality] - 0.5f) * personalityEmotionInfluence[personality][emotion];
         }
         return value;
     }
@@ -119,7 +83,7 @@ public class Personality
 
         emotion.SetEmotionValue(EmotionType.TerrorEnchantment, GetTraitValue(PersonalityType.Neuroticism) * 0.8f +
                        (1 - GetTraitValue(PersonalityType.Extraversion)) * 0.3f);
-       
+
         emotion.SetEmotionValue(EmotionType.AnxietyConfidence, GetTraitValue(PersonalityType.Neuroticism) * 0.7f +
                         (1 - GetTraitValue(PersonalityType.Agreeableness)) * 0.3f);
 
@@ -129,7 +93,7 @@ public class Personality
 
     public void getString(ref string s)
     {
-        for (int i = 0;i<_traits.Length;i++)
+        for (int i = 0; i < _traits.Length; i++)
         {
             s += ((PersonalityType)(i)).ToString();
             s += ": " + _traits[i] + "\n";

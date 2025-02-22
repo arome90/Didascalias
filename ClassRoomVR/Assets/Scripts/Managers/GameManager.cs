@@ -134,6 +134,7 @@ namespace ClassRoomVR
 
         private void OnApplicationQuit()
         {
+            LoadManager.DestroyInstance();
             if (isAutoSavingEnabled)
             {
                 UpdateSavedData();
