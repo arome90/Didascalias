@@ -59,6 +59,7 @@ namespace ClassRoomVR
         /// <returns>Retorna un IEnumerator necesario para las corrutinas.</returns>
         public void PlaySitAction(EventSittingAnimations anim)
         {
+            if (anim == sittingAnim) return;
             if (sittingAnim == EventSittingAnimations.Sleeping) StartCoroutine(RandomBlink());
             sittingAnim = anim;
             SetFacialEmotion();

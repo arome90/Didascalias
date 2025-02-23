@@ -130,19 +130,22 @@ namespace ClassRoomVR
             _animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
             phone.SetActive(false);
 
-
-            //PRUEBA
-            //if (PlayerPrefs.GetInt("TreeModel") == 0) {
-            //    _behaviorTree.SetActive(false);
-            //}
-            //else if (PlayerPrefs.GetInt("TreeModel") == 1)
-            //{
-            //    _behaviorTree.ExternalBehavior= model1;
-            //}
-            //else if (PlayerPrefs.GetInt("TreeModel") == 2)
-            //{
-            //    _behaviorTree.ExternalBehavior = model2;
-            //}
+            if (PlayerPrefs.HasKey("TreeModel")) {
+            // PRUEBA
+           
+                if (PlayerPrefs.GetInt("TreeModel") == 0)
+                {
+                    _behaviorTree.SetActive(false);
+                }
+                else if (PlayerPrefs.GetInt("TreeModel") == 1)
+                {
+                    _behaviorTree.ExternalBehavior = model1;
+                }
+                else if (PlayerPrefs.GetInt("TreeModel") == 2)
+                {
+                    _behaviorTree.ExternalBehavior = model2;
+                }
+            }
         }
 
         /// <summary>

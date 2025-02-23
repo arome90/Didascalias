@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 
 
@@ -9,6 +10,7 @@ namespace ClassRoomVR
     /// </summary>
     public class GenerateBackpack : MonoBehaviour
     {
+        [SerializeField] private List<GameObject> children;
         private void Start()
         {
             ActivateRandomChild();
@@ -17,25 +19,25 @@ namespace ClassRoomVR
         /// <summary>
         /// Activa un hijo aleatorio de este GameObject y destruye los otros.
         /// </summary>
-        private void ActivateRandomChild()
+        public void ActivateRandomChild()
         {
-            int childCount = transform.childCount;
-
-            // Si no hay hijos, salir del método
-            if (childCount == 0) return;
-
-            int randomIndex = Random.Range(0, childCount);
-
-            for (int i = 0; i < childCount; i++)
+            if (children == null || children.Count == 0)
             {
-                Transform child = transform.GetChild(i);
+                Debug.LogWarning("No hay hijos asignados en la lista.");
+                return;
+            }
+
+            int randomIndex = Random.Range(0, children.Count);
+
+            for (int i = 0; i < children.Count; i++)
+            {
                 if (i == randomIndex)
                 {
-                    child.gameObject.SetActive(true); // Activar el hijo seleccionado
+                    children[i].SetActive(true);
                 }
                 else
                 {
-                    Destroy(child.gameObject); // Destruir los hijos no seleccionados
+                    Destroy(children[i]);
                 }
             }
         }
