@@ -12,6 +12,7 @@ namespace ClassRoomVR
 
     public class TextPanel : MonoBehaviour
     {
+        public float time=2;
         [System.Serializable]
         public class MethodInfoWrapper
         {
@@ -25,14 +26,10 @@ namespace ClassRoomVR
 
         private void Start()
         {
-            UpdateTextPanel();
+            InvokeRepeating(nameof(UpdateTextPanel), 1, time);
         }
 
-        private void Update()
-        {
-            UpdateTextPanel();
-        }
-
+      
         public void UpdateTextPanel()
         {
             textMeshPro.text = string.Empty;

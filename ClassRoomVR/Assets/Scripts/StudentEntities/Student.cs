@@ -72,6 +72,9 @@ namespace ClassRoomVR
         private GameObject pencil;
         //PRUEBA
         [SerializeField] private ExternalBehaviorTree model1, model2;
+
+        private float _beforeAttention;
+
         #region Getters
 
         public Desk GetDesk() => _desk;
@@ -149,6 +152,8 @@ namespace ClassRoomVR
                     _behaviorTree.ExternalBehavior = model2;
                 }
             }
+
+            _beforeAttention = -1;
         }
 
         /// <summary>
@@ -243,7 +248,8 @@ namespace ClassRoomVR
             if (GameManager.Instance.IsPause) return;
 
             UpdateTargetPosition();
-            if (_attentionText != null)
+            if (_attentionText != null && _beforeAttention != _behaviour.AttentionLevel)
+                _beforeAttention= _behaviour.AttentionLevel;
                 _attentionText.text = _behaviour.AttentionLevel.ToString("0.##");
             PerformAction();
         }
