@@ -12,6 +12,7 @@ namespace ClassRoomVR
         [SerializeField] private Animation _deskAnimation; // Referencia a la animación del escritorio
         [SerializeField] private Animation _chairAnimation; // Referencia a la animación de la silla
         [SerializeField] private NavMeshObstacle _chairObstacle; // Referencia al obstáculo de la silla
+        [SerializeField] private GameObject _notebook; // Referencia al obstáculo de la silla
 
         private int _deskId; // Número de identificación del escritorio
 
@@ -39,6 +40,7 @@ namespace ClassRoomVR
             // Inicializa la lista de nombres de clips de animación
             _deskAnimationClipNames = new List<string>();
             OnCollisionChanged = new UnityEngine.Events.UnityEvent();
+            _notebook.SetActive(false);
         }
 
         /// <summary>
@@ -73,6 +75,16 @@ namespace ClassRoomVR
                 OnCollisionChanged?.Invoke(); // Invoca el evento de forma segura
             }
         }
+
+        /// <summary>
+        /// Activar el objeto cuaderno
+        /// </summary>
+        /// <param name="enable">Activar o no.</param>
+        public void DrawOnNoteBook(bool enable)
+        {
+            _notebook.SetActive(enable);
+        }
+
 
         /// <summary>
         /// Reproduce la animación del escritorio según el clip especificado.

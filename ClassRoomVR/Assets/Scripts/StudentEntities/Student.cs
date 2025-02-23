@@ -68,6 +68,8 @@ namespace ClassRoomVR
         private BehaviorTree _behaviorTree;
         [SerializeField]
         private GameObject phone;
+        [SerializeField]
+        private GameObject pencil;
         //PRUEBA
         [SerializeField] private ExternalBehaviorTree model1, model2;
         #region Getters
@@ -129,6 +131,7 @@ namespace ClassRoomVR
             var stateAnim = _animator.GetCurrentAnimatorStateInfo(0);
             _animator.Play(stateAnim.fullPathHash, 0, Random.Range(0f, 1f));
             phone.SetActive(false);
+            pencil.SetActive(false);
 
             if (PlayerPrefs.HasKey("TreeModel")) {
             // PRUEBA
@@ -465,6 +468,11 @@ namespace ClassRoomVR
             {
                phone.SetActive(false);
             }
+            else if (label == "Drawing")
+            {
+                pencil.SetActive(false);
+                _desk.DrawOnNoteBook(false);
+            }
 
         } 
         public void ActionBegin(string label)
@@ -478,6 +486,11 @@ namespace ClassRoomVR
             else if (label == "PlayPhone")
             {
                 phone.SetActive(true);
+            }
+            else if (label == "Drawing")
+            {
+                pencil.SetActive(true);
+                _desk.DrawOnNoteBook(true);
             }
         }
         private bool Distance(Vector3 position, Vector3 destination, float breakDistance)
