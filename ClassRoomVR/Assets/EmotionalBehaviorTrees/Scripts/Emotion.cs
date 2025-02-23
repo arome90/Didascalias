@@ -7,7 +7,7 @@ public class Emotion
     private float[] _emotions;
     private System.Random random;
     private BehaviorTree _behaviorTree;
-    private float sendEventThreshold = 0.1f;
+    private float sendEventThreshold = 0.3f;
     private float emoCounter;
 
     public Emotion(BehaviorTree bt = null)
