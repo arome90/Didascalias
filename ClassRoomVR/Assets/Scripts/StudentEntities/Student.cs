@@ -455,7 +455,7 @@ namespace ClassRoomVR
             _animator.SetFloat("Speed",0);
             _navMeshAgent.enabled = false;
             onComplete?.Invoke();
-            SitBack();
+            //SitBack();
 
         }
         public void ActionFinished(string label)

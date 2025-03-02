@@ -8,6 +8,7 @@ using MathNet.Numerics.Distributions;
 using Utilities.Extensions;
 using Meta.WitAi.Composer;
 using Meta.WitAi.Json;
+using System;
 
 namespace ClassRoomVR
 {
@@ -41,9 +42,11 @@ namespace ClassRoomVR
 
         private void Awake()
         {
+            Activate();
             text = string.Empty;
             GameManager.Instance.SetVoiceExperience(this);
             studentsSelected = new List<Student>();
+
             appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
                 appVoiceExperience.Activate();
@@ -80,8 +83,8 @@ namespace ClassRoomVR
                 {
                     textMeshPro.text = strin;
                 }
-                appVoiceExperience.Deactivate();
-                Activate();
+                //appVoiceExperience.Deactivate();
+                //Activate();
             });
 
             appVoiceExperience.VoiceEvents.OnMicLevelChanged.AddListener((value) =>
