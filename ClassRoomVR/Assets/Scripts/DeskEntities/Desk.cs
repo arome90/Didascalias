@@ -62,7 +62,7 @@ namespace ClassRoomVR
         /// Obtiene la posición del estudiante que está sentado en el escritorio.
         /// </summary>
         /// <returns>Vector3 con la posición del estudiante.</returns>
-        public Vector3 GetStudentPosition() => transform.GetChild(0).position + new Vector3(0, 0, 0.05f);
+        public Vector3 GetStudentPosition() => transform.GetChild(0).position;
 
         /// <summary>
         /// Invoca el evento de colisión si el otro objeto tiene la etiqueta "Desk".

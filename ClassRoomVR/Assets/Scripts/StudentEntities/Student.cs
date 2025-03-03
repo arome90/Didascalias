@@ -11,6 +11,7 @@ using UnityEngine.XR.Content.Animation;
 using MathNet.Numerics.Distributions;
 using BehaviorDesigner.Runtime;
 using Utilities.Extensions;
+using UnityEngine.XR.Content.Interaction;
 
 namespace ClassRoomVR
 {
@@ -20,7 +21,6 @@ namespace ClassRoomVR
     [System.Serializable]
     public class Student : MonoBehaviour, IAnimationEventActionFinished, IAnimationEventActionBegin
     {
-
         public enum Actions
         {
             // Distraído
@@ -63,8 +63,6 @@ namespace ClassRoomVR
         private ResponseStudent _response;
         private JawMove _jaw;
         private RigBuilder _rig;
-        private Vector3 _studentSittingPlaceOffset;
-        private Transform _studentSittingPlace;
         private BehaviorTree _behaviorTree;
         [SerializeField]
         private GameObject phone;
@@ -75,6 +73,10 @@ namespace ClassRoomVR
 
         private float _beforeAttention;
 
+        private Vector3 _studentSittingPlaceOffset;
+
+        private float _studentStandUpPlaceOffset= -0.12f;
+      
         #region Getters
 
         public Desk GetDesk() => _desk;
@@ -114,6 +116,7 @@ namespace ClassRoomVR
 
         #endregion
 
+ 
 
         private void Awake()
         {
@@ -152,10 +155,8 @@ namespace ClassRoomVR
                     _behaviorTree.ExternalBehavior = model2;
                 }
             }
-
             _beforeAttention = -1;
         }
-
         /// <summary>
         /// Establece los parámetros del estudiante.
         /// </summary>
@@ -443,31 +444,26 @@ namespace ClassRoomVR
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
             while (_state != State.StandUp)
                 yield return null;
-            
-
-            _navMeshAgent.SetDestination(destination);
+            _navMeshAgent.enabled = true;
+             _navMeshAgent.SetDestination(destination);
             _animator.SetFloat("Speed", Mathf.Clamp01(_navMeshAgent.speed));
-            while (Distance(transform.position, destination, 1.5f)) {
+            while (Distance(transform.position, destination, _navMeshAgent.stoppingDistance)) {
                 yield return null;
             }
-
             _rig.layers[0].active = true;
             _animator.SetFloat("Speed",0);
             _navMeshAgent.enabled = false;
             onComplete?.Invoke();
             //SitBack();
-
         }
         public void ActionFinished(string label)
         {
-          
             if (label == "SitDown")
             {
                 _state = State.Sitting;
             }
             else if (label == "StandUp")
             {
-                _studentSittingPlace = transform;
                 _state = State.StandUp;
             }
             else if (label == "PlayPhone")
@@ -479,7 +475,6 @@ namespace ClassRoomVR
                 pencil.SetActive(false);
                 _desk.DrawOnNoteBook(false);
             }
-
         } 
         public void ActionBegin(string label)
         {
@@ -487,7 +482,6 @@ namespace ClassRoomVR
             {
                 _state = State.Standing;
                 _desk.PlayChairAnim("ChairPushedBack");
-
             }
             else if (label == "PlayPhone")
             {
@@ -512,27 +506,26 @@ namespace ClassRoomVR
         /// <returns>Coroutine.</returns>
         private IEnumerator OnCompleteSitBack()
         {
-            while (Distance(transform.position, _desk.GetStudentPosition(), 0.07f))
+            Vector3 pos= _desk.GetStudentPosition() + _desk.transform.forward* _studentStandUpPlaceOffset;
+            while (Distance(transform.position, pos, _navMeshAgent.stoppingDistance))
             {
                 _animator.SetFloat("Speed", Mathf.Clamp01(_navMeshAgent.speed));
-
                 yield return null;
             }
+            transform.position = pos;
 
             _navMeshAgent.enabled = false;
             transform.rotation = _desk.transform.rotation;
             _animator.SetBool("OnFoot", false);
+            _desk.SetChairActive(true);
             //_desk.PlayAnimacionMesa(Animaciones.SitRelajado);
-            _studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
-
-            Transform seatPosition = _desk.transform.GetChild(0);
-            transform.SetPositionAndRotation(seatPosition.position, seatPosition.parent.rotation);
-            transform.Translate(_studentSittingPlaceOffset/2-new Vector3(0,0,-0.03f), Space.Self);
-         //   transform.Translate(new Vector3(0,), Space.Self);
 
             _rig.layers[0].active = true;
-            _desk.SetChairActive(true);
             _desk.PlayChairAnim("ChairPushedFront");
+            while (_state != State.Sitting)
+                yield return null;
+            transform.position = _desk.GetStudentPosition() + _studentSittingPlaceOffset;
+            _studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
         }
 
         /// <summary>
@@ -554,14 +547,11 @@ namespace ClassRoomVR
         /// <param name="onComplete">Acción a ejecutar al completar el movimiento.</param>
         public void MoveTo(Vector3 destination, float breakDistance, System.Action onComplete = null)
         {
-            _navMeshAgent.enabled = true;
             _rig.layers[0].active = false;
-
             if (_state == State.Sitting)
             {
                 StandUp();
             }
-          
             StartCoroutine(OnCompleteMove(destination, breakDistance, onComplete));
         }
         /// <summary>
@@ -569,10 +559,8 @@ namespace ClassRoomVR
         public void StandUp()
         {
              _desk.SetChairActive(false);
-            _animator.SetBool("OnFoot", true);
             _animator.SetInteger("Action", -1);
-            //
-
+            _animator.SetBool("OnFoot", true);
         }
      
         /// <summary>
@@ -660,5 +648,19 @@ namespace ClassRoomVR
             yield return null;
             //}
         }
+
+
+        //[ContextMenu("Prueba")]
+        //public void prueba()
+        //{
+        //    MoveTo(ClassManager.Instance._player.transform.position,0.0f);
+        //}
+
+
+        //[ContextMenu("volver_sitio")]
+        //public void volver_sitio()
+        //{
+        //    SitBack();
+        //}
     }
 }
