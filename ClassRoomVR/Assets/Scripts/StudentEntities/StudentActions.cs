@@ -60,7 +60,8 @@ namespace ClassRoomVR
         public void PlaySitAction(EventSittingAnimations anim)
         {
             if (anim == sittingAnim) return;
-            if (sittingAnim != EventSittingAnimations.Sleeping) { 
+
+            if (sittingAnim == EventSittingAnimations.Sleeping ) { 
                 SetBlendShape(Expressions.Sleep, 0);
                 StartCoroutine(RandomBlink());
             }
