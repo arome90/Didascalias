@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System;
 using ClassRoomVR;
 using UnityEngine;
-using System.IO;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 
 // Based on the big 5 personality traits model
 public class Personality

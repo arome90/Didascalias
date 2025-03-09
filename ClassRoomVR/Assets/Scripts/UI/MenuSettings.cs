@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Localization.Settings;
-using UnityEngine.Localization.Tables;
-using UnityEngine.Localization;
-using UnityEditor.Localization;
-using System.Linq;
 
 namespace ClassRoomVR
 {
@@ -22,8 +17,6 @@ namespace ClassRoomVR
         [SerializeField] private Option _boysOption; // Opción para configurar el número de chicos
         [SerializeField] private Option _girlsOption; // Opción para configurar el número de chicas
         private int _maxStudents; // Número máximo de estudiantes permitido
-
-        [SerializeField] private StringTableCollection _translationTable;
 
         private void Start()
         {
@@ -51,11 +44,11 @@ namespace ClassRoomVR
             string[] structure = Enum.GetNames(typeof(StructureMode));
             List<string> options = new List<string>();
 
-            for (int i = 0; i < structure.Length; i++) {
+            for (int i = 0; i < structure.Length; i++)
+            {
                 string traduction = "";
                 Didascalia_LocalizationManager.Instance.GetTranslation(structure[i],
-                    Didascalia_LocalizationManager.TableCollections.SPANISH, 
-                    Didascalia_LocalizationManager.CurrentLanguage, out traduction);
+                    Didascalia_LocalizationManager.TableCollections.SPANISH, out traduction);
 
                 options.Add(traduction);
             }
