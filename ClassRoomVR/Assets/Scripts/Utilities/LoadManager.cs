@@ -57,7 +57,7 @@ namespace ClassRoomVR
 
         public Dictionary<TKey, TValue> LoadDataFromJson<TKey, TValue>(string jsonPath)
         {
-            string filePath = Path.Combine(Application.dataPath, jsonPath);
+            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, jsonPath);
             var result = new Dictionary<TKey, TValue>();
             if (File.Exists(filePath))
             {

@@ -29,7 +29,8 @@ namespace BehaviorDesigner.Runtime.Tasks
         private List<KeyValuePair<float, int>> executionOrder = new List<KeyValuePair<float, int>>();
 
         private List<Dictionary<BehaviorInfluences, float>> behaviorInfluences;
-        private string behaviorInfluencesJsonPath = "jsonResources/BehaviorInfluences.json";
+        [SerializeField]
+        private string behaviorInfluencesJsonPath;
         public override void OnAwake()
         {
             // If specified, use the seed provided.

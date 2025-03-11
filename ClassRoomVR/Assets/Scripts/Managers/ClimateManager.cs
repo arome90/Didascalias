@@ -36,7 +36,7 @@ namespace ClassRoomVR
         /// </summary>
         private void LoadBehaviorValues()
         {
-            string filePath = Path.Combine(Application.dataPath, sittingBehaviorsJsonPath);
+            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, sittingBehaviorsJsonPath);
 
             if (File.Exists(filePath))
             {
