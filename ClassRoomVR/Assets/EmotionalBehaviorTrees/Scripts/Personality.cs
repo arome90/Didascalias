@@ -27,7 +27,8 @@ public class Personality
             Debug.Log("Personality loaded successfully.");
             return;
         }
-        Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(personalityEmotionJsonPath);
+        string path=System.IO.Path.Combine(Application.persistentDataPath, personalityEmotionJsonPath);
+        Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(path);
         if (tempImpacts == null) return;
         // Convertir claves a enumeradores
         personalityEmotionInfluence = LoadManager.Instance.ConvertDictionary<PersonalityType, EmotionType,float>(tempImpacts);

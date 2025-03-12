@@ -34,7 +34,7 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
     /// </summary>
     private void LoadExternalForcesFromJson()
     {
-        string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, externalForcesEmotionJsonPath);
+        string filePath = System.IO.Path.Combine(Application.persistentDataPath, externalForcesEmotionJsonPath);
 
         if (File.Exists(filePath))
         {
@@ -79,7 +79,7 @@ public class ExternalForceManager : GenericSingleton<ExternalForceManager>
             Debug.LogError($"External forces file not found at path: {filePath}");
         }
 
-        filePath = System.IO.Path.Combine(Application.streamingAssetsPath, externalForcesEmotionJsonPath);
+        filePath = System.IO.Path.Combine(Application.persistentDataPath, externalForcesEmotionJsonPath);
 
         if (File.Exists(filePath))
         {

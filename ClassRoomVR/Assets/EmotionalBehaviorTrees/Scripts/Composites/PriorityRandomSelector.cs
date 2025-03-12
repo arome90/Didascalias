@@ -115,7 +115,8 @@ namespace BehaviorDesigner.Runtime.Tasks
                 Debug.Log("Behavior influences loaded successfully.");
                 return;
             }
-            Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(behaviorInfluencesJsonPath);
+            string path=System.IO.Path.Combine(Application.persistentDataPath, behaviorInfluencesJsonPath);
+            Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(path);
             if (tempImpacts == null) return;
 
             // Convertir claves a enumeradores

@@ -44,7 +44,8 @@ namespace ClassRoomVR
                 Debug.Log("Behavior values loaded successfully.");
                 return;
             }
-            Dictionary<string, float> tempImpacts = LoadManager.Instance.LoadDataFromJson<string,float>(studentBehavoirJsonPath);
+            string path=System.IO.Path.Combine(Application.persistentDataPath, studentBehavoirJsonPath);
+            Dictionary<string, float> tempImpacts = LoadManager.Instance.LoadDataFromJson<string,float>(path);
             if (tempImpacts == null) return;
             // Convertir claves a enumeradores
             studentBehavoirValues = LoadManager.Instance.ConvertDictionary<studentBehaviorParams,float>(tempImpacts);

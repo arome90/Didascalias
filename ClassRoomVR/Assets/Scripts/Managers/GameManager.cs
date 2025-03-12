@@ -111,19 +111,19 @@ namespace ClassRoomVR
         public void LoadMainMenu()
         {
             WsClient.Instance.Disconnect();
-            SceneTransitionManager.Singleton.GoToSceneAsync(0);
+            SceneTransitionManager.Singleton.GoToSceneAsync(1);
         }
 
         public void LoadTutorial()
         {
             currentSettings = availableSettings[availableSettings.Length - 1];
-            SceneTransitionManager.Singleton.GoToSceneAsync(2);
+            SceneTransitionManager.Singleton.GoToSceneAsync(3);
         }
 
         public void LoadMainScene()
         {
             ServerMessage.SendInfoInitial();
-            SceneTransitionManager.Singleton.GoToSceneAsync(1);
+            SceneTransitionManager.Singleton.GoToSceneAsync(2);
         }
 
         public void SetCurrentSettings(int index)

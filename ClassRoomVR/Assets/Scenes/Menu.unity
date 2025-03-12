@@ -2029,6 +2029,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.098
       objectReference: {fileID: 0}
+    - target: {fileID: 7189396008240900207, guid: 0e369159e386f074c9d848fee68b2efa,
+        type: 3}
+      propertyPath: field of view
+      value: 115.3
+      objectReference: {fileID: 0}
     - target: {fileID: 7238658122282277787, guid: 0e369159e386f074c9d848fee68b2efa,
         type: 3}
       propertyPath: m_Enabled
@@ -3867,9 +3872,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stringTableCollections:
-  - {fileID: 11400000, guid: ad57c44a3767f5a46a6ca1ffa7d8ebfb, type: 2}
-  - {fileID: 11400000, guid: 9da58a69854fc4b4c987a2ca183b8737, type: 2}
-  - {fileID: 11400000, guid: 548c0c33d775bca46883c2a68c73d39e, type: 2}
+  - m_TableReference:
+      m_TableCollectionName: 
+  - m_TableReference:
+      m_TableCollectionName: 
+  - m_TableReference:
+      m_TableCollectionName: 
 --- !u!1 &2003665476
 GameObject:
   m_ObjectHideFlags: 0
@@ -5456,7 +5464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &816120419975270530
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5527,7 +5535,6 @@ MonoBehaviour:
   _editDeskPositionButton: {fileID: 7860514874402560979}
   _boysOption: {fileID: 4169417868821345869}
   _girlsOption: {fileID: 8419819408468853573}
-  _translationTable: {fileID: 11400000, guid: 9da58a69854fc4b4c987a2ca183b8737, type: 2}
 --- !u!114 &1019937148329667777
 MonoBehaviour:
   m_ObjectHideFlags: 0
