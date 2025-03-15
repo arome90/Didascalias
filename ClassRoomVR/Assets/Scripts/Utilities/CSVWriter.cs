@@ -30,7 +30,7 @@ namespace ClassRoomVR
         void inicialWrite()
         {
             string creationTime = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); // Obtiene la hora actual
-            string folderPath = Path.Combine(Application.dataPath, "CSV");
+            string folderPath = Path.Combine(Application.persistentDataPath, "CSV");
             // Crear la carpeta si no existe
             if (!Directory.Exists(folderPath))
             {
