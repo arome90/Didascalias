@@ -108,15 +108,24 @@ namespace ClassRoomVR
         [SerializeField]
         private Animator animator;
 
-        public void getAnimatorActioon(StringWrapper s)
+        public void getAnimatorAction(StringWrapper s)
         {
             s.Value += "Action: ";
             s.Value += animator.GetInteger("Action");
         }
 
+        public int getAnimatorAction()
+        {
+            return animator.GetInteger("Action");
+        }
+
+        public float getAttention()
+        {
+            return _behaviour.AttentionLevel;
+        }
         #endregion
 
- 
+
 
         private void Awake()
         {
@@ -188,6 +197,11 @@ namespace ClassRoomVR
         public float[] GetEmotions()
         {
             return _emotion.GetAllEmotions();
+        }
+
+        public float[] GetTraits()
+        {
+            return _personality.GetAllTraits();
         }
 
 

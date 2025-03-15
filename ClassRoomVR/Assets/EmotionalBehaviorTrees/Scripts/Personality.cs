@@ -97,6 +97,11 @@ public class Personality
             s += ": " + _traits[i] + "\n";
         }
     }
+
+    public float[] GetAllTraits()
+    {
+        return (float[])_traits.Clone();
+    }
 }
 
 

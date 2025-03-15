@@ -98,7 +98,7 @@ namespace ClassRoomVR
         {
             if (dB <= silenceThreshold)
             {
-                externalForceManager.ApplyExternalForce(ExternalForces.TeacherSilentTooLong);
+                //externalForceManager.ApplyExternalForce(ExternalForces.TeacherSilentTooLong);
                 Debug.Log("Silencio");
             }
             else if (dB <= whisperThreshold)
