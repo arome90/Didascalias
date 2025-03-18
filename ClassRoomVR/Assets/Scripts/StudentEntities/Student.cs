@@ -246,6 +246,7 @@ namespace ClassRoomVR
         /// </summary>
         public void PayAttention()
         {
+            _canPerformDistractedAction = false;
             _behaviour.SetAttention();
             SetDirection(FieldOfVision.Teacher);
         }
@@ -266,7 +267,7 @@ namespace ClassRoomVR
             if (_attentionText != null && _beforeAttention != _behaviour.AttentionLevel)
                 _beforeAttention= _behaviour.AttentionLevel;
                 _attentionText.text = _behaviour.AttentionLevel.ToString("0.##");
-            PerformAction();
+            //PerformAction();
         }
 
         // Variables privadas para comenzar animaciones cuando no se está atendiendo a clase.
@@ -279,51 +280,58 @@ namespace ClassRoomVR
 
         private IEnumerator DistractedActionCooldown()
         {
-            _canPerformDistractedAction = false;
-            _distractedActionCooldown = Random.Range(_minCooldownDistractedAction, _maxCooldownDistractedAction);
-            yield return new WaitForSeconds(_distractedActionCooldown);
-            _canPerformDistractedAction = true;
-        }
+            while (_canPerformDistractedAction)
+            {
+                GetDistracted();
+                _distractedActionCooldown = Random.Range(_minCooldownDistractedAction, _maxCooldownDistractedAction);
+                yield return new WaitForSeconds(_distractedActionCooldown);
 
+            }
+        }
+        public void SetDistracted() { 
+            _canPerformDistractedAction = true;
+            StartCoroutine(DistractedActionCooldown());
+        }
         private void PerformAction()
         {
             // Para pruebas, lo ponemos en 40f, pero el valor debería ser algo parecido a 20-25f.
-            if (_canPerformDistractedAction && _behaviour.AttentionLevel <= _attetionThresholdDistracted)
+            if (_canPerformDistractedAction )
             {
+                GetDistracted();
                 // Valor sin debug: Random.Range(0, 2);
-                int expressionOrAction = Random.Range(1, 2);
-                if (expressionOrAction == 0) // acción
-                {
-                    int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.GIRARSE + 1);
-                    if (distractedAction == (int)Actions.MOVIL)
-                    {
-                        SetDirection(FieldOfVision.Down);
-                    }
-                    _animator.SetInteger("Action", distractedAction);
-                }
-                else if (expressionOrAction == 1) // Expresión
-                {
-                    int distractedExpression = Random.Range(0, 3);
-                    //Expressions expression; //TODO
-                    //switch (distractedExpression)
-                    //{
-                    //    case 0:
-                    //        expression = Expressions.Angry;
-                    //        break;
-                    //    case 1:
-                    //        expression = Expressions.Cry;
-                    //        break;
-                    //    case 2:
-                    //        expression = Expressions.Sleep;
-                    //        break;
-                    //    default:
-                    //        expression = Expressions.Sleep;
-                    //        break;
-                    //}
-                    // StartCoroutine(_behaviour.ChangeExpression(expression));
-                }
+                //int expressionOrAction = Random.Range(1, 2);
+                //if (expressionOrAction == 0) // acción
+                //{
+                //    int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.GIRARSE + 1);
+                //    if (distractedAction == (int)Actions.MOVIL)
+                //    {
+                //        SetDirection(FieldOfVision.Down);
+                //    }
+                //    _animator.SetInteger("Action", distractedAction);
+                //}
+                //else if (expressionOrAction == 1) // Expresión
+                //{
+                //    int distractedExpression = Random.Range(0, 3);
+                //    //Expressions expression; //TODO
+                //    //switch (distractedExpression)
+                //    //{
+                //    //    case 0:
+                //    //        expression = Expressions.Angry;
+                //    //        break;
+                //    //    case 1:
+                //    //        expression = Expressions.Cry;
+                //    //        break;
+                //    //    case 2:
+                //    //        expression = Expressions.Sleep;
+                //    //        break;
+                //    //    default:
+                //    //        expression = Expressions.Sleep;
+                //    //        break;
+                //    //}
+                //    // StartCoroutine(_behaviour.ChangeExpression(expression));
+                //}
 
-                StartCoroutine(DistractedActionCooldown());
+                
             }
             else if (_behaviour.AttentionLevel > 75f)
             {
@@ -367,7 +375,7 @@ namespace ClassRoomVR
         /// Establece la dirección de la atención del estudiante.
         /// </summary>
         /// <param name="fieldOfVision">Campo de visión al que se dirige la atención.</param>
-        private void SetDirection(FieldOfVision fieldOfVision)
+        public void SetDirection(FieldOfVision fieldOfVision)
         {
             _vision = fieldOfVision;
 

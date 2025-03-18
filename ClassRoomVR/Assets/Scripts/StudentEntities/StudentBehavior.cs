@@ -71,7 +71,6 @@ namespace ClassRoomVR
         private void MakeDecision()
         {
             if (GameManager.Instance.IsPause) return;
-
             float distanceFactor = CalculateDistanceToPlayerMap();
             UpdateAttentionLevel(distanceFactor);
         }
@@ -94,7 +93,6 @@ namespace ClassRoomVR
             if (_student.IsStudentInFieldOfVision())
             {
                 _attentionLevel += studentBehavoirValues[studentBehaviorParams.attentionAddition] * studentBehavoirValues[studentBehaviorParams.distanceFactorAddition] * (1 - factor);
-                //Debug.Log(_attentionAddition);
             }
             else
             {
@@ -118,7 +116,7 @@ namespace ClassRoomVR
         /// </summary>
         public void SetAttention()
         {
-            _attentionLevel = Mathf.Max(_attentionLevel, 65f);
+          //  _attentionLevel = Mathf.Max(_attentionLevel, 65f);
           //  StartCoroutine(ChangeExpression(Expressions.Smile));
         }
 

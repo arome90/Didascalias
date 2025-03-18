@@ -70,6 +70,7 @@ namespace ClassRoomVR
             {
                 case EventSittingAnimations.None:
                     {
+                        student.PayAttention();
                         animator.SetInteger("Action", -1);
                         animator.SetInteger("SittingRandomAction", (int)NormalSittingAnimations.SitHandsOnDesk);
                         sittingAnim = EventSittingAnimations.None;
@@ -79,22 +80,26 @@ namespace ClassRoomVR
                
                 case EventSittingAnimations.RiseHand:
                     {
+                        student.PayAttention();
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.PlayingPhone:
                     {
+                        student.SetDirection(FieldOfVision.Down);
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.ConstantMoving:
                     {
+                        student.SetDistracted();
                         animator.SetInteger("Action", (int)anim);
 
                         break;
                     }
                 case EventSittingAnimations.Sleeping:
                     {
+                        student.SetDirection(FieldOfVision.Down);
                         animator.SetInteger("Action", (int)anim);
                         SetBlendShape(Expressions.Sleep, 100f);
 
@@ -102,26 +107,32 @@ namespace ClassRoomVR
                     }
                 case EventSittingAnimations.Attending:
                     {
+                        student.PayAttention();
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.Attending2:
                     {
+                        student.PayAttention();
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.Bored:
                     {
+                        student.SetDistracted();
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.Drawing:
                     {
+                        student.SetDirection(FieldOfVision.Down);
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
                 case EventSittingAnimations.Terrified:
                     {
+                        student.SetDistracted();
+
                         animator.SetInteger("Action", (int)anim);
                         break;
                     }
