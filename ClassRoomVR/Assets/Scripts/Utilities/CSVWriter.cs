@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Web;
 using UnityEngine;
+using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
@@ -15,16 +13,52 @@ namespace ClassRoomVR
         private StreamWriter writer_2;
         [SerializeField]
         private float snapshotTime;
+        [SerializeField] 
+        private int maxSnapshot;
+        private int snapshotCount;
 
         private Dictionary<string, Student> students;
 
         private ClimateManager climateManager;
 
+        private Queue<string> queue_1;
+        private Queue<string> queue_2;
+
         void Start()
         {
-            climateManager= ClimateManager.Instance;
+            loadConfig();
+
+            if (!this.isActiveAndEnabled) return;
+            snapshotCount = 0;
+            climateManager = ClimateManager.Instance;
+            queue_1 = new Queue<string>();
+            queue_2 = new Queue<string>();
             inicialWrite();
-            InvokeRepeating("WriteData", 0.0f, snapshotTime);
+            InvokeRepeating("RegisterData", 0.0f, snapshotTime);
+        }
+
+        void loadConfig()
+        {
+            Dictionary<string, Dictionary<string, object>> config_ = null;
+            if (LoadManager.Instance.GetObject("config", ref config_))
+            {
+                if (config_.TryGetValue("csv", out var innerDict))
+                {
+                    if (innerDict.TryGetValue("maxSnapshot", out var value))
+                    {
+                        if (value.GetType() == typeof(int)) maxSnapshot = (int)value;
+                    }
+                    if (innerDict.TryGetValue("snapshotTime", out var value_2))
+                    {
+                        if (value_2.GetType() == typeof(float)) snapshotTime = (float)value_2;
+                    }
+                    if (innerDict.TryGetValue("activate", out var value_3))
+                    {
+                        if (value_3.GetType() == typeof(bool)) this.SetActive((bool)value_3);
+                    }
+                }
+               
+            }
         }
 
         void inicialWrite()
@@ -68,21 +102,43 @@ namespace ClassRoomVR
             writer_3.Flush();
             writer_3.Close();
         }
-        void WriteData()
+        void RegisterData()
         {
+            snapshotCount++;
             foreach (KeyValuePair<string, Student> kvp in students)
             {
                 string attentionString = kvp.Value.getAttention().ToString(CultureInfo.InvariantCulture);
                 string emotionsString = string.Join(",", Array.ConvertAll(kvp.Value.GetEmotions(), e => e.ToString(CultureInfo.InvariantCulture)));
                 string i = kvp.Key + "," + kvp.Value.getAnimatorAction() + "," + attentionString + "," + emotionsString + "," + Time.realtimeSinceStartup.ToString(CultureInfo.InvariantCulture);
-                writer_1.WriteLine(i);
+                queue_1.Enqueue(i);
             }
-            
-            writer_2.WriteLine(climateManager.environmentalClimate.ToString(CultureInfo.InvariantCulture));
+            string i2= climateManager.environmentalClimate.ToString(CultureInfo.InvariantCulture) + "," + Time.realtimeSinceStartup.ToString(CultureInfo.InvariantCulture);
+            queue_2.Enqueue(i2);
+            if(snapshotCount > maxSnapshot)
+            {
+                saveData();
+                snapshotCount = 0;
+            }
+        }
+
+        void saveData()
+        {
+            while (queue_1.Count > 0)
+            {
+                writer_1.WriteLine(queue_1.Dequeue());
+            }
+            while (queue_2.Count > 0)
+            {
+                writer_2.WriteLine(queue_2.Dequeue());
+            }
+            writer_1.Flush();
+            writer_2.Flush();
         }
 
         void OnDestroy()
         {
+            writer_1.Flush();
+            writer_2.Flush();
             writer_1.Close();
             writer_2.Close();
         }

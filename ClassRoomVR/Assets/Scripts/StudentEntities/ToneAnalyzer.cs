@@ -36,6 +36,11 @@ namespace ClassRoomVR
         void Start()
         {
             maxTone = silenceThreshold;
+            if(voiceActivation == null || !voiceActivation.enabled || !voiceActivation.gameObject.activeSelf)
+            {
+                this.enabled = false;
+                Debug.LogError("voiceActivation not found or not enabled");
+            }
         }
 
         void Update()

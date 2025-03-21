@@ -1,10 +1,13 @@
+using ClassRoomVR;
 using OVR.OpenVR;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using static OVRHaptics;
 
 public class LoadingScene : MonoBehaviour
 {
@@ -19,17 +22,23 @@ public class LoadingScene : MonoBehaviour
     void Start()
     {
         StartCoroutine(SetupGameFiles());
+        string file = Path.Combine(Application.persistentDataPath, "config.json");
+        var dictionary = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(file);
+        if (dictionary == null || !LoadManager.Instance.SaveObject("config", dictionary))
+        {
+            Debug.LogError("Failed to load config.json file");
+        }
     }
 
     IEnumerator SetupGameFiles()
     {
-        int N= files.Length;
-        int cont= 0;
+        int N = files.Length;
+        int cont = 0;
         foreach (string file in files)
         {
             text2.text = file;
             //string fileName = Path.GetFileName(file);
-            string fileName =file;
+            string fileName = file;
             string persistentFile = Path.Combine(Application.persistentDataPath, fileName);
 
             if (!File.Exists(persistentFile)) // Solo copia si no existe en persistentDataPath
@@ -42,11 +51,12 @@ public class LoadingScene : MonoBehaviour
                 Debug.Log($"Archivo ya copiado: {fileName}, saltando el proceso.");
             }
             cont++;
-            int percentage= cont/N * 100;
+            int percentage = cont / N * 100;
             textMeshPro.text = percentage.ToString() + "%";
         }
 
         textMeshPro.text = "100%";
+
         // Simulación de carga adicional
         yield return new WaitForSeconds(1f);
 
