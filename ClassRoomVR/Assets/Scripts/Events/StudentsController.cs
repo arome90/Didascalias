@@ -207,26 +207,51 @@ namespace ClassRoomVR
                 currentAction = actions[index];
                 _res = Actions.None;
 
+                string actionInfo = "Comportamiento disrruptivo!";
+                string eventType = "";
+                string alumnx = "";
                 switch (currentAction.Action)
                 {
-                    case Actions.Insultar:
+                    case Actions.Insultar: {
                         Debug.Log("Insultando");
-                        StartCoroutine(ActionsMethod.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
+                        eventType = "INSULT";
+                        Student s = GetRandomStudentExcluding();
+                        alumnx += "\"";
+                        alumnx += s.GetName();
+                        alumnx += "\"";
+                        StartCoroutine(ActionsMethod.Insult(s, currentAction, CreateConflict));
+                    }
                         break;
                     case Actions.Separados:
                         Debug.Log("Separándonos");
+                        eventType = "TALK";
+                        alumnx = "";
                         GetRandomStudentsSeparate();
+                        for (int i = 0; i < studentList.Count; i++){
+                            alumnx += "\"";
+                            alumnx += studentList[i].GetName();
+                            alumnx += "\"";
+                            if (i < studentList.Count - 1) alumnx += ", ";
+                        }
                         StartCoroutine(ActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
                         break;
-                    case Actions.Levantarse:
+                    case Actions.Levantarse: {
                         Debug.Log("Levantándose");
-                        ActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
+                        eventType = "STAND_UP";
+                        Student s = GetRandomStudentExcluding();
+                        alumnx += "\"";
+                        alumnx += s.GetName();
+                        alumnx += "\"";
+                        ActionsMethod.StandUpAndMove(s, currentAction, _frontSide.position, CreateConflict);
+                    }
                         break;
                     default:
                         Debug.LogError(currentAction.name + " action is not implemented or its type is missing. Check it!");
+                        eventType += "No implementado.";
                         currentAction = null;
                         break;
                 }
+                InputLogger.Instance.WriteToJson(actionInfo, eventType, alumnx);
             }
         }
 

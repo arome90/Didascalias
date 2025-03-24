@@ -1,6 +1,7 @@
 using WebSocketSharp;
 using UnityEngine;
 using System;
+using System.Collections;
 using Newtonsoft.Json;
 using ClassRoomVR;
 
@@ -47,16 +48,36 @@ public class WsClient : GenericSingleton<WsClient>
         {
             if (ws != null && ws.IsAlive) return;
             Debug.Log("Creating new WebSocket");
-            ws = new WebSocket("wss://cyclops.uab.cat/game/");
+            //ws = new WebSocket("wss://cyclops.uab.cat/game/");
+            ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
+
+            /*
+            for (int i = 0; i < 100; i++)
+            {
+                i++;
+            }
+            Debug.Log("Connecting to WebSocket");
             ws.OnOpen += HandleOnOpen;
             ws.OnMessage += HandleSessionMessage;
             ws.OnClose += HandleOnClose;
             ws.ConnectAsync();
+            */
+
+            StartCoroutine(susbribeWS(ws));
         }
         catch (Exception ex)
         {
             Debug.LogError("Error en la conexión WebSocket: " + ex.Message);
         }
+    }
+
+    IEnumerator susbribeWS(WebSocket ws)
+    {
+        yield return new WaitForSeconds(0.6f);
+        ws.OnOpen += HandleOnOpen;
+        ws.OnMessage += HandleSessionMessage;
+        ws.OnClose += HandleOnClose;
+        ws.ConnectAsync();
     }
 
     /// <summary>
@@ -85,7 +106,9 @@ public class WsClient : GenericSingleton<WsClient>
     /// <param name="e">Información del evento de apertura.</param>
     private void HandleOnOpen(object sender, EventArgs e)
     {
+        Debug.Log("HandleOnOpen");
         IsConnected = true;
+        Debug.Log("New Message (createSession) cn num d session: " + Session);
         var message = new MessageSent(MessageType.CreateSession, Session, _deviceId);
         SendWebSocketMessage(message);
     }
@@ -98,8 +121,10 @@ public class WsClient : GenericSingleton<WsClient>
     /// <param name="e">El mensaje recibido.</param>
     private void HandleSessionMessage(object sender, MessageEventArgs e)
     {
+        Debug.Log("HandleSessionMessage");
         if (TryDeserializeMessage(e.Data, ref receivedMessage))
         {
+            Debug.Log("Mensaje inicial se deserializó correctamente.");
             Session = receivedMessage.data?.ToString();
             Debug.Log(Session);
             ws.OnMessage -= HandleSessionMessage;

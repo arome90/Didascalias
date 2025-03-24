@@ -142,6 +142,7 @@ namespace ClassRoomVR
         /// </summary>
         public static void SendInfo()
         {
+            Debug.Log("SendInfo desde ServerMessage");
             var inputData = new MessageData(InputLogger.Instance.Input);
             WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient.Instance.Session, inputData));
         }

@@ -87,6 +87,7 @@ namespace ClassRoomVR
         public StudentBehavior GetBehavior() => _behaviour;
         public StudentsController GetController() => _controller;
         public State GetState() => _state;
+        public string GetName() => _studentNameText.text;
 
         #endregion
 

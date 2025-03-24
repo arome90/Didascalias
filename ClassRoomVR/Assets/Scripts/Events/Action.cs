@@ -48,7 +48,6 @@ namespace ClassRoomVR
             _textMeshPro = text;
             _behaviorTree = GetComponent<BehaviorTree>();
             InputLogger.Instance.NewAction();
-            _behaviorTree.EnableBehavior();
 
             if (_disruptiveAction.Laughter)
             {
@@ -56,6 +55,7 @@ namespace ClassRoomVR
             }
 
             if (_textMeshPro != null)
+            _behaviorTree.EnableBehavior();
             {
                 _textMeshPro.text = "-1";
             }

@@ -234,8 +234,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 25366135}
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}
+--- !u!1 &25366134 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 25366133}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &25366135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25366134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4864225239607994189399f1ea8d257a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &69277133 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 468310873852146817, guid: 9d57decff4009d14da9c166c3076bbb1,
@@ -2200,7 +2222,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c615f2e75443a04d8296b94bd861af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeUpdate: 1
+  TimeUpdate: 0.1
+  WriteStep: 0.5
+  WriteDir: writtenInfo
+  WritePath: test
 --- !u!4 &2101349845
 Transform:
   m_ObjectHideFlags: 0

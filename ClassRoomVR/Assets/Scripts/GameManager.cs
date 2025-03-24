@@ -150,6 +150,7 @@ namespace ClassRoomVR
 
         private void OnApplicationQuit()
         {
+            InputLogger.Instance.WriteEnd();
             if (isAutoSavingEnabled)
             {
                 UpdateSavedData();
