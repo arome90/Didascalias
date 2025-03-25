@@ -6,9 +6,9 @@ using ClassRoomVR;
 
 /// <summary>
 /// Maneja fuerzas externas que afectan a los estudiantes.
-/// Hereda de <see cref="GenericSingleton{ExternalForceManager}"/>.
+/// Hereda de <see cref="SceneSingleton{ExternalForceManager}"/>.
 /// </summary>
-public class ExternalForceManager : GenericSingleton<ExternalForceManager>
+public class ExternalForceManager : SceneSingleton<ExternalForceManager>
 {
     private Dictionary<ExternalForces, Dictionary<EmotionType, float>> externalForceEmotionImpacts;
     private Dictionary<ExternalForces, float> externalForceAttentionImpact;

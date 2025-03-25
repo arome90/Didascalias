@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -12,13 +13,18 @@ namespace ClassRoomVR
     {
         [SerializeField] private Button _resumeButton; // Botón para reanudar el juego
         [SerializeField] private Button _quitButton; // Botón para salir del juego
+        [SerializeField] private Canvas _canvas = null;
 
         bool _quitting = false;
 
         private void Start()
         {
             GameManager.Instance.IsPause = false;
-
+            if(_canvas == null)
+            {
+                _canvas = GetComponent<Canvas>();
+            }
+            _canvas.enabled = false;
             _resumeButton.onClick.AddListener(ResumeGame);
             _quitButton.onClick.AddListener(QuitGame);
         }
@@ -38,7 +44,7 @@ namespace ClassRoomVR
         /// </summary>
         public void ResumeGame()
         {
-            GetComponent<Canvas>().enabled = false;
+            _canvas.enabled = false;
             GameManager.Instance.Continue();
         }
 
@@ -47,6 +53,7 @@ namespace ClassRoomVR
         /// </summary>
         public void PauseGame()
         {
+            _canvas.enabled = true;
             GameManager.Instance.Pause(false);
         }
 
@@ -76,6 +83,13 @@ namespace ClassRoomVR
             }
             _quitting = true;
             GameManager.Instance.LoadMainMenu();
+        }
+
+
+        [ContextMenu("Ejecutar MiMetodo")]
+        public void MiMetodo()
+        {
+            QuitGame();
         }
     }
 }

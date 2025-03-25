@@ -11,9 +11,9 @@ namespace ClassRoomVR
 {
     /// <summary>
     /// Clima de los estudiantes
-    /// Hereda de <see cref="GenericSingleton{ClimateManager}"/>.
+    /// Hereda de <see cref="SceneSingleton{ClimateManager}"/>.
     /// </summary>
-    public class ClimateManager : GenericSingleton<ClimateManager>
+    public class ClimateManager : SceneSingleton<ClimateManager>
     {
         //influido por el comportamiento del estudiante
         public float environmentalClimate { get; private set; } // [-1,1]

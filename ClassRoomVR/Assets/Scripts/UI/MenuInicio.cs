@@ -28,6 +28,11 @@ namespace ClassRoomVR
 
         Dictionary<string, WitConfiguration> _languageDictionary = new Dictionary<string, WitConfiguration>();
 
+        private void Awake()
+        {
+            _nextScreen.SetActive(false);
+        }
+
         private void Start()
         {
             AddButtonListeners();

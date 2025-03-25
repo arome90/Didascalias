@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using Oculus.Voice;
 using MathNet.Numerics.Statistics;
 using Meta.WitAi;
-using Meta.WitAi.Composer.Integrations;
-using MathNet.Numerics.Distributions;
 using Utilities.Extensions;
-using Meta.WitAi.Composer;
-using Meta.WitAi.Json;
-using System;
 
 namespace ClassRoomVR
 {
@@ -65,6 +60,7 @@ namespace ClassRoomVR
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
                 UpdateClass(response);
+                appVoiceExperience.Deactivate();
             });
 
             appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
@@ -95,10 +91,11 @@ namespace ClassRoomVR
 
             appVoiceExperience.VoiceEvents.OnMicStartedListening.AddListener(() =>
             {
-                volumeList.Clear();
+                volumeList.RemoveRange(0,volumeList.Count);
             });
 
-            volumeList = new List<float>();
+            volumeList = new List<float>(100);
+            volumeList.Capacity = 100;
 
         }
 
@@ -112,12 +109,14 @@ namespace ClassRoomVR
         {
             float dB = 20 * Mathf.Log10(a);  //LUFS
             //Debug.Log("Volumen de voz: " + dB + " dB");
-
             if (dB > silenceThreshold)
             {
+                if(volumeList.Count > 100)
+                {
+                    volumeList.Remove(0);
+                }
                 volumeList.Add(dB);
             }
-
         }
 
         public void clearVolumeList()
@@ -126,7 +125,9 @@ namespace ClassRoomVR
         }
 
         public void OnValidatePartialResponse(Meta.WitAi.Data.VoiceSession sessionData)
-        {
+        { 
+            if(sessionData.response == null) return;
+
             string[] names = sessionData.response.GetAllEntityValues("wit$contact:student");
 
             if (names != null && names.Length > 0)

@@ -1,70 +1,82 @@
-using ClassRoomVR;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-public class Didascalia_InputManager : MonoBehaviour
+namespace ClassRoomVR
 {
-    [SerializeField] InputActionReference menu;
-    [SerializeField] InputActionReference pause;
-
-    [SerializeField] Canvas handMenu;
-    [SerializeField] PauseMenu pauseMenu = null;
-
-    private void Start()
+    public class Didascalia_InputManager : MonoBehaviour
     {
-        if (pauseMenu == null) pauseMenu = handMenu.GetComponent<PauseMenu>();
-        menu.action.Enable();
-        pause.action.Enable();
+        [SerializeField] InputActionReference menu;
+        [SerializeField] InputActionReference pause;
 
-        menu.action.performed += ToggleHandMenu;
-        pause.action.performed += TogglePause;
-    }
+        [SerializeField] PauseMenu pauseMenu;
 
-    private void OnEnable()
-    {
-        Start();
-    }
+        private bool actionsInitialized = false;
 
-    private void OnDisable()
-    {
-        DisableHandMenu();
-        DisablePause();
-        menu.action.performed -= ToggleHandMenu;
-        pause.action.performed -= TogglePause;
-
-        menu.action.Disable();
-        pause.action.Disable();
-    }
-
-    private void ToggleHandMenu(InputAction.CallbackContext ctx)
-    {
-        bool isActive = !handMenu.enabled;
-        handMenu.enabled = isActive;
-
-        if (!GameManager.Instance.IsPause && isActive)
+        private void Start()
         {
-            pauseMenu.PauseGame();
+            InitializeActions();
         }
-        else if (GameManager.Instance.IsPause && !isActive)
+
+        private void OnEnable()
+        {
+            InitializeActions();
+        }
+
+        private void OnDisable()
+        {
+            DisablePause();
+            menu.action.performed -= ToggleHandMenu;
+            pause.action.performed -= TogglePause;
+            menu.action.Disable();
+            pause.action.Disable();
+            actionsInitialized = false;
+        }
+
+        /// <summary>
+        /// Método para inicializar las acciones y registrar los eventos.
+        /// </summary>
+        private void InitializeActions()
+        {
+            if (!actionsInitialized)
+            {
+                menu.action.Enable();
+                pause.action.Enable();
+                menu.action.performed += ToggleHandMenu;
+                pause.action.performed += TogglePause;
+                actionsInitialized = true;
+            }
+        }
+
+        // <summary>
+        /// Método para alternar el menú de la mano y el estado de pausa.
+        /// El menú esta activo si esta en estado de pausa.
+        /// </summary>
+        private void ToggleHandMenu(InputAction.CallbackContext ctx)
+        {
+            if (GameManager.Instance.IsPause)
+            {
+                pauseMenu.ResumeGame();
+            }
+            else
+            {
+                pauseMenu.PauseGame();
+            }
+        }
+
+        /// <summary>
+        /// Método para alternar el estado de pausa.
+        /// </summary>
+        private void TogglePause(InputAction.CallbackContext ctx)
+        {
+            pauseMenu.TogglePause();
+        }
+
+        /// <summary>
+        /// Método para reanudar el juego si está en pausa.
+        /// </summary>
+        private void DisablePause()
         {
             pauseMenu.ResumeGame();
         }
     }
 
-    private void DisableHandMenu()
-    {
-        handMenu.enabled = false;
-    }
-
-    private void TogglePause(InputAction.CallbackContext ctx)
-    {
-        pauseMenu.TogglePause();
-    }
-
-    private void DisablePause()
-    {
-        pauseMenu.ResumeGame();
-    }
 }

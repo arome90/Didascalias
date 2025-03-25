@@ -9,7 +9,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona la transición entre menús en la interfaz.
     /// </summary>
-    public class MenuTransition : GenericSingleton<MenuTransition>
+    public class MenuTransition : SceneSingleton<MenuTransition>
     {
         [SerializeField] private InputActionProperty _helpAction; // Acción de entrada para mostrar/ocultar texto de ayuda
         [SerializeField] private List<GameObject> _menus; // Lista de menús en la interfaz
