@@ -29,7 +29,6 @@ namespace ClassRoomVR
             InvokeRepeating(nameof(UpdateTextPanel), 1, time);
         }
 
-      
         public void UpdateTextPanel()
         {
             textMeshPro.text = string.Empty;

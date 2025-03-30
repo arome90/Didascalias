@@ -15,11 +15,6 @@ namespace ClassRoomVR
         [SerializeField] TMPro.TextMeshProUGUI textMeshPro;
         List<Student> studentsSelected;
 
-        [SerializeField]
-        private float silenceThreshold = -35.0f;
-
-        List<float> volumeList;
-
         void Start()
         {
             st = ClassManager.Instance.GetStudentsController();
@@ -82,48 +77,8 @@ namespace ClassRoomVR
                 //appVoiceExperience.Deactivate();
                 //Activate();
             });
-
-            appVoiceExperience.VoiceEvents.OnMicLevelChanged.AddListener((value) =>
-            {
-                OnMicLevelChanged(value);
-            });
-
-
-            appVoiceExperience.VoiceEvents.OnMicStartedListening.AddListener(() =>
-            {
-                volumeList.RemoveRange(0,volumeList.Count);
-            });
-
-            volumeList = new List<float>(100);
-            volumeList.Capacity = 100;
-
         }
-
-        public float getLevelAudio()
-        {
-            if(volumeList.Count == 0) return silenceThreshold;
-            return (float)volumeList.Maximum();
-        }
-
-        public void OnMicLevelChanged(float a)
-        {
-            float dB = 20 * Mathf.Log10(a);  //LUFS
-            //Debug.Log("Volumen de voz: " + dB + " dB");
-            if (dB > silenceThreshold)
-            {
-                if(volumeList.Count > 100)
-                {
-                    volumeList.Remove(0);
-                }
-                volumeList.Add(dB);
-            }
-        }
-
-        public void clearVolumeList()
-        {
-            volumeList.Clear();
-        }
-
+    
         public void OnValidatePartialResponse(Meta.WitAi.Data.VoiceSession sessionData)
         { 
             if(sessionData.response == null) return;
@@ -163,8 +118,6 @@ namespace ClassRoomVR
         //  public void UpdateClass(VoiceSession sessionData) 
         public void UpdateClass(Meta.WitAi.Json.WitResponseNode response)
         {
-            //SetLevelAudio();
-
             if (text.Length > 0)
             {
                 // var response = sessionData.response;
