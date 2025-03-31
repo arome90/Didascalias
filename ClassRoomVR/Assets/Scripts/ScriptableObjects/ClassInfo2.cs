@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace ClassRoomVR
 {
-    [CreateAssetMenu(fileName = "ClassInfo", menuName = "ScriptableObject/ClassInfo", order = 3)]
-    public class ClassInfo : ScriptableObject
+    [CreateAssetMenu(fileName = "ClassInfo2", menuName = "ScriptableObject/ClassInfo2", order = 3)]
+    public class ClassInfo2 : ScriptableObject
     {
         [Serializable]
         public struct NamesLanguage

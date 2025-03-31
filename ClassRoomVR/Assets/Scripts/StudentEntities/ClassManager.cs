@@ -21,7 +21,7 @@ namespace ClassRoomVR
         private bool[] _asientosOcupados;
         private Dictionary<string, Student2> _students;
         private StudentsController2 _studentsController;
-        private ClassInfo _classInfo;
+        private ClassInfo2 _classInfo;
         private List<List<string>> _names;
         private ClassSettings _settings;
 
@@ -65,7 +65,7 @@ namespace ClassRoomVR
             _classInfo = GameManager2.Instance.GetCurrentClassInfo();
             _names = new List<List<string>>();
 
-            List<ClassInfo.NamesLanguage> a = _classInfo.GetNames();
+            List<ClassInfo2.NamesLanguage> a = _classInfo.GetNames();
             _names.Add(new List<string>(a[(int)Didascalia_LocalizationManager.CurrentLanguage].femaleNames));
             _names.Add(new List<string>(a[(int)Didascalia_LocalizationManager.CurrentLanguage].maleNames));
         }

@@ -44,7 +44,7 @@ namespace ClassRoomVR
 
         [SerializeField] private ClassSettings currentSettings;
         [SerializeField] private ClassSettings[] availableSettings;
-        [SerializeField] private ClassInfo currentClassInfo;
+        [SerializeField] private ClassInfo2 currentClassInfo;
         [SerializeField] private bool isAutoSavingEnabled = false;
         [SerializeField] private bool saveAudio = false;
         private int indexCurrentSett;
@@ -112,7 +112,7 @@ namespace ClassRoomVR
             currentSettings.NumWomen = data.WomenCount;
         }
 
-        public ClassInfo GetCurrentClassInfo() => currentClassInfo;
+        public ClassInfo2 GetCurrentClassInfo() => currentClassInfo;
         public VoiceActivation GetVoiceActivation() => voice;
 
         public void LoadMainMenu()
@@ -135,6 +135,7 @@ namespace ClassRoomVR
 
         public void SetCurrentSettings(int index)
         {
+            if (availableSettings.Length == 0 || index> availableSettings.Length-1) return;
             lastSettingsUsed = index;
             currentSettings = availableSettings[index];
             indexCurrentSett = index;
@@ -181,7 +182,7 @@ namespace ClassRoomVR
 
         public void ChangeLanguage(int localeID)
         {
-            if (!canChange) return;
+            if (!canChange || _witAppsForLanguages.Length == 0) return;
             _currentWitApp = _witAppsForLanguages[localeID].witApp;
             int i = 0;
             StartCoroutine(SetLocale(localeID));
