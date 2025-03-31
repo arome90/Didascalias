@@ -1093,7 +1093,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825419207}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b75449bda6ede734a969e352edb8d8e8, type: 3}
   m_Name: 
@@ -2010,6 +2010,7 @@ GameObject:
   - component: {fileID: 1472140258}
   - component: {fileID: 1472140263}
   - component: {fileID: 1472140264}
+  - component: {fileID: 1472140265}
   m_Layer: 0
   m_Name: Students
   m_TagString: Untagged
@@ -2211,6 +2212,27 @@ MonoBehaviour:
   attentionThreshold: -0.6
   externalForcesEmotionJsonPath: ExternalForcesEmotion.json
   externalForcesAttentionJsonPath: ExternalForcesAttention.json
+--- !u!114 &1472140265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472140257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aaa32c91dc88b24487d1ed561489ecb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voiceVariables: {fileID: 2101349846}
+  voiceVariablesWit: {fileID: 2101349848}
+  usemicrophone: 0
+  externalForceManager: {fileID: 1472140264}
+  silenceThreshold: -35
+  whisperThreshold: -25
+  normalThreshold: -12
+  shoutThreshold: 0
+  targetTime: 1
 --- !u!1001 &1491266296
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2769,6 +2791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 2101349847}
+  maxVolume: 0
 --- !u!82 &2101349847
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2872,20 +2895,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101349841}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b65660614d815834cbb4192e6cd91bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   appVoiceExperience: {fileID: 825419208}
-  externalForceManager: {fileID: 1472140264}
-  silenceThreshold: -35
-  whisperThreshold: -25
-  normalThreshold: -12
-  shoutThreshold: 0
-  targetTime: 10
-  silenceTime: 10
-  talksTooMuchTime: 15
+  timer: 0
 --- !u!1001 &493455963278496415
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3341,19 +3357,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5855e4d18a7bbd745a402a9e3a6fa3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  silenceThreshold: -35
-  whisperThreshold: -25
-  normalThreshold: -12
-  shoutThreshold: 0
-  targetTime: 5
-  silenceTime: 10
-  talksTooMuchTime: 15
-  timeCounter: 0
-  silencetimeCounter: 0
-  talksTooMuchTimeCounter: 0
-  maxTone: 0
-  voiceActivation: {fileID: 825419209}
-  externalForceManager: {fileID: 1472140264}
 --- !u!4 &7215109424562837627
 Transform:
   m_ObjectHideFlags: 0

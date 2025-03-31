@@ -94,7 +94,7 @@ namespace ClassRoomVR
                 float weight = GetBehaviorValue(behavior);
                 // Ajustar el peso del estudiante
                 studentBehaviorWeights[studentName] = weight;
-                Debug.Log($"Weight set to {weight} for student {studentName}");
+                //Debug.Log($"Weight set to {weight} for student {studentName}");
                 RecalculateClimate();
             }
             else
@@ -117,7 +117,7 @@ namespace ClassRoomVR
             }
 
             environmentalClimate = newEnvironmentalClimate / studentBehaviorWeights.Count;
-            Debug.Log("ACTUAL CLIMATE: "+ environmentalClimate);
+            //Debug.Log("ACTUAL CLIMATE: "+ environmentalClimate);
         }
     }
 }

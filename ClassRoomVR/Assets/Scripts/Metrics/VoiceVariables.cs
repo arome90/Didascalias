@@ -15,8 +15,12 @@ public class VoiceVariables : MonoBehaviour
     public AudioSource audioSource;
     float[] audioFragment;
     float[] spectrum;
+
+    public float maxVolume;
+    private float lastVolume;
     void Start()
     {
+        maxVolume = -35.0f;
         audioSource.loop = true;
         initializeVariables();
         audioSource.clip = Microphone.Start(null, true, recordingTime, sampleRate);
@@ -32,7 +36,6 @@ public class VoiceVariables : MonoBehaviour
         bufferLength = sampleRate * recordingTime;
         audioFragment = new float[bufferLength];
         spectrum = new float[1024];
-        //Todo lk: luego si eso, carga datos desde json
     }
 
     /// <summary>
@@ -43,11 +46,12 @@ public class VoiceVariables : MonoBehaviour
         Microphone.End(null);
         // Calcula el nivel de intensidad en decibelios.
         float volumeLevel = CalculateVolumeLevel();
-
+        lastVolume= volumeLevel;
+        maxVolume = math.max(volumeLevel, maxVolume);
         // análisis de pitch.
         float dominantFrequency = AnalyzePitch();
         // Muestra el nivel de intensidad en decibelios en consola.
-        Debug.Log($"Volume: {volumeLevel}, Dominant Frequency: {dominantFrequency}");
+        //Debug.Log($"Volume: {volumeLevel}, Dominant Frequency: {dominantFrequency}");
         audioSource.clip = Microphone.Start(null, true, recordingTime, sampleRate);
 
     }
@@ -99,8 +103,14 @@ public class VoiceVariables : MonoBehaviour
         return dominantFrequency;
     }
 
+    public void ResetVolume()
+    {
+        maxVolume = lastVolume;
+    }
+
     private void OnDestroy()
     {
         Microphone.End(null);
     }
+
 }
