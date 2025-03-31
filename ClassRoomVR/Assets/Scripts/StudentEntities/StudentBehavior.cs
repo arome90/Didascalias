@@ -129,6 +129,26 @@ namespace ClassRoomVR
             _statistics.Push(_attentionLevel);
             return _statistics.Mean;
         }
-
+        /// <summary>
+        /// Cambia la expresión del estudiante suavemente.
+        /// </summary>
+        /// <param name="exp">Expresión a cambiar.</param>
+        public IEnumerator ChangeExpression(Expresiones2 exp)
+        {
+            //int expressionIndex = (int)exp;
+            //while (_meshRenderer.GetBlendShapeWeight(expressionIndex) < 100f)
+            //{
+            //    for (int i = 0; i < _blendShapeWeights.Length; i++)
+            //    {
+            //        float changeValue = i == expressionIndex ? 15f : -20f;
+            //        _blendShapeWeights[i] = Mathf.Clamp(_blendShapeWeights[i] + changeValue, 0f, 100f);
+            //        _meshRenderer.SetBlendShapeWeight(i, _blendShapeWeights[i]);
+            //    }
+            // El valor de esto antes era 0.5f. El cambio de expresiones se hace un tanto lento
+            yield return new WaitForSeconds(0.125f);
+            //}
+            //_currentExpression = exp;
+        }
     }
+    
 }

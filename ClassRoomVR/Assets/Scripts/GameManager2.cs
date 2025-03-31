@@ -1,0 +1,312 @@
+﻿using Meta.WitAi.Data.Configuration;
+using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Localization.Settings;
+using Utilities.Extensions;
+
+namespace ClassRoomVR
+{
+    public class GameManager2 : MonoBehaviour
+    {
+        [Serializable]
+        public struct LanguageOption
+        {
+            public string name;
+            public WitConfiguration witApp;
+        }
+        [SerializeField] private LanguageOption[] _witAppsForLanguages;
+
+        private WitConfiguration _currentWitApp;
+
+        public WitConfiguration Language { get { return _currentWitApp; } }
+
+        /// <summary>
+        /// DEBE SEGUIR EL MISMO ORDEN QUE EN LAS OPCIONES DE LOCALIZACIÓN
+        /// ESPAÑOL - 0
+        /// PORTUGUÉS br - 1
+        /// ...
+        /// </summary>
+        public LanguageOption[] witAppsForLanguages { get { return _witAppsForLanguages; } }
+
+        /// <summary>
+        /// Evento llamado cuando se cambia el idioma de la aplicación
+        /// </summary>
+        public UnityEvent OnLanguageChanged;
+
+        public bool IsPause;
+        private bool _connectionLost = false;
+
+        private DataSystem2 savedData;
+        private VoiceActivation2 voice;
+        private ReconnectUI2 loadingBar;
+
+        [SerializeField] private ClassSettings2 currentSettings;
+        [SerializeField] private ClassSettings2[] availableSettings;
+        [SerializeField] private ClassInfo2 currentClassInfo;
+        [SerializeField] private bool isAutoSavingEnabled = false;
+        [SerializeField] private bool saveAudio = false;
+        private int indexCurrentSett;
+
+        private int lastSettingsUsed;
+        public static GameManager2 Instance { get; private set; }
+
+        private void Awake()
+        {
+            if (!InitializeSingleton()) return;
+            IsPause = false;
+        }
+
+        private void Start()
+        {
+            int language = PlayerPrefs.GetInt("Language", 0);
+            ChangeLanguage(language);
+
+            ClassSettings2[] settings = availableSettings;
+            int index = 0;
+            foreach (var setting in settings)
+            {
+                if (setting.name == "Personalizado")
+                {
+                    break;
+                }
+                index++;
+            }
+            Instance.SetCurrentSettings(index);
+
+            // Esto significa que crea una instancia en caso de ser nulo.
+            OnLanguageChanged ??= new UnityEvent();
+        }
+
+        private bool InitializeSingleton()
+        {
+            if (Instance != null)
+            {
+                Destroy(this);
+                return false;
+            }
+            Instance = this;
+            InitializeData();
+            DontDestroyOnLoad(this);
+            return true;
+        }
+
+        private void InitializeData()
+        {
+            if (isAutoSavingEnabled)
+            {
+                savedData = SaveSystem2.LoadData();
+                ApplySavedSettings(savedData);
+            }
+            else savedData = new DataSystem2();
+        }
+
+        private void ApplySavedSettings(DataSystem2 data)
+        {
+            currentSettings.NumStudents = data.NumStudents;
+            currentSettings.Age = data.Age;
+            currentSettings.StructureMode = data.StructureMode;
+            currentSettings.Mode = data.Mode;
+            currentSettings.NumMen = data.MenCount;
+            currentSettings.NumWomen = data.WomenCount;
+        }
+
+        public ClassInfo2 GetCurrentClassInfo() => currentClassInfo;
+        public VoiceActivation2 GetVoiceActivation() => voice;
+
+        public void LoadMainMenu()
+        {
+            WsClient2.Instance.Disconnect();
+            SceneTransitionManager2.Singleton.GoToSceneAsync(0);
+        }
+
+        public void LoadTutorial()
+        {
+            currentSettings = availableSettings[availableSettings.Length - 1];
+            SceneTransitionManager2.Singleton.GoToSceneAsync(2);
+        }
+
+        public void LoadMainScene()
+        {
+            ServerMessage2.SendInfoInitial();
+            SceneTransitionManager2.Singleton.GoToSceneAsync(1);
+        }
+
+        public void SetCurrentSettings(int index)
+        {
+            if (availableSettings.Length == 0 || index> availableSettings.Length-1) return;
+            lastSettingsUsed = index;
+            currentSettings = availableSettings[index];
+            indexCurrentSett = index;
+        }
+
+        /// <summary>
+        /// Se seleccionan las últimas opciones de clase usadas que no fueran la del tutorial.
+        /// </summary>
+        public void SetLastUsedSettings()
+        {
+            currentSettings = availableSettings[lastSettingsUsed];
+        }
+
+        private void OnApplicationQuit()
+        {
+            if (isAutoSavingEnabled)
+            {
+                UpdateSavedData();
+                SaveSystem2.SaveData(savedData);
+
+            }
+        }
+
+        private void UpdateSavedData()
+        {
+            savedData.NumStudents = currentSettings.NumStudents;
+            savedData.Age = currentSettings.Age;
+            savedData.StructureMode = currentSettings.StructureMode;
+            savedData.Mode = currentSettings.Mode;
+            savedData.MenCount = currentSettings.NumMen;
+            savedData.WomenCount = currentSettings.NumWomen;
+        }
+
+        private bool canChange = true;
+        public void ChangeLanguage(WitConfiguration newWitApp)
+        {
+            if (!canChange) return;
+            _currentWitApp = newWitApp;
+            int i = 0;
+            while (i < _witAppsForLanguages.Length && _currentWitApp != _witAppsForLanguages[i].witApp) ++i;
+            StartCoroutine(SetLocale(i));
+            OnLanguageChanged.Invoke();
+        }
+
+        public void ChangeLanguage(int localeID)
+        {
+            if (!canChange || _witAppsForLanguages.Length == 0) return;
+            _currentWitApp = _witAppsForLanguages[localeID].witApp;
+            int i = 0;
+            StartCoroutine(SetLocale(localeID));
+            OnLanguageChanged.Invoke();
+        }
+
+        private IEnumerator SetLocale(int localeID)
+        {
+            canChange = false;
+            PlayerPrefs.SetInt("Language", localeID);
+            yield return LocalizationSettings.InitializationOperation;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[localeID];
+            Didascalia_LocalizationManager.ChangeLanguage(localeID);
+            canChange = true;
+        }
+
+        public ClassSettings2 GetCurrentSettings()
+        {
+            return currentSettings;
+        }
+
+        public int GetIndexCurrentSettings()
+        {
+            return indexCurrentSett;
+        }
+        public ClassSettings2[] GetAvailableSettings() => availableSettings;
+
+
+        public bool GetSaveAudio() => saveAudio;
+        private void Update()
+        {
+            if (IsPause && ConnectionIsAvailable() && _connectionLost)
+            {
+                HandleReconnection();
+            }
+        }
+
+        private bool ConnectionIsAvailable()
+        {
+            return Application.internetReachability != NetworkReachability.NotReachable;
+        }
+
+        private bool IsLoadingBarVisible()
+        {
+            return loadingBar != null && loadingBar.GetComponent<Canvas>().enabled;
+        }
+
+        private void HandleReconnection()
+        {
+            Debug.Log("vuelve la conexion");
+
+            if (voice != null)
+            {
+                voice.Activate();
+            }
+
+            WsClient2.Instance.StartConnection();
+            ToggleLoadingBar(false);
+            Continue();
+        }
+
+        public void Pause(bool lostConnection)
+        {
+            if (lostConnection)
+            {
+                ToggleLoadingBar(true);
+            }
+            SceneTransitionManager2.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            _connectionLost = lostConnection;
+        }
+
+        private void Pause()
+        {
+            if (IsPause) return;
+            StopTime();
+            IsPause = true;
+        }
+
+        private void ToggleLoadingBar(bool visible)
+        {
+            if (loadingBar != null)
+            {
+                loadingBar.GetComponent<Canvas>().enabled = visible;
+            }
+        }
+
+        void WaitConnection()
+        {
+            if (loadingBar.GetComponent<Canvas>().enabled && Application.internetReachability != NetworkReachability.NotReachable)
+            {
+                Debug.Log("vuelve la coneccion");
+                voice.Activate();
+                WsClient2.Instance.StartConnection();
+                loadingBar.SetActive(false);
+                Continue();
+            }
+            else
+            {
+                Invoke(nameof(WaitConnection), 3.0f);
+            }
+        }
+
+        public void Continue()
+        {
+            //AudioListener.pause = false;
+            Time.timeScale = 1.0f;
+            IsPause = false;
+            SceneTransitionManager2.Singleton.FadeScreen.Fade(0.8f, 0.0f);
+        }
+
+        public void StopTime()
+        {
+            Debug.Log("TIME HAS STOPPED!!");
+            Time.timeScale = 0.0f;
+        }
+
+        public void SetVoiceExperience(VoiceActivation2 voice)
+        {
+            this.voice = voice;
+        }
+        public void SetLoadingBar(ReconnectUI2 bar)
+        {
+            loadingBar = bar;
+            loadingBar.SetActive(false);
+        }
+    }
+}
