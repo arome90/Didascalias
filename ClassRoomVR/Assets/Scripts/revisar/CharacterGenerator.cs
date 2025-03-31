@@ -14,7 +14,7 @@ namespace ClassRoomVR
         [Header("Meshes")]
         [SerializeField] private CharacterSkinnedMeshes _characterAssets; // Activos de malla del personaje
 
-        private Student _student; // Referencia al componente Student
+        private Student2 _student; // Referencia al componente Student
         private Transform[] _playerBonesArray; // Array de huesos del jugador
         private Transform _rootBone; // Hueso raíz
         private Dictionary<string, Transform> _playerBonesDict; // Diccionario de huesos del jugador
@@ -63,7 +63,7 @@ namespace ClassRoomVR
 
         private void Start()
         {
-            _student = GetComponent<Student>();
+            _student = GetComponent<Student2>();
             SetupCharacterMeshes();
         }
 

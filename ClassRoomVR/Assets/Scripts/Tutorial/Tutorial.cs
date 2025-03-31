@@ -50,8 +50,8 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private TTSSpeaker _speaker;  // Controlador de texto a voz
     [SerializeField] private string _dateId = "[DATE]";  // Identificador para el formato de fecha
 
-    private Student _student;  // Estudiante que participa en el tutorial
-    private StudentsController _studentControl;  // Controlador de los estudiantes
+    private Student2 _student;  // Estudiante que participa en el tutorial
+    private StudentsController2 _studentControl;  // Controlador de los estudiantes
 
     bool _phaseSkipped = false;
 

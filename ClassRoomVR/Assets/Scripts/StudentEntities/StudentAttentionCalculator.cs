@@ -13,7 +13,7 @@ namespace ClassRoomVR
         /// </summary>
         [SerializeField] private float _attentionAverage;
 
-        private Student[] _students;
+        private Student2[] _students;
         private RunningStatistics _attentionStatistics;
 
         private void Start()

@@ -15,10 +15,10 @@ namespace ClassRoomVR
         [SerializeField] private AudioClip _classLaughterClip; // Clip de audio de risas de clase
         [SerializeField] private AudioClip _noiseClip; // Clip de audio de ruido
 
-        private StudentsController _studentsController; // Controlador de estudiantes
+        private StudentsController2 _studentsController; // Controlador de estudiantes
         private GameObject _player; // Jugador
         private BehaviorTree _behaviorTree; // Árbol de comportamiento
-        private List<Student> _problematicStudents; // Lista de estudiantes problemáticos
+        private List<Student2> _problematicStudents; // Lista de estudiantes problemáticos
         private DisruptiveAction _disruptiveAction; // Acción disruptiva específica
         private TextMeshProUGUI _textMeshPro; // UI para mostrar texto
 
@@ -40,7 +40,7 @@ namespace ClassRoomVR
         /// <param name="students">Lista de estudiantes problemáticos.</param>
         /// <param name="action">Acción disruptiva a manejar.</param>
         /// <param name="text">Texto que se mostrará en pantalla.</param>
-        public void SetParameters(GameObject player, List<Student> students, DisruptiveAction action, TextMeshProUGUI text)
+        public void SetParameters(GameObject player, List<Student2> students, DisruptiveAction action, TextMeshProUGUI text)
         {
             _player = player;
             _problematicStudents = students;
@@ -88,7 +88,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="student">El estudiante a verificar.</param>
         /// <returns>Retorna un IEnumerator para la corrutina.</returns>
-        private IEnumerator IgnoreStudent(Student student)
+        private IEnumerator IgnoreStudent(Student2 student)
         {
             float outOfVisionTimer = 0f;
 
@@ -136,7 +136,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="student">El estudiante a resolver.</param>
         /// <returns>Retorna true si se resolvió, false si no.</returns>
-        private bool Resolve(Student student)
+        private bool Resolve(Student2 student)
         {
             return (Vector3.Distance(student.transform.position, _player.transform.position) <= _distanceNear
                     && student.IsStudentInFieldOfVision())

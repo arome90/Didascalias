@@ -10,22 +10,22 @@ using Unity.VisualScripting;
 
 namespace ClassRoomVR
 {
-    public class StudentsController : MonoBehaviour
+    public class StudentsController2 : MonoBehaviour
     {
         // Modo de conversación actual
         private TalkMode _mode;
-        private Actions _res;
+        private Actions2 _res;
 
         // Propiedad para acceder a las resoluciones
-        public Actions Resolutions
+        public Actions2 Resolutions
         {
             get { return _res; }
             set { _res = value; }
         }
 
         // Diccionario de estudiantes
-        private Dictionary<string, Student> _students;
-        private List<Student> _raisedHandStudents;
+        private Dictionary<string, Student2> _students;
+        private List<Student2> _raisedHandStudents;
 
         // Jugador
         private GameObject _player;
@@ -47,7 +47,7 @@ namespace ClassRoomVR
         public Transform Door => _door;
 
         // Método para inicializar los parámetros (jugador y estudiantes)
-        public void SetParameters(GameObject player, Dictionary<string, Student> students)
+        public void SetParameters(GameObject player, Dictionary<string, Student2> students)
         {
             _player = player;
             _students = students;
@@ -58,19 +58,19 @@ namespace ClassRoomVR
             studentList = null;
         }
 
-        public void AddHandRaisedStudent(Student student)
+        public void AddHandRaisedStudent(Student2 student)
         {
             if(!_raisedHandStudents.Contains(student)) 
                 _raisedHandStudents.Add(student);
         }
-        public void RemoveHandRaisedStudent(Student student)
+        public void RemoveHandRaisedStudent(Student2 student)
         {
             if (_raisedHandStudents.Contains(student))
                 _raisedHandStudents.Remove(student);
         }
 
         // Método para cambiar a dos estudiantes de lugar
-        public void ChangeDesk(Student student1, Student student2)
+        public void ChangeDesk(Student2 student1, Student2 student2)
         {
             var position1 = student1.GetDesk();
             var position2 = student2.GetDesk();
@@ -79,7 +79,7 @@ namespace ClassRoomVR
         }
 
         // Método para buscar un estudiante por nombre (manejo de diacríticos)
-        public bool TryGetStudent(string name, out Student student)
+        public bool TryGetStudent(string name, out Student2 student)
         {
             student = null;
             if (_students.ContainsKey(name))
@@ -94,7 +94,7 @@ namespace ClassRoomVR
         public void GoOut()
         {
             int i = 0;
-            foreach (Student student in _students.Values.Where(s => !s.IsProblematicStudent()))
+            foreach (Student2 student in _students.Values.Where(s => !s.IsProblematicStudent()))
             {
                 i++;
                 StartCoroutine(WaitAndExit(student, i));
@@ -102,14 +102,14 @@ namespace ClassRoomVR
         }
 
         // Corutina para esperar y luego hacer que un estudiante salga del aula
-        IEnumerator WaitAndExit(Student student, float waitTime)
+        IEnumerator WaitAndExit(Student2 student, float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
             student.MoveTo(_door.position, 0.5f);
         }
 
         // Maneja la acción de sentarse para los estudiantes
-        public void HandleSit(List<Student> studentList)
+        public void HandleSit(List<Student2> studentList)
         {
             foreach (var student in studentList)
             {
@@ -118,7 +118,7 @@ namespace ClassRoomVR
         }
 
         // Maneja la acción de moverse para los estudiantes
-        public void HandleMove(List<Student> studentList, string place = null)
+        public void HandleMove(List<Student2> studentList, string place = null)
         {
             Transform position = Place(place);
             if (position == null) return;
@@ -126,7 +126,7 @@ namespace ClassRoomVR
         }
 
         // Maneja el cambio de lugar de los estudiantes
-        public void HandleChange(List<Student> studentList)
+        public void HandleChange(List<Student2> studentList)
         {
             if (studentList.Count > 1)
             {
@@ -142,13 +142,13 @@ namespace ClassRoomVR
         }
 
         // Maneja la expulsión de estudiantes
-        public void HandleExpel(List<Student> studentList)
+        public void HandleExpel(List<Student2> studentList)
         {
             studentList.ForEach(student => student.MoveTo(_door.position, 0.5f));
         }
 
         // Maneja el llamado de atención a un estudiante
-        public void HandleCall(Student student)
+        public void HandleCall(Student2 student)
         {
             student.PayAttention();
             student.SetColor(Color.blue);
@@ -157,7 +157,7 @@ namespace ClassRoomVR
         }
 
         // Corutina para devolver el color original al estudiante después de 5 segundos
-        IEnumerator ReturnColor(Student student)
+        IEnumerator ReturnColor(Student2 student)
         {
             yield return new WaitForSeconds(3.2f);
             student.SetColor(Color.white);
@@ -200,7 +200,7 @@ namespace ClassRoomVR
         // Objeto para la acción disruptiva actual
         private GameObject actionObject;
         private DisruptiveAction currentAction;
-        private List<Student> studentList;
+        private List<Student2> studentList;
 
         // Realiza una acción disruptiva sobre los estudiantes
         public void DoSomethingDisruptive(int index)
@@ -210,20 +210,20 @@ namespace ClassRoomVR
             {
                 Debug.Log("Choosing new action to perform");
                 currentAction = actions[index];
-                _res = Actions.None;
+                _res = Actions2.None;
 
                 switch (currentAction.Action)
                 {
-                    case Actions.Insultar:
+                    case Actions2.Insultar:
                         Debug.Log("Insultando");
                         StartCoroutine(ActionsMethod.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
                         break;
-                    case Actions.Separados:
+                    case Actions2.Separados:
                         Debug.Log("Separándonos");
                         GetRandomStudentsSeparate();
                         StartCoroutine(ActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
                         break;
-                    case Actions.Levantarse:
+                    case Actions2.Levantarse:
                         Debug.Log("Levantándose");
                         ActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
                         break;
@@ -252,46 +252,46 @@ namespace ClassRoomVR
         }
 
         // Obtiene un estudiante aleatorio, excluyendo uno ya seleccionado
-        private Student GetRandomStudentExcluding()
+        private Student2 GetRandomStudentExcluding()
         {
-            Student exclude = studentList?.FirstOrDefault();
+            Student2 exclude = studentList?.FirstOrDefault();
             studentList?.Clear();
 
-            List<Student> eligibleStudents = _students.Values
+            List<Student2> eligibleStudents = _students.Values
                 .Where(s => s != exclude && s.GetState() != State.Standing)
                 .ToList();
 
-            studentList = new List<Student> { eligibleStudents[UnityEngine.Random.Range(0, eligibleStudents.Count)] };
+            studentList = new List<Student2> { eligibleStudents[UnityEngine.Random.Range(0, eligibleStudents.Count)] };
             return studentList.First();
         }
 
         // Obtiene estudiantes aleatorios para separarlos
-        private List<Student> GetRandomStudentsSeparate()
+        private List<Student2> GetRandomStudentsSeparate()
         {
             var excludedStudents = studentList?.Take(2).ToList();
             studentList?.Clear();
 
-            List<Student> eligibleStudents = _students.Values
+            List<Student2> eligibleStudents = _students.Values
                 .Where(s => excludedStudents == null || !excludedStudents.Contains(s) && s.GetState() != State.Standing)
                 .ToList();
 
             int randomStudentIndex = UnityEngine.Random.Range(0, eligibleStudents.Count);
-            Student student = eligibleStudents[randomStudentIndex];
+            Student2 student = eligibleStudents[randomStudentIndex];
 
             randomStudentIndex = randomStudentIndex != eligibleStudents.Count - 1 &&
                                  ((randomStudentIndex + 1) % GameManager.Instance.GetCurrentSettings().Columns != 0)
                                  ? randomStudentIndex + 1
                                  : randomStudentIndex - 1;
 
-            Student secStudent = eligibleStudents[randomStudentIndex];
+            Student2 secStudent = eligibleStudents[randomStudentIndex];
 
-            List<Student> restStudents = eligibleStudents
+            List<Student2> restStudents = eligibleStudents
                 .Where(s => s != student && s != secStudent)
                 .ToList();
 
             var problem = restStudents[UnityEngine.Random.Range(0, restStudents.Count)];
 
-            studentList = new List<Student> { problem, student, secStudent };
+            studentList = new List<Student2> { problem, student, secStudent };
             return studentList;
         }
 
@@ -305,7 +305,7 @@ namespace ClassRoomVR
             }
             else
             {
-                Student st = _raisedHandStudents[0];
+                Student2 st = _raisedHandStudents[0];
                 st.GenerateText(text);
                 st.HandDown();
                 _raisedHandStudents.Remove(st);
@@ -324,7 +324,7 @@ namespace ClassRoomVR
         private void Start()
         {
             //Invoke(nameof(doso), 2);
-            _raisedHandStudents = new List<Student>();  
+            _raisedHandStudents = new List<Student2>();  
         }
 
         //private void doso()

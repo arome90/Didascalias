@@ -26,7 +26,7 @@ namespace ClassRoomVR
         [SerializeField] private float _distanceFactorAddition = 2.1f;
         [SerializeField] private float _distanceFactorSubtraction = 2.0f;
 
-        private Student _student;
+        private Student2 _student;
         private Transform _player;
         private RunningStatistics _statistics;
         private SkinnedMeshRenderer _meshRenderer;
@@ -35,7 +35,7 @@ namespace ClassRoomVR
         private void Start()
         {
             _statistics = new RunningStatistics();
-            _student = GetComponent<Student>();
+            _student = GetComponent<Student2>();
             _player = Camera.main.transform;
             _blendShapeWeights = new float[6];
 

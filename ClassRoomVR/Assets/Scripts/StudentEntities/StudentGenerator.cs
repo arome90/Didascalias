@@ -11,7 +11,7 @@ public class StudentGenerator : MonoBehaviour
     [SerializeField] private CharacterProps _characterProps;
     [SerializeField] private CharacterSkinnedMeshes _characterAssets;
 
-    private Student _student;
+    private Student2 _student;
     private Transform[] _playerBonesArray;
     private Transform _rootBone;
     private Dictionary<string, Transform> _playerBonesDict;
@@ -67,7 +67,7 @@ public class StudentGenerator : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        _student = GetComponent<Student>();
+        _student = GetComponent<Student2>();
         SetupCharacterMeshes();
         SpawnProps();
     }

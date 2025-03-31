@@ -12,9 +12,9 @@ namespace ClassRoomVR
     /// Clase que representa a un estudiante en la simulación de aula.
     /// </summary>
     [System.Serializable]
-    public class Student : MonoBehaviour
+    public class Student2 : MonoBehaviour
     {
-        public enum Actions
+        public enum Actions2
         {
             // Distraído
             BALANCEARSE,
@@ -64,7 +64,7 @@ namespace ClassRoomVR
         [SerializeField] private MultiAimConstraint _headConstraint;
         
         private StudentBehavior _behaviour;
-        private StudentsController _controller;
+        private StudentsController2 _controller;
 
         private Transform _player;
         private ResponseStudent _response;
@@ -79,14 +79,14 @@ namespace ClassRoomVR
         public AudioSource GetAudioSource() => _audioSource;
         public NavMeshAgent GetNavMeshAgent() => _navMeshAgent;
         public StudentBehavior GetBehavior() => _behaviour;
-        public StudentsController GetController() => _controller;
+        public StudentsController2 GetController() => _controller;
         public State GetState() => _state;
 
         #endregion
 
         #region Setters
 
-        public void SetController(StudentsController controller) => _controller = controller;
+        public void SetController(StudentsController2 controller) => _controller = controller;
 
         #endregion
 
@@ -233,12 +233,12 @@ namespace ClassRoomVR
                 int expressionOrAction = Random.Range(0, 2);
                 if(expressionOrAction == 0) // acción
                 {
-                    int distractedAction = Random.Range((int)Actions.BALANCEARSE, (int)Actions.LANZAR_OBJETO + 1);
-                    if (distractedAction == (int)Actions.MOVIL)
+                    int distractedAction = Random.Range((int)Actions2.BALANCEARSE, (int)Actions2.LANZAR_OBJETO + 1);
+                    if (distractedAction == (int)Actions2.MOVIL)
                     {
                         SetDirection(FieldOfVision.Down);
                     }
-                    if(distractedAction == (int)Actions.BALANCEARSE)
+                    if(distractedAction == (int)Actions2.BALANCEARSE)
                     {
                         _desk.PlayChairAnimation();
                     }
@@ -311,7 +311,7 @@ namespace ClassRoomVR
             _controller.AddHandRaisedStudent(this);
             _animPlaying = AnimationState.HAND_RAISED;
             _animator.SetBool("HandRaised", true);
-            _animator.SetInteger("Accion", (int)Actions.LEVANTAR_MANO);
+            _animator.SetInteger("Accion", (int)Actions2.LEVANTAR_MANO);
 
         }
         /// <summary>
@@ -339,7 +339,7 @@ namespace ClassRoomVR
         {
             _animPlaying = AnimationState.WRITING;
             _animator.SetBool("Writing", true);
-            _animator.SetInteger("Accion", (int)Actions.ESCRIBIR);
+            _animator.SetInteger("Accion", (int)Actions2.ESCRIBIR);
             StartCoroutine(WriteForSeconds(UnityEngine.Random.Range(3.0f, 7.5f)));
         }
 

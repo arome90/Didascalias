@@ -32,7 +32,7 @@ namespace ClassRoomVR
         public GameObject BehaviorHolder => _behaviorHolder;
 
         [Tooltip("Action associated with this disruptive behavior.")]
-        [SerializeField] private Actions _action;
-        public Actions Action => _action;
+        [SerializeField] private Actions2 _action;
+        public Actions2 Action => _action;
     }
 }

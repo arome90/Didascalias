@@ -311,7 +311,7 @@ public enum VisualAction
 }
 
 [Flags]
-public enum Actions
+public enum Actions2
 {
     /// <summary>
     /// Ninguna acción.

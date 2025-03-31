@@ -14,13 +14,13 @@ namespace ClassRoomVR
         [SerializeField] private AudioClip _beforeClassBell;
         [SerializeField] private AudioClip _afterClassBell;
         [SerializeField] private GameObject _player;
-        [SerializeField] private Student _body;
+        [SerializeField] private Student2 _body;
         [SerializeField] private bool _generateOnStart;
 
         private Transform _studentsPositions;
         private bool[] _asientosOcupados;
-        private Dictionary<string, Student> _students;
-        private StudentsController _studentsController;
+        private Dictionary<string, Student2> _students;
+        private StudentsController2 _studentsController;
         private ClassInfo _classInfo;
         private List<List<string>> _names;
         private ClassSettings _settings;
@@ -31,7 +31,7 @@ namespace ClassRoomVR
         public override void Awake()
         {
             _settings = GameManager.Instance.GetCurrentSettings();
-            _studentsController = GetComponent<StudentsController>();
+            _studentsController = GetComponent<StudentsController2>();
             if (_generateOnStart)
             {
                 Generate();
@@ -61,7 +61,7 @@ namespace ClassRoomVR
             }
 
             _asientosOcupados = new bool[_studentsPositions.childCount];
-            _students = new Dictionary<string, Student>();
+            _students = new Dictionary<string, Student2>();
             _classInfo = GameManager.Instance.GetCurrentClassInfo();
             _names = new List<List<string>>();
 
@@ -143,9 +143,9 @@ namespace ClassRoomVR
         /// <param name="name">Nombre del estudiante.</param>
         /// <param name="gender">Género del estudiante.</param>
         /// <returns>Instancia del estudiante creado.</returns>
-        private Student CreateStudent(string name, Gender gender)
+        private Student2 CreateStudent(string name, Gender gender)
         {
-            Student pickedStudent = Instantiate(_body, transform);
+            Student2 pickedStudent = Instantiate(_body, transform);
             pickedStudent.SetParameters(_player.transform, name, gender);
             _students.Add(name, pickedStudent);
             return pickedStudent;
@@ -156,7 +156,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="deskPos">Posición del escritorio en el que se ubicará el estudiante.</param>
         /// <param name="student">Estudiante a ubicar.</param>
-        private void PlaceStudent(ref int deskPos, Student student)
+        private void PlaceStudent(ref int deskPos, Student2 student)
         {
             DeskManager.Instance.GetFreeDesk(ref deskPos);
             Desk desk = _studentsPositions.GetChild(deskPos).GetComponent<Desk>();
@@ -251,7 +251,7 @@ namespace ClassRoomVR
         /// <param name="name">Nombre del estudiante (opcional).</param>
         private void GenerateStudent(ref int deskPos, Gender gender, string name = null)
         {
-            Student student = CreateStudent(name ?? PickRandomName(gender), gender);
+            Student2 student = CreateStudent(name ?? PickRandomName(gender), gender);
             PlaceStudent(ref deskPos, student);
         }
 
@@ -259,7 +259,7 @@ namespace ClassRoomVR
         /// Obtiene todos los estudiantes en forma de array.
         /// </summary>
         /// <returns>Array de estudiantes.</returns>
-        public Student[] GetStudents()
+        public Student2[] GetStudents()
         {
             return _students.Values.ToArray();
         }
@@ -267,8 +267,8 @@ namespace ClassRoomVR
         /// <summary>
         /// Obtiene el controlador de estudiantes.
         /// </summary>
-        /// <returns>Instancia de <see cref="StudentsController"/>.</returns>
-        public StudentsController GetStudentsController()
+        /// <returns>Instancia de <see cref="StudentsController2"/>.</returns>
+        public StudentsController2 GetStudentsController()
         {
             return _studentsController;
         }

@@ -10,10 +10,10 @@ namespace ClassRoomVR
     public class VoiceActivation : MonoBehaviour
     {
         [SerializeField] AppVoiceExperience appVoiceExperience;
-        StudentsController st;
+        StudentsController2 st;
         string text;
         [SerializeField] TMPro.TextMeshProUGUI textMeshPro;
-        List<Student> studentsSelected;
+        List<Student2> studentsSelected;
 
         void Start()
         {
@@ -34,7 +34,7 @@ namespace ClassRoomVR
         {
             text = string.Empty;
             GameManager.Instance.SetVoiceExperience(this);
-            studentsSelected = new List<Student>();
+            studentsSelected = new List<Student2>();
             appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
                 appVoiceExperience.Activate();
@@ -125,7 +125,7 @@ namespace ClassRoomVR
 
             if (names != null && names.Length > 0)
             {
-                Student s;
+                Student2 s;
                 for (int i = 0; i < names.Length; i++)
                 {
                     if (TryGetStudent(names[i], out s))
@@ -141,7 +141,7 @@ namespace ClassRoomVR
                 }
             }
         }
-        private bool TryGetStudent(string studentName, out Student s)
+        private bool TryGetStudent(string studentName, out Student2 s)
         {
             // Checkea student name
             if (ClassManager.Instance.GetStudentsController().TryGetStudent(studentName, out s))
@@ -176,14 +176,14 @@ namespace ClassRoomVR
                         break;
                     case "CambiarAlumno":
                         st.HandleChange(studentsSelected);
-                        st.Resolutions = Actions.Separados | Actions.Levantarse;
+                        st.Resolutions = Actions2.Separados | Actions2.Levantarse;
                         break;
                     case "Postponer":
                         st.HandlePostpone();
                         break;
                     case "Expulsion":
                         st.HandleExpel(studentsSelected);
-                        st.Resolutions = Actions.Insultar;
+                        st.Resolutions = Actions2.Insultar;
                         break;
                     case "Saludos":
                         Didascalia_LocalizationManager.Instance.GetTranslation("greetingsTeacher",

@@ -13,7 +13,7 @@ namespace ClassRoomVR
     {
         [SerializeField] private string _dateId = "[DATE]"; // Identificador de la fecha en el texto
         private TTSSpeaker _speaker; // Componente TTSSpeaker para la síntesis de voz
-        private Student _student; // Componente Student para gestionar el color y el movimiento de la mandíbula
+        private Student2 _student; // Componente Student para gestionar el color y el movimiento de la mandíbula
         private AudioClip _asyncClip; // Clip de audio para reproducción asíncrona
         private bool _isSpeaking; // Indica si el estudiante está hablando
 
@@ -24,7 +24,7 @@ namespace ClassRoomVR
 
         private void Start()
         {
-            _student = GetComponent<Student>(); // Obtiene el componente Student
+            _student = GetComponent<Student2>(); // Obtiene el componente Student
             _asyncClip = GetComponent<AudioClip>(); // Obtiene el componente AudioClip
             _speaker = GetComponent<TTSSpeaker>(); // Obtiene el componente TTSSpeaker
 
