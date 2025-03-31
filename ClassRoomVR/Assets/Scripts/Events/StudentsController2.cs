@@ -36,7 +36,7 @@ namespace ClassRoomVR
         [SerializeField] private Transform _door;
 
         // Acciones disruptivas (serializadas)
-        [SerializeField] private DisruptiveAction[] actions;
+        [SerializeField] private DisruptiveAction2[] actions;
 
         // Texto de la interfaz de usuario (serializado)
         [SerializeField] private TMPro.TextMeshProUGUI text;
@@ -199,7 +199,7 @@ namespace ClassRoomVR
 
         // Objeto para la acción disruptiva actual
         private GameObject actionObject;
-        private DisruptiveAction currentAction;
+        private DisruptiveAction2 currentAction;
         private List<Student2> studentList;
 
         // Realiza una acción disruptiva sobre los estudiantes
@@ -216,16 +216,16 @@ namespace ClassRoomVR
                 {
                     case Actions2.Insultar:
                         Debug.Log("Insultando");
-                        StartCoroutine(ActionsMethod.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
+                        StartCoroutine(ActionsMethod2.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
                         break;
                     case Actions2.Separados:
                         Debug.Log("Separándonos");
                         GetRandomStudentsSeparate();
-                        StartCoroutine(ActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
+                        StartCoroutine(ActionsMethod2.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
                         break;
                     case Actions2.Levantarse:
                         Debug.Log("Levantándose");
-                        ActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
+                        ActionsMethod2.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
                         break;
                     default:
                         Debug.LogError(currentAction.name + " action is not implemented or its type is missing. Check it!");

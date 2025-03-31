@@ -11,6 +11,6 @@ public class SessionText : MonoBehaviour
     private void Start()
     {
         // Obtiene el componente TextMeshProUGUI y establece su texto con el valor de la sesión actual
-        GetComponent<TextMeshProUGUI>().text = WsClient.Instance.Session;
+        GetComponent<TextMeshProUGUI>().text = WsClient2.Instance.Session;
     }
 }

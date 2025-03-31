@@ -8,7 +8,7 @@ using ClassRoomVR;
 /// Clase que maneja la conexión WebSocket y la comunicación con el servidor.
 /// Implementa un Singleton genérico para ser accesible globalmente.
 /// </summary>
-public class WsClient : GenericSingleton<WsClient>
+public class WsClient2 : GenericSingleton<WsClient2>
 {
     // Indicador de acción pendiente.
     private bool actionFlag = false;

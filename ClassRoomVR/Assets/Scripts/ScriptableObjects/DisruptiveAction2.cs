@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace ClassRoomVR
 {
-    [CreateAssetMenu(fileName = "DisruptiveAction", menuName = "ScriptableObject/DisruptiveAction", order = 5)]
-    public class DisruptiveAction : ScriptableObject
+    [CreateAssetMenu(fileName = "DisruptiveAction2", menuName = "ScriptableObject/DisruptiveAction2", order = 5)]
+    public class DisruptiveAction2 : ScriptableObject
     {
         [Header("Animation & Audio")]
         [Tooltip("Animation that displays the problematic action.")]

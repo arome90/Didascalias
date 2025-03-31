@@ -117,7 +117,7 @@ namespace ClassRoomVR
 
         public void LoadMainMenu()
         {
-            WsClient.Instance.Disconnect();
+            WsClient2.Instance.Disconnect();
             SceneTransitionManager.Singleton.GoToSceneAsync(0);
         }
 
@@ -239,7 +239,7 @@ namespace ClassRoomVR
                 voice.Activate();
             }
 
-            WsClient.Instance.StartConnection();
+            WsClient2.Instance.StartConnection();
             ToggleLoadingBar(false);
             Continue();
         }
@@ -275,7 +275,7 @@ namespace ClassRoomVR
             {
                 Debug.Log("vuelve la coneccion");
                 voice.Activate();
-                WsClient.Instance.StartConnection();
+                WsClient2.Instance.StartConnection();
                 loadingBar.SetActive(false);
                 Continue();
             }

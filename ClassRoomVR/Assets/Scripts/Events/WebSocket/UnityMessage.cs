@@ -134,7 +134,7 @@ namespace ClassRoomVR
         public static void SendInfoInitial()
         {
             var initData = CreateInitialMessageData();
-            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient.Instance.Session, initData));
+            WsClient2.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient2.Instance.Session, initData));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace ClassRoomVR
         public static void SendInfo()
         {
             var inputData = new MessageData(InputLogger.Instance.Input);
-            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient.Instance.Session, inputData));
+            WsClient2.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient2.Instance.Session, inputData));
         }
 
         /// <summary>

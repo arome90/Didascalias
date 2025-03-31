@@ -19,7 +19,7 @@ namespace ClassRoomVR
         private GameObject _player; // Jugador
         private BehaviorTree _behaviorTree; // Árbol de comportamiento
         private List<Student2> _problematicStudents; // Lista de estudiantes problemáticos
-        private DisruptiveAction _disruptiveAction; // Acción disruptiva específica
+        private DisruptiveAction2 _disruptiveAction; // Acción disruptiva específica
         private TextMeshProUGUI _textMeshPro; // UI para mostrar texto
 
         private const float MaxOutOfVisionTime = 20.0f; // Tiempo máximo fuera de la visión
@@ -40,7 +40,7 @@ namespace ClassRoomVR
         /// <param name="students">Lista de estudiantes problemáticos.</param>
         /// <param name="action">Acción disruptiva a manejar.</param>
         /// <param name="text">Texto que se mostrará en pantalla.</param>
-        public void SetParameters(GameObject player, List<Student2> students, DisruptiveAction action, TextMeshProUGUI text)
+        public void SetParameters(GameObject player, List<Student2> students, DisruptiveAction2 action, TextMeshProUGUI text)
         {
             _player = player;
             _problematicStudents = students;

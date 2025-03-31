@@ -28,7 +28,7 @@ namespace ClassRoomVR
         {
             _backButton.onClick.AddListener(GoBackScreen);
             _startButton.onClick.AddListener(GoStart);
-            WsClient.Instance.StartConnection();
+            WsClient2.Instance.StartConnection();
         }
 
         private void OnEnable()
@@ -113,7 +113,7 @@ namespace ClassRoomVR
                 DeskManager.Instance.DestroyChildren();
             }
             _textSession.gameObject.SetActive(true);
-            _textSession.text = WsClient.Instance.Session;
+            _textSession.text = WsClient2.Instance.Session;
             GameManager2.Instance.LoadMainScene();
         }
 

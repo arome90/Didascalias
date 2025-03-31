@@ -6,14 +6,14 @@ namespace ClassRoomVR
     /// <summary>
     /// Métodos estáticos para manejar acciones disruptivas de los estudiantes.
     /// </summary>
-    public static class ActionsMethod
+    public static class ActionsMethod2
     {
         /// <summary>
         /// Reproduce la animación y el audio apropiado para una acción disruptiva, basado en el género del estudiante.
         /// </summary>
         /// <param name="student">El estudiante que realiza la acción.</param>
         /// <param name="action">La acción disruptiva que realizará el estudiante.</param>
-        private static void PlayDisruptiveAction(Student2 student, DisruptiveAction action)
+        private static void PlayDisruptiveAction(Student2 student, DisruptiveAction2 action)
         {
             student.PayAttention(); // Indica que el estudiante está prestando atención.
 
@@ -34,7 +34,7 @@ namespace ClassRoomVR
         /// <param name="action">Acción disruptiva a ejecutar.</param>
         /// <param name="onComplete">Acción a ejecutar al finalizar la corrutina.</param>
         /// <returns>Retorna un IEnumerator necesario para las corrutinas.</returns>
-        public static IEnumerator SitTogether(Student2 student1, Student2 student2, Student2 studentNear, DisruptiveAction action, System.Action onComplete)
+        public static IEnumerator SitTogether(Student2 student1, Student2 student2, Student2 studentNear, DisruptiveAction2 action, System.Action onComplete)
         {
             student1.SetProblematicStudent(); // Marca al primer estudiante como problemático.
             student1.MoveTo(studentNear.GetDesk().GetStudentPosition(), 1f); // Mueve al estudiante al asiento del estudiante cercano.
@@ -68,7 +68,7 @@ namespace ClassRoomVR
         /// <param name="action">La acción disruptiva a ejecutar.</param>
         /// <param name="onComplete">Acción a ejecutar al finalizar la corrutina.</param>
         /// <returns>Retorna un IEnumerator necesario para las corrutinas.</returns>
-        public static IEnumerator Insult(Student2 student, DisruptiveAction action, System.Action onComplete)
+        public static IEnumerator Insult(Student2 student, DisruptiveAction2 action, System.Action onComplete)
         {
             PlayDisruptiveAction(student, action); // Ejecuta la acción disruptiva.
             yield return new WaitForSeconds(2f); // Espera 2 segundos.
@@ -82,7 +82,7 @@ namespace ClassRoomVR
         /// <param name="action">La acción disruptiva a ejecutar.</param>
         /// <param name="destination">La posición a la que se moverá el estudiante.</param>
         /// <param name="onComplete">Acción a ejecutar al finalizar el movimiento.</param>
-        public static void StandUpAndMove(Student2 student, DisruptiveAction action, Vector3 destination, System.Action onComplete)
+        public static void StandUpAndMove(Student2 student, DisruptiveAction2 action, Vector3 destination, System.Action onComplete)
         {
             PlayDisruptiveAction(student, action); // Ejecuta la acción disruptiva.
             student.MoveTo(destination, 1f, onComplete); // Mueve al estudiante al destino con una velocidad definida.
