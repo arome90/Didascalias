@@ -14,12 +14,12 @@ public class CharacterSkinnedMeshes2 : ScriptableObject
         /// Lista de ítems de ropa para esta categoría.
         /// </summary>
         [SerializeField]
-        private List<Garment> _items;
+        private List<Garment2> _items;
 
         /// <summary>
         /// Obtiene los ítems de ropa.
         /// </summary>
-        public List<Garment> Items => _items;
+        public List<Garment2> Items => _items;
     }
 
     [System.Serializable]
@@ -29,23 +29,23 @@ public class CharacterSkinnedMeshes2 : ScriptableObject
         /// Cuerpos para hombres.
         /// </summary>
         [SerializeField]
-        private CharacterSkin[] _men;
+        private CharacterSkin2[] _men;
 
         /// <summary>
         /// Cuerpos para mujeres.
         /// </summary>
         [SerializeField]
-        private CharacterSkin[] _women;
+        private CharacterSkin2[] _women;
 
         /// <summary>
         /// Obtiene los cuerpos para hombres.
         /// </summary>
-        public CharacterSkin[] Men => _men;
+        public CharacterSkin2[] Men => _men;
 
         /// <summary>
         /// Obtiene los cuerpos para mujeres.
         /// </summary>
-        public CharacterSkin[] Women => _women;
+        public CharacterSkin2[] Women => _women;
     }
 
     /// <summary>

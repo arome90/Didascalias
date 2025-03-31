@@ -402,11 +402,11 @@ public class Tutorial : MonoBehaviour
         switch (_tutorialSteps[_currentPhase].Actual)
         {
             case 0:
-                ClassManager.Instance.Generate();
+                ClassManager2.Instance.Generate();
                 GameManager2.Instance.GetVoiceActivation().ActiveText(true);
                 GameManager2.Instance.GetVoiceActivation().Activate();
-                _student = ClassManager.Instance.GetStudents()[0];
-                _studentControl = ClassManager.Instance.GetStudentsController();
+                _student = ClassManager2.Instance.GetStudents()[0];
+                _studentControl = ClassManager2.Instance.GetStudentsController();
                 _tutorialSteps[_currentPhase].Actual = 1;
                 break;
             case 1:

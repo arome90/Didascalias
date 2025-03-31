@@ -6,7 +6,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Generador de personajes para la simulación de aula VR.
     /// </summary>
-    public class CharacterGenerator : MonoBehaviour
+    public class CharacterGenerator2 : MonoBehaviour
     {
         [Header("Huesos del Estudiante")]
         [SerializeField] private string[] _extraBonesBody; // Huesos adicionales para el cuerpo
@@ -97,7 +97,7 @@ namespace ClassRoomVR
             var complement = selectedBody.HeadBone.Complements[Random.Range(0, selectedBody.HeadBone.Complements.Count)];
             int colorIndex = Random.Range(0, complement.Color.Length);
 
-            CharacterPropsSpawner.TrySpawnComplement(_rootBone, selectedBody.HeadBone, complement, colorIndex, false);
+            CharacterPropsSpawner2.TrySpawnComplement(_rootBone, selectedBody.HeadBone, complement, colorIndex, false);
         }
 
         /// <summary>

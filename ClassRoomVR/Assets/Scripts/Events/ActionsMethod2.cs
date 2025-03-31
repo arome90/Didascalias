@@ -51,7 +51,7 @@ namespace ClassRoomVR
             student2.SetProblematicStudent(); // Marca al segundo estudiante como problemático.
 
             // Cambia los asientos de los estudiantes.
-            ClassManager.Instance.GetStudentsController().ChangeDesk(student1, studentNear);
+            ClassManager2.Instance.GetStudentsController().ChangeDesk(student1, studentNear);
 
             // Espera hasta que el primer estudiante esté sentado.
             yield return new WaitUntil(() => student1.GetState() == State2.Sitting);

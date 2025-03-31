@@ -29,7 +29,7 @@ namespace ClassRoomVR
         /// </summary>
         private void Start()
         {
-            _studentsController = ClassManager.Instance.GetStudentsController();
+            _studentsController = ClassManager2.Instance.GetStudentsController();
             _studentsController.SetMode(TalkMode2.None);
         }
 

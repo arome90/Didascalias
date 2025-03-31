@@ -17,7 +17,7 @@ namespace ClassRoomVR
 
         void Start()
         {
-            st = ClassManager.Instance.GetStudentsController();
+            st = ClassManager2.Instance.GetStudentsController();
         }
 
         public void ActiveText(bool active)
@@ -144,7 +144,7 @@ namespace ClassRoomVR
         private bool TryGetStudent(string studentName, out Student2 s)
         {
             // Checkea student name
-            if (ClassManager.Instance.GetStudentsController().TryGetStudent(studentName, out s))
+            if (ClassManager2.Instance.GetStudentsController().TryGetStudent(studentName, out s))
             {
                 return true;
             }

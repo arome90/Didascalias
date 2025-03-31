@@ -4,7 +4,7 @@ using UnityEngine;
 /// Configuración del aspecto del personaje, incluyendo cuerpo, pelo y materiales.
 /// </summary>
 [CreateAssetMenu(fileName = "CharacterSkin", menuName = "Character Assets/Character Skin", order = 2)]
-public class CharacterSkin : ScriptableObject
+public class CharacterSkin2 : ScriptableObject
 {
     [Header("Cuerpo")]
     [SerializeField] private SkinnedMeshRenderer _body;       // Mesh con animación para el cuerpo

@@ -19,7 +19,7 @@ namespace ClassRoomVR
         private void Start()
         {
             // Obtiene los estudiantes del gestor de la clase y inicializa las estadísticas.
-            _students = GetComponent<ClassManager>().GetStudents();
+            _students = GetComponent<ClassManager2>().GetStudents();
             _attentionStatistics = new RunningStatistics();
 
             // Inicia la llamada repetida para calcular el promedio de atención.

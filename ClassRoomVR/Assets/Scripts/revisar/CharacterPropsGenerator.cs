@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Encargado de generar y asignar complementos a los huesos del personaje.
 /// </summary>
-public class CharacterPropsSpawner : MonoBehaviour
+public class CharacterPropsSpawner2 : MonoBehaviour
 {
     [SerializeField] private CharacterProps2 _characterProps; // Propiedades de los complementos del personaje
 

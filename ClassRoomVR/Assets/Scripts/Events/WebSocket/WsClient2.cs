@@ -157,7 +157,7 @@ public class WsClient2 : GenericSingleton<WsClient2>
     private void HandleAction()
     {
         Debug.Log("Handling Action from server!");
-        var studentController = ClassManager.Instance.GetStudentsController();
+        var studentController = ClassManager2.Instance.GetStudentsController();
         if (int.TryParse(receivedMessage.id, out int studentId) && studentId >= 0)
         {
             // Faltar al respeto/Sentarse juntos/Levantarse

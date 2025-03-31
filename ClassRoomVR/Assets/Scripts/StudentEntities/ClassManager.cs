@@ -6,9 +6,9 @@ namespace ClassRoomVR
 {
     /// <summary>
     /// Clase que gestiona la clase de estudiantes en la realidad virtual.
-    /// Hereda de <see cref="GenericSingleton{ClassManager}"/>.
+    /// Hereda de <see cref="GenericSingleton{ClassManager2}"/>.
     /// </summary>
-    public class ClassManager : GenericSingleton<ClassManager>
+    public class ClassManager2 : GenericSingleton<ClassManager2>
     {
         [SerializeField] private Transform[] _targetsHead;
         [SerializeField] private AudioClip _beforeClassBell;
