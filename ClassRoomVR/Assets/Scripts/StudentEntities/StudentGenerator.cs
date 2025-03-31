@@ -8,8 +8,8 @@ using UnityEngine;
 public class StudentGenerator : MonoBehaviour
 {
     [Header("Propiedades del Personaje")]
-    [SerializeField] private CharacterProps _characterProps;
-    [SerializeField] private CharacterSkinnedMeshes _characterAssets;
+    [SerializeField] private CharacterProps2 _characterProps;
+    [SerializeField] private CharacterSkinnedMeshes2 _characterAssets;
 
     private Student2 _student;
     private Transform[] _playerBonesArray;
@@ -223,7 +223,7 @@ public class StudentGenerator : MonoBehaviour
     /// <param name="boneAttachment">Adjunto de hueso.</param>
     /// <param name="isFoot">Si el accesorio es un pie.</param>
     /// <returns>Verdadero si debe ser generado en el lado derecho.</returns>
-    private bool DetermineSpawnSide(CharacterProps.ComplementAttachment boneAttachment, bool isFoot)
+    private bool DetermineSpawnSide(CharacterProps2.ComplementAttachment boneAttachment, bool isFoot)
     {
         if (boneAttachment.BoneName.Contains("R") && !isFoot)
         {
@@ -241,7 +241,7 @@ public class StudentGenerator : MonoBehaviour
     /// <param name="color">Índice de color.</param>
     /// <param name="spawnOnRight">Si el complemento debe generarse en el lado derecho.</param>
     /// <param name="isFoot">Si el complemento es un pie.</param>
-    private void SpawnComplement(Transform rootBone, CharacterProps.ComplementAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, int color, bool spawnOnRight, bool isFoot)
+    private void SpawnComplement(Transform rootBone, CharacterProps2.ComplementAttachment boneAttachment, CharacterProps2.MeshMaterialPair complement, int color, bool spawnOnRight, bool isFoot)
     {
         if (spawnOnRight || isFoot)
         {
@@ -261,7 +261,7 @@ public class StudentGenerator : MonoBehaviour
     /// <param name="complement">Complemento a generar.</param>
     /// <param name="color">Índice de color.</param>
     /// <param name="isMirrored">Si el complemento debe ser reflejado.</param>
-    public static void TrySpawnComplement(Transform rootBone, CharacterProps.ComplementAttachment boneAttachment, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
+    public static void TrySpawnComplement(Transform rootBone, CharacterProps2.ComplementAttachment boneAttachment, CharacterProps2.MeshMaterialPair complement, int color, bool isMirrored)
     {
         if (Random.Range(0f, 100f) <= boneAttachment.Probability)
         {
@@ -281,7 +281,7 @@ public class StudentGenerator : MonoBehaviour
     /// <param name="complement">Complemento a generar.</param>
     /// <param name="color">Índice de color.</param>
     /// <param name="isMirrored">Si el objeto debe ser reflejado.</param>
-    public static void SpawnForBone(Transform rootBone, string boneName, CharacterProps.MeshMaterialPair complement, int color, bool isMirrored)
+    public static void SpawnForBone(Transform rootBone, string boneName, CharacterProps2.MeshMaterialPair complement, int color, bool isMirrored)
     {
         Transform bone = FindBoneInChildren(rootBone, boneName);
         if (bone == null)

@@ -15,12 +15,12 @@ public class CharacterSkin : ScriptableObject
     [SerializeField] private Material _hairMat;               // Material del pelo
 
     [Header("Complementos de la cabeza")]
-    [SerializeField] private CharacterProps.ComplementAttachment _headBone;  // Configuración del hueso para los complementos de la cabeza
+    [SerializeField] private CharacterProps2.ComplementAttachment _headBone;  // Configuración del hueso para los complementos de la cabeza
 
     public SkinnedMeshRenderer Body => _body;
     public Material BodyMat => _bodyMat;
     public SkinnedMeshRenderer Hair => _hair;
     public Material HairMat => _hairMat;
-    public CharacterProps.ComplementAttachment HeadBone => _headBone;
+    public CharacterProps2.ComplementAttachment HeadBone => _headBone;
 }
 

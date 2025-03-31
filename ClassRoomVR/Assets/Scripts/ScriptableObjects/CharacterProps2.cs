@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CharacterProps", menuName = "Character Assets/Character Props", order = 0)]
-public class CharacterProps : ScriptableObject
+[CreateAssetMenu(fileName = "CharacterProps2", menuName = "Character Assets/Character Props2", order = 0)]
+public class CharacterProps2 : ScriptableObject
 {
     [System.Serializable]
     public struct MeshMaterialPair

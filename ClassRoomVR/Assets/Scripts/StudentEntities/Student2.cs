@@ -51,7 +51,7 @@ namespace ClassRoomVR
         [SerializeField] private TextMeshProUGUI _studentNameText;
         [SerializeField] private TextMeshProUGUI _attentionText;
 
-        private Desk _desk;
+        private Desk2 _desk;
         private Animator _animator;
         private AudioSource _audioSource;
         private NavMeshAgent _navMeshAgent;
@@ -73,7 +73,7 @@ namespace ClassRoomVR
 
         #region Getters
 
-        public Desk GetDesk() => _desk;
+        public Desk2 GetDesk() => _desk;
         public Gender2 GetGender() => _gender;
         public bool IsProblematicStudent() => _problematic;
         public AudioSource GetAudioSource() => _audioSource;
@@ -136,7 +136,7 @@ namespace ClassRoomVR
         /// Establece el escritorio del estudiante.
         /// </summary>
         /// <param name="d">Escritorio al que se asigna el estudiante.</param>
-        public void SetDesk(Desk d)
+        public void SetDesk(Desk2 d)
         {
             _desk = d;
         }
@@ -571,7 +571,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="d">Nuevo escritorio.</param>
         /// <returns>Coroutine.</returns>
-        public IEnumerator ChangeDesk(Desk d)
+        public IEnumerator ChangeDesk(Desk2 d)
         {
             if (_state == State2.Standing)
             {

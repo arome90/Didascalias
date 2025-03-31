@@ -9,9 +9,9 @@ namespace ClassRoomVR
     /// </summary>
     public class DeskManager : GenericSingleton<DeskManager>
     {
-        [SerializeField] private Desk _deskPrefab; // Prefab de escritorio
+        [SerializeField] private Desk2 _deskPrefab; // Prefab de escritorio
         private List<Vector2> _deskPositions; // Lista de posiciones de los escritorios
-        private List<Desk> _desks; // Lista de instancias de los escritorios
+        private List<Desk2> _desks; // Lista de instancias de los escritorios
 
         [SerializeField] private float _deskOffsetX; // Offset de X de los escritorios
         [SerializeField] private float _deskOffsetZ; // Offset de Z de los escritorios
@@ -27,13 +27,13 @@ namespace ClassRoomVR
         /// <summary>
         /// Propiedad para obtener la lista de escritorios instanciados.
         /// </summary>
-        public List<Desk> Desks => _desks;
+        public List<Desk2> Desks => _desks;
 
         public override void Awake()
         {
             base.Awake();
             _deskPositions = new List<Vector2>();
-            _desks = new List<Desk>();
+            _desks = new List<Desk2>();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace ClassRoomVR
                     float zPos = -i + (numRows - 1) / 2f;
                     _deskPositions.Add(new Vector2(xPos, zPos));
 
-                    Desk desk = Instantiate(_deskPrefab, new Vector3(transform.position.x + xPos * _deskOffsetX, transform.position.y, transform.position.z + zPos * _deskOffsetZ), Quaternion.identity, transform);
+                    Desk2 desk = Instantiate(_deskPrefab, new Vector3(transform.position.x + xPos * _deskOffsetX, transform.position.y, transform.position.z + zPos * _deskOffsetZ), Quaternion.identity, transform);
                     desk.DeskId = iDesk;
                     _desks.Add(desk);
                     iDesk++;
@@ -108,7 +108,7 @@ namespace ClassRoomVR
                 _deskPositions.Add(new Vector2(xPos, zPos));
 
                 Vector3 position = new Vector3(xPos, 0, -zPos) + transform.position;
-                Desk desk = Instantiate(_deskPrefab, position, Quaternion.identity, transform);
+                Desk2 desk = Instantiate(_deskPrefab, position, Quaternion.identity, transform);
 
                 if (degrees > 180)
                 {

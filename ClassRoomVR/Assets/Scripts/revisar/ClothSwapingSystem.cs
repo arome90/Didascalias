@@ -12,7 +12,7 @@ public class ClothSwappingSystem : MonoBehaviour
     private Dictionary<string, Transform> _playerBonesDict;
 
     [Header("Activos de Ropa")]
-    [SerializeField] private CharacterSkinnedMeshes _characterSkinnedMeshes;
+    [SerializeField] private CharacterSkinnedMeshes2 _characterSkinnedMeshes;
 
     private void Awake()
     {

@@ -5,7 +5,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase encargada de gestionar la activación de un objeto hijo aleatorio en la mochila, desactivando o destruyendo los demás.
     /// </summary>
-    public class GenerateBackpack : MonoBehaviour
+    public class GenerateBackpack2 : MonoBehaviour
     {
         private void Start()
         {

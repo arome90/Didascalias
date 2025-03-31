@@ -12,7 +12,7 @@ namespace ClassRoomVR
         [SerializeField] private string[] _extraBonesBody; // Huesos adicionales para el cuerpo
 
         [Header("Meshes")]
-        [SerializeField] private CharacterSkinnedMeshes _characterAssets; // Activos de malla del personaje
+        [SerializeField] private CharacterSkinnedMeshes2 _characterAssets; // Activos de malla del personaje
 
         private Student2 _student; // Referencia al componente Student
         private Transform[] _playerBonesArray; // Array de huesos del jugador

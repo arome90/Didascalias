@@ -10,9 +10,9 @@ public class Complement : ScriptableObject
     [SerializeField] private string _boneName;                // Nombre del hueso al que se adjunta el complemento
     [Range(0f, 100f)]
     [SerializeField] private float _probability;              // Probabilidad de usar este complemento
-    [SerializeField] private List<CharacterProps.MeshMaterialPair> _complements; // Lista de combinaciones de mesh y material para el complemento
+    [SerializeField] private List<CharacterProps2.MeshMaterialPair> _complements; // Lista de combinaciones de mesh y material para el complemento
 
     public string BoneName => _boneName;
     public float Probability => _probability;
-    public List<CharacterProps.MeshMaterialPair> Complements => _complements;
+    public List<CharacterProps2.MeshMaterialPair> Complements => _complements;
 }

@@ -159,7 +159,7 @@ namespace ClassRoomVR
         private void PlaceStudent(ref int deskPos, Student2 student)
         {
             DeskManager.Instance.GetFreeDesk(ref deskPos);
-            Desk desk = _studentsPositions.GetChild(deskPos).GetComponent<Desk>();
+            Desk2 desk = _studentsPositions.GetChild(deskPos).GetComponent<Desk2>();
             Transform seatPosition = desk.transform.GetChild(0);
             student.transform.SetPositionAndRotation(seatPosition.position, seatPosition.parent.rotation);
             student.transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);

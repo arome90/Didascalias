@@ -7,7 +7,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Controla las animaciones del escritorio y la silla, así como la interacción con otros escritorios.
     /// </summary>
-    public class Desk : MonoBehaviour
+    public class Desk2 : MonoBehaviour
     {
         [SerializeField] private Animation _deskAnimation; // Referencia a la animación del escritorio
         [SerializeField] private Animation _chairAnimation; // Referencia a la animación de la silla
