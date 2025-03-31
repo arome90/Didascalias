@@ -7,7 +7,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Controla el comportamiento del estudiante en el entorno VR.
     /// </summary>
-    public class StudentBehavior : MonoBehaviour
+    public class StudentBehavior2 : MonoBehaviour
     {
         private const float AttentionMin = 0f;
         private const float AttentionMax = 100f;
