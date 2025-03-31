@@ -73,7 +73,7 @@ public class WsClient : GenericSingleton<WsClient>
         if (!e.WasClean)
         {
             Debug.Log("Conexión perdida. No hay Internet.");
-            GameManager.Instance.Pause(true);
+            GameManager2.Instance.Pause(true);
         }
     }
 

@@ -108,13 +108,13 @@ namespace ClassRoomVR
         {
             ToggleUIElements(false);
             _menus[_currentMenuIndex].SetActive(false);
-            if (GameManager.Instance.GetCurrentSettings().name != "Personalizado")
+            if (GameManager2.Instance.GetCurrentSettings().name != "Personalizado")
             {
                 DeskManager.Instance.DestroyChildren();
             }
             _textSession.gameObject.SetActive(true);
             _textSession.text = WsClient.Instance.Session;
-            GameManager.Instance.LoadMainScene();
+            GameManager2.Instance.LoadMainScene();
         }
 
         /// <summary>

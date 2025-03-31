@@ -84,12 +84,12 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnLanguageChanged.AddListener(ChangeLanguageClips);
+        GameManager2.Instance.OnLanguageChanged.AddListener(ChangeLanguageClips);
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnLanguageChanged.RemoveListener(ChangeLanguageClips);
+        GameManager2.Instance.OnLanguageChanged.RemoveListener(ChangeLanguageClips);
     }
 
     private void ChangeLanguageClips()
@@ -175,8 +175,8 @@ public class Tutorial : MonoBehaviour
     {
         if (finish) return;
         finish = true;
-        _handIzq.SetRed(VisualAction.Activate);
-        _handDer.SetRed(VisualAction.Activate);
+        _handIzq.SetRed(VisualAction2.Activate);
+        _handDer.SetRed(VisualAction2.Activate);
         _handIzq.transform.parent.GetChild(3).SetActive(true);
         _handDer.transform.parent.GetChild(2).SetActive(true);
         _tutorialSteps[_currentPhase].ConditionMet = true;
@@ -282,7 +282,7 @@ public class Tutorial : MonoBehaviour
         if (_currentPhase == _tutorialSteps.Length - 1)
         {
             _skipTutorial.onClick.RemoveAllListeners();
-            _skipTutorial.onClick.AddListener(GameManager.Instance.LoadMainMenu);
+            _skipTutorial.onClick.AddListener(GameManager2.Instance.LoadMainMenu);
             _nextButton.gameObject.SetActive(false);
         }
     }
@@ -292,8 +292,8 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     private void CleanHandActions()
     {
-        _handIzq.CleanRed(VisualAction.Activate);
-        _handDer.CleanRed(VisualAction.Activate);
+        _handIzq.CleanRed(VisualAction2.Activate);
+        _handDer.CleanRed(VisualAction2.Activate);
     }
 
     /// <summary>
@@ -301,7 +301,7 @@ public class Tutorial : MonoBehaviour
     /// </summary>
     private void GoMenu()
     {
-        GameManager.Instance.LoadMainMenu();
+        GameManager2.Instance.LoadMainMenu();
     }
 
     /// <summary>
@@ -363,8 +363,8 @@ public class Tutorial : MonoBehaviour
     {
         if (_tutorialSteps[_currentPhase].Actual == 0)
         {
-            _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed += Action_performed;
-            _handDer.SetRed(VisualAction.PrimaryButton);
+            _handDer.InputActions[(int)VisualAction2.PrimaryButton].action.performed += Action_performed;
+            _handDer.SetRed(VisualAction2.PrimaryButton);
             Invoke(nameof(Generate), 12);
             _tutorialSteps[_currentPhase].Actual = 1;
             _tutorialSteps[_currentPhase].Objective = 0;
@@ -372,15 +372,15 @@ public class Tutorial : MonoBehaviour
         else if (_tutorialSteps[_currentPhase].Actual == 2 && _tutorialSteps[_currentPhase].Objective == 1)
         {
             _tutorialSteps[_currentPhase].Objective = 0;
-            _handDer.SetRed(VisualAction.PrimaryButton);
+            _handDer.SetRed(VisualAction2.PrimaryButton);
             ModifyTextToSpeech("cantMoveTTS", true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 3 && _tutorialSteps[_currentPhase].Objective == 1)
         {
             _tutorialSteps[_currentPhase].Objective = 0;
-            _handDer.InputActions[(int)VisualAction.PrimaryButton].action.performed -= Action_performed;
-            _handIzq.InputActions[(int)VisualAction.Menu].action.performed += Action_performed;
-            _handIzq.SetRed(VisualAction.Menu);
+            _handDer.InputActions[(int)VisualAction2.PrimaryButton].action.performed -= Action_performed;
+            _handIzq.InputActions[(int)VisualAction2.Menu].action.performed += Action_performed;
+            _handIzq.SetRed(VisualAction2.Menu);
             ModifyTextToSpeech("menuActivationTTS", true);
         }
         else if (_tutorialSteps[_currentPhase].Actual == 4 && _tutorialSteps[_currentPhase].Objective == 1)
@@ -390,7 +390,7 @@ public class Tutorial : MonoBehaviour
         }
         else if ((_tutorialSteps[_currentPhase].Actual == 5 && _tutorialSteps[_currentPhase].Objective == 1))
         {
-            _handIzq.InputActions[(int)VisualAction.Menu].action.performed -= Action_performed;
+            _handIzq.InputActions[(int)VisualAction2.Menu].action.performed -= Action_performed;
             _tutorialSteps[_currentPhase].ConditionMet = true;
         }
 
@@ -403,8 +403,8 @@ public class Tutorial : MonoBehaviour
         {
             case 0:
                 ClassManager.Instance.Generate();
-                GameManager.Instance.GetVoiceActivation().ActiveText(true);
-                GameManager.Instance.GetVoiceActivation().Activate();
+                GameManager2.Instance.GetVoiceActivation().ActiveText(true);
+                GameManager2.Instance.GetVoiceActivation().Activate();
                 _student = ClassManager.Instance.GetStudents()[0];
                 _studentControl = ClassManager.Instance.GetStudentsController();
                 _tutorialSteps[_currentPhase].Actual = 1;
@@ -417,9 +417,9 @@ public class Tutorial : MonoBehaviour
                 }
                 break;
             case 2:
-                if (_student.GetState() == State.Sitting)
+                if (_student.GetState() == State2.Sitting)
                 {
-                    GameManager.Instance.GetVoiceActivation().ActiveText(false);
+                    GameManager2.Instance.GetVoiceActivation().ActiveText(false);
                     _tutorialSteps[_currentPhase].ConditionMet = true;
 
                 }

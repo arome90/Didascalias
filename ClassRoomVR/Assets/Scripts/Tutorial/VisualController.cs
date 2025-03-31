@@ -88,7 +88,7 @@ public class VisualController : MonoBehaviour
     /// Establece el color rojo para una acción visual específica.
     /// </summary>
     /// <param name="action">Acción visual.</param>
-    public void SetRed(VisualAction action)
+    public void SetRed(VisualAction2 action)
     {
         _renderers[(int)action].material.color = Color.red;
         _target = (int)action;
@@ -98,7 +98,7 @@ public class VisualController : MonoBehaviour
     /// Limpia el color rojo previamente establecido para una acción visual.
     /// </summary>
     /// <param name="action">Acción visual.</param>
-    public void CleanRed(VisualAction action)
+    public void CleanRed(VisualAction2 action)
     {
         _renderers[(int)action].material.color = Color.white;
         _target = -1;

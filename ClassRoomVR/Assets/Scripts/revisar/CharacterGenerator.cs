@@ -72,7 +72,7 @@ namespace ClassRoomVR
         /// </summary>
         private void SetupCharacterMeshes()
         {
-            var bodies = _student.GetGender() == Gender.Women ? _characterAssets.Bodies.Women : _characterAssets.Bodies.Men;
+            var bodies = _student.GetGender() == Gender2.Women ? _characterAssets.Bodies.Women : _characterAssets.Bodies.Men;
             var selectedBody = bodies[Random.Range(0, bodies.Length)];
 
             AttachMesh(selectedBody.Body, selectedBody.BodyMat, selectedBody.HairMat, _rootBone);

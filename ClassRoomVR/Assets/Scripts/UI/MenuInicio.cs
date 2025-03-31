@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System;
 using Meta.WitAi.Data.Configuration;
 using TMPro;
-using static ClassRoomVR.GameManager;
+using static ClassRoomVR.GameManager2;
 using System.IO;
 using System.Collections;
 using Unity.VisualScripting;

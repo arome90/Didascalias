@@ -43,11 +43,11 @@ public class Didascalia_InputManager : MonoBehaviour
         bool isActive = !handMenu.enabled;
         handMenu.enabled = isActive;
 
-        if (!GameManager.Instance.IsPause && isActive)
+        if (!GameManager2.Instance.IsPause && isActive)
         {
             pauseMenu.PauseGame();
         }
-        else if (GameManager.Instance.IsPause && !isActive)
+        else if (GameManager2.Instance.IsPause && !isActive)
         {
             pauseMenu.ResumeGame();
         }

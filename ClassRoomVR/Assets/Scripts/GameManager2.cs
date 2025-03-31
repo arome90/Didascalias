@@ -8,7 +8,7 @@ using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager2 : MonoBehaviour
     {
         [Serializable]
         public struct LanguageOption
@@ -50,7 +50,7 @@ namespace ClassRoomVR
         private int indexCurrentSett;
 
         private int lastSettingsUsed;
-        public static GameManager Instance { get; private set; }
+        public static GameManager2 Instance { get; private set; }
 
         private void Awake()
         {

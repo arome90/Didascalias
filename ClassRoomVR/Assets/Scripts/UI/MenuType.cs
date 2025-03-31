@@ -31,7 +31,7 @@ namespace ClassRoomVR
         /// </summary>
         private void OnEditButtonClick()
         {
-            GameManager.Instance.SetCurrentSettings(0); // Establece la configuración actual
+            GameManager2.Instance.SetCurrentSettings(0); // Establece la configuración actual
             MenuTransition.Instance.GoNextScreen(); // Navega a la siguiente pantalla
         }
 
@@ -42,7 +42,7 @@ namespace ClassRoomVR
         private void OnDropdownValueChanged(int value)
         {
             _editText.SetActive(value == 0); // Muestra el texto si el valor seleccionado es 0
-            GameManager.Instance.SetCurrentSettings(value); // Actualiza la configuración actual según la selección
+            GameManager2.Instance.SetCurrentSettings(value); // Actualiza la configuración actual según la selección
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace ClassRoomVR
         private void RefreshDropdownOptions()
         {
             _structureDropdown.ClearOptions(); // Limpia las opciones actuales del dropdown
-            var availableSettings = GameManager.Instance.GetAvailableSettings(); // Obtiene las configuraciones disponibles
-            var currentIndex = GameManager.Instance.GetIndexCurrentSettings(); // Obtiene el índice de la configuración actual
+            var availableSettings = GameManager2.Instance.GetAvailableSettings(); // Obtiene las configuraciones disponibles
+            var currentIndex = GameManager2.Instance.GetIndexCurrentSettings(); // Obtiene el índice de la configuración actual
             _structureDropdown.AddOptions(GetDropdownOptions(availableSettings)); // Añade nuevas opciones al dropdown
             _structureDropdown.value = currentIndex; // Establece el valor seleccionado al índice de la configuración actual
         }

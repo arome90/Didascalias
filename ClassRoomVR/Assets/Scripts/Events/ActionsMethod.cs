@@ -18,7 +18,7 @@ namespace ClassRoomVR
             student.PayAttention(); // Indica que el estudiante está prestando atención.
 
             // Reproduce la animación y el audio correspondiente según el género.
-            var audioClip = student.GetGender() == Gender.Women
+            var audioClip = student.GetGender() == Gender2.Women
                 ? action.SituationAudioFeminine
                 : action.SituationAudioMasculine;
 
@@ -54,7 +54,7 @@ namespace ClassRoomVR
             ClassManager.Instance.GetStudentsController().ChangeDesk(student1, studentNear);
 
             // Espera hasta que el primer estudiante esté sentado.
-            yield return new WaitUntil(() => student1.GetState() == State.Sitting);
+            yield return new WaitUntil(() => student1.GetState() == State2.Sitting);
 
             student1.GenerateText("Te voy a contar lo que hice ayer a ver si no nos cambia el profe"); // Inicia una conversación disruptiva.
 

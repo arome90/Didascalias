@@ -56,7 +56,7 @@ namespace ClassRoomVR
 
         private void MakeDecision()
         {
-            if (GameManager.Instance.IsPause) return;
+            if (GameManager2.Instance.IsPause) return;
 
             float distanceFactor = CalculateDistanceToPlayerMap();
             UpdateAttentionLevel(distanceFactor);
@@ -95,7 +95,7 @@ namespace ClassRoomVR
         public void SetAttention()
         {
             _attentionLevel = Mathf.Max(_attentionLevel, 65f);
-            StartCoroutine(ChangeExpression(Expresiones.Sonreir));
+            StartCoroutine(ChangeExpression(Expresiones2.Sonreir));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace ClassRoomVR
         {
             while (true)
             {
-                yield return Blink(Expresiones.Pestañear);
+                yield return Blink(Expresiones2.Pestañear);
                 yield return new WaitForSeconds(Random.Range(BlinkIntervalMin, BlinkIntervalMax));
             }
         }
@@ -124,9 +124,9 @@ namespace ClassRoomVR
         /// Ejecuta un parpadeo.
         /// </summary>
         /// <param name="expresion">Expresión de parpadeo.</param>
-        private IEnumerator Blink(Expresiones expresion)
+        private IEnumerator Blink(Expresiones2 expresion)
         {
-            if (_currentExpression != Expresiones.Dormido)
+            if (_currentExpression != Expresiones2.Dormido)
             {
                 SetBlendShape(expresion, 100f);
                 yield return new WaitForSeconds(0.2f);
@@ -139,7 +139,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="expresion">Expresión de la forma de mezcla.</param>
         /// <param name="value">Valor del peso.</param>
-        public void SetBlendShape(Expresiones expresion, float value)
+        public void SetBlendShape(Expresiones2 expresion, float value)
         {
             if (_meshRenderer != null)
             {
@@ -148,12 +148,12 @@ namespace ClassRoomVR
         }
 
 
-        private Expresiones _currentExpression;
+        private Expresiones2 _currentExpression;
         /// <summary>
         /// Cambia la expresión del estudiante suavemente.
         /// </summary>
         /// <param name="exp">Expresión a cambiar.</param>
-        public IEnumerator ChangeExpression(Expresiones exp)
+        public IEnumerator ChangeExpression(Expresiones2 exp)
         {
             int expressionIndex = (int)exp;
             while (_meshRenderer.GetBlendShapeWeight(expressionIndex) < 100f)

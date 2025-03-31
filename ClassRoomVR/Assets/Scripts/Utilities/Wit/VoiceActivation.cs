@@ -33,7 +33,7 @@ namespace ClassRoomVR
         private void Awake()
         {
             text = string.Empty;
-            GameManager.Instance.SetVoiceExperience(this);
+            GameManager2.Instance.SetVoiceExperience(this);
             studentsSelected = new List<Student2>();
             appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
             {
@@ -46,7 +46,7 @@ namespace ClassRoomVR
                 if (Application.internetReachability == NetworkReachability.NotReachable)
                 {
                     Debug.Log("nO HAY INTERNET");
-                    GameManager.Instance.Pause(true);
+                    GameManager2.Instance.Pause(true);
                 }
             });
 
@@ -97,15 +97,15 @@ namespace ClassRoomVR
             if (media > -30)
             {
                 Debug.Log("¡Gritando " + (int)media);
-                st.SetMode(TalkMode.Disrespect);
+                st.SetMode(TalkMode2.Disrespect);
             }
             else if (media < -50)
             {
                 Debug.Log("¡Susurrando " + (int)media);
-                st.SetMode(TalkMode.Good);
+                st.SetMode(TalkMode2.Good);
 
             }
-            else { Debug.Log("¡Normal " + (int)media); st.SetMode(TalkMode.Normal); }
+            else { Debug.Log("¡Normal " + (int)media); st.SetMode(TalkMode2.Normal); }
         }
         List<float> volumeList;
         public void OnMicLevelChanged(float a)
@@ -204,7 +204,7 @@ namespace ClassRoomVR
 
                 if (insulto != "")
                 {
-                    st.SetMode(TalkMode.Disrespect);
+                    st.SetMode(TalkMode2.Disrespect);
                 }
             }
         }

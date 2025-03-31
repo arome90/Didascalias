@@ -9,7 +9,7 @@ public class PCDebugClass : MonoBehaviour
     {
         if(Keyboard.current.mKey.wasPressedThisFrame)
         {
-            GameManager.Instance.LoadMainMenu();
+            GameManager2.Instance.LoadMainMenu();
         }
     }
 }

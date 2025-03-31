@@ -13,7 +13,7 @@ namespace ClassRoomVR
     public class StudentsController2 : MonoBehaviour
     {
         // Modo de conversación actual
-        private TalkMode _mode;
+        private TalkMode2 _mode;
         private Actions2 _res;
 
         // Propiedad para acceder a las resoluciones
@@ -138,7 +138,7 @@ namespace ClassRoomVR
         public void HandlePostpone()
         {
             Debug.Log("Postpone situation");
-            _mode = TalkMode.Good;
+            _mode = TalkMode2.Good;
         }
 
         // Maneja la expulsión de estudiantes
@@ -186,13 +186,13 @@ namespace ClassRoomVR
         }
 
         // Obtiene el modo de conversación actual
-        public TalkMode GetMode()
+        public TalkMode2 GetMode()
         {
             return _mode;
         }
 
         // Establece el modo de conversación actual
-        public void SetMode(TalkMode value)
+        public void SetMode(TalkMode2 value)
         {
             _mode = value;
         }
@@ -258,7 +258,7 @@ namespace ClassRoomVR
             studentList?.Clear();
 
             List<Student2> eligibleStudents = _students.Values
-                .Where(s => s != exclude && s.GetState() != State.Standing)
+                .Where(s => s != exclude && s.GetState() != State2.Standing)
                 .ToList();
 
             studentList = new List<Student2> { eligibleStudents[UnityEngine.Random.Range(0, eligibleStudents.Count)] };
@@ -272,14 +272,14 @@ namespace ClassRoomVR
             studentList?.Clear();
 
             List<Student2> eligibleStudents = _students.Values
-                .Where(s => excludedStudents == null || !excludedStudents.Contains(s) && s.GetState() != State.Standing)
+                .Where(s => excludedStudents == null || !excludedStudents.Contains(s) && s.GetState() != State2.Standing)
                 .ToList();
 
             int randomStudentIndex = UnityEngine.Random.Range(0, eligibleStudents.Count);
             Student2 student = eligibleStudents[randomStudentIndex];
 
             randomStudentIndex = randomStudentIndex != eligibleStudents.Count - 1 &&
-                                 ((randomStudentIndex + 1) % GameManager.Instance.GetCurrentSettings().Columns != 0)
+                                 ((randomStudentIndex + 1) % GameManager2.Instance.GetCurrentSettings().Columns != 0)
                                  ? randomStudentIndex + 1
                                  : randomStudentIndex - 1;
 

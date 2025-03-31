@@ -25,18 +25,18 @@ namespace ClassRoomVR
         public LocalizedString Name { get => _name; }
 
         [SerializeField]
-        private Age _age;
-        public Age Age { get => _age; set => _age = value; }
+        private Age2 _age;
+        public Age2 Age { get => _age; set => _age = value; }
 
         [Header("Class Structure")]
         [SerializeField]
-        private StructureMode _structureMode;
-        public StructureMode StructureMode { get => _structureMode; set => _structureMode = value; }
+        private StructureMode2 _structureMode;
+        public StructureMode2 StructureMode { get => _structureMode; set => _structureMode = value; }
 
         [Header("Generation Mode")]
         [SerializeField]
-        private GenerateMode _mode;
-        public GenerateMode Mode { get => _mode; set => _mode = value; }
+        private GenerateMode2 _mode;
+        public GenerateMode2 Mode { get => _mode; set => _mode = value; }
 
         [SerializeField]
         private StudentInfo[] _students;
@@ -107,11 +107,11 @@ namespace ClassRoomVR
                 DrawProperty(_properties[11], "Number of Desks");
                 DrawProperty(_properties[12], "Name");
 
-                DrawEnumProperty(_properties[4], "Structure", typeof(StructureMode));
-                DrawStructureProperties((StructureMode)_properties[4].enumValueIndex);
+                DrawEnumProperty(_properties[4], "Structure", typeof(StructureMode2));
+                DrawStructureProperties((StructureMode2)_properties[4].enumValueIndex);
 
-                DrawEnumProperty(_properties[5], "Mode", typeof(GenerateMode));
-                DrawModeProperties((GenerateMode)_properties[5].enumValueIndex);
+                DrawEnumProperty(_properties[5], "Mode", typeof(GenerateMode2));
+                DrawModeProperties((GenerateMode2)_properties[5].enumValueIndex);
 
                 EditorGUI.EndChangeCheck();
                 serializedObject.ApplyModifiedProperties();
@@ -128,18 +128,18 @@ namespace ClassRoomVR
                 prop.enumValueIndex = Convert.ToInt32(newEnumValue);
             }
 
-            private void DrawStructureProperties(StructureMode structureMode)
+            private void DrawStructureProperties(StructureMode2 structureMode)
             {
                 switch (structureMode)
                 {
-                    case StructureMode.Fila:
+                    case StructureMode2.Fila:
                         DrawProperty(_properties[9], "Columns");
                         DrawProperty(_properties[10], "Rows");
                         break;
-                    case StructureMode.U:
-                    case StructureMode.Circular:
+                    case StructureMode2.U:
+                    case StructureMode2.Circular:
                         DrawProperty(_properties[7], "Radius");
-                        if (structureMode == StructureMode.Circular)
+                        if (structureMode == StructureMode2.Circular)
                         {
                             DrawProperty(_properties[8], "Degrees");
                         }
@@ -147,14 +147,14 @@ namespace ClassRoomVR
                 }
             }
 
-            private void DrawModeProperties(GenerateMode mode)
+            private void DrawModeProperties(GenerateMode2 mode)
             {
                 switch (mode)
                 {
-                    case GenerateMode.Random:
+                    case GenerateMode2.Random:
                         DrawProperty(_properties[0], "Number of Students");
                         break;
-                    case GenerateMode.Personalized:
+                    case GenerateMode2.Personalized:
                         DrawProperty(_properties[0], "Number of Students");
                         DrawProperty(_properties[6], "Personalized Students");
                         if (_properties[6].arraySize > _properties[0].intValue)
@@ -162,7 +162,7 @@ namespace ClassRoomVR
                             _properties[6].arraySize = _properties[0].intValue;
                         }
                         break;
-                    case GenerateMode.Gender:
+                    case GenerateMode2.Gender:
                         DrawProperty(_properties[2], "Number of Women");
                         DrawProperty(_properties[1], "Number of Men");
                         break;

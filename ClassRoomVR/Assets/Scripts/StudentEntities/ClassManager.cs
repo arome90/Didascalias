@@ -30,12 +30,12 @@ namespace ClassRoomVR
         /// </summary>
         public override void Awake()
         {
-            _settings = GameManager.Instance.GetCurrentSettings();
+            _settings = GameManager2.Instance.GetCurrentSettings();
             _studentsController = GetComponent<StudentsController2>();
             if (_generateOnStart)
             {
                 Generate();
-                GameManager.Instance.GetVoiceActivation().Activate();
+                GameManager2.Instance.GetVoiceActivation().Activate();
             }
         }
 
@@ -62,7 +62,7 @@ namespace ClassRoomVR
 
             _asientosOcupados = new bool[_studentsPositions.childCount];
             _students = new Dictionary<string, Student2>();
-            _classInfo = GameManager.Instance.GetCurrentClassInfo();
+            _classInfo = GameManager2.Instance.GetCurrentClassInfo();
             _names = new List<List<string>>();
 
             List<ClassInfo.NamesLanguage> a = _classInfo.GetNames();
@@ -78,7 +78,7 @@ namespace ClassRoomVR
             _studentsController.SetParameters(_player, _students);
             PlayBellSound(_beforeClassBell);
 
-            if (GameManager.Instance.GetSaveAudio())
+            if (GameManager2.Instance.GetSaveAudio())
             {
                 AudioRecorder.StartRecording();
             }
@@ -91,10 +91,10 @@ namespace ClassRoomVR
         {
             switch (_settings.StructureMode)
             {
-                case StructureMode.Circular:
+                case StructureMode2.Circular:
                     DeskManager.Instance.CreateCircle(_settings.NumStudents, _settings.Radius, _settings.Degrees);
                     break;
-                case StructureMode.U:
+                case StructureMode2.U:
                     DeskManager.Instance.CreateCircle(_settings.NumStudents, _settings.Radius);
                     break;
                 default:
@@ -108,7 +108,7 @@ namespace ClassRoomVR
         /// </summary>
         private void OnApplicationQuit()
         {
-            if (GameManager.Instance.GetSaveAudio())
+            if (GameManager2.Instance.GetSaveAudio())
             {
                 AudioRecorder.SaveRecording();
             }
@@ -123,10 +123,10 @@ namespace ClassRoomVR
 
             switch (_settings.Mode)
             {
-                case GenerateMode.Gender:
+                case GenerateMode2.Gender:
                     GenerateStudentsByGender(ref deskPos);
                     break;
-                case GenerateMode.Personalized:
+                case GenerateMode2.Personalized:
                     GeneratePersonalizedStudents(ref deskPos);
                     break;
             }
@@ -143,7 +143,7 @@ namespace ClassRoomVR
         /// <param name="name">Nombre del estudiante.</param>
         /// <param name="gender">Género del estudiante.</param>
         /// <returns>Instancia del estudiante creado.</returns>
-        private Student2 CreateStudent(string name, Gender gender)
+        private Student2 CreateStudent(string name, Gender2 gender)
         {
             Student2 pickedStudent = Instantiate(_body, transform);
             pickedStudent.SetParameters(_player.transform, name, gender);
@@ -176,7 +176,7 @@ namespace ClassRoomVR
         private void GenerateRandomStudent(ref int deskPos)
         {
             int gender = Random.Range(0, 2);
-            GenerateStudent(ref deskPos, (Gender)gender);
+            GenerateStudent(ref deskPos, (Gender2)gender);
         }
 
         /// <summary>
@@ -191,21 +191,21 @@ namespace ClassRoomVR
             int generatedWomen = 0;
             for (int i = 0; i < _settings.NumStudents; ++i)
             {
-                Gender gender;
+                Gender2 gender;
                 if (_settings.NumWomen > generatedWomen && _settings.NumMen > generatedMen)
                 {
-                    gender = (Gender)Random.Range(0, 2);
+                    gender = (Gender2)Random.Range(0, 2);
                 }
                 else if (_settings.NumWomen <= generatedWomen)
                 {
-                    gender = Gender.Men;
+                    gender = Gender2.Men;
                 }
                 else
                 {
-                    gender = Gender.Women;
+                    gender = Gender2.Women;
                 }
                 GenerateStudent(ref deskPos, gender);
-                if (gender == Gender.Women)
+                if (gender == Gender2.Women)
                 {
                     ++generatedWomen;
                 }
@@ -234,7 +234,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="gender">Género del estudiante.</param>
         /// <returns>Nombre seleccionado.</returns>
-        private string PickRandomName(Gender gender)
+        private string PickRandomName(Gender2 gender)
         {
             int genderInt = (int)gender;
             int index = Random.Range(0, _names[genderInt].Count);
@@ -249,7 +249,7 @@ namespace ClassRoomVR
         /// <param name="deskPos">Posición del escritorio en el que se ubicará el estudiante.</param>
         /// <param name="gender">Género del estudiante.</param>
         /// <param name="name">Nombre del estudiante (opcional).</param>
-        private void GenerateStudent(ref int deskPos, Gender gender, string name = null)
+        private void GenerateStudent(ref int deskPos, Gender2 gender, string name = null)
         {
             Student2 student = CreateStudent(name ?? PickRandomName(gender), gender);
             PlaceStudent(ref deskPos, student);

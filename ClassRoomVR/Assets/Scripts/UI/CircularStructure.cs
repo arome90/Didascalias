@@ -140,10 +140,10 @@ namespace ClassRoomVR
 
         private void OnEnable()
         {
-            settings = GameManager.Instance.GetCurrentSettings();
+            settings = GameManager2.Instance.GetCurrentSettings();
             int maxDesks = MaxDesk();
             Debug.Log("Numero máximo de escritorios en círculo: " + maxDesks);
-            maxDesks = settings.StructureMode == StructureMode.U
+            maxDesks = settings.StructureMode == StructureMode2.U
                 ? maxDesks / 2
                 : maxDesks;
             Debug.Log("Numero máximo de escritorios en setting actual: " + maxDesks);
@@ -153,7 +153,7 @@ namespace ClassRoomVR
 
             settings.Radius = Mathf.Min(settings.Radius, _radiusOption.GetMax());
 
-            if (settings.StructureMode == StructureMode.U)
+            if (settings.StructureMode == StructureMode2.U)
             {
                 _degreesOption.gameObject.SetActive(false);
                 settings.Degrees = 180f;

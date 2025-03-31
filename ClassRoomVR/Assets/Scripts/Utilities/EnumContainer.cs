@@ -1,6 +1,6 @@
 ﻿using System;
 
-public enum OriginInfo
+public enum OriginInfo2
 {
     /// <summary>
     /// Persona de origen hispano o latino.
@@ -28,7 +28,7 @@ public enum OriginInfo
     Other
 }
 
-public enum Gender
+public enum Gender2
 {
     /// <summary>
     /// Género femenino.
@@ -41,7 +41,7 @@ public enum Gender
     Men
 }
 
-public enum State
+public enum State2
 {
     /// <summary>
     /// Estado sentado.
@@ -54,7 +54,7 @@ public enum State
     Standing
 }
 
-public enum TalkMode
+public enum TalkMode2
 {
     /// <summary>
     /// Modo de conversación no especificado.
@@ -77,7 +77,7 @@ public enum TalkMode
     Normal
 }
 
-public enum Allign
+public enum Allign2
 {
     /// <summary>
     /// Alineación no especificada.
@@ -95,7 +95,7 @@ public enum Allign
     Front
 }
 
-public enum GenerateMode
+public enum GenerateMode2
 {
     /// <summary>
     /// Modo de generación aleatorio.
@@ -113,7 +113,7 @@ public enum GenerateMode
     Gender
 }
 
-public enum Age
+public enum Age2
 {
     /// <summary>
     /// Primer grado.
@@ -131,7 +131,7 @@ public enum Age
     Tercero
 }
 
-public enum StructureMode
+public enum StructureMode2
 {
     /// <summary>
     /// Estructura en fila.
@@ -150,7 +150,7 @@ public enum StructureMode
 }
 
 [Flags]
-public enum FieldOfVision
+public enum FieldOfVision2
 {
     /// <summary>
     /// Visión hacia arriba.
@@ -189,7 +189,7 @@ public enum FieldOfVision
 }
 
 [Flags]
-public enum HandSelector
+public enum HandSelector2
 {
     /// <summary>
     /// Selección basada en la posición.
@@ -218,7 +218,7 @@ public enum HandSelector
 }
 
 [Flags]
-public enum HeadSelector
+public enum HeadSelector2
 {
     /// <summary>
     /// Selección basada en la posición.
@@ -236,7 +236,7 @@ public enum HeadSelector
     Velocidad = 4
 }
 
-public enum Animaciones
+public enum Animaciones2
 {
     /// <summary>
     /// Animación de empujar.
@@ -254,7 +254,7 @@ public enum Animaciones
     SitSinGanas
 }
 
-public enum AnimacionesStudent
+public enum AnimacionesStudent2
 {
     /// <summary>
     /// Animación de levantar.
@@ -277,7 +277,7 @@ public enum AnimacionesStudent
     SitSinGanas
 }
 
-public enum VisualAction
+public enum VisualAction2
 {
     /// <summary>
     /// Acción del menú.
@@ -334,7 +334,7 @@ public enum Actions2
     Levantarse = 1 << 2  // 4
 }
 
-public enum Positions
+public enum Positions2
 {
     /// <summary>
     /// Sin posición especificada.
@@ -362,7 +362,7 @@ public enum Positions
     Student
 }
 
-public enum Expresiones
+public enum Expresiones2
 {
     /// <summary>
     /// Expresión de llorar.

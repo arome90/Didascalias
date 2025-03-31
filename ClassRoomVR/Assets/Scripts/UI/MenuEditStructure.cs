@@ -16,7 +16,7 @@ namespace ClassRoomVR
 
         private void Awake()
         {
-            _settings = GameManager.Instance.GetCurrentSettings();
+            _settings = GameManager2.Instance.GetCurrentSettings();
             _applyButton.onClick.AddListener(OnApplyButtonClick);
         }
 
@@ -40,8 +40,8 @@ namespace ClassRoomVR
         /// </summary>
         private void UpdateStructureVisibility()
         {
-            bool isCircular = _settings.StructureMode == StructureMode.Circular
-                || _settings.StructureMode == StructureMode.U;
+            bool isCircular = _settings.StructureMode == StructureMode2.Circular
+                || _settings.StructureMode == StructureMode2.U;
 
             SetStructureVisibility(_circularStructure, isCircular);
             SetStructureVisibility(_filaStructure, !isCircular);

@@ -42,11 +42,11 @@ namespace ClassRoomVR
         private AnimationState _animPlaying = AnimationState.NONE;
 
         // Variables privadas para referencias de componentes y estado del estudiante
-        private FieldOfVision _vision;
-        [SerializeField] private FieldOfVision _distracted;
-        private FieldOfVision[] _distractedArray;
-        [SerializeField] private State _state;
-        [SerializeField] private Gender _gender;
+        private FieldOfVision2 _vision;
+        [SerializeField] private FieldOfVision2 _distracted;
+        private FieldOfVision2[] _distractedArray;
+        [SerializeField] private State2 _state;
+        [SerializeField] private Gender2 _gender;
         [SerializeField] private bool _problematic = false;
         [SerializeField] private TextMeshProUGUI _studentNameText;
         [SerializeField] private TextMeshProUGUI _attentionText;
@@ -59,7 +59,7 @@ namespace ClassRoomVR
 
         [SerializeField] private Transform _target;
         private Vector3 _actualTargetPosition;
-        private Dictionary<FieldOfVision, Vector3> _targets;
+        private Dictionary<FieldOfVision2, Vector3> _targets;
         
         [SerializeField] private MultiAimConstraint _headConstraint;
         
@@ -74,13 +74,13 @@ namespace ClassRoomVR
         #region Getters
 
         public Desk GetDesk() => _desk;
-        public Gender GetGender() => _gender;
+        public Gender2 GetGender() => _gender;
         public bool IsProblematicStudent() => _problematic;
         public AudioSource GetAudioSource() => _audioSource;
         public NavMeshAgent GetNavMeshAgent() => _navMeshAgent;
         public StudentBehavior GetBehavior() => _behaviour;
         public StudentsController2 GetController() => _controller;
-        public State GetState() => _state;
+        public State2 GetState() => _state;
 
         #endregion
 
@@ -101,8 +101,8 @@ namespace ClassRoomVR
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _behaviour = GetComponent<StudentBehavior>();
             _jaw = GetComponent<JawMove>();
-            _state = State.Sitting;
-            _distractedArray = System.Enum.GetValues(typeof(FieldOfVision)).Cast<FieldOfVision>()
+            _state = State2.Sitting;
+            _distractedArray = System.Enum.GetValues(typeof(FieldOfVision2)).Cast<FieldOfVision2>()
                 .Where(c => (_distracted & c) == c)
                 .ToArray();
             var stateAnim = _animator.GetCurrentAnimatorStateInfo(0);
@@ -115,7 +115,7 @@ namespace ClassRoomVR
         /// <param name="player">Transform del jugador.</param>
         /// <param name="name">Nombre del estudiante.</param>
         /// <param name="gender">Género del estudiante.</param>
-        public void SetParameters(Transform player, string name, Gender gender)
+        public void SetParameters(Transform player, string name, Gender2 gender)
         {
             _player = player;
             transform.name = name;
@@ -147,15 +147,15 @@ namespace ClassRoomVR
         /// <param name="transforms">Transformaciones de los objetivos.</param>
         public void SetTargets(Transform[] transforms)
         {
-            _targets = new Dictionary<FieldOfVision, Vector3>
+            _targets = new Dictionary<FieldOfVision2, Vector3>
             {
-                { FieldOfVision.Up, transform.up * 2f },
-                { FieldOfVision.Right, transform.right },
-                { FieldOfVision.Down, transform.up / -2 },
-                { FieldOfVision.Left, -transform.right },
-                { FieldOfVision.Window, transforms[0].position },
-                { FieldOfVision.Door, transforms[1].position },
-                { FieldOfVision.Teacher, Vector3.zero }
+                { FieldOfVision2.Up, transform.up * 2f },
+                { FieldOfVision2.Right, transform.right },
+                { FieldOfVision2.Down, transform.up / -2 },
+                { FieldOfVision2.Left, -transform.right },
+                { FieldOfVision2.Window, transforms[0].position },
+                { FieldOfVision2.Door, transforms[1].position },
+                { FieldOfVision2.Teacher, Vector3.zero }
             };
         }
 
@@ -165,7 +165,7 @@ namespace ClassRoomVR
         public void PayAttention()
         {
             _behaviour.SetAttention();
-            SetDirection(FieldOfVision.Teacher);
+            SetDirection(FieldOfVision2.Teacher);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace ClassRoomVR
 
         private void Update()
         {
-            if (GameManager.Instance.IsPause) return;
+            if (GameManager2.Instance.IsPause) return;
 
             UpdateTargetPosition();
             if (_attentionText != null)
@@ -236,7 +236,7 @@ namespace ClassRoomVR
                     int distractedAction = Random.Range((int)Actions2.BALANCEARSE, (int)Actions2.LANZAR_OBJETO + 1);
                     if (distractedAction == (int)Actions2.MOVIL)
                     {
-                        SetDirection(FieldOfVision.Down);
+                        SetDirection(FieldOfVision2.Down);
                     }
                     if(distractedAction == (int)Actions2.BALANCEARSE)
                     {
@@ -247,20 +247,20 @@ namespace ClassRoomVR
                 else if(expressionOrAction == 1) // Expresión
                 {
                     int distractedExpression = Random.Range(0, 3);
-                    Expresiones expression;
+                    Expresiones2 expression;
                     switch (distractedExpression)
                     {
                         case 0:
-                            expression = Expresiones.Enfadado;
+                            expression = Expresiones2.Enfadado;
                             break;
                         case 1:
-                            expression = Expresiones.Quejarse;
+                            expression = Expresiones2.Quejarse;
                             break;
                         case 2:
-                            expression = Expresiones.Dormido;
+                            expression = Expresiones2.Dormido;
                             break;
                         default:
-                            expression = Expresiones.Dormido;
+                            expression = Expresiones2.Dormido;
                             break;
                     }
                     StartCoroutine(_behaviour.ChangeExpression(expression));
@@ -366,11 +366,11 @@ namespace ClassRoomVR
         private void UpdateTargetPosition()
         {
             OrientStudentNameTowardsPlayer();
-            if (_vision == FieldOfVision.Teacher)
+            if (_vision == FieldOfVision2.Teacher)
             {
                 MoveTargetTo(_player.position, 5.0f);
             }
-            else if (_state == State.Sitting)
+            else if (_state == State2.Sitting)
             {
                 MoveTargetTo(_actualTargetPosition, _maxSpeed);
             }
@@ -378,7 +378,7 @@ namespace ClassRoomVR
 
         private void MoveTargetTo(Vector3 destination, float speed)
         {
-            _target.position = _vision == FieldOfVision.Teacher ?
+            _target.position = _vision == FieldOfVision2.Teacher ?
                 Vector3.MoveTowards(_target.position, destination, speed * Time.deltaTime) :
                 Vector3.SmoothDamp(_target.position, destination, ref _currentVelocity, _smoothTime, speed, Time.deltaTime);
         }
@@ -394,13 +394,13 @@ namespace ClassRoomVR
         /// Establece la dirección de la atención del estudiante.
         /// </summary>
         /// <param name="fieldOfVision">Campo de visión al que se dirige la atención.</param>
-        private void SetDirection(FieldOfVision fieldOfVision)
+        private void SetDirection(FieldOfVision2 fieldOfVision)
         {
             _vision = fieldOfVision;
 
-            if (_vision == FieldOfVision.Teacher) return;
+            if (_vision == FieldOfVision2.Teacher) return;
 
-            if (fieldOfVision == FieldOfVision.Door || fieldOfVision == FieldOfVision.Window)
+            if (fieldOfVision == FieldOfVision2.Door || fieldOfVision == FieldOfVision2.Window)
             {
                 _actualTargetPosition = _targets[fieldOfVision];
                 return;
@@ -437,7 +437,7 @@ namespace ClassRoomVR
         {
             _problematic = false;
             _studentNameText.color = Color.white;
-            if (_state == State.Standing)
+            if (_state == State2.Standing)
                 SitBack();
         }
 
@@ -486,7 +486,7 @@ namespace ClassRoomVR
             while (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
                 yield return null;
 
-            _state = State.Standing;
+            _state = State2.Standing;
             _navMeshAgent.SetDestination(destination);
 
             while (Distance(transform.position, destination, breakDistance))
@@ -519,12 +519,12 @@ namespace ClassRoomVR
             _navMeshAgent.enabled = false;
             transform.rotation = _desk.transform.rotation;
             _animator.SetBool("onFoot", false);
-            _desk.PlayDeskAnimation(Animaciones.SitRelajado);
+            _desk.PlayDeskAnimation(Animaciones2.SitRelajado);
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.3f, 0);
             Transform pos = _desk.transform.GetChild(0);
             transform.SetPositionAndRotation(pos.position, pos.parent.rotation);
             transform.Translate(-new Vector3(0f, 0f, 0.15f), Space.Self);
-            _state = State.Sitting;
+            _state = State2.Sitting;
             _rig.layers[0].active = true;
             _desk.SetChairActive(true);
         }
@@ -552,11 +552,11 @@ namespace ClassRoomVR
             _navMeshAgent.enabled = true;
             _rig.layers[0].active = false;
 
-            if (_state == State.Sitting)
+            if (_state == State2.Sitting)
             {
                 _desk.SetChairActive(false);
                 _animator.SetBool("onFoot", true);
-                _desk.PlayDeskAnimation(Animaciones.Empujar);
+                _desk.PlayDeskAnimation(Animaciones2.Empujar);
             }
             else
             {
@@ -573,7 +573,7 @@ namespace ClassRoomVR
         /// <returns>Coroutine.</returns>
         public IEnumerator ChangeDesk(Desk d)
         {
-            if (_state == State.Standing)
+            if (_state == State2.Standing)
             {
                 yield return new WaitForSeconds(2f);
                 _desk = d;
@@ -583,7 +583,7 @@ namespace ClassRoomVR
             {
                 _desk.SetChairActive(false);
                 _animator.SetBool("onFoot", true);
-                _desk.PlayDeskAnimation(Animaciones.Empujar);
+                _desk.PlayDeskAnimation(Animaciones2.Empujar);
                 _desk = d;
                 StartCoroutine(OnCompleteStandChange());
             }

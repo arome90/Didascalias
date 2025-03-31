@@ -11,12 +11,12 @@ public class ChangeWitApp : MonoBehaviour
     void Start()
     {
         witApp = GetComponent<AppVoiceExperience>();
-        GameManager.Instance.OnLanguageChanged.AddListener(ChangeWitAppLanguage);
+        GameManager2.Instance.OnLanguageChanged.AddListener(ChangeWitAppLanguage);
         ChangeWitAppLanguage();
     }
 
     public void ChangeWitAppLanguage()
     {
-        witApp.RuntimeConfiguration.witConfiguration = GameManager.Instance.Language;
+        witApp.RuntimeConfiguration.witConfiguration = GameManager2.Instance.Language;
     }
 }

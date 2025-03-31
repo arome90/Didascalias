@@ -19,17 +19,17 @@ public class DataSystem
     /// <summary>
     /// Edad de los estudiantes.
     /// </summary>
-    public Age Age { get; set; }
+    public Age2 Age { get; set; }
 
     /// <summary>
     /// Estructura del aula.
     /// </summary>
-    public StructureMode StructureMode { get; set; }
+    public StructureMode2 StructureMode { get; set; }
 
     /// <summary>
     /// Modo de generación de datos.
     /// </summary>
-    public GenerateMode Mode { get; set; }
+    public GenerateMode2 Mode { get; set; }
 
     /// <summary>
     /// Información de los estudiantes.

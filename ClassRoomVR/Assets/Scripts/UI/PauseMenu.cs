@@ -17,7 +17,7 @@ namespace ClassRoomVR
 
         private void Start()
         {
-            GameManager.Instance.IsPause = false;
+            GameManager2.Instance.IsPause = false;
 
             _resumeButton.onClick.AddListener(ResumeGame);
             _quitButton.onClick.AddListener(QuitGame);
@@ -30,7 +30,7 @@ namespace ClassRoomVR
 
         private void Update()
         {
-            _quitButton.interactable = GameManager.Instance.IsPause && !_quitting;
+            _quitButton.interactable = GameManager2.Instance.IsPause && !_quitting;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace ClassRoomVR
         public void ResumeGame()
         {
             GetComponent<Canvas>().enabled = false;
-            GameManager.Instance.Continue();
+            GameManager2.Instance.Continue();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace ClassRoomVR
         /// </summary>
         public void PauseGame()
         {
-            GameManager.Instance.Pause(false);
+            GameManager2.Instance.Pause(false);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace ClassRoomVR
         /// </summary>
         public void TogglePause()
         {
-            if(GameManager.Instance.IsPause)
+            if(GameManager2.Instance.IsPause)
             {
                 ResumeGame();
             }
@@ -70,12 +70,12 @@ namespace ClassRoomVR
         /// </summary>
         private void QuitGame()
         {
-            if(GameManager.Instance.IsPause)
+            if(GameManager2.Instance.IsPause)
             {
                 ResumeGame();
             }
             _quitting = true;
-            GameManager.Instance.LoadMainMenu();
+            GameManager2.Instance.LoadMainMenu();
         }
     }
 }

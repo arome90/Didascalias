@@ -30,7 +30,7 @@ namespace ClassRoomVR
         private void Start()
         {
             _studentsController = ClassManager.Instance.GetStudentsController();
-            _studentsController.SetMode(TalkMode.None);
+            _studentsController.SetMode(TalkMode2.None);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace ClassRoomVR
                 {
                     _behaviorTree.GetVariable("Path").SetValue(1);
                     _problematicStudents.ForEach(s => s.SetColor(Color.green));
-                    Debug.Log(_studentsController.GetMode() == TalkMode.Good ? "Genial" : "Segundo camino");
+                    Debug.Log(_studentsController.GetMode() == TalkMode2.Good ? "Genial" : "Segundo camino");
                 }
             });
         }
@@ -141,7 +141,7 @@ namespace ClassRoomVR
             return (Vector3.Distance(student.transform.position, _player.transform.position) <= _distanceNear
                     && student.IsStudentInFieldOfVision())
                    || ((_studentsController.Resolutions & _disruptiveAction.Action) == _disruptiveAction.Action
-                   && _studentsController.GetMode() != TalkMode.Disrespect);
+                   && _studentsController.GetMode() != TalkMode2.Disrespect);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace ClassRoomVR
         /// </summary>
         public void Shout()
         {
-            if (_studentsController.GetMode() == TalkMode.Disrespect)
+            if (_studentsController.GetMode() == TalkMode2.Disrespect)
             {
                 _behaviorTree.GetVariable("Path").SetValue(2);
                 var audioSource = _player.GetComponent<AudioSource>();
@@ -186,7 +186,7 @@ namespace ClassRoomVR
             });
 
             Debug.Log(_behaviorTree.GetVariable("Path").GetValue());
-            _studentsController.SetMode(TalkMode.None);
+            _studentsController.SetMode(TalkMode2.None);
             Destroy(gameObject, 2f);
             InputLogger.Instance.CompareVelocity();
         }

@@ -29,7 +29,7 @@ namespace ClassRoomVR
             _speaker = GetComponent<TTSSpeaker>(); // Obtiene el componente TTSSpeaker
 
             // Configura el ID de la voz según el género del estudiante
-            _speaker.VoiceID = _student.GetGender() == Gender.Men ? "WIT$CAM" : "MARIA";
+            _speaker.VoiceID = _student.GetGender() == Gender2.Men ? "WIT$CAM" : "MARIA";
             _speaker.Events.OnPlaybackComplete.AddListener(OnPlaybackComplete); // Añade un listener para el evento de finalización de reproducción
         }
 

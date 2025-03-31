@@ -31,7 +31,7 @@ namespace ClassRoomVR
         /// </summary>
         private void InitializeSettings()
         {
-            _settings = GameManager.Instance.GetCurrentSettings();
+            _settings = GameManager2.Instance.GetCurrentSettings();
             _girlsOption.SetValue(_settings.NumWomen);
             _boysOption.SetValue(_settings.NumMen);
         }
@@ -41,7 +41,7 @@ namespace ClassRoomVR
         /// </summary>
         private void InitializeDropdown()
         {
-            string[] structure = Enum.GetNames(typeof(StructureMode));
+            string[] structure = Enum.GetNames(typeof(StructureMode2));
             List<string> options = new List<string>();
 
             for (int i = 0; i < structure.Length; i++) {
@@ -62,8 +62,8 @@ namespace ClassRoomVR
         private void InitializeListeners()
         {
             _structureDropdown.onValueChanged.AddListener(ChangeStructure);
-            _boysOption.onValueChanged.AddListener(value => UpdateStudentCount(value, Gender.Men));
-            _girlsOption.onValueChanged.AddListener(value => UpdateStudentCount(value, Gender.Women));
+            _boysOption.onValueChanged.AddListener(value => UpdateStudentCount(value, Gender2.Men));
+            _girlsOption.onValueChanged.AddListener(value => UpdateStudentCount(value, Gender2.Women));
             _editDeskPositionButton.onClick.AddListener(() =>
             {
                 MenuTransition.Instance.GoNextScreen();
@@ -77,7 +77,7 @@ namespace ClassRoomVR
         /// <param name="value">El valor seleccionado en el menú desplegable.</param>
         private void ChangeStructure(int value)
         {
-            _settings.StructureMode = (StructureMode)value;
+            _settings.StructureMode = (StructureMode2)value;
             DeskManager.Instance.DestroyChildren();
             UpdateStructureAndStudents();
         }
@@ -89,9 +89,9 @@ namespace ClassRoomVR
         {
             _maxStudents = _settings.StructureMode switch
             {
-                StructureMode.Fila => 30,
-                StructureMode.Circular => 12,
-                StructureMode.U => 6,
+                StructureMode2.Fila => 30,
+                StructureMode2.Circular => 12,
+                StructureMode2.U => 6,
                 _ => _maxStudents
             };
 
@@ -108,9 +108,9 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="value">El nuevo número de estudiantes.</param>
         /// <param name="gender">El género de los estudiantes.</param>
-        private void UpdateStudentCount(float value, Gender gender)
+        private void UpdateStudentCount(float value, Gender2 gender)
         {
-            if (gender == Gender.Men)
+            if (gender == Gender2.Men)
             {
                 _settings.NumMen = (int)value;
             }

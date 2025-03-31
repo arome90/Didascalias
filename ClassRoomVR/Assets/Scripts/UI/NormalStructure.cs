@@ -32,7 +32,7 @@ namespace ClassRoomVR
 
         private void OnEnable()
         {
-            settings = GameManager.Instance.GetCurrentSettings(); // Obtiene la configuración actual del aula
+            settings = GameManager2.Instance.GetCurrentSettings(); // Obtiene la configuración actual del aula
             InitializeSettings();
             Set();
         }
