@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Generador de estudiantes que configura las mallas del personaje y los complementos.
 /// </summary>
-public class StudentGenerator : MonoBehaviour
+public class StudentGenerator2 : MonoBehaviour
 {
     [Header("Propiedades del Personaje")]
     [SerializeField] private CharacterProps2 _characterProps;
