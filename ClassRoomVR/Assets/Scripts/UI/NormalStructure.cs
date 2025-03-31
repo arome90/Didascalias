@@ -27,7 +27,7 @@ namespace ClassRoomVR
         public override void Set()
         {
             AdjustMatrix();
-            DeskManager.Instance.CreateRegularLayout(settings.NumDesks, settings.Rows, settings.Columns);
+            DeskManager2.Instance.CreateRegularLayout(settings.NumDesks, settings.Rows, settings.Columns);
         }
 
         private void OnEnable()
@@ -171,12 +171,12 @@ namespace ClassRoomVR
         /// <returns>Número máximo de escritorios.</returns>
         public override int MaxDesk()
         {
-            Renderer deskCollider = DeskManager.Instance.GetDeskCollider();
+            Renderer deskCollider = DeskManager2.Instance.GetDeskCollider();
             Vector3 deskDimensions = Vector3.Scale(deskCollider.bounds.size, deskCollider.transform.lossyScale);
-            Vector3 classroomDimensions = DeskManager.Instance.GetComponent<BoxCollider>().size;
+            Vector3 classroomDimensions = DeskManager2.Instance.GetComponent<BoxCollider>().size;
 
-            int maxColumns = Mathf.RoundToInt(classroomDimensions.x / (deskDimensions.x * DeskManager.Instance.DeskOffsetX));
-            int maxRows = Mathf.RoundToInt(classroomDimensions.z / (deskDimensions.z * 2 * DeskManager.Instance.DeskOffsetZ));
+            int maxColumns = Mathf.RoundToInt(classroomDimensions.x / (deskDimensions.x * DeskManager2.Instance.DeskOffsetX));
+            int maxRows = Mathf.RoundToInt(classroomDimensions.z / (deskDimensions.z * 2 * DeskManager2.Instance.DeskOffsetZ));
 
             _columnsOption.SetMax(maxColumns);
             _rowsOption.SetMax(maxRows);

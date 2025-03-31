@@ -7,7 +7,7 @@ namespace ClassRoomVR
     /// Clase que gestiona la creación y organización de los escritorios en el aula.
     /// Permite la creación de distribuciones regulares o circulares.
     /// </summary>
-    public class DeskManager : GenericSingleton<DeskManager>
+    public class DeskManager2 : GenericSingleton<DeskManager2>
     {
         [SerializeField] private Desk2 _deskPrefab; // Prefab de escritorio
         private List<Vector2> _deskPositions; // Lista de posiciones de los escritorios

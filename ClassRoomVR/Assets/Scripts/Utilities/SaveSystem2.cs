@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 [System.Serializable]
-public class DataSystem
+public class DataSystem2
 {
     /// <summary>
     /// Hash del archivo JSON para verificación de integridad.
@@ -47,7 +47,7 @@ public class DataSystem
     public int WomenCount { get; set; }
 }
 
-public static class SaveSystem
+public static class SaveSystem2
 {
     private static readonly string SavePath = Path.Combine(Application.persistentDataPath, "save.json");
 
@@ -55,7 +55,7 @@ public static class SaveSystem
     /// Guarda los datos en un archivo JSON.
     /// </summary>
     /// <param name="data">Datos a guardar.</param>
-    public static void SaveData(DataSystem data)
+    public static void SaveData(DataSystem2 data)
     {
         try
         {
@@ -72,7 +72,7 @@ public static class SaveSystem
     /// Carga los datos desde un archivo JSON.
     /// </summary>
     /// <returns>Datos cargados o null si hay un error.</returns>
-    public static DataSystem LoadData()
+    public static DataSystem2 LoadData()
     {
         if (!File.Exists(SavePath))
         {
@@ -83,7 +83,7 @@ public static class SaveSystem
         try
         {
             string json = File.ReadAllText(SavePath);
-            DataSystem data = JsonUtility.FromJson<DataSystem>(json);
+            DataSystem2 data = JsonUtility.FromJson<DataSystem2>(json);
 
             string originalHash = data.Hash;
             data.Hash = string.Empty;

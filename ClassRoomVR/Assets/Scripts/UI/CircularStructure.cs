@@ -35,11 +35,11 @@ namespace ClassRoomVR
             Debug.Log("Número de escritorios: " + settings.NumDesks);
             if (_isUStructure)
             {
-                DeskManager.Instance.CreateCircle(settings.NumDesks, settings.Radius);
+                DeskManager2.Instance.CreateCircle(settings.NumDesks, settings.Radius);
             }
             else
             {
-                DeskManager.Instance.CreateCircle(settings.NumDesks, settings.Radius, settings.Degrees);
+                DeskManager2.Instance.CreateCircle(settings.NumDesks, settings.Radius, settings.Degrees);
             }
 
             _lastOption = 0;
@@ -195,11 +195,11 @@ namespace ClassRoomVR
         /// <returns>El número máximo de escritorios.</returns>
         public override int MaxDesk()
         {
-            Renderer deskCollider = DeskManager.Instance.GetDeskCollider();
-            Vector3 classroomDimensions = DeskManager.Instance.GetComponent<BoxCollider>().size;
+            Renderer deskCollider = DeskManager2.Instance.GetDeskCollider();
+            Vector3 classroomDimensions = DeskManager2.Instance.GetComponent<BoxCollider>().size;
             Vector3 deskDimensions = Vector3.Scale(deskCollider.bounds.size, deskCollider.transform.lossyScale);
 
-            _deskWithOffset = deskDimensions.x * DeskManager.Instance.DeskOffsetO;
+            _deskWithOffset = deskDimensions.x * DeskManager2.Instance.DeskOffsetO;
 
             float maxRadius = Mathf.Min(
                 (classroomDimensions.x - deskDimensions.z * 3f) / 2f,

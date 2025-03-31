@@ -7,7 +7,7 @@ using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
-    public class VoiceActivation : MonoBehaviour
+    public class VoiceActivation2 : MonoBehaviour
     {
         [SerializeField] AppVoiceExperience appVoiceExperience;
         StudentsController2 st;

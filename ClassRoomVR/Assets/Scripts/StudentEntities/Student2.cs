@@ -67,7 +67,7 @@ namespace ClassRoomVR
         private StudentsController2 _controller;
 
         private Transform _player;
-        private ResponseStudent _response;
+        private ResponseStudent2 _response;
         private JawMove2 _jaw;
         private RigBuilder _rig;
 
@@ -93,7 +93,7 @@ namespace ClassRoomVR
         private void Awake()
         {
             // Inicializa referencias y componentes
-            _response = GetComponent<ResponseStudent>();
+            _response = GetComponent<ResponseStudent2>();
             _rig = GetComponent<RigBuilder>();
             _collider = GetComponent<BoxCollider>();
             _animator = GetComponent<Animator>();

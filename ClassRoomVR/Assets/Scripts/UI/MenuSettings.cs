@@ -78,7 +78,7 @@ namespace ClassRoomVR
         private void ChangeStructure(int value)
         {
             _settings.StructureMode = (StructureMode2)value;
-            DeskManager.Instance.DestroyChildren();
+            DeskManager2.Instance.DestroyChildren();
             UpdateStructureAndStudents();
         }
 
@@ -119,7 +119,7 @@ namespace ClassRoomVR
                 _settings.NumWomen = (int)value;
             }
             SetMaxStudents();
-            DeskManager.Instance.DestroyChildren();
+            DeskManager2.Instance.DestroyChildren();
         }
 
         /// <summary>

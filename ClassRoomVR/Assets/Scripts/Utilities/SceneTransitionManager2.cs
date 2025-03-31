@@ -5,15 +5,15 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Gestor de transiciones entre escenas con efectos de desvanecimiento.
 /// </summary>
-public class SceneTransitionManager : MonoBehaviour
+public class SceneTransitionManager2 : MonoBehaviour
 {
-    [SerializeField] private FadeScreen _fadeScreen;
+    [SerializeField] private FadeScreen2 _fadeScreen;
 
     /// <summary>
     /// Instancia singleton del gestor de transiciones.
     /// </summary>
-    public static SceneTransitionManager Singleton { get; private set; }
-    public FadeScreen FadeScreen => _fadeScreen;
+    public static SceneTransitionManager2 Singleton { get; private set; }
+    public FadeScreen2 FadeScreen => _fadeScreen;
 
     private void Awake()
     {
@@ -34,7 +34,7 @@ public class SceneTransitionManager : MonoBehaviour
     {
         if(FadeScreen == null)
         {
-            _fadeScreen = FindFirstObjectByType<FadeScreen>();
+            _fadeScreen = FindFirstObjectByType<FadeScreen2>();
         }
     }
 

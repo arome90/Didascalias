@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Sistema encargado de cambiar la ropa del personaje al azar.
 /// </summary>
-public class ClothSwappingSystem : MonoBehaviour
+public class ClothSwappingSystem2 : MonoBehaviour
 {
     [Header("Huesos del Jugador")]
     private Transform[] _playerBonesArray;

@@ -5,7 +5,7 @@ using UnityEngine;
 /// Configuración de un complemento, incluyendo el hueso al que se adjunta, la probabilidad y las combinaciones de mesh y material.
 /// </summary>
 [CreateAssetMenu(fileName = "Complement", menuName = "Character Assets/Complement", order = 5)]
-public class Complement : ScriptableObject
+public class Complement2 : ScriptableObject
 {
     [SerializeField] private string _boneName;                // Nombre del hueso al que se adjunta el complemento
     [Range(0f, 100f)]

@@ -54,7 +54,7 @@ namespace ClassRoomVR
         /// </summary>
         private void SetupClassroom()
         {
-            _studentsPositions = DeskManager.Instance.gameObject.transform;
+            _studentsPositions = DeskManager2.Instance.gameObject.transform;
             if (_studentsPositions.childCount == 0)
             {
                 SetupDesks();
@@ -92,13 +92,13 @@ namespace ClassRoomVR
             switch (_settings.StructureMode)
             {
                 case StructureMode2.Circular:
-                    DeskManager.Instance.CreateCircle(_settings.NumStudents, _settings.Radius, _settings.Degrees);
+                    DeskManager2.Instance.CreateCircle(_settings.NumStudents, _settings.Radius, _settings.Degrees);
                     break;
                 case StructureMode2.U:
-                    DeskManager.Instance.CreateCircle(_settings.NumStudents, _settings.Radius);
+                    DeskManager2.Instance.CreateCircle(_settings.NumStudents, _settings.Radius);
                     break;
                 default:
-                    DeskManager.Instance.CreateRegularLayout(_settings.NumStudents, _settings.Rows, _settings.Columns);
+                    DeskManager2.Instance.CreateRegularLayout(_settings.NumStudents, _settings.Rows, _settings.Columns);
                     break;
             }
         }
@@ -158,7 +158,7 @@ namespace ClassRoomVR
         /// <param name="student">Estudiante a ubicar.</param>
         private void PlaceStudent(ref int deskPos, Student2 student)
         {
-            DeskManager.Instance.GetFreeDesk(ref deskPos);
+            DeskManager2.Instance.GetFreeDesk(ref deskPos);
             Desk2 desk = _studentsPositions.GetChild(deskPos).GetComponent<Desk2>();
             Transform seatPosition = desk.transform.GetChild(0);
             student.transform.SetPositionAndRotation(seatPosition.position, seatPosition.parent.rotation);

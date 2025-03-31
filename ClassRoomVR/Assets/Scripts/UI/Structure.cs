@@ -38,7 +38,7 @@ namespace ClassRoomVR
         private void OnDisable()
         {
             // Limpia los objetos hijos inactivos bajo parentDesk cuando la estructura está desactivada
-            DeskManager.Instance.DestroyInactiveChildObjects();
+            DeskManager2.Instance.DestroyInactiveChildObjects();
         }
 
         /// <summary>

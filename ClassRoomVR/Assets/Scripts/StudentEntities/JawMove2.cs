@@ -19,7 +19,7 @@ namespace ClassRoomVR
         [SerializeField] private float _timeUpdate = 0.4f;
 
         private AudioSource _audioSource;
-        private ResponseStudent _response;
+        private ResponseStudent2 _response;
         private Vector3 _initialJawAngles;
         private float _targetZRotation;
         private float _lastMaxValue;
@@ -27,7 +27,7 @@ namespace ClassRoomVR
         private void Start()
         {
             _audioSource = GetComponent<AudioSource>();
-            _response = GetComponent<ResponseStudent>();
+            _response = GetComponent<ResponseStudent2>();
             _initialJawAngles = _jaw.localRotation.eulerAngles;
         }
 

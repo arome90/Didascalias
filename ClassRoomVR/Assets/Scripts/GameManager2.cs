@@ -38,8 +38,8 @@ namespace ClassRoomVR
         public bool IsPause;
         private bool _connectionLost = false;
 
-        private DataSystem savedData;
-        private VoiceActivation voice;
+        private DataSystem2 savedData;
+        private VoiceActivation2 voice;
         private ReconnectUI loadingBar;
 
         [SerializeField] private ClassSettings2 currentSettings;
@@ -96,13 +96,13 @@ namespace ClassRoomVR
         {
             if (isAutoSavingEnabled)
             {
-                savedData = SaveSystem.LoadData();
+                savedData = SaveSystem2.LoadData();
                 ApplySavedSettings(savedData);
             }
-            else savedData = new DataSystem();
+            else savedData = new DataSystem2();
         }
 
-        private void ApplySavedSettings(DataSystem data)
+        private void ApplySavedSettings(DataSystem2 data)
         {
             currentSettings.NumStudents = data.NumStudents;
             currentSettings.Age = data.Age;
@@ -113,24 +113,24 @@ namespace ClassRoomVR
         }
 
         public ClassInfo2 GetCurrentClassInfo() => currentClassInfo;
-        public VoiceActivation GetVoiceActivation() => voice;
+        public VoiceActivation2 GetVoiceActivation() => voice;
 
         public void LoadMainMenu()
         {
             WsClient2.Instance.Disconnect();
-            SceneTransitionManager.Singleton.GoToSceneAsync(0);
+            SceneTransitionManager2.Singleton.GoToSceneAsync(0);
         }
 
         public void LoadTutorial()
         {
             currentSettings = availableSettings[availableSettings.Length - 1];
-            SceneTransitionManager.Singleton.GoToSceneAsync(2);
+            SceneTransitionManager2.Singleton.GoToSceneAsync(2);
         }
 
         public void LoadMainScene()
         {
             ServerMessage.SendInfoInitial();
-            SceneTransitionManager.Singleton.GoToSceneAsync(1);
+            SceneTransitionManager2.Singleton.GoToSceneAsync(1);
         }
 
         public void SetCurrentSettings(int index)
@@ -154,7 +154,7 @@ namespace ClassRoomVR
             if (isAutoSavingEnabled)
             {
                 UpdateSavedData();
-                SaveSystem.SaveData(savedData);
+                SaveSystem2.SaveData(savedData);
 
             }
         }
@@ -250,7 +250,7 @@ namespace ClassRoomVR
             {
                 ToggleLoadingBar(true);
             }
-            SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            SceneTransitionManager2.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
             _connectionLost = lostConnection;
         }
 
@@ -290,7 +290,7 @@ namespace ClassRoomVR
             //AudioListener.pause = false;
             Time.timeScale = 1.0f;
             IsPause = false;
-            SceneTransitionManager.Singleton.FadeScreen.Fade(0.8f, 0.0f);
+            SceneTransitionManager2.Singleton.FadeScreen.Fade(0.8f, 0.0f);
         }
 
         public void StopTime()
@@ -299,7 +299,7 @@ namespace ClassRoomVR
             Time.timeScale = 0.0f;
         }
 
-        public void SetVoiceExperience(VoiceActivation voice)
+        public void SetVoiceExperience(VoiceActivation2 voice)
         {
             this.voice = voice;
         }

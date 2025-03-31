@@ -110,7 +110,7 @@ namespace ClassRoomVR
             _menus[_currentMenuIndex].SetActive(false);
             if (GameManager2.Instance.GetCurrentSettings().name != "Personalizado")
             {
-                DeskManager.Instance.DestroyChildren();
+                DeskManager2.Instance.DestroyChildren();
             }
             _textSession.gameObject.SetActive(true);
             _textSession.text = WsClient2.Instance.Session;

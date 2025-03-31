@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Manages the fading in and out of a screen effect using a Renderer component.
 /// </summary>
-public class FadeScreen : MonoBehaviour
+public class FadeScreen2 : MonoBehaviour
 {
     [SerializeField] private bool _fadeOnStart = true;
     [SerializeField] private float _fadeDuration = 2f;

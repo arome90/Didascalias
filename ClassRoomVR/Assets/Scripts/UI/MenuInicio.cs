@@ -32,7 +32,7 @@ namespace ClassRoomVR
         private void Start()
         {
             AddButtonListeners();
-            DeskManager.Instance.DestroyChildren();
+            DeskManager2.Instance.DestroyChildren();
             DontDestroyOnLoad(GameObject.Find("DeskManager"));
         }
 

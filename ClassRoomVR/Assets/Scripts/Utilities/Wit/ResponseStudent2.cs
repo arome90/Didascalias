@@ -9,7 +9,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona la respuesta hablada de un estudiante usando TTSSpeaker.
     /// </summary>
-    public class ResponseStudent : MonoBehaviour
+    public class ResponseStudent2 : MonoBehaviour
     {
         [SerializeField] private string _dateId = "[DATE]"; // Identificador de la fecha en el texto
         private TTSSpeaker _speaker; // Componente TTSSpeaker para la síntesis de voz
