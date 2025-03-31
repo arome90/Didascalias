@@ -8,7 +8,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Gestiona todo el input recopilado del usuario.
     /// </summary>
-    public class InputLogger : GenericSingleton<InputLogger>
+    public class InputLogger2 : GenericSingleton<InputLogger2>
     {
         // Variable que se envía al servidor
         private InputVariables _input;
@@ -81,7 +81,7 @@ namespace ClassRoomVR
             int i = FindGreatestDistinction(actlist);
             _input = new InputVariables(i, actlist[0], actlist[1], actlist[2]);
             actlist.CopyTo(_list);
-            ServerMessage.SendInfo();
+            ServerMessage2.SendInfo();
         }
 
         /// <summary>

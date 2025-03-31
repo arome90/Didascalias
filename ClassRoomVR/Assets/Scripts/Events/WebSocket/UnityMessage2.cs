@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ClassRoomVR
 {
     [Serializable]
-    public struct MessageReceived
+    public struct MessageReceived2
     {
         public string type;
         public string id;
@@ -14,9 +14,9 @@ namespace ClassRoomVR
     }
 
     [Serializable]
-    public struct MessageSent
+    public struct MessageSent2
     {
-        public MessageType type;
+        public MessageType2 type;
         public string session;
         public object data;
 
@@ -26,7 +26,7 @@ namespace ClassRoomVR
         /// <param name="messageType">El tipo de mensaje</param>
         /// <param name="sessionId">El ID de la sesión</param>
         /// <param name="dat">Los datos del mensaje</param>
-        public MessageSent(MessageType messageType, string sessionId, object dat)
+        public MessageSent2(MessageType2 messageType, string sessionId, object dat)
         {
             session = sessionId;
             type = messageType;
@@ -37,7 +37,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Enumeración para los tipos de mensajes que se pueden enviar/recibir.
     /// </summary>
-    public enum MessageType
+    public enum MessageType2
     {
         NewSpectator,
         CreateSession,
@@ -48,7 +48,7 @@ namespace ClassRoomVR
     }
 
     [Serializable]
-    public struct VectorJson
+    public struct VectorJson2
     {
         public float x;
         public float y;
@@ -58,7 +58,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="xValue">El valor en X</param>
         /// <param name="yValue">El valor en Y</param>
-        public VectorJson(float xValue, float yValue)
+        public VectorJson2(float xValue, float yValue)
         {
             x = xValue;
             y = yValue;
@@ -66,34 +66,34 @@ namespace ClassRoomVR
     }
 
     [Serializable]
-    public struct AlumnoInit
+    public struct AlumnoInit2
     {
         public string nombre;
         public int id;
-        public VectorJson posicion;
+        public VectorJson2 posicion;
     }
 
     [Serializable]
-    public struct AlumnoFeatures
+    public struct AlumnoFeatures2
     {
         public string nombre;
-        public VectorJson posicion;
+        public VectorJson2 posicion;
     }
 
     [Serializable]
-    public struct CatalogoOpciones
+    public struct CatalogoOpciones2
     {
         public string[] opcionesGlobales;
         public string[] opcionesIndividuales;
     }
 
     [Serializable]
-    public struct InitialMessageData
+    public struct InitialMessageData2
     {
-        public AlumnoInit[] alumnosPosiciones;
+        public AlumnoInit2[] alumnosPosiciones;
         public string horaClase;
         public long tiempoSesion;
-        public CatalogoOpciones catalogo;
+        public CatalogoOpciones2 catalogo;
 
         /// <summary>
         /// Constructor para el mensaje inicial con los datos de los alumnos y el catálogo de opciones.
@@ -102,7 +102,7 @@ namespace ClassRoomVR
         /// <param name="hora">La hora de la clase</param>
         /// <param name="sesion">El tiempo de la sesión en formato Unix</param>
         /// <param name="cat">El catálogo de opciones disponibles</param>
-        public InitialMessageData(AlumnoInit[] posiciones, string hora, long sesion, CatalogoOpciones cat)
+        public InitialMessageData2(AlumnoInit2[] posiciones, string hora, long sesion, CatalogoOpciones2 cat)
         {
             alumnosPosiciones = posiciones;
             horaClase = hora;
@@ -112,7 +112,7 @@ namespace ClassRoomVR
     }
 
     [Serializable]
-    public struct MessageData
+    public struct MessageData2
     {
         public InputVariables input;
 
@@ -120,13 +120,13 @@ namespace ClassRoomVR
         /// Constructor que recibe los datos de entrada.
         /// </summary>
         /// <param name="input">Los datos de entrada registrados</param>
-        public MessageData(InputVariables input)
+        public MessageData2(InputVariables input)
         {
             this.input = input;
         }
     }
 
-    public static class ServerMessage
+    public static class ServerMessage2
     {
         /// <summary>
         /// Envía el mensaje inicial con los datos de los alumnos y la configuración de la clase.
@@ -134,7 +134,7 @@ namespace ClassRoomVR
         public static void SendInfoInitial()
         {
             var initData = CreateInitialMessageData();
-            WsClient2.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient2.Instance.Session, initData));
+            WsClient2.Instance.SendWebSocketMessage(new MessageSent2(MessageType2.Init, WsClient2.Instance.Session, initData));
         }
 
         /// <summary>
@@ -142,23 +142,23 @@ namespace ClassRoomVR
         /// </summary>
         public static void SendInfo()
         {
-            var inputData = new MessageData(InputLogger.Instance.Input);
-            WsClient2.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient2.Instance.Session, inputData));
+            var inputData = new MessageData2(InputLogger2.Instance.Input);
+            WsClient2.Instance.SendWebSocketMessage(new MessageSent2(MessageType2.Info, WsClient2.Instance.Session, inputData));
         }
 
         /// <summary>
         /// Crea los datos del mensaje inicial para ser enviados a los clientes.
         /// </summary>
         /// <returns>Devuelve los datos iniciales para el mensaje</returns>
-        private static InitialMessageData CreateInitialMessageData()
+        private static InitialMessageData2 CreateInitialMessageData()
         {
             Didascalia_LocalizationManager l = Didascalia_LocalizationManager.Instance;
             l.GetTranslation("student1", Didascalia_LocalizationManager.TableCollections.WEB, out string student1);
             l.GetTranslation("student2", Didascalia_LocalizationManager.TableCollections.WEB, out string student2);
-            AlumnoInit[] posiciones = new AlumnoInit[]
+            AlumnoInit2[] posiciones = new AlumnoInit2[]
             {
-                new AlumnoInit { nombre = student1, posicion = new VectorJson(1.0f, 0.0f) },
-                new AlumnoInit { nombre = student2, posicion = new VectorJson(0.5f, 1.0f) }
+                new AlumnoInit2 { nombre = student1, posicion = new VectorJson2(1.0f, 0.0f) },
+                new AlumnoInit2 { nombre = student2, posicion = new VectorJson2(0.5f, 1.0f) }
             };
             l.GetTranslation("disrespectButton", Didascalia_LocalizationManager.TableCollections.WEB, out string disrespectButton);
             l.GetTranslation("fightButton", Didascalia_LocalizationManager.TableCollections.WEB, out string fightButton);
@@ -169,13 +169,13 @@ namespace ClassRoomVR
             string hora = GetFormattedCurrentTime();
             long sesion = GetCurrentUnixTimestamp();
 
-            var catalogo = new CatalogoOpciones
+            var catalogo = new CatalogoOpciones2
             {
                 opcionesGlobales = new string[] { disrespectButton, sitButton, standButton },
                 opcionesIndividuales = new string[] { fightButton, insultButton }
             };
 
-            return new InitialMessageData(posiciones, hora, sesion, catalogo);
+            return new InitialMessageData2(posiciones, hora, sesion, catalogo);
         }
 
         /// <summary>

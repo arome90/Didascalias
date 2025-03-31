@@ -8,7 +8,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase base abstracta que representa una estructura de aula.
     /// </summary>
-    public abstract class Structure : MonoBehaviour
+    public abstract class Structure2 : MonoBehaviour
     {
         [SerializeField] protected Option numDesks; // Opción de UI para establecer el número de escritorios
         [SerializeField] protected Toggle fillEmptyDesks;

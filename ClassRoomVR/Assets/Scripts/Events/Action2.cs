@@ -47,7 +47,7 @@ namespace ClassRoomVR
             _disruptiveAction = action;
             _textMeshPro = text;
             _behaviorTree = GetComponent<BehaviorTree>();
-            InputLogger.Instance.NewAction();
+            InputLogger2.Instance.NewAction();
             _behaviorTree.EnableBehavior();
 
             if (_disruptiveAction.Laughter)
@@ -188,7 +188,7 @@ namespace ClassRoomVR
             Debug.Log(_behaviorTree.GetVariable("Path").GetValue());
             _studentsController.SetMode(TalkMode2.None);
             Destroy(gameObject, 2f);
-            InputLogger.Instance.CompareVelocity();
+            InputLogger2.Instance.CompareVelocity();
         }
 
         /// <summary>

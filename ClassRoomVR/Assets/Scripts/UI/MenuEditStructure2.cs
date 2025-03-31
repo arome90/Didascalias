@@ -9,8 +9,8 @@ namespace ClassRoomVR
     public class MenuEditStructure2 : MonoBehaviour
     {
         [SerializeField] private Button _applyButton; // Botón para aplicar cambios
-        [SerializeField] private Structure _circularStructure; // Estructura circular
-        [SerializeField] private Structure _filaStructure; // Estructura en fila
+        [SerializeField] private Structure2 _circularStructure; // Estructura circular
+        [SerializeField] private Structure2 _filaStructure; // Estructura en fila
 
         private ClassSettings2 _settings; // Configuraciones del aula
 
@@ -52,7 +52,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="structure">La estructura a actualizar.</param>
         /// <param name="isVisible">Indica si la estructura debe ser visible.</param>
-        private void SetStructureVisibility(Structure structure, bool isVisible)
+        private void SetStructureVisibility(Structure2 structure, bool isVisible)
         {
             structure?.gameObject.SetActive(isVisible);
         }

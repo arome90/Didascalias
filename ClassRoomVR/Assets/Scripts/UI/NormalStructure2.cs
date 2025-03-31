@@ -8,7 +8,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que representa una estructura de aulas con disposición en filas y columnas.
     /// </summary>
-    public class NormalStructure2 : Structure
+    public class NormalStructure2 : Structure2
     {
         [SerializeField] private Option _rowsOption; // Opción de UI para establecer el número de filas
         [SerializeField] private Option _columnsOption; // Opción de UI para establecer el número de columnas

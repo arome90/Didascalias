@@ -17,7 +17,7 @@ public class WsClient2 : GenericSingleton<WsClient2>
     private static WebSocket ws = null;
 
     // Mensaje recibido.
-    private MessageReceived receivedMessage;
+    private MessageReceived2 receivedMessage;
 
     // Identificador del dispositivo.
     private string _deviceId;
@@ -86,7 +86,7 @@ public class WsClient2 : GenericSingleton<WsClient2>
     private void HandleOnOpen(object sender, EventArgs e)
     {
         IsConnected = true;
-        var message = new MessageSent(MessageType.CreateSession, Session, _deviceId);
+        var message = new MessageSent2(MessageType2.CreateSession, Session, _deviceId);
         SendWebSocketMessage(message);
     }
 
@@ -126,7 +126,7 @@ public class WsClient2 : GenericSingleton<WsClient2>
     /// Envía un mensaje al servidor a través del WebSocket.
     /// </summary>
     /// <param name="message">El mensaje a enviar.</param>
-    public void SendWebSocketMessage(ClassRoomVR.MessageSent message)
+    public void SendWebSocketMessage(ClassRoomVR.MessageSent2 message)
     {
         if (ws != null && ws.IsAlive)
         {
@@ -178,11 +178,11 @@ public class WsClient2 : GenericSingleton<WsClient2>
     /// <param name="data">Datos del mensaje en formato JSON.</param>
     /// <param name="message">Referencia al objeto MessageReceived donde se almacenará el mensaje deserializado.</param>
     /// <returns>True si el mensaje se deserializó correctamente, False en caso contrario.</returns>
-    private bool TryDeserializeMessage(string data, ref MessageReceived message)
+    private bool TryDeserializeMessage(string data, ref MessageReceived2 message)
     {
         try
         {
-            message = JsonConvert.DeserializeObject<MessageReceived>(data);
+            message = JsonConvert.DeserializeObject<MessageReceived2>(data);
             return true;
         }
         catch (Exception ex)

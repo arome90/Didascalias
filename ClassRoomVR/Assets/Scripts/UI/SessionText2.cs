@@ -6,7 +6,7 @@ using TMPro;
 /// <summary>
 /// Clase que gestiona la visualización del texto de la sesión en la interfaz de usuario.
 /// </summary>
-public class SessionText : MonoBehaviour
+public class SessionText2 : MonoBehaviour
 {
     private void Start()
     {

@@ -8,7 +8,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona la disposición circular de escritorios.
     /// </summary>
-    public class CircularStructure2 : Structure
+    public class CircularStructure2 : Structure2
     {
         [SerializeField] private Option _radiusOption;
         [SerializeField] private Option _degreesOption;
