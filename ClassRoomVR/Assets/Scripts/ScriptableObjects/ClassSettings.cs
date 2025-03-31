@@ -39,8 +39,8 @@ namespace ClassRoomVR
         public GenerateMode2 Mode { get => _mode; set => _mode = value; }
 
         [SerializeField]
-        private StudentInfo[] _students;
-        public StudentInfo[] Students { get => _students; set => _students = value; }
+        private StudentInfo2[] _students;
+        public StudentInfo2[] Students { get => _students; set => _students = value; }
 
         [Header("Gender Distribution")]
         [SerializeField]

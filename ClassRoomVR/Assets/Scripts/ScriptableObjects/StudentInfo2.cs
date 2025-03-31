@@ -5,7 +5,7 @@ namespace ClassRoomVR
 {
 
     [CreateAssetMenu(fileName = "Student", menuName = "ScriptableObject/StudentInfo", order = 6)]
-    public class StudentInfo : ScriptableObject
+    public class StudentInfo2 : ScriptableObject
     {
         [SerializeField] private string _nameStudent;
         [SerializeField] private Gender2 _gender;
@@ -18,8 +18,8 @@ namespace ClassRoomVR
         public bool Disability => _hasDisability;
 
 #if UNITY_EDITOR
-        [CustomEditor(typeof(StudentInfo))]
-        public class StudentInfoEditor : Editor
+        [CustomEditor(typeof(StudentInfo2))]
+        public class StudentInfoEditor2 : Editor
         {
             private void OnEnable()
             {

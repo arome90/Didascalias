@@ -34,7 +34,7 @@ public class DataSystem
     /// <summary>
     /// Información de los estudiantes.
     /// </summary>
-    public ClassRoomVR.StudentInfo[] Students { get; set; }
+    public ClassRoomVR.StudentInfo2[] Students { get; set; }
 
     /// <summary>
     /// Contador de hombres.
