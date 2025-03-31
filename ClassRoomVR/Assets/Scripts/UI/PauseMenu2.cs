@@ -8,7 +8,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona el menú de pausa del juego.
     /// </summary>
-    public class PauseMenu : MonoBehaviour
+    public class PauseMenu2 : MonoBehaviour
     {
         [SerializeField] private Button _resumeButton; // Botón para reanudar el juego
         [SerializeField] private Button _quitButton; // Botón para salir del juego

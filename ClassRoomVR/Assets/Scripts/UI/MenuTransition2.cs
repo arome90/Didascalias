@@ -9,14 +9,14 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona la transición entre menús en la interfaz.
     /// </summary>
-    public class MenuTransition : GenericSingleton<MenuTransition>
+    public class MenuTransition2 : GenericSingleton<MenuTransition2>
     {
         [SerializeField] private InputActionProperty _helpAction; // Acción de entrada para mostrar/ocultar texto de ayuda
         [SerializeField] private List<GameObject> _menus; // Lista de menús en la interfaz
         [SerializeField] private Button _backButton; // Botón para volver al menú anterior
         [SerializeField] private Button _startButton; // Botón para iniciar la partida
         [SerializeField] private int _currentMenuIndex; // Índice del menú actual
-        [SerializeField] private MenuInicio _menuInicio; // Referencia al menú de inicio
+        [SerializeField] private MenuInicio2 _menuInicio; // Referencia al menú de inicio
         [SerializeField] private GameObject _player; // Objeto del jugador
         [SerializeField] private TextMeshProUGUI _textSession; // Texto para mostrar la sesión actual
         [SerializeField] private TextMeshProUGUI _text; // Texto para mostrar mensajes en la interfaz

@@ -40,7 +40,7 @@ namespace ClassRoomVR
 
         private DataSystem2 savedData;
         private VoiceActivation2 voice;
-        private ReconnectUI loadingBar;
+        private ReconnectUI2 loadingBar;
 
         [SerializeField] private ClassSettings2 currentSettings;
         [SerializeField] private ClassSettings2[] availableSettings;
@@ -303,7 +303,7 @@ namespace ClassRoomVR
         {
             this.voice = voice;
         }
-        public void SetLoadingBar(ReconnectUI bar)
+        public void SetLoadingBar(ReconnectUI2 bar)
         {
             loadingBar = bar;
             loadingBar.SetActive(false);

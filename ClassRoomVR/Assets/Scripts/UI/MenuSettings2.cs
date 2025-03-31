@@ -9,7 +9,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona la configuración del menú de ajustes.
     /// </summary>
-    public class MenuSettings : MonoBehaviour
+    public class MenuSettings2 : MonoBehaviour
     {
         private ClassSettings2 _settings; // Configuraciones del aula
         [SerializeField] private TMP_Dropdown _structureDropdown; // Menú desplegable para seleccionar la estructura
@@ -66,8 +66,8 @@ namespace ClassRoomVR
             _girlsOption.onValueChanged.AddListener(value => UpdateStudentCount(value, Gender2.Women));
             _editDeskPositionButton.onClick.AddListener(() =>
             {
-                MenuTransition.Instance.GoNextScreen();
-                MenuTransition.Instance.MoveClase();
+                MenuTransition2.Instance.GoNextScreen();
+                MenuTransition2.Instance.MoveClase();
             });
         }
 

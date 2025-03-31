@@ -9,7 +9,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona el menú para seleccionar el tipo de estructura en la interfaz de usuario.
     /// </summary>
-    public class MenuType : MonoBehaviour
+    public class MenuType2 : MonoBehaviour
     {
         [SerializeField] private TMP_Dropdown _structureDropdown; // Dropdown para seleccionar el tipo de estructura
         [SerializeField] private Button _editButton; // Botón para acceder a la pantalla de edición
@@ -32,7 +32,7 @@ namespace ClassRoomVR
         private void OnEditButtonClick()
         {
             GameManager2.Instance.SetCurrentSettings(0); // Establece la configuración actual
-            MenuTransition.Instance.GoNextScreen(); // Navega a la siguiente pantalla
+            MenuTransition2.Instance.GoNextScreen(); // Navega a la siguiente pantalla
         }
 
         /// <summary>

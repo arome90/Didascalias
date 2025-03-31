@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Clase que maneja la interfaz de usuario de reconexión, incluyendo una barra de carga animada.
 /// </summary>
-public class ReconnectUI : MonoBehaviour
+public class ReconnectUI2 : MonoBehaviour
 {
     [SerializeField] private Image _loadingBar; // Imagen de la barra de carga
     [SerializeField] private float _fillSpeed = 0.5f; // Velocidad de rotación de la barra de carga

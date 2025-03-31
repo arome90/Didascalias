@@ -10,11 +10,11 @@ public class Didascalia_InputManager2 : MonoBehaviour
     [SerializeField] InputActionReference pause;
 
     [SerializeField] Canvas handMenu;
-    [SerializeField] PauseMenu pauseMenu = null;
+    [SerializeField] PauseMenu2 pauseMenu = null;
 
     private void Start()
     {
-        if (pauseMenu == null) pauseMenu = handMenu.GetComponent<PauseMenu>();
+        if (pauseMenu == null) pauseMenu = handMenu.GetComponent<PauseMenu2>();
         menu.action.Enable();
         pause.action.Enable();
 

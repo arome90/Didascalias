@@ -6,7 +6,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona la edición de la estructura del menú.
     /// </summary>
-    public class MenuEditStructure : MonoBehaviour
+    public class MenuEditStructure2 : MonoBehaviour
     {
         [SerializeField] private Button _applyButton; // Botón para aplicar cambios
         [SerializeField] private Structure _circularStructure; // Estructura circular
@@ -31,8 +31,8 @@ namespace ClassRoomVR
         /// </summary>
         private void OnApplyButtonClick()
         {
-            MenuTransition.Instance.GoBackScreen();
-            MenuTransition.Instance.MovePizarra();
+            MenuTransition2.Instance.GoBackScreen();
+            MenuTransition2.Instance.MovePizarra();
         }
 
         /// <summary>

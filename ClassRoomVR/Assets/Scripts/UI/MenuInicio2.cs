@@ -15,7 +15,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Clase que gestiona el menú de inicio.
     /// </summary>
-    public class MenuInicio : MonoBehaviour
+    public class MenuInicio2 : MonoBehaviour
     {
         [SerializeField] private Button _enter; // Botón para entrar
         [SerializeField] private Button _tutorial; // Botón para el tutorial
