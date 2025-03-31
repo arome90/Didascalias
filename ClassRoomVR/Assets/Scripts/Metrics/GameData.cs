@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -6,39 +7,41 @@ using UnityEngine;
 namespace ClassRoomVR
 {
     [Serializable]
-    public class PlayerData
+    public class BaseData
     {
         public string Time;
-        public Dictionary<string, object> Parameters;
 
-        public PlayerData(Dictionary<string, object> parameters)
+        public BaseData()
         {
             Time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff");
-            Parameters = parameters;
+        }
+    }
+
+    [Serializable]
+    public class VoiceData: BaseData
+    {
+        public float Volume, Pitch;
+        public VoiceData(float v, float p)
+        {
+            Volume = v;
+            Pitch = p;
         }
     }
 
     [Serializable]
     public class GameData
     {
-        public Dictionary<string, List<PlayerData>> Players;
-
+        public Dictionary<string, List<BaseData>> datas;
+        public string Session;
         public GameData()
         {
-            Players = new Dictionary<string, List<PlayerData>>();
+            datas = new Dictionary<string, List<BaseData>>();
         }
 
-        public void AddEntry(string playerId, Dictionary<string, object> parameters)
-        {
-            if (!Players.ContainsKey(playerId))
-                Players[playerId] = new List<PlayerData>();
-
-            Players[playerId].Add(new PlayerData(parameters));
-        }
 
         public string ToJson()
         {
-            return JsonUtility.ToJson(Players, true); // Convierte directamente el diccionario
+            return JsonConvert.SerializeObject(datas, Formatting.Indented);
         }
     }
 

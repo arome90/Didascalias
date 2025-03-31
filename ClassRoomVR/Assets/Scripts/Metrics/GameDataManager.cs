@@ -12,7 +12,7 @@ namespace ClassRoomVR
         private WsClient ws;
         private HttpClient client;
         private GameData gameData = new GameData();
-        private int maxPlayerDataCount = 50; // Número máximo de PlayerData antes de enviar
+        private int maxPlayerDataCount = 5; // Número máximo de PlayerData antes de enviar
         private string Session;
 
         [SerializeField]
@@ -22,6 +22,8 @@ namespace ClassRoomVR
             ws = WsClient.Instance;
             client = HttpClient.Instance;
             Session = ws.Session;
+            gameData.datas[Session] = new List<BaseData>();
+            gameData.Session = Session;
             InvokeRepeating("SendDataByTime", timer, timer);
 
         }
@@ -30,33 +32,34 @@ namespace ClassRoomVR
         {
             lock (gameData)
             {
-                if (gameData.Players[Session].Count > 0)
+                if (gameData.datas[Session].Count > 0)
                 {
                     client.sendJson(gameData.ToJson());
-                    gameData.Players.Clear();
+                    gameData.datas[Session].Clear();
                 }
             }
         }
 
-        public void SendData(PlayerData data)
+        public void SendData(BaseData data)
         {
-            gameData.Players[Session].Add(data);
+            gameData.datas[Session].Add(data);
             lock (gameData)
             {
-                if (gameData.Players[Session].Count >= maxPlayerDataCount)
+                if (gameData.datas[Session].Count >= maxPlayerDataCount)
                 {
                     client.sendJson(gameData.ToJson());
-                    gameData.Players.Clear();
+                    gameData.datas[Session].Clear();
                 }
             }
         }
 
         void OnDestroy()
         {
-            if (gameData.Players[Session].Count > 0)
+            if (gameData.datas[Session].Count > 0)
             {
                 client.sendJson(gameData.ToJson());
-                gameData.Players.Clear();
+                gameData.datas[Session].Clear();
+                gameData.datas.Clear();
             }
         }
 

@@ -2743,6 +2743,7 @@ GameObject:
   - component: {fileID: 2101349846}
   - component: {fileID: 2101349847}
   - component: {fileID: 2101349848}
+  - component: {fileID: 2101349849}
   m_Layer: 0
   m_Name: AnalysisVariable
   m_TagString: Untagged
@@ -2757,7 +2758,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101349841}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c615f2e75443a04d8296b94bd861af0, type: 3}
   m_Name: 
@@ -2902,6 +2903,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appVoiceExperience: {fileID: 825419208}
   timer: 0
+--- !u!114 &2101349849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101349841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c750336966e681439c09471463bc877, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: 5
 --- !u!1001 &493455963278496415
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3216,7 +3230,7 @@ PrefabInstance:
     - target: {fileID: 4680873424180462680, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -77.685
+      value: -68
       objectReference: {fileID: 0}
     - target: {fileID: 4680873424698151404, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}

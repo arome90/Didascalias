@@ -19,7 +19,8 @@ namespace ClassRoomVR
         private float maxVolume;
         private float volumeToSend;
 
-        public float timer;
+        [SerializeField]
+        private float sentTime = 1.0f;
 
 
         void Awake()
@@ -44,6 +45,7 @@ namespace ClassRoomVR
             {
                 OnMicLevelChanged(value);
             });
+            InvokeRepeating(nameof(SendData), sentTime, sentTime);
 
         }
 
@@ -68,7 +70,7 @@ namespace ClassRoomVR
 
         public void SendData()
         {
-            PlayerData d = new PlayerData(new Dictionary<string, object> { { "VolumeWit", volumeToSend } });
+            VoiceData d = new VoiceData(lastVolume, 0);
             GameDataManager.Instance.SendData(d);
         }
 

@@ -106,7 +106,7 @@ public class VoiceVariables : MonoBehaviour
     }
     public void SendData(float v,float p)
     {
-        PlayerData d = new PlayerData(new Dictionary<string, object> { { "Volume", v }, { "Pitch", p } });
+        VoiceData d = new VoiceData( v ,p);
         GameDataManager.Instance.SendData(d);
     }
     public void ResetVolume()
