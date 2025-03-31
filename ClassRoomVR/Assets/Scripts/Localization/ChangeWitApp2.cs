@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeWitApp : MonoBehaviour
+public class ChangeWitApp2 : MonoBehaviour
 {
     private AppVoiceExperience witApp;
     // Start is called before the first frame update

@@ -9,7 +9,7 @@ using UnityEngine.AI;
 namespace ClassRoomVR
 {
     [RequireComponent(typeof(AudioSource))]
-    public class JawMove : MonoBehaviour
+    public class JawMove2 : MonoBehaviour
     {
         [SerializeField] private Transform _jaw;
         [SerializeField] private float _sizeReduction = 500f;

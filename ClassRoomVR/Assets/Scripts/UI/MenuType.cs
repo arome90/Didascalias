@@ -62,7 +62,7 @@ namespace ClassRoomVR
         /// </summary>
         /// <param name="classes">Arreglo de configuraciones de clase.</param>
         /// <returns>Lista de nombres de opciones para el dropdown.</returns>
-        private List<string> GetDropdownOptions(ClassSettings[] classes)
+        private List<string> GetDropdownOptions(ClassSettings2[] classes)
         {
             List<string> dropdownOptions = new List<string>(classes.Length - 1);
             int currentLocale = LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale);

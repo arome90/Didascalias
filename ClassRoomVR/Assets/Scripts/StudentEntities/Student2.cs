@@ -68,7 +68,7 @@ namespace ClassRoomVR
 
         private Transform _player;
         private ResponseStudent _response;
-        private JawMove _jaw;
+        private JawMove2 _jaw;
         private RigBuilder _rig;
 
         #region Getters
@@ -100,7 +100,7 @@ namespace ClassRoomVR
             _audioSource = GetComponent<AudioSource>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _behaviour = GetComponent<StudentBehavior>();
-            _jaw = GetComponent<JawMove>();
+            _jaw = GetComponent<JawMove2>();
             _state = State2.Sitting;
             _distractedArray = System.Enum.GetValues(typeof(FieldOfVision2)).Cast<FieldOfVision2>()
                 .Where(c => (_distracted & c) == c)

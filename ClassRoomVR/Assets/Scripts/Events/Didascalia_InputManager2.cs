@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Didascalia_InputManager : MonoBehaviour
+public class Didascalia_InputManager2 : MonoBehaviour
 {
     [SerializeField] InputActionReference menu;
     [SerializeField] InputActionReference pause;

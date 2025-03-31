@@ -240,7 +240,7 @@ namespace ClassRoomVR
         {
             Debug.Log("Creating a conflict");
             actionObject = Instantiate(currentAction.BehaviorHolder);
-            actionObject.GetComponent<Action>().SetParameters(_player, studentList, currentAction, text);
+            actionObject.GetComponent<Action2>().SetParameters(_player, studentList, currentAction, text);
             actionObject = null;
             currentAction = null;
 

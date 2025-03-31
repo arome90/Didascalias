@@ -12,7 +12,7 @@ namespace ClassRoomVR
         [SerializeField] private Structure _circularStructure; // Estructura circular
         [SerializeField] private Structure _filaStructure; // Estructura en fila
 
-        private ClassSettings _settings; // Configuraciones del aula
+        private ClassSettings2 _settings; // Configuraciones del aula
 
         private void Awake()
         {

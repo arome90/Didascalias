@@ -11,7 +11,7 @@ namespace ClassRoomVR
     /// </summary>
     public class MenuSettings : MonoBehaviour
     {
-        private ClassSettings _settings; // Configuraciones del aula
+        private ClassSettings2 _settings; // Configuraciones del aula
         [SerializeField] private TMP_Dropdown _structureDropdown; // Menú desplegable para seleccionar la estructura
         [SerializeField] private Button _editDeskPositionButton; // Botón para editar la posición de los escritorios
         [SerializeField] private Option _boysOption; // Opción para configurar el número de chicos

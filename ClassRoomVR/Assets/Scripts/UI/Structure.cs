@@ -12,7 +12,7 @@ namespace ClassRoomVR
     {
         [SerializeField] protected Option numDesks; // Opción de UI para establecer el número de escritorios
         [SerializeField] protected Toggle fillEmptyDesks;
-        protected ClassSettings settings; // Configuraciones para el aula
+        protected ClassSettings2 settings; // Configuraciones para el aula
 
         private void SetFillEmptyDesks(bool value)
         {

@@ -23,7 +23,7 @@ namespace ClassRoomVR
         private StudentsController2 _studentsController;
         private ClassInfo2 _classInfo;
         private List<List<string>> _names;
-        private ClassSettings _settings;
+        private ClassSettings2 _settings;
 
         /// <summary>
         /// Método llamado al iniciar el script. Configura el entorno y, si es necesario, genera la clase.

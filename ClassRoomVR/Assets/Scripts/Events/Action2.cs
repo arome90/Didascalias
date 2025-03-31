@@ -9,7 +9,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Controla las acciones disruptivas utilizando un árbol de comportamiento.
     /// </summary>
-    public class Action : MonoBehaviour
+    public class Action2 : MonoBehaviour
     {
         [SerializeField] private float _distanceNear = 5.0f; // Distancia considerada cercana
         [SerializeField] private AudioClip _classLaughterClip; // Clip de audio de risas de clase

@@ -11,8 +11,8 @@ using UnityEditor;
 
 namespace ClassRoomVR
 {
-    [CreateAssetMenu(fileName = "NewClassSettings", menuName = "ScriptableObject/ClassSettings", order = 4)]
-    public class ClassSettings : ScriptableObject
+    [CreateAssetMenu(fileName = "NewClassSettings", menuName = "ScriptableObject/ClassSettings2", order = 4)]
+    public class ClassSettings2 : ScriptableObject
     {
         [Header("General Settings")]
         [Range(1, 30)]
@@ -79,8 +79,8 @@ namespace ClassRoomVR
         public int Rows { get => _rows; set => _rows = value; }
 
 #if UNITY_EDITOR
-        [CustomEditor(typeof(ClassSettings))]
-        public class ClassSettingsEditor : Editor
+        [CustomEditor(typeof(ClassSettings2))]
+        public class ClassSettingsEditor2 : Editor
         {
             private SerializedProperty[] _properties;
 

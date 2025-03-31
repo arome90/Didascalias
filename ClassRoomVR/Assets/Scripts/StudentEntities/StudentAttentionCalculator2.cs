@@ -6,7 +6,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Calcula el promedio de atención de los estudiantes en la clase.
     /// </summary>
-    public class StudentAttentionCalculator : MonoBehaviour
+    public class StudentAttentionCalculator2 : MonoBehaviour
     {
         /// <summary>
         /// Promedio de atención calculado.

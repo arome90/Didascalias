@@ -42,8 +42,8 @@ namespace ClassRoomVR
         private VoiceActivation voice;
         private ReconnectUI loadingBar;
 
-        [SerializeField] private ClassSettings currentSettings;
-        [SerializeField] private ClassSettings[] availableSettings;
+        [SerializeField] private ClassSettings2 currentSettings;
+        [SerializeField] private ClassSettings2[] availableSettings;
         [SerializeField] private ClassInfo2 currentClassInfo;
         [SerializeField] private bool isAutoSavingEnabled = false;
         [SerializeField] private bool saveAudio = false;
@@ -63,7 +63,7 @@ namespace ClassRoomVR
             int language = PlayerPrefs.GetInt("Language", 0);
             ChangeLanguage(language);
 
-            ClassSettings[] settings = availableSettings;
+            ClassSettings2[] settings = availableSettings;
             int index = 0;
             foreach (var setting in settings)
             {
@@ -199,7 +199,7 @@ namespace ClassRoomVR
             canChange = true;
         }
 
-        public ClassSettings GetCurrentSettings()
+        public ClassSettings2 GetCurrentSettings()
         {
             return currentSettings;
         }
@@ -208,7 +208,7 @@ namespace ClassRoomVR
         {
             return indexCurrentSett;
         }
-        public ClassSettings[] GetAvailableSettings() => availableSettings;
+        public ClassSettings2[] GetAvailableSettings() => availableSettings;
 
 
         public bool GetSaveAudio() => saveAudio;
