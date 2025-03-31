@@ -1,3 +1,4 @@
+using ClassRoomVR;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -54,6 +55,7 @@ public class VoiceVariables : MonoBehaviour
         //Debug.Log($"Volume: {volumeLevel}, Dominant Frequency: {dominantFrequency}");
         audioSource.clip = Microphone.Start(null, true, recordingTime, sampleRate);
 
+        SendData(volumeLevel, dominantFrequency);
     }
 
     /// <summary>
@@ -102,7 +104,11 @@ public class VoiceVariables : MonoBehaviour
         // Retorna la frecuencia dominante.
         return dominantFrequency;
     }
-
+    public void SendData(float v,float p)
+    {
+        PlayerData d = new PlayerData(new Dictionary<string, object> { { "Volume", v }, { "Pitch", p } });
+        GameDataManager.Instance.SendData(d);
+    }
     public void ResetVolume()
     {
         maxVolume = lastVolume;

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ClassRoomVR
 {
-    public class GameDataManager : MonoBehaviour
+    public class GameDataManager : SceneSingleton<GameDataManager>
     {
         private WsClient ws;
         private HttpClient client;
@@ -38,7 +38,7 @@ namespace ClassRoomVR
             }
         }
 
-        private void SendData(PlayerData data)
+        public void SendData(PlayerData data)
         {
             gameData.Players[Session].Add(data);
             lock (gameData)
