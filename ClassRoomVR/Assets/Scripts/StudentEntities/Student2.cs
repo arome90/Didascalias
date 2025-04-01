@@ -217,76 +217,76 @@ namespace ClassRoomVR
             // Bajamos la mano si ha bajado nuestro nivel de atención
             if(_animPlaying != AnimationState.NONE && _behaviour.AttentionLevel < 65f)
             {
-                switch (_animPlaying)
-                {
-                    case AnimationState.WRITING:
-                        EndWriting();
-                        break;
+                //switch (_animPlaying)
+                //{
+                //    case AnimationState.WRITING:
+                //        EndWriting();
+                //        break;
 
-                    case AnimationState.HAND_RAISED:
-                        HandDown();
-                        break;
-                }
+                //    case AnimationState.HAND_RAISED:
+                //        HandDown();
+                //        break;
+                //}
             }
             if (_actionCooldownHasPassed && _behaviour.AttentionLevel <= _attetionThresholdDistracted)
             {
-                int expressionOrAction = Random.Range(0, 2);
-                if(expressionOrAction == 0) // acción
-                {
-                    int distractedAction = Random.Range((int)Actions2.BALANCEARSE, (int)Actions2.LANZAR_OBJETO + 1);
-                    if (distractedAction == (int)Actions2.MOVIL)
-                    {
-                        SetDirection(FieldOfVision2.Down);
-                    }
-                    if(distractedAction == (int)Actions2.BALANCEARSE)
-                    {
-                        _desk.PlayChairAnimation();
-                    }
-                    _animator.SetInteger("Accion", distractedAction);
-                }
-                else if(expressionOrAction == 1) // Expresión
-                {
-                    int distractedExpression = Random.Range(0, 3);
-                    Expresiones2 expression;
-                    switch (distractedExpression)
-                    {
-                        case 0:
-                            expression = Expresiones2.Enfadado;
-                            break;
-                        case 1:
-                            expression = Expresiones2.Quejarse;
-                            break;
-                        case 2:
-                            expression = Expresiones2.Dormido;
-                            break;
-                        default:
-                            expression = Expresiones2.Dormido;
-                            break;
-                    }
-                    StartCoroutine(_behaviour.ChangeExpression(expression));
-                }
+                //int expressionOrAction = Random.Range(0, 2);
+                //if(expressionOrAction == 0) // acción
+                //{
+                //    int distractedAction = Random.Range((int)Actions2.BALANCEARSE, (int)Actions2.LANZAR_OBJETO + 1);
+                //    if (distractedAction == (int)Actions2.MOVIL)
+                //    {
+                //        SetDirection(FieldOfVision2.Down);
+                //    }
+                //    if(distractedAction == (int)Actions2.BALANCEARSE)
+                //    {
+                //        _desk.PlayChairAnimation();
+                //    }
+                //    _animator.SetInteger("Accion", distractedAction);
+                //}
+                //else if(expressionOrAction == 1) // Expresión
+                //{
+                //    int distractedExpression = Random.Range(0, 3);
+                //    Expresiones2 expression;
+                //    switch (distractedExpression)
+                //    {
+                //        case 0:
+                //            expression = Expresiones2.Enfadado;
+                //            break;
+                //        case 1:
+                //            expression = Expresiones2.Quejarse;
+                //            break;
+                //        case 2:
+                //            expression = Expresiones2.Dormido;
+                //            break;
+                //        default:
+                //            expression = Expresiones2.Dormido;
+                //            break;
+                //    }
+                //    StartCoroutine(_behaviour.ChangeExpression(expression));
+                //}
                 
-                StartCoroutine(PerformActionCooldown());
+                //StartCoroutine(PerformActionCooldown());
             }
             else if (_actionCooldownHasPassed && _behaviour.AttentionLevel > 75f)
             {
                 // Hacer cosas guays, como escribir o así, como si estuvieran tomando apuntes.
                 // int attentionAction = Random.Range((int)Actions.ABRIR, (int)Actions.LEVANTAR_MANO + 1);
-                int attentionAction = Random.Range(0, 101);
+                //int attentionAction = Random.Range(0, 101);
 
-                if (attentionAction < 5) // un 5% de las veces, hacemos que el/la alumn@ levante la mano
-                {
-                    RaiseHand();
-                }
-                else if (attentionAction < 70) // un 65% de las veces, hacemos que el/la alumn@ escriba durante un rato
-                {
-                    StartWriting();
-                }
-                else
-                {
-                    StartCoroutine(PerformActionCooldown());
-                }
-                _actionCooldownHasPassed = false;
+                //if (attentionAction < 5) // un 5% de las veces, hacemos que el/la alumn@ levante la mano
+                //{
+                //    RaiseHand();
+                //}
+                //else if (attentionAction < 70) // un 65% de las veces, hacemos que el/la alumn@ escriba durante un rato
+                //{
+                //    StartWriting();
+                //}
+                //else
+                //{
+                //    StartCoroutine(PerformActionCooldown());
+                //}
+                //_actionCooldownHasPassed = false;
             }
             _actionCooldownHasPassed = _actionCooldownHasPassed && _animPlaying == AnimationState.NONE;
         }
