@@ -47,7 +47,9 @@ public class WsClient : GenericSingleton<WsClient>
         {
             if (ws != null && ws.IsAlive) return;
             Debug.Log("Creating new WebSocket");
-            ws = new WebSocket("wss://cyclops.uab.cat/game/");
+            ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
+
+            //ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws.OnOpen += HandleOnOpen;
             ws.OnMessage += HandleSessionMessage;
             ws.OnClose += HandleOnClose;
