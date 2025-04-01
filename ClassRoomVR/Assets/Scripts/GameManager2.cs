@@ -8,7 +8,7 @@ using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
-    public class GameManager2 : MonoBehaviour
+    public class GameManager2 : SceneSingleton<GameManager2>
     {
         [Serializable]
         public struct LanguageOption
@@ -50,16 +50,16 @@ namespace ClassRoomVR
         private int indexCurrentSett;
 
         private int lastSettingsUsed;
-        public static GameManager2 Instance { get; private set; }
 
-        private void Awake()
-        {
-            if (!InitializeSingleton()) return;
-            IsPause = false;
-        }
+        //public override void Awake()
+        //{
+        //   // if (!InitializeSingleton()) return;
+        //}
 
         private void Start()
         {
+            IsPause = false;
+
             int language = PlayerPrefs.GetInt("Language", 0);
             ChangeLanguage(language);
 
@@ -79,18 +79,18 @@ namespace ClassRoomVR
             OnLanguageChanged ??= new UnityEvent();
         }
 
-        private bool InitializeSingleton()
-        {
-            if (Instance != null)
-            {
-                Destroy(this);
-                return false;
-            }
-            Instance = this;
-            InitializeData();
-            DontDestroyOnLoad(this);
-            return true;
-        }
+        //private bool InitializeSingleton()
+        //{
+        //    if (Instance != null)
+        //    {
+        //        Destroy(this);
+        //        return false;
+        //    }
+        //    Instance = this;
+        //    InitializeData();
+        //    DontDestroyOnLoad(this);
+        //    return true;
+        //}
 
         private void InitializeData()
         {
@@ -118,19 +118,19 @@ namespace ClassRoomVR
         public void LoadMainMenu()
         {
             WsClient2.Instance.Disconnect();
-            SceneTransitionManager2.Singleton.GoToSceneAsync(0);
+            SceneTransitionManager2.Singleton.GoToSceneAsync(   1);
         }
 
         public void LoadTutorial()
         {
             currentSettings = availableSettings[availableSettings.Length - 1];
-            SceneTransitionManager2.Singleton.GoToSceneAsync(2);
+            SceneTransitionManager2.Singleton.GoToSceneAsync(3);
         }
 
         public void LoadMainScene()
         {
             ServerMessage2.SendInfoInitial();
-            SceneTransitionManager2.Singleton.GoToSceneAsync(1);
+            SceneTransitionManager2.Singleton.GoToSceneAsync(2);
         }
 
         public void SetCurrentSettings(int index)

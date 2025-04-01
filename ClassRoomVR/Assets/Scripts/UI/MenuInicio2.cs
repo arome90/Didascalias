@@ -52,7 +52,7 @@ namespace ClassRoomVR
         /// </summary>
         private void OnEnterButtonClick()
         {
-            Instance.SetLastUsedSettings();
+            GameManager2.Instance.SetLastUsedSettings();
             PlayButton();
             GoNextScreen();
         }
@@ -63,7 +63,7 @@ namespace ClassRoomVR
         private void OnTutorialButtonClick()
         {
             _tutorial.interactable = false;
-            Instance.LoadTutorial();
+            GameManager2.Instance.LoadTutorial();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace ClassRoomVR
         public void LanguageSelector()
         {
             _languageSelector.options.Clear();
-            LanguageOption[] languages = Instance.witAppsForLanguages;
+            LanguageOption[] languages = GameManager2.Instance.witAppsForLanguages;
             for (int i = 0; i < languages.Length; ++i)
             {
                 _languageDictionary.Add(languages[i].name, languages[i].witApp);
@@ -125,7 +125,7 @@ namespace ClassRoomVR
         {
             string currentLanguage = dropdown.options[value].text;
 
-            Instance.ChangeLanguage(_languageDictionary[currentLanguage]);
+            GameManager2.Instance.ChangeLanguage(_languageDictionary[currentLanguage]);
         }
 
         /// <summary>

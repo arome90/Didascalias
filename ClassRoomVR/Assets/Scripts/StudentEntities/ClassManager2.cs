@@ -6,9 +6,9 @@ namespace ClassRoomVR
 {
     /// <summary>
     /// Clase que gestiona la clase de estudiantes en la realidad virtual.
-    /// Hereda de <see cref="GenericSingleton{ClassManager2}"/>.
+    /// Hereda de <see cref="SceneSingleton{ClassManager2}"/>.
     /// </summary>
-    public class ClassManager2 : GenericSingleton<ClassManager2>
+    public class ClassManager2 : SceneSingleton<ClassManager2>
     {
         [SerializeField] private Transform[] _targetsHead;
         [SerializeField] private AudioClip _beforeClassBell;
@@ -32,11 +32,11 @@ namespace ClassRoomVR
         {
             _settings = GameManager2.Instance.GetCurrentSettings();
             _studentsController = GetComponent<StudentsController2>();
-            if (_generateOnStart)
-            {
+           // if (_generateOnStart)
+         //   {
                 Generate();
-                GameManager2.Instance.GetVoiceActivation().Activate();
-            }
+              //  GameManager2.Instance.GetVoiceActivation().Activate();
+          //  }
         }
 
         /// <summary>

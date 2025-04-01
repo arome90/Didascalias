@@ -1932,18 +1932,18 @@ GameObject:
   m_Component:
   - component: {fileID: 1805749416763871098}
   - component: {fileID: 6394200175754609986}
-  - component: {fileID: 7509973540603057216}
   - component: {fileID: -4003894230735117553}
   - component: {fileID: 8089880809311193109}
   - component: {fileID: -5770127364650121690}
   - component: {fileID: -7728425489250237141}
   - component: {fileID: 9202623821141003789}
   - component: {fileID: 4252507083906446710}
-  - component: {fileID: 425534648888875691}
-  - component: {fileID: 8089822018792531412}
   - component: {fileID: 8024393512368406280}
   - component: {fileID: 3688080226689136329}
   - component: {fileID: 8748687209574031006}
+  - component: {fileID: 1197088187607840288}
+  - component: {fileID: -3783517900777583224}
+  - component: {fileID: 4029789812796130585}
   m_Layer: 0
   m_Name: Student2
   m_TagString: Untagged
@@ -1992,26 +1992,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7509973540603057216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21bfddb18390c954da519c79fa0af5a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _distracted: 63
-  _state: 0
-  _gender: 0
-  _problematic: 0
-  _studentNameText: {fileID: 813558317919732908}
-  _attentionText: {fileID: 4496128837668229746}
-  _target: {fileID: 5893043990474631000}
-  _headConstraint: {fileID: 7980371750097749196}
 --- !u!114 &-4003894230735117553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2025,10 +2005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _decisionTime: 2
-  _attentionAddition: 3
-  _attentionSubtraction: 6
-  _distanceFactorAddition: 1
-  _distanceFactorSubtraction: 0.5
+  studentBehavoirJsonPath: 
 --- !u!195 &8089880809311193109
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2194,37 +2171,6 @@ MonoBehaviour:
   - m_Rig: {fileID: 6140805333759216109}
     m_Active: 1
   m_Effectors: []
---- !u!114 &425534648888875691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b98669901b3c5449be7814b2798b2b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _jaw: {fileID: 1115370993372197686}
-  _sizeReduction: 500
-  _smoothSpeed: 5
-  _fastSmoothSpeed: 20
-  _sensitivity: 1
-  _timeUpdate: 0.4
---- !u!114 &8089822018792531412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0adc7a4dcfafb4d49a0863e458e4433e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dateId: '[DATE]'
 --- !u!114 &8024393512368406280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2392,10 +2338,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterProps: {fileID: 11400000, guid: 6b2a692a152826a47a43f9f0de117cec, type: 2}
-  _characterAssets: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b, type: 2}
+  _characterAssets: {fileID: 0}
   _extraBonesBody:
   - Bip001LeftEye
   - Bip001RightEye
+--- !u!114 &1197088187607840288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786677739925861320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 387b2a86ae120bf49b9400f37590ae19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dateId: '[DATE]'
+--- !u!114 &-3783517900777583224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786677739925861320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543a041adbe453c49aa76770da23c5c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _jaw: {fileID: 1115370993372197686}
+  _sizeReduction: 500
+  _smoothSpeed: 5
+  _fastSmoothSpeed: 20
+  _sensitivity: 1
+  _timeUpdate: 0.4
+--- !u!114 &4029789812796130585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786677739925861320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9dba09a160cd34fa165a0b7d34c7a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _distracted: 63
+  _state: 0
+  _gender: 0
+  _problematic: 0
+  _studentNameText: {fileID: 813558317919732908}
+  _attentionText: {fileID: 4496128837668229746}
+  _target: {fileID: 5893043990474631000}
+  _headConstraint: {fileID: 7980371750097749196}
 --- !u!1 &5908004529214358535
 GameObject:
   m_ObjectHideFlags: 0
