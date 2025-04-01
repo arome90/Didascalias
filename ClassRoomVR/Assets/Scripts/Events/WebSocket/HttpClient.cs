@@ -5,10 +5,6 @@ using System.Collections;
 
 public class HttpClient : GenericSingleton<HttpClient>
 {
-    private DateTime currentAppDate = new DateTime();
-
-    public DateTime getCurrentAppTime() { return currentAppDate; }
-
     public void sendJson(string jsonText)
     {
         StartCoroutine(sendJsonNet(jsonText));
