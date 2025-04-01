@@ -1932,7 +1932,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1805749416763871098}
   - component: {fileID: 6394200175754609986}
-  - component: {fileID: -4003894230735117553}
   - component: {fileID: 8089880809311193109}
   - component: {fileID: -5770127364650121690}
   - component: {fileID: -7728425489250237141}
@@ -1944,6 +1943,7 @@ GameObject:
   - component: {fileID: 1197088187607840288}
   - component: {fileID: -3783517900777583224}
   - component: {fileID: 4029789812796130585}
+  - component: {fileID: 3582199237399691479}
   m_Layer: 0
   m_Name: Student2
   m_TagString: Untagged
@@ -1992,20 +1992,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-4003894230735117553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b752a859fadbaec4db44765a112610d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _decisionTime: 2
-  studentBehavoirJsonPath: 
 --- !u!195 &8089880809311193109
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2147,7 +2133,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efe58df89b5b74a97a123b5ed2b70422, type: 3}
   m_Name: 
@@ -2393,6 +2379,23 @@ MonoBehaviour:
   _attentionText: {fileID: 4496128837668229746}
   _target: {fileID: 5893043990474631000}
   _headConstraint: {fileID: 7980371750097749196}
+--- !u!114 &3582199237399691479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786677739925861320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 974f3a7f928d9d64896cf8f6bb0b2c7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _decisionTime: 2.5
+  _attentionAddition: 30
+  _attentionSubtraction: 20
+  _distanceFactorAddition: 2.1
+  _distanceFactorSubtraction: 2
 --- !u!1 &5908004529214358535
 GameObject:
   m_ObjectHideFlags: 0

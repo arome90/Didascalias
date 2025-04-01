@@ -63,7 +63,7 @@ namespace ClassRoomVR
         
         [SerializeField] private MultiAimConstraint _headConstraint;
         
-        private StudentBehavior _behaviour;
+        private StudentBehavior2 _behaviour;
         private StudentsController2 _controller;
 
         private Transform _player;
@@ -78,7 +78,7 @@ namespace ClassRoomVR
         public bool IsProblematicStudent() => _problematic;
         public AudioSource GetAudioSource() => _audioSource;
         public NavMeshAgent GetNavMeshAgent() => _navMeshAgent;
-        public StudentBehavior GetBehavior() => _behaviour;
+        public StudentBehavior2 GetBehavior() => _behaviour;
         public StudentsController2 GetController() => _controller;
         public State2 GetState() => _state;
 
@@ -99,7 +99,7 @@ namespace ClassRoomVR
             _animator = GetComponent<Animator>();
             _audioSource = GetComponent<AudioSource>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
-            _behaviour = GetComponent<StudentBehavior>();
+            _behaviour = GetComponent<StudentBehavior2>();
             _jaw = GetComponent<JawMove2>();
             _state = State2.Sitting;
             _distractedArray = System.Enum.GetValues(typeof(FieldOfVision2)).Cast<FieldOfVision2>()
