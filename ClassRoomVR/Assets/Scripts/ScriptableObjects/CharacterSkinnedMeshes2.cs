@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// ScriptableObject que almacena los activos de ropa para los personajes.
 /// </summary>
-[CreateAssetMenu(fileName = "CharacterClothingAssets", menuName = "Character Assets/Clothing Assets", order = 1)]
+[CreateAssetMenu(fileName = "CharacterClothingAssets2", menuName = "Character Assets/Clothing Assets2", order = 1)]
 public class CharacterSkinnedMeshes2 : ScriptableObject
 {
     [System.Serializable]
@@ -14,12 +14,12 @@ public class CharacterSkinnedMeshes2 : ScriptableObject
         /// Lista de ítems de ropa para esta categoría.
         /// </summary>
         [SerializeField]
-        private List<Garment2> _items;
+        private List<Garment> _items;
 
         /// <summary>
         /// Obtiene los ítems de ropa.
         /// </summary>
-        public List<Garment2> Items => _items;
+        public List<Garment> Items => _items;
     }
 
     [System.Serializable]

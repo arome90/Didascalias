@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Configuración del aspecto del personaje, incluyendo cuerpo, pelo y materiales.
 /// </summary>
-[CreateAssetMenu(fileName = "CharacterSkin", menuName = "Character Assets/Character Skin", order = 2)]
+[CreateAssetMenu(fileName = "CharacterSkin2", menuName = "Character Assets/Character Skin2", order = 2)]
 public class CharacterSkin2 : ScriptableObject
 {
     [Header("Cuerpo")]

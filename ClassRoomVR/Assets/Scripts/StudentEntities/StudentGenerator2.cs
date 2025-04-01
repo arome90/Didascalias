@@ -99,10 +99,10 @@ public class StudentGenerator2 : MonoBehaviour
             }
         }
 
-        var complement = item.HeadBone.Complements[Random.Range(0, item.HeadBone.Complements.Count)];
-        int colorIndex = Random.Range(0, complement.Color.Length);
+       // var complement = item.HeadBone.Complements[Random.Range(0, item.HeadBone.Complements.Count)];
+      //  int colorIndex = Random.Range(0, complement.Color.Length);
 
-        TrySpawnComplement(_rootBone, item.HeadBone, complement, colorIndex, false);
+       // TrySpawnComplement(_rootBone, item.HeadBone, complement, colorIndex, false);
     }
 
     /// <summary>
