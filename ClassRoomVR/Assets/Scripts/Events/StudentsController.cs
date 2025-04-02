@@ -224,7 +224,7 @@ namespace ClassRoomVR
                         break;
                     case Actions.Separados:
                         Debug.Log("Separándonos");
-                        eventType = "TALK";
+                        eventType = "SEPARATE";
                         alumnx = "";
                         GetRandomStudentsSeparate();
                         for (int i = 0; i < studentList.Count; i++){
@@ -318,10 +318,14 @@ namespace ClassRoomVR
         // Reproduce una oración aleatoria con un estudiante
         public void PlaySentence(string text)
         {
-            if(_raisedHandStudents.Count == 0)
+            string actionInfo = "Comportamiento disrruptivo!";
+            string eventType = "TALK: " + text;
+            string alumnx = "\"";
+            if (_raisedHandStudents.Count == 0)
             {
                 int randomStudentIndex = UnityEngine.Random.Range(0, _students.Count);
                 _students.ElementAt(randomStudentIndex).Value.GenerateText(text);
+                alumnx += _students.ElementAt(randomStudentIndex).Value.GetName();
             }
             else
             {
@@ -329,7 +333,10 @@ namespace ClassRoomVR
                 st.GenerateText(text);
                 st.HandDown();
                 _raisedHandStudents.Remove(st);
+                alumnx += st.GetName();
             }
+            alumnx += "\"";
+            InputLogger.Instance.WriteToJson(actionInfo, eventType, alumnx);
         }
 
         // Reproduce una oración con todos los estudiantes

@@ -147,7 +147,7 @@ namespace ClassRoomVR
             //_input = new InputVariables(i, actlist[0], actlist[1], actlist[2]);
             _input = new InputVariables(i, actlist[0], actlist[1], actlist[2]);
             actlist.CopyTo(_list);
-            Debug.Log("SendInfo desde InputLogger");
+            //Debug.Log("SendInfo desde InputLogger");
             ServerMessage.SendInfo();
         }
 
@@ -157,7 +157,7 @@ namespace ClassRoomVR
         private void SendDevInfo()
         {
             WriteEnd();
-            Debug.Log("SendDevInfo desde InputLogger: " + JsonText);
+            //Debug.Log("SendDevInfo desde InputLogger: " + JsonText);
             HttpClient.Instance.sendJson(JsonText);
             StartJson(); //return false??
         }
