@@ -133,8 +133,8 @@ namespace ClassRoomVR
         /// </summary>
         public static void SendInfoInitial()
         {
-            var initData = CreateInitialMessageData();
-            WsClient2.Instance.SendWebSocketMessage(new MessageSent2(MessageType2.Init, WsClient2.Instance.Session, initData));
+            //var initData = CreateInitialMessageData();
+          //  WsClient2.Instance.SendWebSocketMessage(new MessageSent2(MessageType2.Init, WsClient2.Instance.Session, initData));
         }
 
         /// <summary>

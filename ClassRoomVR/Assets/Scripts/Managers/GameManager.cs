@@ -76,8 +76,8 @@ namespace ClassRoomVR
         {
             if (Instance != null)
             {
-                Destroy(this);
-                return false;
+               // Destroy(this);
+              //  return false;
             }
             Instance = this;
             InitializeData();

@@ -19,7 +19,7 @@ public class Didascalia_LocalizationManager : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject);
+           // Destroy(this.gameObject);
         }
     }
     #endregion

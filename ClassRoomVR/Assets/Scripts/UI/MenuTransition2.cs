@@ -33,7 +33,7 @@ namespace ClassRoomVR
 
         private void OnEnable()
         {
-            DisplayInitialPage();
+           // DisplayInitialPage();
             if (_helpAction != null)
             {
                 _helpAction.action.performed += ToggleTextVisibility;
@@ -53,9 +53,9 @@ namespace ClassRoomVR
         /// </summary>
         private void DisplayInitialPage()
         {
-            _menus.ForEach(menu => menu.SetActive(false));
-            SetActiveMenu(_currentMenuIndex);
-            ChangeScreen(0);
+           // _menus.ForEach(menu => menu.SetActive(false));
+           // SetActiveMenu(_currentMenuIndex);
+           // ChangeScreen(0);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace ClassRoomVR
         private void GoStart()
         {
             ToggleUIElements(false);
-            _menus[_currentMenuIndex].SetActive(false);
+            //_menus[_currentMenuIndex].SetActive(false);
             if (GameManager2.Instance.GetCurrentSettings().name != "Personalizado")
             {
                 DeskManager2.Instance.DestroyChildren();

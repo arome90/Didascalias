@@ -131,8 +131,8 @@ namespace ClassRoomVR
 
         public void LoadMainScene()
         {
-            ServerMessage2.SendInfoInitial();
-            SceneTransitionManager2.Singleton.GoToSceneAsync(2);
+           // ServerMessage2.SendInfoInitial();
+            SceneTransitionManager2.Singleton.GoToSceneAsync(4);
         }
 
         public void SetCurrentSettings(int index)
@@ -185,7 +185,7 @@ namespace ClassRoomVR
 
         public void ChangeLanguage(int localeID)
         {
-            if (!canChange || _witAppsForLanguages.Length == 0) return;
+            if (!canChange) return;
             _currentWitApp = _witAppsForLanguages[localeID].witApp;
             int i = 0;
             StartCoroutine(SetLocale(localeID));
