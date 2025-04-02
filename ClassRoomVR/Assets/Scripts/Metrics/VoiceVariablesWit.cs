@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
@@ -34,6 +35,9 @@ namespace ClassRoomVR
 
         void Start()
         {
+            loadConfig();
+            if (!this.enabled) return;
+
             if (appVoiceExperience == null || !appVoiceExperience.enabled || !appVoiceExperience.gameObject.activeSelf)
             {
                 this.enabled = false;
@@ -47,6 +51,36 @@ namespace ClassRoomVR
             });
             InvokeRepeating(nameof(SendData), sentTime, sentTime);
 
+        }
+
+        void loadConfig()
+        {
+            Dictionary<string, Dictionary<string, object>> config_ = null;
+            if (LoadManager.Instance.GetObject("config", ref config_))
+            {
+                if (config_.TryGetValue("AnalysisVariable", out var innerDict))
+                {
+                    if (innerDict.TryGetValue("VoiceActivate", out var value_3))
+                    {
+                        if (value_3.GetType() == typeof(bool)) this.enabled = (bool)value_3;
+                    }
+
+                    if (innerDict.TryGetValue("useMicrophone", out var value))
+                    {
+                        if (value.GetType() == typeof(bool))
+                        {
+                            if ((bool)value) this.enabled = false;
+                        }
+                    }
+
+                    if (innerDict.TryGetValue("snapshotTime", out var value_2))
+                    {
+                        if (value_2.GetType() == typeof(float)) sentTime = (float)value_2;
+                    }
+                }
+                   
+
+            }
         }
 
 

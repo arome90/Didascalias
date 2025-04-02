@@ -8,7 +8,7 @@ namespace ClassRoomVR
     /// <summary>
     /// Gestiona todo el input recopilado del usuario.
     /// </summary>
-    public class InputLogger : GenericSingleton<InputLogger>
+    public class InputLogger : SceneSingleton<InputLogger>
     {
         // Variable que se envía al servidor
         private InputVariables _input;
@@ -44,12 +44,31 @@ namespace ClassRoomVR
         /// </summary>
         private void Start()
         {
+            loadConfig();
+            if(!enabled) return;
+
             _head = new HeadVariables();
             _hands = new HandsManager();
             _list = new float[3];
 
             InvokeRepeating(nameof(SendInfo), 1f, 1f);
             StartCoroutine(UpdateInfo());
+        }
+
+        void loadConfig()
+        {
+            Dictionary<string, Dictionary<string, object>> config_ = null;
+            if (LoadManager.Instance.GetObject("config", ref config_))
+            {
+                if (config_.TryGetValue("AnalysisVariable", out var innerDict))
+                {
+                    if (innerDict.TryGetValue("inputActivate", out var value_3))
+                    {
+                        if (value_3.GetType() == typeof(bool)) this.enabled = (bool)value_3;
+                    }
+           
+                }
+            }
         }
 
         /// <summary>
@@ -71,17 +90,20 @@ namespace ClassRoomVR
         /// </summary>
         private void SendInfo()
         {
-            List<float> actlist = new List<float>
-            {
-                _head.Velocidad.Variable,
-                _hands.LeftHand.Velocity.Variable,
-                _hands.RightHand.Velocity.Variable
-            };
+            //List<float> actlist = new List<float>
+            //{
+            //    _head.Velocidad.Variable,
+            //    _hands.LeftHand.Velocity.Variable,
+            //    _hands.RightHand.Velocity.Variable
+            //};
 
-            int i = FindGreatestDistinction(actlist);
-            _input = new InputVariables(i, actlist[0], actlist[1], actlist[2]);
-            actlist.CopyTo(_list);
-            ServerMessage.SendInfo();
+            //int i = FindGreatestDistinction(actlist);
+            //_input = new InputVariables(i, actlist[0], actlist[1], actlist[2]);
+            //actlist.CopyTo(_list);
+            //ServerMessage.SendInfo();
+            PlayerData d = new PlayerData(_head.Velocidad.Variable, _hands.LeftHand.Velocity.Variable, _hands.RightHand.Velocity.Variable);
+            GameDataManager.Instance.SendData(d);
+
         }
 
         /// <summary>

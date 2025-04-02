@@ -29,6 +29,21 @@ namespace ClassRoomVR
     }
 
     [Serializable]
+    public class PlayerData : BaseData
+    {
+        public float HeadVelocity;
+        public float LeftHandVelocity;
+        public float RightHandVelocity;
+
+        public PlayerData(float headVelocity, float leftHandVelocity, float rightHandVelocity)
+        {
+            HeadVelocity = headVelocity;
+            LeftHandVelocity = leftHandVelocity;
+            RightHandVelocity = rightHandVelocity;
+        }
+    }
+
+    [Serializable]
     public class GameData
     {
         public Dictionary<string, List<BaseData>> datas;

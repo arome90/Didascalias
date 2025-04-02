@@ -21,12 +21,60 @@ public class VoiceVariables : MonoBehaviour
     private float lastVolume;
     void Start()
     {
+        loadConfig();
+        if (!enabled) return;
         maxVolume = -35.0f;
         audioSource.loop = true;
+
+        audioSource.spatialBlend = 1f;
+        audioSource.maxDistance = 10000f;
+
         initializeVariables();
         audioSource.clip = Microphone.Start(null, true, recordingTime, sampleRate);
-        // Invocar la función de análisis de voz periódicamente.
+
+        StartCoroutine(WaitForMicrophoneAndPlay());
         InvokeRepeating(nameof(AnalyzeVoice), recordingTime, recordingTime);
+
+    }
+
+    private IEnumerator WaitForMicrophoneAndPlay()
+    {
+        // Espera hasta que el micrófono tenga datos disponibles.
+        while (!(Microphone.GetPosition(null) > 0))
+        {
+            yield return null;
+        }
+        // Reproduce el audio.
+        audioSource.Play();
+    }
+
+
+    void loadConfig()
+    {
+        Dictionary<string, Dictionary<string, object>> config_ = null;
+        if (LoadManager.Instance.GetObject("config", ref config_))
+        {
+            if (config_.TryGetValue("AnalysisVariable", out var innerDict))
+            {
+                if (innerDict.TryGetValue("VoiceActivate", out var value_3))
+                {
+                    if (value_3.GetType() == typeof(bool)) this.enabled = (bool)value_3;
+                }
+
+                if (innerDict.TryGetValue("useMicrophone", out var value))
+                {
+                    if (value.GetType() == typeof(bool))
+                    {
+                        if (!(bool)value) this.enabled = false;
+                    }
+                }
+
+                if (innerDict.TryGetValue("snapshotTime", out var value_2))
+                {
+                    if (value_2.GetType() == typeof(float)) recordingTime = (int)value_2;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -36,7 +84,7 @@ public class VoiceVariables : MonoBehaviour
     {
         bufferLength = sampleRate * recordingTime;
         audioFragment = new float[bufferLength];
-        spectrum = new float[1024];
+        spectrum = new float[2048];
     }
 
     /// <summary>
@@ -44,7 +92,6 @@ public class VoiceVariables : MonoBehaviour
     /// </summary>
     void AnalyzeVoice()
     {
-        Microphone.End(null);
         // Calcula el nivel de intensidad en decibelios.
         float volumeLevel = CalculateVolumeLevel();
         lastVolume= volumeLevel;
@@ -52,8 +99,11 @@ public class VoiceVariables : MonoBehaviour
         // análisis de pitch.
         float dominantFrequency = AnalyzePitch();
         // Muestra el nivel de intensidad en decibelios en consola.
-        //Debug.Log($"Volume: {volumeLevel}, Dominant Frequency: {dominantFrequency}");
+        Debug.Log($"Volume: {volumeLevel}, Dominant Frequency: {dominantFrequency}");
+
+        Microphone.End(null);
         audioSource.clip = Microphone.Start(null, true, recordingTime, sampleRate);
+        StartCoroutine(WaitForMicrophoneAndPlay());
 
         SendData(volumeLevel, dominantFrequency);
     }
@@ -65,7 +115,7 @@ public class VoiceVariables : MonoBehaviour
     float CalculateVolumeLevel()
     {
         audioSource.clip.GetData(audioFragment, 0);
-        int audio_length= math.max(audioFragment.Length, audioSource.clip.samples);
+        int audio_length= Mathf.Max(audioFragment.Length, audioSource.clip.samples);
         // Calcula el valor RMS (Root Mean Square) para obtener el nivel de intensidad.
         float rms = 0;
         for (int i = 0; i < audio_length; i++)
@@ -93,14 +143,14 @@ public class VoiceVariables : MonoBehaviour
 
         for (int i = 0; i < spectrum.Length; i++)
         {
-            if (audioFragment[i] > maxFrequency)
+            if (spectrum[i] > maxFrequency)
             {
-                maxFrequency = audioFragment[i];
+                maxFrequency = spectrum[i];
                 maxIndex = i;
             }
         }
         // Calcula la frecuencia dominante en Hz.
-        float dominantFrequency = maxIndex * AudioSettings.outputSampleRate / 2 / spectrum.Length;
+        float dominantFrequency = maxIndex * AudioSettings.outputSampleRate / 2.0f / spectrum.Length;
         // Retorna la frecuencia dominante.
         return dominantFrequency;
     }
