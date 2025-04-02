@@ -19,6 +19,7 @@ public class VoiceVariables : MonoBehaviour
 
     public float maxVolume;
     private float lastVolume;
+
     void Start()
     {
         loadConfig();
@@ -98,12 +99,14 @@ public class VoiceVariables : MonoBehaviour
         maxVolume = math.max(volumeLevel, maxVolume);
         // análisis de pitch.
         float dominantFrequency = AnalyzePitch();
+
         // Muestra el nivel de intensidad en decibelios en consola.
         Debug.Log($"Volume: {volumeLevel}, Dominant Frequency: {dominantFrequency}");
 
         Microphone.End(null);
         audioSource.clip = Microphone.Start(null, true, recordingTime, sampleRate);
         StartCoroutine(WaitForMicrophoneAndPlay());
+        //audioSource.Play();
 
         SendData(volumeLevel, dominantFrequency);
     }
@@ -149,8 +152,19 @@ public class VoiceVariables : MonoBehaviour
                 maxIndex = i;
             }
         }
+        float delta = 0.0f;
+        // Interpolación parabólica para mejorar precisión
+        if (maxIndex > 0 && maxIndex < spectrum.Length - 1)
+        {
+            float left = spectrum[maxIndex - 1];
+            float center = spectrum[maxIndex];
+            float right = spectrum[maxIndex + 1];
+            delta = (left - right) / (2 * (left - 2 * center + right));
+        }
+
+
         // Calcula la frecuencia dominante en Hz.
-        float dominantFrequency = maxIndex * AudioSettings.outputSampleRate / 2.0f / spectrum.Length;
+        float dominantFrequency = (maxIndex+delta) * AudioSettings.outputSampleRate / spectrum.Length;
         // Retorna la frecuencia dominante.
         return dominantFrequency;
     }
