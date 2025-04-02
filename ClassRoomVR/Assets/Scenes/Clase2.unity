@@ -188,15 +188,44 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager2
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 9179661390788717391, guid: a9ab442347d1ef3449756435954b93b3, type: 3}
+    - target: {fileID: 8423337638409068261, guid: a9ab442347d1ef3449756435954b93b3,
+        type: 3}
+      propertyPath: availableSettings.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8423337638409068261, guid: a9ab442347d1ef3449756435954b93b3,
+        type: 3}
+      propertyPath: availableSettings.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: b29f490be265de149a555feb4a382ce5,
+        type: 2}
+    - target: {fileID: 8423337638409068261, guid: a9ab442347d1ef3449756435954b93b3,
+        type: 3}
+      propertyPath: availableSettings.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: b29f490be265de149a555feb4a382ce5,
+        type: 2}
+    - target: {fileID: 8423337638409068261, guid: a9ab442347d1ef3449756435954b93b3,
+        type: 3}
+      propertyPath: availableSettings.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: b29f490be265de149a555feb4a382ce5,
+        type: 2}
+    - target: {fileID: 8423337638409068261, guid: a9ab442347d1ef3449756435954b93b3,
+        type: 3}
+      propertyPath: availableSettings.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: b29f490be265de149a555feb4a382ce5,
+        type: 2}
+    - target: {fileID: 8423337638409068261, guid: a9ab442347d1ef3449756435954b93b3,
+        type: 3}
+      propertyPath: _witAppsForLanguages.Array.data[1].name
+      value: "Portugu\xE9s"
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: a9ab442347d1ef3449756435954b93b3,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1318155216}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9ab442347d1ef3449756435954b93b3, type: 3}
 --- !u!1 &69277133 stripped
 GameObject:
@@ -1778,35 +1807,6 @@ MonoBehaviour:
   pause: {fileID: 3160435567660403118, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   handMenu: {fileID: 115284395}
   pauseMenu: {fileID: 115284396}
---- !u!1 &1318155212 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4812924016416801407, guid: a9ab442347d1ef3449756435954b93b3,
-    type: 3}
-  m_PrefabInstance: {fileID: 25366133}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1318155216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1318155212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba23cd6e08fa3d04ebcd933a8aae05b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _witAppsForLanguages: []
-  OnLanguageChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  IsPause: 0
-  currentSettings: {fileID: 11400000, guid: b29f490be265de149a555feb4a382ce5, type: 2}
-  availableSettings:
-  - {fileID: 11400000, guid: b29f490be265de149a555feb4a382ce5, type: 2}
-  currentClassInfo: {fileID: 11400000, guid: 752acf47570207942a5bc83eed2b369e, type: 2}
-  isAutoSavingEnabled: 0
-  saveAudio: 0
 --- !u!1 &1455992142
 GameObject:
   m_ObjectHideFlags: 0

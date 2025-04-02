@@ -28,15 +28,19 @@ namespace ClassRoomVR
         /// <summary>
         /// Método llamado al iniciar el script. Configura el entorno y, si es necesario, genera la clase.
         /// </summary>
-        public override void Awake()
+        public void Awake()
         {
             _settings = GameManager2.Instance.GetCurrentSettings();
             _studentsController = GetComponent<StudentsController2>();
-           // if (_generateOnStart)
-         //   {
+        }
+
+        private void OnEnable()
+        {
+            if (_generateOnStart)
+            {
                 Generate();
-              //  GameManager2.Instance.GetVoiceActivation().Activate();
-          //  }
+                GameManager2.Instance.GetVoiceActivation().Activate();
+            }
         }
 
         /// <summary>

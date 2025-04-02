@@ -31,17 +31,17 @@ public class SceneSingleton<T> : MonoBehaviour where T : Component
         }
     }
 
-    public virtual void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this as T;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    //public virtual void Awake()
+    //{
+    //    if (instance == null)
+    //    {
+    //        instance = this as T;
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
     private void OnDestroy()
     {

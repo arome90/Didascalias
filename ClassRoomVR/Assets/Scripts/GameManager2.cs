@@ -56,8 +56,10 @@ namespace ClassRoomVR
         //   // if (!InitializeSingleton()) return;
         //}
 
-        private void Start()
+        public void Awake()
         {
+            //base.Awake();
+
             IsPause = false;
 
             int language = PlayerPrefs.GetInt("Language", 0);
@@ -135,7 +137,8 @@ namespace ClassRoomVR
 
         public void SetCurrentSettings(int index)
         {
-            if (availableSettings.Length == 0 || index> availableSettings.Length-1) return;
+            if (availableSettings.Length == 0 || index> availableSettings.Length-1) 
+                return;
             lastSettingsUsed = index;
             currentSettings = availableSettings[index];
             indexCurrentSett = index;
