@@ -22,6 +22,11 @@ public class LoadingScene : MonoBehaviour
     void Start()
     {
         StartCoroutine(SetupGameFiles());
+       
+    }
+
+    private void LoadConfig()
+    {
         string file = Path.Combine(Application.persistentDataPath, "config.json");
         var dictionary = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(file);
         if (dictionary == null || !LoadManager.Instance.SaveObject("config", dictionary))
@@ -54,6 +59,8 @@ public class LoadingScene : MonoBehaviour
             int percentage = cont / N * 100;
             textMeshPro.text = percentage.ToString() + "%";
         }
+
+        LoadConfig();
 
         textMeshPro.text = "100%";
 
