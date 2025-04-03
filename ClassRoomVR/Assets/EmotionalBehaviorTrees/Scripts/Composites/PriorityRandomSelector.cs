@@ -1,14 +1,28 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using System.Drawing.Printing;
 using ClassRoomVR;
-using System.IO;
-using System.Linq;
-using OVRSimpleJSON;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
+    public class EmoImpact
+    {
+        public EmoImpact()
+        {
+            Influences = new Dictionary<BehaviorInfluences, float>();
+            Value = -1;
+        }
+        public int Value { get; set; }
+        public Dictionary<BehaviorInfluences, float> Influences { get; set; }
+    }
+
+    [Serializable]
+    public class LoadImpact
+    {
+        public int Value { get; set; }
+        public Dictionary<string, float> Influences { get; set; }
+    }
+
     [TaskDescription("Ordenar de acuerdo con los pesos y asociar un probi de probabilidad a cada Nodo secundario ")]
     [TaskIcon("{SkinColor}PrioritySelectorIcon.png")]
     public class PriorityRandomSelector : Action
@@ -25,10 +39,9 @@ namespace BehaviorDesigner.Runtime.Tasks
         public SharedInt intValue;
         // The order to run its children in. 
         // first is priority, second is index id
-        //private SortedDictionary<float, int> executionOrder = new SortedDictionary<float, int>();
         private List<KeyValuePair<float, int>> executionOrder = new List<KeyValuePair<float, int>>();
 
-        private List<Dictionary<BehaviorInfluences, float>> behaviorInfluences;
+        private List<EmoImpact> behaviorInfluences;
         [SerializeField]
         private string behaviorInfluencesJsonPath;
         public override void OnAwake()
@@ -72,7 +85,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             // priority will be first in the list and will be executed first.
             for (int i = 0; i < behaviorInfluences.Count; ++i)
             {
-                executionOrder.Add(new KeyValuePair<float, int>(ComputePriority(behaviorInfluences[i]), i));
+                executionOrder.Add(new KeyValuePair<float, int>(ComputePriority(behaviorInfluences[i].Influences), behaviorInfluences[i].Value));
             }
         }
 
@@ -116,20 +129,22 @@ namespace BehaviorDesigner.Runtime.Tasks
                 return;
             }
             string path=System.IO.Path.Combine(Application.persistentDataPath, behaviorInfluencesJsonPath);
-            Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(path);
+            Dictionary<string, LoadImpact> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, LoadImpact>(path);
             if (tempImpacts == null) return;
 
             // Convertir claves a enumeradores
-            behaviorInfluences = new List<Dictionary<BehaviorInfluences, float>>();
+            behaviorInfluences = new List<EmoImpact>();
 
             foreach (var kvp in tempImpacts)
             {
-                var behaviorImpacts = new Dictionary<BehaviorInfluences, float>();
-                foreach (var emotionKvp in kvp.Value)
+                var behaviorImpacts = new EmoImpact();
+                behaviorImpacts.Value = kvp.Value.Value;
+
+                foreach (var emotionKvp in kvp.Value.Influences)
                 {
                     if (System.Enum.TryParse(emotionKvp.Key, out BehaviorInfluences emotion))
                     {
-                        behaviorImpacts[emotion] = emotionKvp.Value;
+                        behaviorImpacts.Influences[emotion] = emotionKvp.Value;
                     }
                 }
                 behaviorInfluences.Add(behaviorImpacts);
