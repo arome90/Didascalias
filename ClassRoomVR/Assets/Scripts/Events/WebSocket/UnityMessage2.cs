@@ -143,7 +143,7 @@ namespace ClassRoomVR
         public static void SendInfo()
         {
             var inputData = new MessageData2(InputLogger2.Instance.Input);
-            WsClient2.Instance.SendWebSocketMessage(new MessageSent2(MessageType2.Info, WsClient2.Instance.Session, inputData));
+            WsClient2.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient2.Instance.Session, inputData));
         }
 
         /// <summary>

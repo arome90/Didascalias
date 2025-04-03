@@ -26,6 +26,7 @@ namespace ClassRoomVR
 
         private void Awake()
         {
+            Debug.Log("WS: holaaaaaa");
             _backButton.onClick.AddListener(GoBackScreen);
             _startButton.onClick.AddListener(GoStart);
             WsClient2.Instance.StartConnection();
