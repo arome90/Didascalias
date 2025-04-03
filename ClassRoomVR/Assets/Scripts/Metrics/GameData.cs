@@ -13,7 +13,7 @@ namespace ClassRoomVR
 
         public BaseData()
         {
-            Time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
         }
     }
 
@@ -40,6 +40,21 @@ namespace ClassRoomVR
             HeadVelocity = headVelocity;
             LeftHandVelocity = leftHandVelocity;
             RightHandVelocity = rightHandVelocity;
+        }
+    }
+
+    [Serializable]
+    public class EventData : BaseData
+    {
+        public string ActionInfo;
+        public string EventType;
+        public List<string> Alumnxs;
+
+        public EventData(string action, string type, List<string> alumnxs)
+        {
+            ActionInfo = action;
+            EventType = type;
+            Alumnxs = alumnxs;
         }
     }
 

@@ -195,26 +195,47 @@ namespace ClassRoomVR
                 currentAction = actions[index];
                 _res = Actions.None;
 
+                string actionInfo = "Comportamiento disrruptivo!";
+                string typeInfo = "";
+                List<string> alumnxsInfo = new List<string>();
+
                 switch (currentAction.Action)
                 {
                     case Actions.Insultar:
+                        { 
                         Debug.Log("Insultando");
-                        StartCoroutine(DisruptiveActionsMethod.Insult(GetRandomStudentExcluding(), currentAction, CreateConflict));
+                        typeInfo = "INSULT";
+                        Student s = GetRandomStudentExcluding();
+                        alumnxsInfo.Add(s.GetName());
+                        StartCoroutine(DisruptiveActionsMethod.Insult(s, currentAction, CreateConflict));
+                        }
                         break;
                     case Actions.Separados:
                         Debug.Log("Separándonos");
                         GetRandomStudentsSeparate();
+                        typeInfo = "SEPARATE";
+                        for (int i = 0; i < studentList.Count; i++)
+                        {
+                            alumnxsInfo.Add(studentList[i].GetName());
+                        }
                         StartCoroutine(DisruptiveActionsMethod.SitTogether(studentList[0], studentList[1], studentList[2], currentAction, CreateConflict));
                         break;
                     case Actions.Levantarse:
+                        {
                         Debug.Log("Levantándose");
-                        DisruptiveActionsMethod.StandUpAndMove(GetRandomStudentExcluding(), currentAction, _frontSide.position, CreateConflict);
+                        typeInfo = "STAND_UP";
+                        Student s = GetRandomStudentExcluding();
+                        alumnxsInfo.Add(s.GetName());
+                        DisruptiveActionsMethod.StandUpAndMove(s, currentAction, _frontSide.position, CreateConflict);
+                        }
                         break;
                     default:
                         Debug.LogError(currentAction.name + " action is not implemented or its type is missing. Check it!");
                         currentAction = null;
                         break;
                 }
+
+                SendData(actionInfo, typeInfo, alumnxsInfo);
             }
         }
 
@@ -283,6 +304,7 @@ namespace ClassRoomVR
         {
             int randomStudentIndex = UnityEngine.Random.Range(0, _students.Count);
             _students.ElementAt(randomStudentIndex).Value.GenerateText(text);
+            SendData("Comportamiento disruptivo!", "TALK: " + text, new List<string> { _students.ElementAt(randomStudentIndex).Value.GetName() });
         }
 
         // Reproduce una oración con todos los estudiantes
@@ -292,6 +314,12 @@ namespace ClassRoomVR
             {
                 _students.ElementAt(i).Value.GenerateText(text);
             }
+        }
+
+        public void SendData(string action, string type, List<string> alumnxs)
+        {
+            EventData d = new EventData(action, type, alumnxs);
+            GameDataManager.Instance.SendData(d);
         }
 
         private void Start()

@@ -86,7 +86,7 @@ namespace ClassRoomVR
         public NavMeshAgent GetNavMeshAgent() => _navMeshAgent;
         public StudentBehavior GetBehavior() => _behaviour;
         public State GetState() => _state;
-
+        public string GetName() => _studentNameText.text;
         public Personality getPersonality() => _personality;
 
         public Emotion GetEmotion() => _emotion;

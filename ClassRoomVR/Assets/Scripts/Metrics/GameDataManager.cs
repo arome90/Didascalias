@@ -12,7 +12,7 @@ namespace ClassRoomVR
         private WsClient ws;
         private HttpClient client;
         private GameData gameData = new GameData();
-        private int maxPlayerDataCount = 5; // Número máximo de PlayerData antes de enviar
+        private int maxPlayerDataCount = 5; // Nï¿½mero mï¿½ximo de PlayerData antes de enviar
         private string Session;
 
         [SerializeField]
@@ -42,9 +42,9 @@ namespace ClassRoomVR
 
         public void SendData(BaseData data)
         {
-            gameData.datas[Session].Add(data);
             lock (gameData)
             {
+                gameData.datas[Session].Add(data);
                 if (gameData.datas[Session].Count >= maxPlayerDataCount)
                 {
                     client.sendJson(gameData.ToJson());
