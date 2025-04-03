@@ -1,6 +1,8 @@
 using ClassRoomVR;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.WebSockets;
 using System.Threading;
 using UnityEngine;
@@ -15,6 +17,8 @@ namespace ClassRoomVR
         private int maxPlayerDataCount = 5; // N�mero m�ximo de PlayerData antes de enviar
         private string Session;
 
+        private string path;
+
         [SerializeField]
         private float timer = 5.0f;
         void Start()
@@ -24,6 +28,16 @@ namespace ClassRoomVR
             Session = ws.Session;
             gameData.datas[Session] = new List<BaseData>();
             gameData.Session = Session;
+            string folderPath = Path.Combine(Application.persistentDataPath, "SessionData");
+
+            // Crear la carpeta si no existe
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            path = Session+"_"+ DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff") + ".json";
+            path = Path.Combine(folderPath, path);
             InvokeRepeating("SendDataByTime", timer, timer);
 
         }
@@ -47,7 +61,9 @@ namespace ClassRoomVR
                 gameData.datas[Session].Add(data);
                 if (gameData.datas[Session].Count >= maxPlayerDataCount)
                 {
-                    client.sendJson(gameData.ToJson());
+                    string text = gameData.ToJson();
+                    client.sendJson(text);
+                    _ = WriterManager.Instance.WriteToStreamWriter(path, text);
                     gameData.datas[Session].Clear();
                 }
             }
