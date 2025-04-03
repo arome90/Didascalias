@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using Utilities.Extensions;
 using static OVRHaptics;
 
 public class LoadingScene : MonoBehaviour
@@ -19,20 +20,14 @@ public class LoadingScene : MonoBehaviour
     private TextMeshProUGUI text2;
     [SerializeField]
     string[] files;
+
+    int cont;
+    bool reload;
     void Start()
     {
-        StartCoroutine(SetupGameFiles());
-       
-    }
-
-    private void LoadConfig()
-    {
-        string file = Path.Combine(Application.persistentDataPath, "config.json");
-        var dictionary = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(file);
-        if (dictionary == null || !LoadManager.Instance.SaveObject("config", dictionary))
-        {
-            Debug.LogError("Failed to load config.json file");
-        }
+        cont = 0;
+        reload = true;
+        StartCoroutine(LoadConfig());
     }
 
     IEnumerator SetupGameFiles()
@@ -45,8 +40,7 @@ public class LoadingScene : MonoBehaviour
             //string fileName = Path.GetFileName(file);
             string fileName = file;
             string persistentFile = Path.Combine(Application.persistentDataPath, fileName);
-
-            if (!File.Exists(persistentFile)) // Solo copia si no existe en persistentDataPath
+            if (!File.Exists(persistentFile) || reload) // Solo copia si no existe en persistentDataPath
             {
                 Debug.Log($"Copiando archivo: {fileName}");
                 yield return CopyFileToPersistentDataPath(fileName);
@@ -60,8 +54,6 @@ public class LoadingScene : MonoBehaviour
             textMeshPro.text = percentage.ToString() + "%";
         }
 
-        LoadConfig();
-
         textMeshPro.text = "100%";
 
         // Simulación de carga adicional
@@ -69,6 +61,50 @@ public class LoadingScene : MonoBehaviour
 
         // Cargar la siguiente escena
         SceneManager.LoadScene(nextScene);
+    }
+
+    IEnumerator LoadConfig()
+    {
+        string sourcePath = Path.Combine(Application.streamingAssetsPath, "config.json");
+        string destinationPath = Path.Combine(Application.persistentDataPath, "config.json");
+        if (!File.Exists(destinationPath)) // Solo copia si no existe en persistentDataPath
+        {
+            UnityWebRequest request = UnityWebRequest.Get(sourcePath);
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                File.WriteAllText(destinationPath, request.downloadHandler.text);
+                Debug.Log($"Archivo copiado: {destinationPath}");
+            }
+            else
+            {
+                Debug.LogError($"Error al copiar {"config.json"}: {request.error}");
+                yield break;
+            }
+        }
+
+        var dictionary = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
+        if (dictionary == null || !LoadManager.Instance.SaveObject("config", dictionary))
+        {
+            Debug.LogError("Failed to load config.json file");
+            yield break;
+        }
+
+        Dictionary<string, Dictionary<string, object>> config_ = null;
+        if (LoadManager.Instance.GetObject("General", ref config_))
+        {
+            if (config_.TryGetValue("General", out var innerDict))
+            {
+                if (innerDict.TryGetValue("reload", out var value))
+                {
+                    if (value.GetType() == typeof(bool)) reload = (bool)value;
+                }
+
+            }
+        }
+
+        StartCoroutine(SetupGameFiles());
+
     }
 
     IEnumerator CopyFileToPersistentDataPath(string fileName)
