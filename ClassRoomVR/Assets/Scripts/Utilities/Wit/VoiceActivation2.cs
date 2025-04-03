@@ -32,6 +32,8 @@ namespace ClassRoomVR
 
         private void Awake()
         {
+            Debug.Log("Awake");
+
             text = string.Empty;
             GameManager2.Instance.SetVoiceExperience(this);
             studentsSelected = new List<Student2>();
@@ -93,7 +95,7 @@ namespace ClassRoomVR
         private void SetLevelAudio()
         {
             double media = volumeList.Mean();
-            //  Debug.Log(media);
+              Debug.Log(media);
             if (media > -30)
             {
                 Debug.Log("¡Gritando " + (int)media);

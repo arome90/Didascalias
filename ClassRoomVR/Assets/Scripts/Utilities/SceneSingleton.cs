@@ -27,7 +27,6 @@ public class SceneSingleton<T> : MonoBehaviour where T : Component
                     }
                 }
             }
-            Debug.Log(instance);
 
             return instance;
         }
@@ -49,7 +48,6 @@ public class SceneSingleton<T> : MonoBehaviour where T : Component
     {
         if (instance == this)
         {
-            Debug.Log("Destrouy"+instance);
 
             instance = null;
         }

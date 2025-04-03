@@ -131,7 +131,7 @@ namespace ClassRoomVR
 
         public void LoadMainScene()
         {
-           // ServerMessage2.SendInfoInitial();
+            ServerMessage2.SendInfoInitial();
             SceneTransitionManager2.Singleton.GoToSceneAsync(4);
         }
 
