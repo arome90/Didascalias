@@ -29,6 +29,15 @@ namespace ClassRoomVR
     }
 
     [Serializable]
+    public class VolumeData : BaseData
+    { 
+        public float volume;
+        public VolumeData(float v) {
+            volume = v;
+        }
+    }
+
+    [Serializable]
     public class PlayerData : BaseData
     {
         public float HeadVelocity;

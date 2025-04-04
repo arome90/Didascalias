@@ -104,7 +104,7 @@ namespace ClassRoomVR
 
         public void SendData()
         {
-            VoiceData d = new VoiceData(lastVolume, 0);
+            VolumeData d = new VolumeData(lastVolume);
             GameDataManager.Instance.SendData(d);
         }
 

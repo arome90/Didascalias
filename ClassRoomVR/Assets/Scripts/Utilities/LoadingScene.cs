@@ -67,7 +67,28 @@ public class LoadingScene : MonoBehaviour
     {
         string sourcePath = Path.Combine(Application.streamingAssetsPath, "config.json");
         string destinationPath = Path.Combine(Application.persistentDataPath, "config.json");
-        if (!File.Exists(destinationPath)) // Solo copia si no existe en persistentDataPath
+        //Ver si va a modificar datos desde APK
+        if (File.Exists(destinationPath))
+        {
+            var dictionary1 = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
+            if (dictionary1 == null)
+            {
+                Debug.LogError("Failed to load config.json file");
+                yield break;
+            }
+           
+            if (dictionary1.TryGetValue("General", out var innerDict))
+            {
+                if (innerDict.TryGetValue("use", out var value))
+                {
+                    if (value.GetType() == typeof(bool)) reload = !(bool)value;
+                }
+
+            }
+        }
+
+
+        if (!File.Exists(destinationPath) || reload) // Solo copia si no existe en persistentDataPath
         {
             UnityWebRequest request = UnityWebRequest.Get(sourcePath);
             yield return request.SendWebRequest();
@@ -83,28 +104,14 @@ public class LoadingScene : MonoBehaviour
             }
         }
 
-        var dictionary = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
-        if (dictionary == null || !LoadManager.Instance.SaveObject("config", dictionary))
+        Dictionary<string, Dictionary<string, object>> config_ = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
+        if (config_ == null || !LoadManager.Instance.SaveObject("config", config_))
         {
             Debug.LogError("Failed to load config.json file");
             yield break;
         }
-
-        Dictionary<string, Dictionary<string, object>> config_ = null;
-        if (LoadManager.Instance.GetObject("General", ref config_))
-        {
-            if (config_.TryGetValue("General", out var innerDict))
-            {
-                if (innerDict.TryGetValue("reload", out var value))
-                {
-                    if (value.GetType() == typeof(bool)) reload = (bool)value;
-                }
-
-            }
-        }
-
+                    
         StartCoroutine(SetupGameFiles());
-
     }
 
     IEnumerator CopyFileToPersistentDataPath(string fileName)

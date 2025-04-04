@@ -55,7 +55,6 @@ namespace ClassRoomVR
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>
             {
                 UpdateClass(response);
-                appVoiceExperience.Deactivate();
             });
 
             appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((response) =>
@@ -74,8 +73,8 @@ namespace ClassRoomVR
                 {
                     textMeshPro.text = strin;
                 }
-                //appVoiceExperience.Deactivate();
-                //Activate();
+                appVoiceExperience.Deactivate();
+                Activate();
             });
         }
     

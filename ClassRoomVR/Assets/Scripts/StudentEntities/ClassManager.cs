@@ -44,7 +44,7 @@ namespace ClassRoomVR
             if (_generateOnStart)
             {
                 Generate();
-                //GameManager.Instance.GetVoiceActivation().Activate();
+                GameManager.Instance.GetVoiceActivation().Activate();
             }
         }
 

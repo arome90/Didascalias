@@ -55,11 +55,10 @@ namespace ClassRoomVR
 
         public Dictionary<TKey, TValue> LoadDataFromJson<TKey, TValue>(string jsonPath)
         {
-            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, jsonPath);
             var result = new Dictionary<TKey, TValue>();
-            if (File.Exists(filePath))
+            if (File.Exists(jsonPath))
             {
-                string json = File.ReadAllText(filePath);
+                string json = File.ReadAllText(jsonPath);
                 try
                 {
                     // Deserializar el JSON a la estructura de datos
@@ -74,7 +73,7 @@ namespace ClassRoomVR
             }
             else
             {
-                Debug.LogError($"File not found at path: {filePath}");
+                Debug.LogError($"File not found at path: {jsonPath}");
                 result = null;
             }
             return result;
@@ -88,6 +87,11 @@ namespace ClassRoomVR
             }
             mainDictionary[key] = (T)s;
             return true;
+        }
+
+        public void ForceSaveObject<T>(string key, T s)
+        {
+            mainDictionary[key] = (T)s;
         }
 
         public Dictionary<TKey, TValue> ConvertDictionary<TKey, TValue>(Dictionary<string, TValue> originalDict)
