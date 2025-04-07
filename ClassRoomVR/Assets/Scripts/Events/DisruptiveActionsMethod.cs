@@ -48,7 +48,13 @@ namespace ClassRoomVR
             yield return new WaitForSeconds(6f); // Espera 6 segundos para simular una acción más natural.
 
             studentNear.GenerateText("De acuerdo"); // El estudiante acepta el cambio de lugar.
+
+            studentNear.StandUp();
+
             student2.SetProblematicStudent(); // Marca al segundo estudiante como problemático.
+
+            yield return new WaitUntil(() => studentNear.GetState() == State.StandUp);
+
 
             // Cambia los asientos de los estudiantes.
             ClassManager.Instance.GetStudentsController().ChangeDesk(student1, studentNear);

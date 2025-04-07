@@ -599,10 +599,9 @@ namespace ClassRoomVR
                 SitBack();
             }
             else
-            {
-                _desk.SetChairActive(false);
-                _animator.SetBool("OnFoot", true);
-                _desk.PlayAnimacionMesa(Animaciones.Empujar);
+            {             
+                StandUp();
+                //_desk.PlayAnimacionMesa(Animaciones.Empujar);
                 _desk = d;
                 StartCoroutine(OnCompleteStandChange());
             }
@@ -615,9 +614,8 @@ namespace ClassRoomVR
         private IEnumerator OnCompleteStandChange()
         {
             _studentNameText.transform.parent.localPosition = new Vector3(0, 1.6f, 0);
-            while (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Walking"))
+            while (_state != State.StandUp)
                 yield return null;
-
             SitBack();
         }
 
