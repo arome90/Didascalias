@@ -441,7 +441,7 @@ public enum ModelingProperties
 
 public enum ExternalForces
 {
-    TeacherTalksTooMuch,
+    TeacherTalksNormal,
     TeacherSilentTooLong,
     TeacherTooLoud,
     TeacherTooQuiet

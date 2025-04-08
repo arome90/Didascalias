@@ -21,11 +21,11 @@ namespace ClassRoomVR
 
 
         [SerializeField]
-        private float silenceThreshold = -35.0f;
+        private float silenceThreshold = -65.0f;
         [SerializeField]
-        private float whisperThreshold = -25.0f; // Umbral de susurro en dB
+        private float whisperThreshold = -50.0f; // Umbral de susurro en dB
         [SerializeField]
-        private float normalThreshold = -12f; // Umbral de habla normal en dB
+        private float normalThreshold = -15f; // Umbral de habla normal en dB
         [SerializeField]
         private float shoutThreshold = 0.0f; // Umbral de grito en dB (no se usa actualmente)
         [SerializeField]
@@ -71,6 +71,7 @@ namespace ClassRoomVR
             }
             else if (dB <= normalThreshold)
             {
+                externalForceManager.ApplyExternalForce(ExternalForces.TeacherTalksNormal);
                 //Debug.Log("VoiceEvent: Normal");
             }
             else
