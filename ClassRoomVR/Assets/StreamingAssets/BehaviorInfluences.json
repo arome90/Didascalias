@@ -13,58 +13,11 @@
       "FrustrationEuphoria": 0.0,
       "DispiritedEncouraged": 0.0,
       "TerrorEnchantment": 0.0
-    }
+    },
+    "Conditions":[]
   },
-  "b1": {
+  "b1_Terrified": {
     "Value": 1,
-    "Influences": {
-      "Priority": 1.0,
-      "Extraversion": -0.4,
-      "Agreeableness": 0.0,
-      "Conscientiousness": 0.0,
-      "Neuroticism": 0.8,
-      "Openness": -0.2,
-      "AnxietyConfidence": -1.0,
-      "BoredomFascination": -0.2,
-      "FrustrationEuphoria": -0.2,
-      "DispiritedEncouraged": -1.0,
-      "TerrorEnchantment": -1.0
-    }
-  },
-  "b2": {
-    "Value": 2,
-    "Influences": {
-      "Priority": 1.0,
-      "Extraversion": 0.5,
-      "Agreeableness": 0.0,
-      "Conscientiousness": 0.0,
-      "Neuroticism": 0.0,
-      "Openness": 0.0,
-      "AnxietyConfidence": 0.2,
-      "BoredomFascination": 0.2,
-      "FrustrationEuphoria": 0.0,
-      "DispiritedEncouraged": 0.4,
-      "TerrorEnchantment": 0.2
-    }
-  },
-  "b3": {
-    "Value": 3,
-    "Influences": {
-      "Priority": 1.0,
-      "Extraversion": 0.0,
-      "Agreeableness": 0.0,
-      "Conscientiousness": -0.6,
-      "Neuroticism": 0.0,
-      "Openness": 0.0,
-      "AnxietyConfidence": 0.0,
-      "BoredomFascination": -1.0,
-      "FrustrationEuphoria": 0.0,
-      "DispiritedEncouraged": 0.5,
-      "TerrorEnchantment": 0.3
-    }
-  },
-  "b4": {
-    "Value": 4,
     "Influences": {
       "Priority": 1.0,
       "Extraversion": 0.0,
@@ -72,14 +25,53 @@
       "Conscientiousness": 0.0,
       "Neuroticism": 0.4,
       "Openness": 0.0,
-      "AnxietyConfidence": -0.8,
+      "AnxietyConfidence": -0.2,
       "BoredomFascination": 0.0,
-      "FrustrationEuphoria": -0.5,
+      "FrustrationEuphoria": 0.0,
+      "DispiritedEncouraged": 0.0,
+      "TerrorEnchantment": -0.4
+    },
+    "Conditions":[
+      { "Influence": "TerrorEnchantment", "Operator": "<", "Value": -0.3 },
+      { "Influence": "Neuroticism", "Operator": ">", "Value": 0.65 }
+    ]
+  },
+  "b3_PlayingMobile": {
+    "Value": 3,
+    "Influences": {
+      "Priority": 1.0,
+      "Extraversion": 0.25,
+      "Conscientiousness": -0.25,
+      "BoredomFascination": -0.25,
+      "DispiritedEncouraged": -0.25
+    },
+    "Conditions":[
+      { "Influence": "BoredomFascination", "Operator": "<", "Value": -0.3 },
+      { "Influence": "Attention", "Operator": "<", "Value": 40.0 }
+    ]
+  },
+  "b4_ConstantMoving": {
+    "Value": 4,
+    "Influences": {
+      "Priority": 1.0,
+      "Extraversion": 0.25,
+      "Agreeableness": 0.0,
+      "Conscientiousness": -0.25,
+      "Neuroticism": 0.0,
+      "Openness": 0.0,
+      "AnxietyConfidence": -0.25,
+      "BoredomFascination": 0.0,
+      "FrustrationEuphoria": -0.25,
       "DispiritedEncouraged": 0.0,
       "TerrorEnchantment": 0.0
-    }
+    },
+    "Conditions":[
+      { "Influence": "Extraversion", "Operator": ">", "Value": 0.5 },
+      { "Influence": "Conscientiousness", "Operator": "<", "Value": 0.5},
+      { "Influence": "Attention", "Operator": "<", "Value": 50.0 }
+    ]
   },
-  "b5": {
+  "b5_Sleeping": {
     "Value": 5,
     "Influences": {
       "Priority": 1.0,
@@ -89,45 +81,50 @@
       "Neuroticism": 0.0,
       "Openness": 0.0,
       "AnxietyConfidence": 0.0,
-      "BoredomFascination": -1.0,
+      "BoredomFascination": -0.5,
       "FrustrationEuphoria": 0.0,
-      "DispiritedEncouraged": -1.0,
+      "DispiritedEncouraged": -0.5,
       "TerrorEnchantment": 0.0
-    }
+    },
+    "Conditions":[
+      { "Influence": "Attention", "Operator": "<", "Value": 35.0 }
+    ]
   },
-  "b6": {
+  "b6_Attending": {
     "Value": 6,
     "Influences": {
       "Priority": 1.0,
       "Extraversion": 0.0,
       "Agreeableness": 0.0,
-      "Conscientiousness": 0.2,
+      "Conscientiousness": 0.3,
       "Neuroticism": 0.0,
       "Openness": 0.0,
       "AnxietyConfidence": 0.2,
-      "BoredomFascination": 0.5,
+      "BoredomFascination": 0.4,
       "FrustrationEuphoria": 0.0,
-      "DispiritedEncouraged": 0.5,
+      "DispiritedEncouraged": 0.4,
       "TerrorEnchantment": 1.0
-    }
+    },
+    "Conditions":[]
   },
-  "b7": {
+  "b7_Attending2": {
     "Value": 7,
     "Influences": {
       "Priority": 1.0,
-      "Extraversion": 0.3,
+      "Extraversion": 0.0,
       "Agreeableness": 0.0,
-      "Conscientiousness": 0.2,
+      "Conscientiousness": 0.3,
       "Neuroticism": 0.0,
       "Openness": 0.0,
       "AnxietyConfidence": 0.0,
-      "BoredomFascination": 0.3,
-      "FrustrationEuphoria": 0.5,
-      "DispiritedEncouraged": 0.0,
+      "BoredomFascination": 0.4,
+      "FrustrationEuphoria": 0.0,
+      "DispiritedEncouraged": 0.3,
       "TerrorEnchantment": 1.0
-    }
+    },
+    "Conditions":[]
   },
-  "b8": {
+  "b8_Bored": {
     "Value": 8,
     "Influences": {
       "Priority": 1.0,
@@ -137,26 +134,32 @@
       "Neuroticism": 0.0,
       "Openness": 0.0,
       "AnxietyConfidence": 0.0,
-      "BoredomFascination": -1.0,
-      "FrustrationEuphoria": -0.5,
-      "DispiritedEncouraged": -0.7,
+      "BoredomFascination": -0.6,
+      "FrustrationEuphoria": 0.0,
+      "DispiritedEncouraged": -0.4,
       "TerrorEnchantment": 0.0
-    }
+    },
+    "Conditions":[
+      { "Influence": "Attention", "Operator": "<", "Value": 42.0 }
+    ]
   },
   "b9": {
     "Value": 9,
     "Influences": {
       "Priority": 1.0,
-      "Extraversion": 0.0,
+      "Extraversion": 0.3,
       "Agreeableness": 0.0,
       "Conscientiousness": -0.3,
       "Neuroticism": 0.0,
       "Openness": 0.4,
       "AnxietyConfidence": 0.0,
-      "BoredomFascination": -0.8,
+      "BoredomFascination": -0.4,
       "FrustrationEuphoria": 0.0,
       "DispiritedEncouraged": 0.0,
-      "TerrorEnchantment": -0.3
-    }
+      "TerrorEnchantment": 0.0
+    },
+    "Conditions":[
+      { "Influence": "Attention", "Operator": "<", "Value": 60.0 }
+    ]
   }
 }

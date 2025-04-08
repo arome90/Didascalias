@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using ClassRoomVR;
+using System.Drawing;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
@@ -10,10 +11,37 @@ namespace BehaviorDesigner.Runtime.Tasks
         public EmoImpact()
         {
             Influences = new Dictionary<BehaviorInfluences, float>();
-            Value = -1;
+            //Valor por defecto
+            Value = -1; 
+            foreach (BehaviorInfluences influence in Enum.GetValues(typeof(BehaviorInfluences)))
+            {
+                Influences[influence] = 0;
+            }
         }
         public int Value { get; set; }
         public Dictionary<BehaviorInfluences, float> Influences { get; set; }
+        public List<EmoCondition> Conditions { get; set; }
+    }
+
+    [Serializable]
+    public class EmoCondition
+    {
+        public BehaviorInfluences Influence { get; set; }
+        public string Operator { get; set; }
+        public float Value { get; set; }
+
+        public bool Check(float v)
+        {
+            if (Operator == ">")
+            {
+                return Value > v;
+            }
+            else if (Operator == "<")
+            {
+                return Value < v;
+            }
+            else { return Value == v; }
+        }
     }
 
     [Serializable]
@@ -21,6 +49,7 @@ namespace BehaviorDesigner.Runtime.Tasks
     {
         public int Value { get; set; }
         public Dictionary<string, float> Influences { get; set; }
+        public List<EmoCondition> Conditions { get; set;}
     }
 
     [TaskDescription("Ordenar de acuerdo con los pesos y asociar un probi de probabilidad a cada Nodo secundario ")]
@@ -85,13 +114,20 @@ namespace BehaviorDesigner.Runtime.Tasks
             // priority will be first in the list and will be executed first.
             for (int i = 0; i < behaviorInfluences.Count; ++i)
             {
-                executionOrder.Add(new KeyValuePair<float, int>(ComputePriority(behaviorInfluences[i].Influences), behaviorInfluences[i].Value));
+                executionOrder.Add(new KeyValuePair<float, int>(ComputePriority(behaviorInfluences[i]), behaviorInfluences[i].Value));
             }
         }
 
-        private float ComputePriority(Dictionary<BehaviorInfluences, float> behavior)
+        private float ComputePriority(EmoImpact emoImpact)
         {
             GameObject targetGameObject = gameObject;
+            Student student = gameObject.GetComponent<Student>();
+            foreach (EmoCondition e in emoImpact.Conditions)
+            {
+                if (!e.Check(student.getBehaviorInfluences(e.Influence))) return 0.0f;
+            }
+
+            Dictionary<BehaviorInfluences, float> behavior = emoImpact.Influences;
             //para generalizar se puede crear un componente especifico TODO
             Emotion emotion = targetGameObject.GetComponent<Student>().GetEmotion();
             Personality personality = targetGameObject.GetComponent<Student>().getPersonality();
@@ -101,21 +137,13 @@ namespace BehaviorDesigner.Runtime.Tasks
                 emotion.GetEmotionValue(EmotionType.FrustrationEuphoria) * behavior[BehaviorInfluences.FrustrationEuphoria] +
                 emotion.GetEmotionValue(EmotionType.AnxietyConfidence) * behavior[BehaviorInfluences.AnxietyConfidence];
 
-            float cont1 = (behavior[BehaviorInfluences.BoredomFascination] + behavior[BehaviorInfluences.DispiritedEncouraged] +
-                behavior[BehaviorInfluences.TerrorEnchantment] + behavior[BehaviorInfluences.FrustrationEuphoria] +
-                behavior[BehaviorInfluences.AnxietyConfidence]);
-
             float personalityInfluence = personality.GetTraitValue(PersonalityType.Openness) * behavior[BehaviorInfluences.Openness] +
                 personality.GetTraitValue(PersonalityType.Agreeableness) * behavior[BehaviorInfluences.Agreeableness] +
                personality.GetTraitValue(PersonalityType.Conscientiousness) * behavior[BehaviorInfluences.Conscientiousness] +
                personality.GetTraitValue(PersonalityType.Extraversion) * behavior[BehaviorInfluences.Extraversion] +
                personality.GetTraitValue(PersonalityType.Neuroticism) * behavior[BehaviorInfluences.Neuroticism];
-
-            float cont2 = behavior[BehaviorInfluences.Openness] + behavior[BehaviorInfluences.Agreeableness] + behavior[BehaviorInfluences.Conscientiousness] +
-                behavior[BehaviorInfluences.Extraversion] + behavior[BehaviorInfluences.Neuroticism];
-
-
-            return (emotionInfluence + personalityInfluence) * behavior[BehaviorInfluences.Priority];
+           
+            return (emotionInfluence + personalityInfluence + 1) * behavior[BehaviorInfluences.Priority];
         }
 
         /// <summary>
@@ -139,7 +167,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             {
                 var behaviorImpacts = new EmoImpact();
                 behaviorImpacts.Value = kvp.Value.Value;
-
+                behaviorImpacts.Conditions = kvp.Value.Conditions;
                 foreach (var emotionKvp in kvp.Value.Influences)
                 {
                     if (System.Enum.TryParse(emotionKvp.Key, out BehaviorInfluences emotion))

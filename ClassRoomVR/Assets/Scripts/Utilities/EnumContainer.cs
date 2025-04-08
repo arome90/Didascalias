@@ -490,5 +490,6 @@ public enum BehaviorInfluences
     BoredomFascination,
     FrustrationEuphoria,
     DispiritedEncouraged,
-    TerrorEnchantment
+    TerrorEnchantment,
+    Attention
 }

@@ -91,6 +91,27 @@ namespace ClassRoomVR
 
         public Emotion GetEmotion() => _emotion;
 
+        public float getBehaviorInfluences(BehaviorInfluences i)
+        {
+            int n = (int)i;
+            if(n>0 && n < 6)  //1-5
+            {
+                return _emotion.GetEmotionValue((EmotionType)(n - 1));
+            }
+            else if(n>5 && n < 11)  //6-10
+            {
+                return _personality.GetTraitValue((PersonalityType)(n - 6));
+            }
+            else if(n == 11)
+            {
+                return getAttention();
+            }
+            else
+            {
+                return 0.0f;
+            }
+        }
+
         #endregion
 
         #region Debug
@@ -124,8 +145,6 @@ namespace ClassRoomVR
             return _behaviour.AttentionLevel;
         }
         #endregion
-
-
 
         private void Awake()
         {
