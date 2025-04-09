@@ -3,6 +3,7 @@ using System.IO;
 using UnityEngine;
 using System.Linq;
 using ClassRoomVR;
+using System;
 
 /// <summary>
 /// Maneja fuerzas externas que afectan a los estudiantes.
@@ -36,82 +37,51 @@ public class ExternalForceManager : SceneSingleton<ExternalForceManager>
     {
         string filePath = System.IO.Path.Combine(Application.persistentDataPath, externalForcesEmotionJsonPath);
 
-        if (File.Exists(filePath))
+        externalForceEmotionImpacts = new Dictionary<ExternalForces, Dictionary<EmotionType, float>>();
+        foreach (ExternalForces force in Enum.GetValues(typeof(ExternalForces)))
         {
-            string json = File.ReadAllText(filePath);
-
-            try
+            var tempDict = new Dictionary<EmotionType, float>();
+            LoadManager.Instance.FillDictionary(ref tempDict, 0.0f);
+            externalForceEmotionImpacts[force] = tempDict;           
+        }
+        Dictionary<string, Dictionary<string, float>> tempImpacts = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, float>>(filePath);
+        // Convertir claves a enumeradores
+        if(tempImpacts != null)
+        {
+            foreach (var kvp in tempImpacts)
             {
-                // Deserializar el JSON a la estructura de datos
-                EntryKeyValueDictionaryWrapper wrapper = JsonUtility.FromJson<EntryKeyValueDictionaryWrapper>(json);
-                Dictionary<string, Dictionary<string, float>> tempImpacts = wrapper.ToDictionary();
-
-                // Convertir claves a enumeradores
-                externalForceEmotionImpacts = new Dictionary<ExternalForces, Dictionary<EmotionType, float>>();
-
-                foreach (var kvp in tempImpacts)
+                if (System.Enum.TryParse(kvp.Key, out ExternalForces force))
                 {
-                    if (System.Enum.TryParse(kvp.Key, out ExternalForces force))
-                    {
-                        var emotionImpacts = new Dictionary<EmotionType, float>();
+                    var emotionImpacts = new Dictionary<EmotionType, float>();
 
-                        foreach (var emotionKvp in kvp.Value)
+                    foreach (var emotionKvp in kvp.Value)
+                    {
+                        if (System.Enum.TryParse(emotionKvp.Key, out EmotionType emotion))
                         {
-                            if (System.Enum.TryParse(emotionKvp.Key, out EmotionType emotion))
-                            {
-                                emotionImpacts[emotion] = emotionKvp.Value;
-                            }
+                            emotionImpacts[emotion] = emotionKvp.Value;
                         }
-
-                        externalForceEmotionImpacts[force] = emotionImpacts;
                     }
+
+                    externalForceEmotionImpacts[force] = emotionImpacts;
                 }
-
-                Debug.Log("External forces loaded successfully.");
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"Error parsing JSON file: {ex.Message}");
             }
         }
-        else
+        
+
+        filePath = System.IO.Path.Combine(Application.persistentDataPath, externalForcesAttentionJsonPath);
+        Dictionary<string, float> tempImpacts2 = LoadManager.Instance.LoadDataFromJson<string, float>(filePath);
+        externalForceAttentionImpact = new Dictionary<ExternalForces, float>();
+        LoadManager.Instance.FillDictionary(ref externalForceAttentionImpact, 0.0f);
+        if (tempImpacts2 != null)
         {
-            Debug.LogError($"External forces file not found at path: {filePath}");
-        }
-
-        filePath = System.IO.Path.Combine(Application.persistentDataPath, externalForcesEmotionJsonPath);
-
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-
-            try
+            foreach (var kvp in tempImpacts2)
             {
-                // Deserializar el JSON a la estructura de datos
-                KeyValueWrapper wrapper = JsonUtility.FromJson<KeyValueWrapper>(json);
-                Dictionary<string, float> tempImpacts = wrapper.ToDictionary();
-
-                // Convertir claves a enumeradores
-                externalForceAttentionImpact = new Dictionary<ExternalForces, float>();
-
-                foreach (var kvp in tempImpacts)
+                if (System.Enum.TryParse(kvp.Key, out ExternalForces force))
                 {
-                    if(System.Enum.TryParse(kvp.Key, out ExternalForces force))
-                    {
-                        externalForceAttentionImpact[force] = kvp.Value;
-                    }
+                    externalForceAttentionImpact[force] = kvp.Value;
                 }
-
-                Debug.Log("External forces loaded successfully.");
             }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"Error parsing JSON file: {ex.Message}");
-            }
-        }
-        else
-        {
-            Debug.LogError($"External forces file not found at path: {filePath}");
+            Debug.Log("External forces loaded successfully.");
         }
     }
 
@@ -145,8 +115,8 @@ public class ExternalForceManager : SceneSingleton<ExternalForceManager>
                             float impactValue = emotionImpact.Value;
 
                             // Modificar la emoción del estudiante
-                         
-                            student.ModifyEmotion(emotionType,impactValue);
+
+                            student.ModifyEmotion(emotionType, impactValue);
                         }
                     }
                 }

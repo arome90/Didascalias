@@ -142,5 +142,20 @@ namespace ClassRoomVR
             return newDict;
         }
 
+        /// <summary>
+        /// Rellena un diccionario con los valores del enum como claves y un valor por defecto.
+        /// </summary>
+        /// <typeparam name="TKey">El tipo de las claves del diccionario, debe ser un enum.</typeparam>
+        /// <typeparam name="TValue">El tipo de los valores del diccionario.</typeparam>
+        /// <param name="dict">El diccionario a rellenar.</param>
+        /// <param name="defaultValue">El valor por defecto a asignar a cada clave.</param>
+        public void FillDictionary<TKey, TValue>(ref Dictionary<TKey, TValue> dict, TValue defaultValue) where TKey : Enum
+        {
+            dict.Clear();
+            foreach (TKey key in Enum.GetValues(typeof(TKey)))
+            {
+                dict[key] = defaultValue;
+            }
+        }
     }
 }

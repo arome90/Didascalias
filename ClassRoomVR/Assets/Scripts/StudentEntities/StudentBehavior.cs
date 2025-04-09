@@ -107,7 +107,7 @@ namespace ClassRoomVR
         public void ExternalForceInfluence(float ef)
         {
             //_attentionLevel += ClimateManager.Instance.environmentalClimate * studentBehavoirValues[studentBehaviorParams.climateInfluence];
-            _attentionLevel += ef*(AttentionMax-AttentionMin);
+            _attentionLevel += ef;
             _attentionLevel = Mathf.Clamp(_attentionLevel, AttentionMin, AttentionMax);
         }
 
