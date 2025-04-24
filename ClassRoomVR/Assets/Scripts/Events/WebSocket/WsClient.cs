@@ -51,7 +51,7 @@ public class WsClient : GenericSingleton<WsClient>
             Debug.Log("Creating new WebSocket");
             //ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
-            StartCoroutine(susbribeWS(ws));
+            SubscribeAndConnectWS(ws);
         }
         catch (Exception ex)
         {
@@ -59,20 +59,13 @@ public class WsClient : GenericSingleton<WsClient>
         }
     }
 
-    IEnumerator susbribeWS(WebSocket ws)
+    void SubscribeAndConnectWS(WebSocket ws)
     {
-        yield return new WaitForSeconds(0.6f);
         ws.OnOpen += HandleOnOpen;
         ws.OnMessage += HandleSessionMessage;
         ws.OnClose += HandleOnClose;
 
-        //while (!ws.IsAlive)
-        //{
         ws.ConnectAsync();
-        //    yield return new WaitForSeconds(0.6f);
-        //}
-
-        //Debug.Log("Connected with Session: " + Session);
     }
 
     public bool IsAlive()
@@ -107,7 +100,7 @@ public class WsClient : GenericSingleton<WsClient>
     private void HandleOnOpen(object sender, EventArgs e)
     {
         IsConnected = true;
-        var message = new MessageSent(MessageType.CreateSession, Session, _deviceId, _deviceId);
+        var message = new MessageSent(MessageType.CreateSession, Session, _deviceId);
         SendWebSocketMessage(message);
     }
 
@@ -130,9 +123,10 @@ public class WsClient : GenericSingleton<WsClient>
             }
             else
             {
-                ws.OnMessage -= HandleSessionMessage;
-                ws.OnMessage += HandleGeneralMessage;
+                StartCoroutine(ServerMessage.SendInfoInitial());
             }
+            ws.OnMessage -= HandleSessionMessage;
+            ws.OnMessage += HandleGeneralMessage;
         }
     }
 

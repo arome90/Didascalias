@@ -122,7 +122,7 @@ namespace ClassRoomVR
 
         public void LoadMainScene()
         {
-            StartCoroutine(ServerMessage.SendInfoInitial());
+            // StartCoroutine(ServerMessage.SendInfoInitial());
             SceneTransitionManager.Singleton.GoToSceneAsync(2);
         }
 
