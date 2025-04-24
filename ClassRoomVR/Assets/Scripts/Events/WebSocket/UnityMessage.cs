@@ -19,6 +19,7 @@ namespace ClassRoomVR
         public MessageType type;
         public string session;
         public object data;
+        public string deviceID;
 
         /// <summary>
         /// Constructor para enviar un mensaje con tipo, sesión y datos.
@@ -26,11 +27,12 @@ namespace ClassRoomVR
         /// <param name="messageType">El tipo de mensaje</param>
         /// <param name="sessionId">El ID de la sesión</param>
         /// <param name="dat">Los datos del mensaje</param>
-        public MessageSent(MessageType messageType, string sessionId, object dat)
+        public MessageSent(MessageType messageType, string sessionId, object dat, string deviceID)
         {
             session = sessionId;
             type = messageType;
             data = dat;
+            this.deviceID = deviceID;
         }
     }
 
@@ -141,7 +143,7 @@ namespace ClassRoomVR
             Debug.Log("Detected connection on WebSocket! Session: " + WsClient.Instance.Session);
 
             var initData = CreateInitialMessageData();
-            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient.Instance.Session, initData));
+            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient.Instance.Session, initData, WsClient.Instance._deviceId));
         }
 
         /// <summary>
@@ -150,7 +152,7 @@ namespace ClassRoomVR
         public static void SendInfo()
         {
             var inputData = new MessageData(InputLogger.Instance.Input);
-            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient.Instance.Session, inputData));
+            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient.Instance.Session, inputData, WsClient.Instance._deviceId));
         }
 
         /// <summary>

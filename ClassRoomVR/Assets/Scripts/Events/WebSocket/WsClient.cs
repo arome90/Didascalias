@@ -22,7 +22,7 @@ public class WsClient : GenericSingleton<WsClient>
     private MessageReceived receivedMessage;
 
     // Identificador del dispositivo.
-    private string _deviceId;
+    public string _deviceId;
 
     // Propiedad que indica si la conexión está activa.
     public bool IsConnected { get; private set; }
@@ -72,7 +72,7 @@ public class WsClient : GenericSingleton<WsClient>
         //    yield return new WaitForSeconds(0.6f);
         //}
 
-        Debug.Log("Connected with Session: " + Session);
+        //Debug.Log("Connected with Session: " + Session);
     }
 
     public bool IsAlive()
@@ -107,7 +107,7 @@ public class WsClient : GenericSingleton<WsClient>
     private void HandleOnOpen(object sender, EventArgs e)
     {
         IsConnected = true;
-        var message = new MessageSent(MessageType.CreateSession, Session, _deviceId);
+        var message = new MessageSent(MessageType.CreateSession, Session, _deviceId, _deviceId);
         SendWebSocketMessage(message);
     }
 
@@ -128,8 +128,11 @@ public class WsClient : GenericSingleton<WsClient>
                 Debug.LogError("Connection with websocket failed");
                 return;
             }
-            ws.OnMessage -= HandleSessionMessage;
-            ws.OnMessage += HandleGeneralMessage;
+            else
+            {
+                ws.OnMessage -= HandleSessionMessage;
+                ws.OnMessage += HandleGeneralMessage;
+            }
         }
     }
 
@@ -154,6 +157,7 @@ public class WsClient : GenericSingleton<WsClient>
     /// <param name="message">El mensaje a enviar.</param>
     public void SendWebSocketMessage(ClassRoomVR.MessageSent message)
     {
+        Debug.Log("Sending message to server: " + message.type);
         if (ws != null && ws.IsAlive)
         {
             var jsonData = JsonConvert.SerializeObject(message);
