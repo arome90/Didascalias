@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using Newtonsoft.Json;
 using ClassRoomVR;
+using System.Runtime.Remoting.Messaging;
 
 /// <summary>
 /// Clase que maneja la conexión WebSocket y la comunicación con el servidor.
@@ -64,7 +65,19 @@ public class WsClient : GenericSingleton<WsClient>
         ws.OnOpen += HandleOnOpen;
         ws.OnMessage += HandleSessionMessage;
         ws.OnClose += HandleOnClose;
+
+        //while (!ws.IsAlive)
+        //{
         ws.ConnectAsync();
+        //    yield return new WaitForSeconds(0.6f);
+        //}
+
+        Debug.Log("Connected with Session: " + Session);
+    }
+
+    public bool IsAlive()
+    {
+        return ws.IsAlive;
     }
 
     /// <summary>
@@ -109,7 +122,12 @@ public class WsClient : GenericSingleton<WsClient>
         if (TryDeserializeMessage(e.Data, ref receivedMessage))
         {
             Session = receivedMessage.data?.ToString();
-            Debug.Log(Session);
+            Debug.Log("Session received: " + Session);
+            if(Session == "" || Session == null)
+            {
+                Debug.LogError("Connection with websocket failed");
+                return;
+            }
             ws.OnMessage -= HandleSessionMessage;
             ws.OnMessage += HandleGeneralMessage;
         }

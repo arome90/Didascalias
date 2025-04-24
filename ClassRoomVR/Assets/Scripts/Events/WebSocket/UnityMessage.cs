@@ -131,8 +131,15 @@ namespace ClassRoomVR
         /// <summary>
         /// Envía el mensaje inicial con los datos de los alumnos y la configuración de la clase.
         /// </summary>
-        public static void SendInfoInitial()
+        public static IEnumerator SendInfoInitial()
         {
+            while(!WsClient.Instance.IsAlive())
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            Debug.Log("Detected connection on WebSocket! Session: " + WsClient.Instance.Session);
+
             var initData = CreateInitialMessageData();
             WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient.Instance.Session, initData));
         }
