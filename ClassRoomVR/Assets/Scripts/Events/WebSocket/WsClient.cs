@@ -1,6 +1,7 @@
 using WebSocketSharp;
 using UnityEngine;
 using System;
+using System.Collections;
 using Newtonsoft.Json;
 using ClassRoomVR;
 
@@ -47,18 +48,23 @@ public class WsClient : GenericSingleton<WsClient>
         {
             if (ws != null && ws.IsAlive) return;
             Debug.Log("Creating new WebSocket");
-            ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
-
             //ws = new WebSocket("wss://cyclops.uab.cat/game/");
-            ws.OnOpen += HandleOnOpen;
-            ws.OnMessage += HandleSessionMessage;
-            ws.OnClose += HandleOnClose;
-            ws.ConnectAsync();
+            ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
+            StartCoroutine(susbribeWS(ws));
         }
         catch (Exception ex)
         {
             Debug.LogError("Error en la conexión WebSocket: " + ex.Message);
         }
+    }
+
+    IEnumerator susbribeWS(WebSocket ws)
+    {
+        yield return new WaitForSeconds(0.6f);
+        ws.OnOpen += HandleOnOpen;
+        ws.OnMessage += HandleSessionMessage;
+        ws.OnClose += HandleOnClose;
+        ws.ConnectAsync();
     }
 
     /// <summary>
