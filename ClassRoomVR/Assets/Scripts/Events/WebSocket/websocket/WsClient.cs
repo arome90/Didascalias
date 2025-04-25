@@ -6,15 +6,15 @@ using Newtonsoft.Json;
 using ClassRoomVR;
 
 /// <summary>
-/// Clase que maneja la conexión WebSocket y la comunicación con el servidor.
-/// Implementa un Singleton genérico para ser accesible globalmente.
+/// Clase que maneja la conexiï¿½n WebSocket y la comunicaciï¿½n con el servidor.
+/// Implementa un Singleton genï¿½rico para ser accesible globalmente.
 /// </summary>
 public class WsClient : GenericSingleton<WsClient>
 {
-    // Indicador de acción pendiente.
+    // Indicador de acciï¿½n pendiente.
     private bool actionFlag = false;
 
-    // Conexión WebSocket.
+    // Conexiï¿½n WebSocket.
     private static WebSocket ws = null;
 
     // Mensaje recibido.
@@ -23,14 +23,14 @@ public class WsClient : GenericSingleton<WsClient>
     // Identificador del dispositivo.
     private string _deviceId;
 
-    // Propiedad que indica si la conexión está activa.
+    // Propiedad que indica si la conexiï¿½n estï¿½ activa.
     public bool IsConnected { get; private set; }
 
-    // Sesión actual.
+    // Sesiï¿½n actual.
     public string Session { get; private set; }
 
     /// <summary>
-    /// Inicializa el estado de conexión y el identificador del dispositivo.
+    /// Inicializa el estado de conexiï¿½n y el identificador del dispositivo.
     /// </summary>
     private void Start()
     {
@@ -41,7 +41,7 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
     /// <summary>
-    /// Inicia la conexión WebSocket al servidor especificado.
+    /// Inicia la conexiï¿½n WebSocket al servidor especificado.
     /// Maneja eventos de apertura, mensajes y cierre.
     /// </summary>
     public void StartConnection()
@@ -54,11 +54,11 @@ public class WsClient : GenericSingleton<WsClient>
             //GameManager.Instance.ChangeWsTxt("Trying to connect ws...");
             //ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
-            StartCoroutine(susbribeWS(ws));
+            SubscribeAndConnectWS(ws);
         }
         catch (Exception ex)
         {
-            Debug.LogError("Error en la conexión WebSocket: " + ex.Message);
+            Debug.LogError("Error en la conexiï¿½n WebSocket: " + ex.Message);
         }
     }
 
@@ -76,20 +76,32 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
     IEnumerator susbribeWS(WebSocket ws)
+    IEnumerator WaitSecondsToSubscribe(float seconds, WebSocket ws)
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(seconds);
+        SubscribeAndConnectWS(ws);
+    }
+
+    void SubscribeAndConnectWS(WebSocket ws)
+    {
         ws.OnOpen += HandleOnOpen;
         ws.OnMessage += HandleSessionMessage;
         ws.OnClose += HandleOnClose;
+
         ws.ConnectAsync();
     }
 
+    public bool IsAlive()
+    {
+        return ws.IsAlive;
+    }
+
     /// <summary>
-    /// Maneja el evento cuando se cierra la conexión WebSocket.
-    /// Actualiza el estado de conexión y pausa el juego si no fue una desconexión limpia.
+    /// Maneja el evento cuando se cierra la conexiï¿½n WebSocket.
+    /// Actualiza el estado de conexiï¿½n y pausa el juego si no fue una desconexiï¿½n limpia.
     /// </summary>
-    /// <param name="sender">El objeto que envía el evento.</param>
-    /// <param name="e">Información del evento de cierre.</param>
+    /// <param name="sender">El objeto que envï¿½a el evento.</param>
+    /// <param name="e">Informaciï¿½n del evento de cierre.</param>
     private void HandleOnClose(object sender, CloseEventArgs e)
     {
         IsConnected = false;
@@ -97,30 +109,29 @@ public class WsClient : GenericSingleton<WsClient>
 
         if (!e.WasClean)
         {
-            Debug.Log("Conexión perdida. No hay Internet.");
+            Debug.Log("Conexiï¿½n perdida. No hay Internet.");
             GameManager.Instance.Pause(true);
         }
     }
 
     /// <summary>
-    /// Maneja el evento cuando se abre la conexión WebSocket.
-    /// Envía un mensaje al servidor con el tipo de mensaje "CreateSession".
+    /// Maneja el evento cuando se abre la conexiï¿½n WebSocket.
+    /// Envï¿½a un mensaje al servidor con el tipo de mensaje "CreateSession".
     /// </summary>
-    /// <param name="sender">El objeto que envía el evento.</param>
-    /// <param name="e">Información del evento de apertura.</param>
+    /// <param name="sender">El objeto que envï¿½a el evento.</param>
+    /// <param name="e">Informaciï¿½n del evento de apertura.</param>
     private void HandleOnOpen(object sender, EventArgs e)
     {
         IsConnected = true;
-        //GameManager.Instance.ChangeWsTxt("Opening ws.");
         var message = new MessageSent(MessageType.CreateSession, Session, _deviceId);
         SendWebSocketMessage(message);
     }
 
     /// <summary>
-    /// Maneja los mensajes iniciales de sesión recibidos del servidor.
-    /// Si se recibe un mensaje válido, actualiza la sesión y cambia el manejador de mensajes a "HandleGeneralMessage".
+    /// Maneja los mensajes iniciales de sesiï¿½n recibidos del servidor.
+    /// Si se recibe un mensaje vï¿½lido, actualiza la sesiï¿½n y cambia el manejador de mensajes a "HandleGeneralMessage".
     /// </summary>
-    /// <param name="sender">El objeto que envía el evento.</param>
+    /// <param name="sender">El objeto que envï¿½a el evento.</param>
     /// <param name="e">El mensaje recibido.</param>
     private void HandleSessionMessage(object sender, MessageEventArgs e)
     {
@@ -129,18 +140,26 @@ public class WsClient : GenericSingleton<WsClient>
             Session = receivedMessage.data?.ToString();
             Debug.Log(Session);
             //GameManager.Instance.ChangeWsTxt("Session created: " + Session);
-            GameManager.Instance.SetWsConnection(true);
-            GameManager.Instance.SetWsTryingToConnect(false);
+            if(Session == "" || Session == null)
+            {
+                Debug.LogError("Connection with websocket failed");
+                return;
+            }
+            else
+            {
+                GameManager.Instance.SetWsConnection(true);
+                GameManager.Instance.SetWsTryingToConnect(false);
+                ServerMessage.SendInfoInitial();
+            }
             ws.OnMessage -= HandleSessionMessage;
             ws.OnMessage += HandleGeneralMessage;
-            GameManager.Instance.Pause(false);
         }
     }
 
     /// <summary>
-    /// Maneja los mensajes generales recibidos del servidor una vez establecida la sesión.
+    /// Maneja los mensajes generales recibidos del servidor una vez establecida la sesiï¿½n.
     /// </summary>
-    /// <param name="sender">El objeto que envía el evento.</param>
+    /// <param name="sender">El objeto que envï¿½a el evento.</param>
     /// <param name="e">El mensaje recibido.</param>
     private void HandleGeneralMessage(object sender, MessageEventArgs e)
     {
@@ -153,24 +172,26 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
     /// <summary>
-    /// Envía un mensaje al servidor a través del WebSocket.
+    /// Envï¿½a un mensaje al servidor a travï¿½s del WebSocket.
     /// </summary>
     /// <param name="message">El mensaje a enviar.</param>
     public void SendWebSocketMessage(ClassRoomVR.MessageSent message)
     {
         if (ws != null && ws.IsAlive)
         {
+            Debug.Log("MESSAGE: " + message);
             var jsonData = JsonConvert.SerializeObject(message);
+            Debug.Log("DATA: " + jsonData);
             ws.SendAsync(jsonData, null);
         }
         else
         {
-            Debug.LogWarning("La conexión WebSocket no está activa.");
+            Debug.LogWarning("La conexiï¿½n WebSocket no estï¿½ activa.");
         }
     }
 
     /// <summary>
-    /// Si se recibe una acción del servidor, se procesa.
+    /// Si se recibe una acciï¿½n del servidor, se procesa.
     /// </summary>
     private void Update()
     {
@@ -182,7 +203,7 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
     /// <summary>
-    /// Procesa la acción recibida desde el servidor.
+    /// Procesa la acciï¿½n recibida desde el servidor.
     /// </summary>
     private void HandleAction()
     {
@@ -212,8 +233,8 @@ public class WsClient : GenericSingleton<WsClient>
     /// Intenta deserializar el mensaje recibido en un objeto MessageReceived.
     /// </summary>
     /// <param name="data">Datos del mensaje en formato JSON.</param>
-    /// <param name="message">Referencia al objeto MessageReceived donde se almacenará el mensaje deserializado.</param>
-    /// <returns>True si el mensaje se deserializó correctamente, False en caso contrario.</returns>
+    /// <param name="message">Referencia al objeto MessageReceived donde se almacenarï¿½ el mensaje deserializado.</param>
+    /// <returns>True si el mensaje se deserializï¿½ correctamente, False en caso contrario.</returns>
     private bool TryDeserializeMessage(string data, ref MessageReceived message)
     {
         try
@@ -229,7 +250,7 @@ public class WsClient : GenericSingleton<WsClient>
     }
         
     /// <summary>
-    /// Desconecta el WebSocket cerrando la conexión de manera segura.
+    /// Desconecta el WebSocket cerrando la conexiï¿½n de manera segura.
     /// </summary>
     public void Disconnect()
     {
@@ -240,7 +261,7 @@ public class WsClient : GenericSingleton<WsClient>
     }
 
     /// <summary>
-    /// Maneja la desconexión cuando se cierra la aplicación.
+    /// Maneja la desconexiï¿½n cuando se cierra la aplicaciï¿½n.
     /// </summary>
     private void OnApplicationQuit()
     {

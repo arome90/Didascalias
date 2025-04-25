@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ClassRoomVR
 {
@@ -21,21 +22,22 @@ namespace ClassRoomVR
         public object data;
 
         /// <summary>
-        /// Constructor para enviar un mensaje con tipo, sesión y datos.
+        /// Constructor para enviar un mensaje con tipo, sesiï¿½n y datos.
         /// </summary>
         /// <param name="messageType">El tipo de mensaje</param>
-        /// <param name="sessionId">El ID de la sesión</param>
+        /// <param name="sessionId">El ID de la sesiï¿½n</param>
         /// <param name="dat">Los datos del mensaje</param>
         public MessageSent(MessageType messageType, string sessionId, object dat)
         {
             session = sessionId;
             type = messageType;
             data = dat;
+            deviceID = WsClient.Instance._deviceId;
         }
     }
 
     /// <summary>
-    /// Enumeración para los tipos de mensajes que se pueden enviar/recibir.
+    /// Enumeraciï¿½n para los tipos de mensajes que se pueden enviar/recibir.
     /// </summary>
     public enum MessageType
     {
@@ -94,20 +96,22 @@ namespace ClassRoomVR
         public string horaClase;
         public long tiempoSesion;
         public CatalogoOpciones catalogo;
+        public string deviceID;
 
         /// <summary>
-        /// Constructor para el mensaje inicial con los datos de los alumnos y el catálogo de opciones.
+        /// Constructor para el mensaje inicial con los datos de los alumnos y el catï¿½logo de opciones.
         /// </summary>
         /// <param name="posiciones">Las posiciones de los alumnos</param>
         /// <param name="hora">La hora de la clase</param>
-        /// <param name="sesion">El tiempo de la sesión en formato Unix</param>
-        /// <param name="cat">El catálogo de opciones disponibles</param>
+        /// <param name="sesion">El tiempo de la sesiï¿½n en formato Unix</param>
+        /// <param name="cat">El catï¿½logo de opciones disponibles</param>
         public InitialMessageData(AlumnoInit[] posiciones, string hora, long sesion, CatalogoOpciones cat)
         {
             alumnosPosiciones = posiciones;
             horaClase = hora;
             tiempoSesion = sesion;
             catalogo = cat;
+            deviceID = WsClient.Instance._deviceId;
         }
     }
 
@@ -115,6 +119,7 @@ namespace ClassRoomVR
     public struct MessageData
     {
         public InputVariables input;
+        public string deviceID;
 
         /// <summary>
         /// Constructor que recibe los datos de entrada.
@@ -123,22 +128,31 @@ namespace ClassRoomVR
         public MessageData(InputVariables input)
         {
             this.input = input;
+            this.deviceID = SystemInfo.deviceUniqueIdentifier;
         }
     }
 
     public static class ServerMessage
     {
         /// <summary>
-        /// Envía el mensaje inicial con los datos de los alumnos y la configuración de la clase.
+        /// Envï¿½a el mensaje inicial con los datos de los alumnos y la configuraciï¿½n de la clase.
         /// </summary>
         public static void SendInfoInitial()
         {
+            if(!WsClient.Instance.IsConnected || WsClient.Instance.Session == null)
+            {
+                Debug.LogError("You must first detect a connection to send data");
+                return;
+            }
+
+            Debug.Log("Detected connection on WebSocket! Session: " + WsClient.Instance.Session);
+
             var initData = CreateInitialMessageData();
             WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient.Instance.Session, initData));
         }
 
         /// <summary>
-        /// Envía el mensaje con los datos de entrada (input) registrados.
+        /// Envï¿½a el mensaje con los datos de entrada (input) registrados.
         /// </summary>
         public static void SendInfo()
         {
@@ -166,8 +180,9 @@ namespace ClassRoomVR
                 opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse", "Restart" },
                 opcionesIndividuales = new string[] { "Pelear", "Insultar" }
             };
+            var data = new InitialMessageData(posiciones, hora, sesion, catalogo);
 
-            return new InitialMessageData(posiciones, hora, sesion, catalogo);
+            return data;
         }
 
         /// <summary>
