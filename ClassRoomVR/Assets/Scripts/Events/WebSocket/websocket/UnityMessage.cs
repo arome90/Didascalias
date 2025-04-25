@@ -20,6 +20,7 @@ namespace ClassRoomVR
         public MessageType type;
         public string session;
         public object data;
+        public string deviceID;
 
         /// <summary>
         /// Constructor para enviar un mensaje con tipo, sesi�n y datos.

@@ -21,7 +21,7 @@ public class WsClient : GenericSingleton<WsClient>
     private MessageReceived receivedMessage;
 
     // Identificador del dispositivo.
-    private string _deviceId;
+    public string _deviceId;
 
     // Propiedad que indica si la conexi�n est� activa.
     public bool IsConnected { get; private set; }
@@ -75,7 +75,6 @@ public class WsClient : GenericSingleton<WsClient>
         }
     }
 
-    IEnumerator susbribeWS(WebSocket ws)
     IEnumerator WaitSecondsToSubscribe(float seconds, WebSocket ws)
     {
         yield return new WaitForSeconds(seconds);
