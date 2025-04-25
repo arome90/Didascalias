@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ClassRoomVR
 {
@@ -32,7 +33,7 @@ namespace ClassRoomVR
             session = sessionId;
             type = messageType;
             data = dat;
-            deviceID = SystemInfo.deviceUniqueIdentifier;
+            deviceID = WsClient.Instance._deviceId;
         }
     }
 
@@ -96,6 +97,7 @@ namespace ClassRoomVR
         public string horaClase;
         public long tiempoSesion;
         public CatalogoOpciones catalogo;
+        public string deviceID;
 
         /// <summary>
         /// Constructor para el mensaje inicial con los datos de los alumnos y el catálogo de opciones.
@@ -110,6 +112,7 @@ namespace ClassRoomVR
             horaClase = hora;
             tiempoSesion = sesion;
             catalogo = cat;
+            deviceID = WsClient.Instance._deviceId;
         }
     }
 
@@ -117,6 +120,7 @@ namespace ClassRoomVR
     public struct MessageData
     {
         public InputVariables input;
+        public string deviceID;
 
         /// <summary>
         /// Constructor que recibe los datos de entrada.
@@ -125,6 +129,7 @@ namespace ClassRoomVR
         public MessageData(InputVariables input)
         {
             this.input = input;
+            this.deviceID = SystemInfo.deviceUniqueIdentifier;
         }
     }
 
@@ -133,12 +138,12 @@ namespace ClassRoomVR
         /// <summary>
         /// Envía el mensaje inicial con los datos de los alumnos y la configuración de la clase.
         /// </summary>
-        public static IEnumerator SendInfoInitial()
+        public static void SendInfoInitial()
         {
-            while(!WsClient.Instance.IsAlive())
+            if(!WsClient.Instance.IsConnected || WsClient.Instance.Session == null)
             {
-                Debug.Log("Not connected yet");
-                yield return new WaitForEndOfFrame();
+                Debug.LogError("You must first detect a connection to send data");
+                return;
             }
 
             Debug.Log("Detected connection on WebSocket! Session: " + WsClient.Instance.Session);
@@ -176,8 +181,9 @@ namespace ClassRoomVR
                 opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse" },
                 opcionesIndividuales = new string[] { "Pelear", "Insultar" }
             };
+            var data = new InitialMessageData(posiciones, hora, sesion, catalogo);
 
-            return new InitialMessageData(posiciones, hora, sesion, catalogo);
+            return data;
         }
 
         /// <summary>

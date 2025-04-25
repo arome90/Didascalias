@@ -59,6 +59,12 @@ public class WsClient : GenericSingleton<WsClient>
         }
     }
 
+    IEnumerator WaitSecondsToSubscribe(float seconds, WebSocket ws)
+    {
+        yield return new WaitForSeconds(seconds);
+        SubscribeAndConnectWS(ws);
+    }
+
     void SubscribeAndConnectWS(WebSocket ws)
     {
         ws.OnOpen += HandleOnOpen;
@@ -123,7 +129,7 @@ public class WsClient : GenericSingleton<WsClient>
             }
             else
             {
-                StartCoroutine(ServerMessage.SendInfoInitial());
+                ServerMessage.SendInfoInitial();
             }
             ws.OnMessage -= HandleSessionMessage;
             ws.OnMessage += HandleGeneralMessage;
@@ -154,7 +160,9 @@ public class WsClient : GenericSingleton<WsClient>
         Debug.Log("Sending message to server: " + message.type);
         if (ws != null && ws.IsAlive)
         {
+            Debug.Log("MESSAGE: " + message);
             var jsonData = JsonConvert.SerializeObject(message);
+            Debug.Log("DATA: " + jsonData);
             ws.SendAsync(jsonData, null);
         }
         else
