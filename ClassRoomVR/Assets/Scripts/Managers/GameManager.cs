@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Generated.PropertyProviders;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization.Settings;
@@ -40,12 +41,16 @@ namespace ClassRoomVR
         /// </summary>
         public UnityEvent OnLanguageChanged;
 
-        public bool IsPause;
+        public bool IsPause = false;
         private bool _connectionLost = false;
+        private bool _wsConnection = false;
+        private bool _wsTryingToConnect = false;
 
         private DataSystem savedData;
         private VoiceActivation voice;
-        private ReconnectUI loadingBar;
+        private GameObject loadingBar;
+        private GameObject loadingBarTxt;
+        private GameObject wsTxt;
 
         [SerializeField] private ClassSettings currentSettings;
         [SerializeField] private ClassSettings[] availableSettings;
@@ -196,10 +201,20 @@ namespace ClassRoomVR
         public bool GetSaveAudio() => saveAudio;
         private void Update()
         {
-            if (IsPause && ConnectionIsAvailable() && _connectionLost)
+            /*if (IsPause && ConnectionIsAvailable() && _connectionLost)
             {
                 HandleReconnection();
             }
+            else */
+            if (!_connectionLost && !ConnectionIsAvailable())
+            {
+                _connectionLost = true;
+            }
+            else if (_connectionLost && ConnectionIsAvailable())
+            {
+                _connectionLost = false;
+            }
+            Pause(_connectionLost);
         }
 
         private bool ConnectionIsAvailable()
@@ -228,12 +243,14 @@ namespace ClassRoomVR
 
         public void Pause(bool lostConnection)
         {
-            if (lostConnection)
-            {
-                ToggleLoadingBar(true);
-            }
-            SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            //if (lostConnection)
+            //{
+            //    Debug.Log("ToggleLoadingBar");
+            //    ToggleLoadingBar(true);
+            //}
+            ////SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
             _connectionLost = lostConnection;
+            ToggleLoadingBar(_connectionLost);
         }
 
         private void Pause()
@@ -241,17 +258,21 @@ namespace ClassRoomVR
             if (IsPause) return;
             StopTime();
             IsPause = true;
+            Debug.Log("Game Paused!!");
         }
 
         private void ToggleLoadingBar(bool visible)
         {
             if (loadingBar != null)
             {
+                loadingBar.SetActive(visible);
                 loadingBar.GetComponent<Canvas>().enabled = visible;
+                loadingBarTxt.SetActive(visible);
+                loadingBarTxt.GetComponent<Canvas>().enabled = visible;
             }
         }
 
-        void WaitConnection()
+        public void WaitConnection()
         {
             if (loadingBar.GetComponent<Canvas>().enabled && Application.internetReachability != NetworkReachability.NotReachable)
             {
@@ -285,10 +306,49 @@ namespace ClassRoomVR
         {
             this.voice = voice;
         }
-        public void SetLoadingBar(ReconnectUI bar)
+        public void SetLoadingBar(GameObject bar)
         {
             loadingBar = bar;
             loadingBar.SetActive(false);
+        }
+        public void SetLoadingTxt(GameObject txt)
+        {
+            loadingBarTxt = txt;
+            loadingBarTxt.SetActive(false);
+        }
+        public void SetWsTxt(GameObject txt)
+        {
+            wsTxt = txt;
+            wsTxt.SetActive(false);
+        }
+        public void ChangeWsTxt(string s)
+        {
+            Debug.Log("Cambiar texto: " + s);
+            if (wsTxt == null)
+            {
+                Debug.Log("wsTxt es nulo");
+                return;
+            }
+            Debug.Log("wsTxt no es nulo");
+            wsTxt.GetComponent<WsTxt>().SetText(s);
+        }
+        public void SetWsConnection(bool connection)
+        {
+            _wsConnection = connection;
+        }
+        public bool GetWsConnection()
+        {
+            return _wsConnection;
+        }
+        public void SetWsTryingToConnect(bool connection)
+        {
+            //if(!_wsTryingToConnect && connection)//si no t estabas intentando conectar y empiezas empezamos el temporizador
+
+            _wsTryingToConnect = connection;
+        }
+        public bool GetWsTryingToConnect()
+        {
+            return _wsTryingToConnect;
         }
     }
 }

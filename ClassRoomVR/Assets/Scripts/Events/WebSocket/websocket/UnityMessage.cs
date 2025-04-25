@@ -19,7 +19,6 @@ namespace ClassRoomVR
         public MessageType type;
         public string session;
         public object data;
-        public string deviceID;
 
         /// <summary>
         /// Constructor para enviar un mensaje con tipo, sesión y datos.
@@ -27,12 +26,11 @@ namespace ClassRoomVR
         /// <param name="messageType">El tipo de mensaje</param>
         /// <param name="sessionId">El ID de la sesión</param>
         /// <param name="dat">Los datos del mensaje</param>
-        public MessageSent(MessageType messageType, string sessionId, object dat, string deviceID)
+        public MessageSent(MessageType messageType, string sessionId, object dat)
         {
             session = sessionId;
             type = messageType;
             data = dat;
-            this.deviceID = deviceID;
         }
     }
 
@@ -133,17 +131,10 @@ namespace ClassRoomVR
         /// <summary>
         /// Envía el mensaje inicial con los datos de los alumnos y la configuración de la clase.
         /// </summary>
-        public static IEnumerator SendInfoInitial()
+        public static void SendInfoInitial()
         {
-            while(!WsClient.Instance.IsAlive())
-            {
-                yield return new WaitForEndOfFrame();
-            }
-
-            Debug.Log("Detected connection on WebSocket! Session: " + WsClient.Instance.Session);
-
             var initData = CreateInitialMessageData();
-            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient.Instance.Session, initData, WsClient.Instance._deviceId));
+            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Init, WsClient.Instance.Session, initData));
         }
 
         /// <summary>
@@ -152,7 +143,7 @@ namespace ClassRoomVR
         public static void SendInfo()
         {
             var inputData = new MessageData(InputLogger.Instance.Input);
-            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient.Instance.Session, inputData, WsClient.Instance._deviceId));
+            WsClient.Instance.SendWebSocketMessage(new MessageSent(MessageType.Info, WsClient.Instance.Session, inputData));
         }
 
         /// <summary>
@@ -172,7 +163,7 @@ namespace ClassRoomVR
 
             var catalogo = new CatalogoOpciones
             {
-                opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse" },
+                opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse", "Restart" },
                 opcionesIndividuales = new string[] { "Pelear", "Insultar" }
             };
 

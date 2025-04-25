@@ -10,7 +10,7 @@ using UnityEngine;
 public class FadeScreen : MonoBehaviour
 {
     [SerializeField] private bool _fadeOnStart = true;
-    [SerializeField] private float _fadeDuration = 2f;
+    [SerializeField] private float _fadeDuration = 1f;
     [SerializeField] private Color _fadeColor = Color.black;
     [SerializeField] private AnimationCurve _fadeCurve;
     //[SerializeField] private string _colorPropertyName = "_Color";
@@ -37,7 +37,8 @@ public class FadeScreen : MonoBehaviour
     /// </summary>
     public void FadeIn()
     {
-        Fade(1f, 0f);
+       //Debug.Log("FADE IN");
+       Fade(1f, 0f);
     }
 
     /// <summary>
@@ -45,7 +46,8 @@ public class FadeScreen : MonoBehaviour
     /// </summary>
     public void FadeOut()
     {//TODO
-       // Fade(0f, 1f);
+       //Debug.Log("FADE OUT");
+       Fade(0f, 1f);
     }
 
     /// <summary>
@@ -60,6 +62,7 @@ public class FadeScreen : MonoBehaviour
         gameObject.SetActive(true);
         if (gameObject.activeSelf)
         {
+            //Debug.Log("fader activooo");
             StartCoroutine(FadeRoutine(alphaIn, alphaOut, onComplete));
         }
     }
@@ -76,6 +79,7 @@ public class FadeScreen : MonoBehaviour
         float timer = 0f;
         while (timer <= _fadeDuration)
         {
+            //Debug.Log("fade routining");
             Color newColor = _fadeColor;
             newColor.a = Mathf.Lerp(alphaIn, alphaOut, _fadeCurve.Evaluate(timer / _fadeDuration));
 
@@ -89,5 +93,10 @@ public class FadeScreen : MonoBehaviour
         finalColor.a = alphaOut;
         _renderer.color = finalColor;
         onComplete?.Invoke();
+    }
+
+    void OnDestroy()
+    {
+        //Debug.Log("FadeScreen script was destroyed");
     }
 }

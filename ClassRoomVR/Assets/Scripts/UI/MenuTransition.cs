@@ -107,15 +107,26 @@ namespace ClassRoomVR
         /// </summary>
         private void GoStart()
         {
-            ToggleUIElements(false);
-            _menus[_currentMenuIndex].SetActive(false);
-            if (GameManager.Instance.GetCurrentSettings().name != "Personalizado")
+            if (GameManager.Instance.GetWsConnection())
             {
-                DeskManager.Instance.DestroyChildren();
+                ToggleUIElements(false);
+                _menus[_currentMenuIndex].SetActive(false);
+                if (GameManager.Instance.GetCurrentSettings().name != "Personalizado")
+                {
+                    DeskManager.Instance.DestroyChildren();
+                }
+                _textSession.gameObject.SetActive(true);
+                _textSession.text = WsClient.Instance.Session;
+                GameManager.Instance.LoadMainScene();
             }
-            _textSession.gameObject.SetActive(true);
-            _textSession.text = WsClient.Instance.Session;
-            GameManager.Instance.LoadMainScene();
+            else
+            {
+                if(GameManager.Instance.GetWsTryingToConnect())
+                {
+                    Debug.Log("Ya estamos intentando conectar con el servidor.");
+                    return;
+                }
+            }
         }
 
         /// <summary>

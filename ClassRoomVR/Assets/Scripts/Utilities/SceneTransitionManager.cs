@@ -32,8 +32,10 @@ public class SceneTransitionManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(FadeScreen == null)
+        //Debug.Log("ScnTransLoad");
+        if (FadeScreen == null)
         {
+            //Debug.Log("ScnTransLoadNohacecosas");
             _fadeScreen = FindFirstObjectByType<FadeScreen>();
         }
     }
@@ -51,10 +53,11 @@ public class SceneTransitionManager : MonoBehaviour
     {
         if (_fadeScreen == null)
         {
-            Debug.LogError("FadeScreen no está asignado.");
+            //Debug.LogError("FadeScreen no está asignado.");
             yield break;
         }
 
+        //Debug.Log(_fadeScreen);//.GameObject.SetActive(true);
         _fadeScreen.FadeOut();
         yield return new WaitForSeconds(_fadeScreen.FadeDuration);
 
@@ -68,6 +71,8 @@ public class SceneTransitionManager : MonoBehaviour
     /// <param name="sceneIndex">Índice de la escena a cargar.</param>
     public void GoToSceneAsync(int sceneIndex)
     {
+        //Debug.Log("ScnTransGotoLlamada");
+        Debug.Log(_fadeScreen);//.GameObject.SetActive(true);
         StartCoroutine(GoToSceneAsyncRoutine(sceneIndex));
     }
 
@@ -75,7 +80,7 @@ public class SceneTransitionManager : MonoBehaviour
     {
         if (_fadeScreen == null)
         {
-            Debug.LogError("FadeScreen no está asignado.");
+            //Debug.LogError("FadeScreen no está asignado.");
             yield break;
         }
 
@@ -92,6 +97,7 @@ public class SceneTransitionManager : MonoBehaviour
             yield return null;
         }
 
+        //Debug.Log("GoToSceneAsyncRoutine acabada");
         operation.allowSceneActivation = true;
     }
 

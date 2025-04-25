@@ -120,7 +120,7 @@ public class ExternalForceManager : SceneSingleton<ExternalForceManager>
                         }
                     }
                 }
-                Debug.Log($"Applied external force '{force}' to all students.");
+                //Debug.Log($"Applied external force '{force}' to all students.");
 
             }
             else

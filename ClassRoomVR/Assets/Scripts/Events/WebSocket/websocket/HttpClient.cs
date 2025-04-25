@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 using System.Collections;
+using ClassRoomVR;
 
 public class HttpClient : GenericSingleton<HttpClient>
 {
     public void sendJson(string jsonText)
     {
         StartCoroutine(sendJsonNet(jsonText));
-        Debug.Log("SendJson " + jsonText);
+        //Debug.Log("SendJson " + jsonText);
     }
 
     IEnumerator sendJsonNet(string jsonText)
@@ -21,12 +22,13 @@ public class HttpClient : GenericSingleton<HttpClient>
             {
                 Debug.Log(www.error);
                 Debug.Log("ERROR enviando json");
+                GameManager.Instance.Pause(true);
             }
             else
             {
-                Debug.Log("UnityWebRequest result: " + www.result);
+                //Debug.Log("UnityWebRequest result: " + www.result);
                 Debug.Log(www.downloadHandler.text);
-                Debug.Log("json enviado correctamente!");
+                //Debug.Log("json enviado correctamente!");
             }
         }
     }

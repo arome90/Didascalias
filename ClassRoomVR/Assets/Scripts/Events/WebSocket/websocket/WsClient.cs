@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using Newtonsoft.Json;
 using ClassRoomVR;
-using System.Runtime.Remoting.Messaging;
 
 /// <summary>
 /// Clase que maneja la conexión WebSocket y la comunicación con el servidor.
@@ -22,7 +21,7 @@ public class WsClient : GenericSingleton<WsClient>
     private MessageReceived receivedMessage;
 
     // Identificador del dispositivo.
-    public string _deviceId;
+    private string _deviceId;
 
     // Propiedad que indica si la conexión está activa.
     public bool IsConnected { get; private set; }
@@ -37,6 +36,8 @@ public class WsClient : GenericSingleton<WsClient>
     {
         IsConnected = false;
         _deviceId = SystemInfo.deviceUniqueIdentifier;
+        Debug.Log("Invoke timeOut");
+        InvokeRepeating("TimeOut", 3.0f, 20.0f);
     }
 
     /// <summary>
@@ -49,6 +50,8 @@ public class WsClient : GenericSingleton<WsClient>
         {
             if (ws != null && ws.IsAlive) return;
             Debug.Log("Creating new WebSocket");
+            GameManager.Instance.SetWsTryingToConnect(true);
+            //GameManager.Instance.ChangeWsTxt("Trying to connect ws...");
             //ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
             StartCoroutine(susbribeWS(ws));
@@ -59,25 +62,26 @@ public class WsClient : GenericSingleton<WsClient>
         }
     }
 
+    void TimeOut()
+    {
+        if (!GameManager.Instance.GetWsConnection())
+        {
+            Debug.Log("TimeOut to connect, try again.");
+            GameManager.Instance.Pause(true);
+            //GameManager.Instance.ChangeWsTxt("TimeOut, we try again.");
+            GameManager.Instance.SetWsTryingToConnect(false);
+            Disconnect();
+            StartConnection();
+        }
+    }
+
     IEnumerator susbribeWS(WebSocket ws)
     {
         yield return new WaitForSeconds(0.6f);
         ws.OnOpen += HandleOnOpen;
         ws.OnMessage += HandleSessionMessage;
         ws.OnClose += HandleOnClose;
-
-        //while (!ws.IsAlive)
-        //{
         ws.ConnectAsync();
-        //    yield return new WaitForSeconds(0.6f);
-        //}
-
-        //Debug.Log("Connected with Session: " + Session);
-    }
-
-    public bool IsAlive()
-    {
-        return ws.IsAlive;
     }
 
     /// <summary>
@@ -107,7 +111,8 @@ public class WsClient : GenericSingleton<WsClient>
     private void HandleOnOpen(object sender, EventArgs e)
     {
         IsConnected = true;
-        var message = new MessageSent(MessageType.CreateSession, Session, _deviceId, _deviceId);
+        //GameManager.Instance.ChangeWsTxt("Opening ws.");
+        var message = new MessageSent(MessageType.CreateSession, Session, _deviceId);
         SendWebSocketMessage(message);
     }
 
@@ -122,17 +127,13 @@ public class WsClient : GenericSingleton<WsClient>
         if (TryDeserializeMessage(e.Data, ref receivedMessage))
         {
             Session = receivedMessage.data?.ToString();
-            Debug.Log("Session received: " + Session);
-            if(Session == "" || Session == null)
-            {
-                Debug.LogError("Connection with websocket failed");
-                return;
-            }
-            else
-            {
-                ws.OnMessage -= HandleSessionMessage;
-                ws.OnMessage += HandleGeneralMessage;
-            }
+            Debug.Log(Session);
+            //GameManager.Instance.ChangeWsTxt("Session created: " + Session);
+            GameManager.Instance.SetWsConnection(true);
+            GameManager.Instance.SetWsTryingToConnect(false);
+            ws.OnMessage -= HandleSessionMessage;
+            ws.OnMessage += HandleGeneralMessage;
+            GameManager.Instance.Pause(false);
         }
     }
 
@@ -157,7 +158,6 @@ public class WsClient : GenericSingleton<WsClient>
     /// <param name="message">El mensaje a enviar.</param>
     public void SendWebSocketMessage(ClassRoomVR.MessageSent message)
     {
-        Debug.Log("Sending message to server: " + message.type);
         if (ws != null && ws.IsAlive)
         {
             var jsonData = JsonConvert.SerializeObject(message);
@@ -191,8 +191,15 @@ public class WsClient : GenericSingleton<WsClient>
         if (int.TryParse(receivedMessage.id, out int studentId) && studentId >= 0)
         {
             // Faltar al respeto/Sentarse juntos/Levantarse
-            Debug.Log(studentId + " student is doing something disruptive!");
-            studentController.DoSomethingDisruptive(studentId);
+            if (studentId == 3){
+                //Restart
+                GameManager.Instance.LoadMainMenu();
+            }
+            else
+            {
+                Debug.Log(studentId + " student is doing something disruptive!");
+                studentController.DoSomethingDisruptive(studentId);
+            }
         }
         else
         {
@@ -227,7 +234,9 @@ public class WsClient : GenericSingleton<WsClient>
     public void Disconnect()
     {
         if (ws == null) return;
-        if(ws.IsAlive) ws?.Close();
+        GameManager.Instance.SetWsConnection(false);
+        if (ws.IsAlive) ws?.Close();
+        ws = null;
     }
 
     /// <summary>

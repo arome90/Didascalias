@@ -12,7 +12,8 @@ public class ReconnectUI : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.SetLoadingBar(this); // Configura la barra de carga en el GameManager
+        Debug.Log("Seting loading bar");
+        GameManager.Instance.SetLoadingBar(gameObject); // Configura la barra de carga en el GameManager
     }
 
     private void Update()

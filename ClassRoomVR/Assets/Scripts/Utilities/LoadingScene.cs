@@ -60,7 +60,10 @@ public class LoadingScene : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // Cargar la siguiente escena
-        SceneManager.LoadScene(nextScene);
+        //SceneManager.LoadScene(nextScene);
+        //Con transición
+        //SceneTransitionManager.Singleton.GoToSceneAsync(SceneManager.GetSceneByName(nextScene).buildIndex);
+        SceneTransitionManager.Singleton.GoToSceneAsync(1);
     }
 
     IEnumerator LoadConfig()

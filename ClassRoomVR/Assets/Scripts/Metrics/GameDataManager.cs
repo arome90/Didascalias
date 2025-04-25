@@ -26,6 +26,7 @@ namespace ClassRoomVR
             ws = WsClient.Instance;
             client = HttpClient.Instance;
             Session = ws.Session;
+            Debug.Log("Creating GameDataManager for session " + Session);
             gameData.datas[Session] = new List<BaseData>();
             gameData.Session = Session;
             string folderPath = Path.Combine(Application.persistentDataPath, "SessionData");
@@ -71,6 +72,8 @@ namespace ClassRoomVR
 
         void OnDestroy()
         {
+            Debug.Log("Destroying GameDataManager");
+
             if (gameData.datas[Session].Count > 0)
             {
                 client.sendJson(gameData.ToJson());
