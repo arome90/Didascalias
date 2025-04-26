@@ -48,7 +48,7 @@ namespace ClassRoomVR
                 if (Application.internetReachability == NetworkReachability.NotReachable)
                 {
                     Debug.Log("nO HAY INTERNET");
-                    GameManager.Instance.Pause(true);
+                    /////GameManager.Instance.Pause(true);
                 }
             });
 

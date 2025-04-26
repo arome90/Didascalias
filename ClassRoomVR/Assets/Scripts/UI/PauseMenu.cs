@@ -36,7 +36,7 @@ namespace ClassRoomVR
 
         private void Update()
         {
-            _quitButton.interactable = GameManager.Instance.IsPause && !_quitting;
+            _quitButton.interactable = !_quitting;
         }
 
         /// <summary>

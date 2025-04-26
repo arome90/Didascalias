@@ -36,8 +36,8 @@ public class WsClient : GenericSingleton<WsClient>
     {
         IsConnected = false;
         _deviceId = SystemInfo.deviceUniqueIdentifier;
-        Debug.Log("Invoke timeOut");
-        InvokeRepeating("TimeOut", 3.0f, 20.0f);
+        /////Debug.Log("Invoke timeOut");
+        /////InvokeRepeating("TimeOut", 3.0f, 20.0f);
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public class WsClient : GenericSingleton<WsClient>
         {
             if (ws != null && ws.IsAlive) return;
             Debug.Log("Creating new WebSocket");
-            GameManager.Instance.SetWsTryingToConnect(true);
+            /////GameManager.Instance.SetWsTryingToConnect(true);
             //GameManager.Instance.ChangeWsTxt("Trying to connect ws...");
             //ws = new WebSocket("wss://cyclops.uab.cat/game/");
             ws = new WebSocket("wss://cyclops-dev.uab.cat/game/");
@@ -109,7 +109,7 @@ public class WsClient : GenericSingleton<WsClient>
         if (!e.WasClean)
         {
             Debug.Log("Conexi�n perdida. No hay Internet.");
-            GameManager.Instance.Pause(true);
+            /////GameManager.Instance.Pause(true);
         }
     }
 
@@ -146,8 +146,8 @@ public class WsClient : GenericSingleton<WsClient>
             }
             else
             {
-                GameManager.Instance.SetWsConnection(true);
-                GameManager.Instance.SetWsTryingToConnect(false);
+                /////GameManager.Instance.SetWsConnection(true);
+                /////GameManager.Instance.SetWsTryingToConnect(false);
                 ServerMessage.SendInfoInitial();
             }
             ws.OnMessage -= HandleSessionMessage;
@@ -254,7 +254,7 @@ public class WsClient : GenericSingleton<WsClient>
     public void Disconnect()
     {
         if (ws == null) return;
-        GameManager.Instance.SetWsConnection(false);
+        /////GameManager.Instance.SetWsConnection(false);
         if (ws.IsAlive) ws?.Close();
         ws = null;
     }

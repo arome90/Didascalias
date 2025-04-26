@@ -22,7 +22,7 @@ public class HttpClient : GenericSingleton<HttpClient>
             {
                 Debug.Log(www.error);
                 Debug.Log("ERROR enviando json");
-                GameManager.Instance.Pause(true);
+                /////GameManager.Instance.Pause(true);
             }
             else
             {

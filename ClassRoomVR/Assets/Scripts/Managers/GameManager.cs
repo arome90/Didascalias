@@ -214,7 +214,7 @@ namespace ClassRoomVR
             {
                 _connectionLost = false;
             }
-            Pause(_connectionLost);
+            /////Pause(_connectionLost);
         }
 
         private bool ConnectionIsAvailable()
@@ -248,9 +248,10 @@ namespace ClassRoomVR
             //    Debug.Log("ToggleLoadingBar");
             //    ToggleLoadingBar(true);
             //}
-            ////SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            IsPause = true;
             _connectionLost = lostConnection;
-            ToggleLoadingBar(_connectionLost);
+            /////ToggleLoadingBar(_connectionLost);
         }
 
         private void Pause()
