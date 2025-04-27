@@ -67,7 +67,7 @@ public class WsClient : GenericSingleton<WsClient>
         if (!GameManager.Instance.GetWsConnection())
         {
             Debug.Log("TimeOut to connect, try again.");
-            GameManager.Instance.Pause(true);
+            GameManager.Instance.Pause(true, true);
             //GameManager.Instance.ChangeWsTxt("TimeOut, we try again.");
             GameManager.Instance.SetWsTryingToConnect(false);
             Disconnect();

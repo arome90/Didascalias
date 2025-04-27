@@ -6,6 +6,7 @@ namespace ClassRoomVR
     {
         [SerializeField] InputActionReference menu;
         [SerializeField] InputActionReference pause;
+        [SerializeField] InputActionReference primaryButton;
 
         [SerializeField] PauseMenu pauseMenu;
 
@@ -23,12 +24,7 @@ namespace ClassRoomVR
 
         private void OnDisable()
         {
-            DisablePause();
-            menu.action.performed -= ToggleHandMenu;
-            pause.action.performed -= TogglePause;
-            menu.action.Disable();
-            pause.action.Disable();
-            actionsInitialized = false;
+            DeinitializeActions();
         }
 
         /// <summary>
@@ -42,8 +38,20 @@ namespace ClassRoomVR
                 pause.action.Enable();
                 menu.action.performed += ToggleHandMenu;
                 pause.action.performed += TogglePause;
+                primaryButton.action.performed += TogglePauseNoFade;
                 actionsInitialized = true;
             }
+        }
+
+        private void DeinitializeActions()
+        {
+            DisablePause();
+            menu.action.performed -= ToggleHandMenu;
+            pause.action.performed -= TogglePause;
+            primaryButton.action.performed -= TogglePauseNoFade;
+            menu.action.Disable();
+            pause.action.Disable();
+            actionsInitialized = false;
         }
 
         // <summary>
@@ -54,11 +62,11 @@ namespace ClassRoomVR
         {
             if (GameManager.Instance.IsPause)
             {
-                pauseMenu.ResumeGame();
+                pauseMenu.ResumeGame(true);
             }
             else
             {
-                pauseMenu.PauseGame();
+                pauseMenu.PauseGame(true);
             }
         }
 
@@ -67,7 +75,15 @@ namespace ClassRoomVR
         /// </summary>
         private void TogglePause(InputAction.CallbackContext ctx)
         {
-            pauseMenu.TogglePause();
+            pauseMenu.TogglePause(true);
+        }
+
+        /// <summary>
+        /// Método para alternar el estado de pausa.
+        /// </summary>
+        private void TogglePauseNoFade(InputAction.CallbackContext ctx)
+        {
+            pauseMenu.TogglePause(false);
         }
 
         /// <summary>
@@ -75,7 +91,7 @@ namespace ClassRoomVR
         /// </summary>
         private void DisablePause()
         {
-            pauseMenu.ResumeGame();
+            pauseMenu.ResumeGame(true);
         }
     }
 

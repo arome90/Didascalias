@@ -238,17 +238,31 @@ namespace ClassRoomVR
 
             WsClient.Instance.StartConnection();
             ToggleLoadingBar(false);
-            Continue();
+            Continue(true);
         }
 
-        public void Pause(bool lostConnection)
+        public void Pause(bool lostConnection, bool fade)
         {
             //if (lostConnection)
             //{
             //    Debug.Log("ToggleLoadingBar");
             //    ToggleLoadingBar(true);
             //}
-            SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+            if (fade) { 
+                try
+                {
+                    SceneTransitionManager.Singleton.FadeScreen.Fade(0.0f, 0.8f, Pause);
+                }
+                catch(Exception ex)
+                {
+                    Debug.LogError("Fade Failed: " + ex.Message);
+                }
+            }
+            else
+            {
+                Pause();
+            }
+
             IsPause = true;
             _connectionLost = lostConnection;
             /////ToggleLoadingBar(_connectionLost);
@@ -281,7 +295,7 @@ namespace ClassRoomVR
                 voice.Activate();
                 WsClient.Instance.StartConnection();
                 loadingBar.SetActive(false);
-                Continue();
+                Continue(true);
             }
             else
             {
@@ -289,12 +303,20 @@ namespace ClassRoomVR
             }
         }
 
-        public void Continue()
+        public void Continue(bool fade)
         {
             //AudioListener.pause = false;
             Time.timeScale = 1.0f;
             IsPause = false;
-            SceneTransitionManager.Singleton.FadeScreen.Fade(0.8f, 0.0f);
+            if (fade) {
+                try
+                {
+                    SceneTransitionManager.Singleton.FadeScreen.Fade(0.8f, 0.0f);
+                }
+                catch (Exception ex) { 
+                    Debug.LogError("Fade Failed: " + ex.Message);
+                }
+            }
         }
 
         public void StopTime()

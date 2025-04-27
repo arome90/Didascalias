@@ -25,50 +25,67 @@ namespace ClassRoomVR
                 _canvas = GetComponent<Canvas>();
             }
             _canvas.enabled = false;
-            _resumeButton.onClick.AddListener(ResumeGame);
+            _resumeButton.onClick.AddListener(ResumeGameNoFade);
             _quitButton.onClick.AddListener(QuitGame);
+        }
+
+        /// <summary>
+        /// hay que refactorizar un poco lo de la pausa porque hay 120 métodos llamándose entre sí
+        /// </summary>
+        private void ResumeGameNoFade()
+        {
+            ResumeGame(false);
         }
 
         private void OnDestroy()
         {
-            ResumeGame();
+            ResumeGame(true);
         }
 
         private void Update()
         {
             _quitButton.interactable = !_quitting;
+
+            if (Input.GetKeyUp(KeyCode.P))
+            {
+                TogglePause(true);
+            }
+            else if (Input.GetKeyUp(KeyCode.O))
+            {
+                TogglePause(false);
+            }
         }
 
         /// <summary>
         /// Reanuda el juego
         /// </summary>
-        public void ResumeGame()
+        public void ResumeGame(bool fade)
         {
             _canvas.enabled = false;
-            GameManager.Instance.Continue();
+            GameManager.Instance.Continue(fade);
         }
 
         /// <summary>
         /// Pausa el juego
         /// </summary>
-        public void PauseGame()
+        public void PauseGame(bool fade)
         {
-            _canvas.enabled = true;
-            GameManager.Instance.Pause(false);
+            _canvas.enabled = fade;
+            GameManager.Instance.Pause(false, fade);
         }
 
         /// <summary>
         /// Alterna la pausa del juego mediante una acción de entrada.
         /// </summary>
-        public void TogglePause()
+        public void TogglePause(bool fade)
         {
             if(GameManager.Instance.IsPause)
             {
-                ResumeGame();
+                ResumeGame(fade);
             }
             else
             {
-                PauseGame();
+                PauseGame(fade);
             }
         }
 
@@ -79,7 +96,7 @@ namespace ClassRoomVR
         {
             if(GameManager.Instance.IsPause)
             {
-                ResumeGame();
+                ResumeGame(true);
             }
             _quitting = true;
             GameManager.Instance.LoadMainMenu();
