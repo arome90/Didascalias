@@ -45,15 +45,6 @@ namespace ClassRoomVR
         private void Update()
         {
             _quitButton.interactable = !_quitting;
-
-            if (Input.GetKeyUp(KeyCode.P))
-            {
-                TogglePause(true);
-            }
-            else if (Input.GetKeyUp(KeyCode.O))
-            {
-                TogglePause(false);
-            }
         }
 
         /// <summary>

@@ -6,7 +6,6 @@ namespace ClassRoomVR
     {
         [SerializeField] InputActionReference menu;
         [SerializeField] InputActionReference pause;
-        [SerializeField] InputActionReference primaryButton;
 
         [SerializeField] PauseMenu pauseMenu;
 
@@ -36,9 +35,10 @@ namespace ClassRoomVR
             {
                 menu.action.Enable();
                 pause.action.Enable();
+                
                 menu.action.performed += ToggleHandMenu;
-                pause.action.performed += TogglePause;
-                primaryButton.action.performed += TogglePauseNoFade;
+                pause.action.performed += TogglePauseNoFade;
+                
                 actionsInitialized = true;
             }
         }
@@ -46,9 +46,10 @@ namespace ClassRoomVR
         private void DeinitializeActions()
         {
             DisablePause();
+
             menu.action.performed -= ToggleHandMenu;
-            pause.action.performed -= TogglePause;
-            primaryButton.action.performed -= TogglePauseNoFade;
+            pause.action.performed -= TogglePauseNoFade;
+
             menu.action.Disable();
             pause.action.Disable();
             actionsInitialized = false;

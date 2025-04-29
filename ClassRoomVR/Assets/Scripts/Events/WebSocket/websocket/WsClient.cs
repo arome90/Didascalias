@@ -211,17 +211,18 @@ public class WsClient : GenericSingleton<WsClient>
         if (int.TryParse(receivedMessage.id, out int studentId) && studentId >= 0)
         {
             // Faltar al respeto/Sentarse juntos/Levantarse
+
+            //Restart
             if (studentId == 3){
-                //Restart
                 GameManager.Instance.LoadMainMenu();
             }
-            else
+            else if(!GameManager.Instance.IsPause)
             {
                 Debug.Log(studentId + " student is doing something disruptive!");
                 studentController.DoSomethingDisruptive(studentId);
             }
         }
-        else
+        else if (!GameManager.Instance.IsPause)
         {
             // Mensajes escritos desde servidor
             studentController.PlaySentence(receivedMessage.data.ToString());

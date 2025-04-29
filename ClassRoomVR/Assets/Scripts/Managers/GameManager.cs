@@ -317,6 +317,8 @@ namespace ClassRoomVR
                     Debug.LogError("Fade Failed: " + ex.Message);
                 }
             }
+
+            Debug.Log("Continued!");
         }
 
         public void StopTime()

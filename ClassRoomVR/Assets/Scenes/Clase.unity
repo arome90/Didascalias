@@ -937,7 +937,6 @@ GameObject:
   - component: {fileID: 825419209}
   - component: {fileID: 825419208}
   - component: {fileID: 825419211}
-  - component: {fileID: 825419212}
   m_Layer: 0
   m_Name: Wit
   m_TagString: Untagged
@@ -1095,18 +1094,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b75449bda6ede734a969e352edb8d8e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &825419212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 825419207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14434a86025dd7241bdc5137b2dac0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &889602728
@@ -2745,6 +2732,11 @@ PrefabInstance:
       propertyPath: _voiceService
       value: 
       objectReference: {fileID: 825419208}
+    - target: {fileID: 1971734526382152232, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2431425976579527239, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -2920,7 +2912,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1971734526382152232, guid: a2a7f9524fec97d4cb29ad24e487ae1c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
