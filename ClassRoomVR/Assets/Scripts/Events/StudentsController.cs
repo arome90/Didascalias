@@ -322,6 +322,14 @@ namespace ClassRoomVR
             GameDataManager.Instance.SendData(d);
         }
 
+        public void SetPauseTree(bool pause)
+        {
+            foreach (Student student in _students.Values)
+            {
+                student.GetBehavior().SetPauseTree(pause);
+            }
+        }
+
         private void Start()
         {
             //Invoke(nameof(doso), 2);

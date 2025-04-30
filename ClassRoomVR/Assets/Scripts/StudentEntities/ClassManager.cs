@@ -294,5 +294,10 @@ namespace ClassRoomVR
             audioSource.clip = clip;
             audioSource.Play();
         }
+
+        public void SetPause(bool pause)
+        {
+            _studentsController.SetPauseTree(pause);
+        }
     }
 }

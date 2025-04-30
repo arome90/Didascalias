@@ -1,4 +1,5 @@
-﻿using BehaviorDesigner.Runtime.Tasks.Emo;
+﻿using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks.Emo;
 using MathNet.Numerics.Statistics;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace ClassRoomVR
 
         private Dictionary<studentBehaviorParams, float> studentBehavoirValues;
         [SerializeField] private string studentBehavoirJsonPath;
+
+        [SerializeField] private BehaviorTree tree;
 
         private void Start()
         {
@@ -130,5 +133,16 @@ namespace ClassRoomVR
             return _statistics.Mean;
         }
 
+        public void SetPauseTree(bool pause)
+        {
+            if(pause)
+            {
+                tree.DisableBehavior();
+            }
+            else
+            {
+                tree.EnableBehavior();
+            }
+        }
     }
 }

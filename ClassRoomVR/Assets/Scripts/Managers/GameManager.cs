@@ -273,6 +273,7 @@ namespace ClassRoomVR
             if (IsPause) return;
             StopTime();
             IsPause = true;
+            ClassManager.Instance.SetPause(IsPause);
             Debug.Log("Game Paused!!");
         }
 
@@ -308,6 +309,7 @@ namespace ClassRoomVR
             //AudioListener.pause = false;
             Time.timeScale = 1.0f;
             IsPause = false;
+            ClassManager.Instance.SetPause(IsPause);
             if (fade) {
                 try
                 {
