@@ -235,6 +235,7 @@ namespace ClassRoomVR
         {
             Debug.Log("Lost Session Connection");
             _connectionLost = true;
+            WsClient.Instance.Disconnect();
             if (SceneManager.GetActiveScene().name != "Menu")
                 LoadMainMenu();
         }
