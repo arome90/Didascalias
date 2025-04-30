@@ -45,11 +45,13 @@ namespace ClassRoomVR
             appVoiceExperience.VoiceEvents.OnError.AddListener((a, b) =>
             {
                 appVoiceExperience.Activate();
+                /* NO HACE FALTA QUE ESTÉ AQUÍ SI LO COMPROBAMOS EN EL HTTPCLIENT CONTINUAMENTE
                 if (Application.internetReachability == NetworkReachability.NotReachable)
                 {
                     Debug.Log("nO HAY INTERNET");
-                    /////GameManager.Instance.Pause(true);
+                    GameManager.Instance.LostSessionConnection();
                 }
+                */
             });
 
             appVoiceExperience.VoiceEvents.OnResponse.AddListener((response) =>

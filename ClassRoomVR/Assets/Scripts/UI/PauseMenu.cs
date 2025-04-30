@@ -62,7 +62,7 @@ namespace ClassRoomVR
         public void PauseGame(bool fade)
         {
             _canvas.enabled = fade;
-            GameManager.Instance.Pause(false, fade);
+            GameManager.Instance.Pause(fade);
         }
 
         /// <summary>

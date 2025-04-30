@@ -1,4 +1,6 @@
-﻿using Meta.WitAi;
+﻿using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityRenderer;
+using Meta.WitAi;
 using Meta.WitAi.Data.Configuration;
 using Oculus.Voice;
 using System;
@@ -43,14 +45,11 @@ namespace ClassRoomVR
 
         public bool IsPause = false;
         private bool _connectionLost = false;
-        private bool _wsConnection = false;
-        private bool _wsTryingToConnect = false;
 
         private DataSystem savedData;
         private VoiceActivation voice;
         private GameObject loadingBar;
         private GameObject loadingBarTxt;
-        private GameObject wsTxt;
 
         [SerializeField] private ClassSettings currentSettings;
         [SerializeField] private ClassSettings[] availableSettings;
@@ -115,7 +114,9 @@ namespace ClassRoomVR
 
         public void LoadMainMenu()
         {
+            Debug.Log("GM loading MM");
             WsClient.Instance.Disconnect();
+            _connectionLost = true;
             SceneTransitionManager.Singleton.GoToSceneAsync(1);
         }
 
@@ -206,14 +207,17 @@ namespace ClassRoomVR
                 HandleReconnection();
             }
             else */
+            
+            //se ha perdido la conexión
             if (!_connectionLost && !ConnectionIsAvailable())
             {
-                _connectionLost = true;
+                SessionAvailable(false);
             }
+            /*
             else if (_connectionLost && ConnectionIsAvailable())
             {
-                _connectionLost = false;
-            }
+                SessionAvailable(true);
+            }*/
             /////Pause(_connectionLost);
         }
 
@@ -227,27 +231,32 @@ namespace ClassRoomVR
             return loadingBar != null && loadingBar.GetComponent<Canvas>().enabled;
         }
 
-        private void HandleReconnection()
+        public void LostSessionConnection()
         {
-            Debug.Log("vuelve la conexion");
-
-            if (voice != null)
-            {
-                voice.Activate();
-            }
-
-            WsClient.Instance.StartConnection();
-            ToggleLoadingBar(false);
-            Continue(true);
+            Debug.Log("Lost Session Connection");
+            _connectionLost = true;
+            if (SceneManager.GetActiveScene().name != "Menu")
+                LoadMainMenu();
         }
 
-        public void Pause(bool lostConnection, bool fade)
+        public void SessionAvailable(bool created)
         {
-            //if (lostConnection)
-            //{
-            //    Debug.Log("ToggleLoadingBar");
-            //    ToggleLoadingBar(true);
-            //}
+            if (created)
+            {
+                Debug.Log("Session Created");
+                _connectionLost = false;
+                ToggleLoadingBar(false);
+            }
+            else
+            {
+                Debug.Log("No Session Created");
+                _connectionLost = true;
+                ToggleLoadingBar(true);
+            }
+        }
+
+        public void Pause(bool fade)
+        {
             if (fade) { 
                 try
                 {
@@ -262,10 +271,7 @@ namespace ClassRoomVR
             {
                 Pause();
             }
-
             IsPause = true;
-            _connectionLost = lostConnection;
-            /////ToggleLoadingBar(_connectionLost);
         }
 
         private void Pause()
@@ -279,29 +285,28 @@ namespace ClassRoomVR
 
         private void ToggleLoadingBar(bool visible)
         {
-            if (loadingBar != null)
+            if (loadingBarTxt != null)
             {
-                loadingBar.SetActive(visible);
-                loadingBar.GetComponent<Canvas>().enabled = visible;
+                Debug.Log("setActive = " + visible);
+                Debug.Log(loadingBarTxt.activeSelf);
                 loadingBarTxt.SetActive(visible);
-                loadingBarTxt.GetComponent<Canvas>().enabled = visible;
-            }
-        }
-
-        public void WaitConnection()
-        {
-            if (loadingBar.GetComponent<Canvas>().enabled && Application.internetReachability != NetworkReachability.NotReachable)
-            {
-                Debug.Log("vuelve la coneccion");
-                voice.Activate();
-                WsClient.Instance.StartConnection();
-                loadingBar.SetActive(false);
-                Continue(true);
+                //Debug.Log("canvasEnabled = " + visible);
+                //loadingBarTxt.GetComponent<Canvas>().enabled = visible;
             }
             else
+                Debug.Log("Loading bar txt is null");
+
+            Debug.Log("Loading toggle" + visible);
+            if (loadingBar != null)
             {
-                Invoke(nameof(WaitConnection), 3.0f);
+                Debug.Log("setActive = " + visible);
+                Debug.Log(loadingBar.activeSelf);
+                loadingBar.SetActive(visible);
+                //Debug.Log("canvasEnabled = " + visible);
+                //loadingBar.GetComponent<Canvas>().enabled = visible;
             }
+            else
+                Debug.Log("Loading bar is null");
         }
 
         public void Continue(bool fade)
@@ -333,49 +338,77 @@ namespace ClassRoomVR
         {
             this.voice = voice;
         }
+
         public void SetLoadingBar(GameObject bar)
         {
             loadingBar = bar;
             loadingBar.SetActive(false);
         }
+
         public void SetLoadingTxt(GameObject txt)
         {
             loadingBarTxt = txt;
             loadingBarTxt.SetActive(false);
         }
-        public void SetWsTxt(GameObject txt)
+
+        public bool GetConnection()
         {
-            wsTxt = txt;
-            wsTxt.SetActive(false);
+            return !_connectionLost;
         }
-        public void ChangeWsTxt(string s)
-        {
-            Debug.Log("Cambiar texto: " + s);
-            if (wsTxt == null)
-            {
-                Debug.Log("wsTxt es nulo");
-                return;
-            }
-            Debug.Log("wsTxt no es nulo");
-            wsTxt.GetComponent<WsTxt>().SetText(s);
-        }
-        public void SetWsConnection(bool connection)
-        {
-            _wsConnection = connection;
-        }
-        public bool GetWsConnection()
-        {
-            return _wsConnection;
-        }
+
+
+        #region DEPRICATED
+        /*
         public void SetWsTryingToConnect(bool connection)
         {
-            //if(!_wsTryingToConnect && connection)//si no t estabas intentando conectar y empiezas empezamos el temporizador
-
             _wsTryingToConnect = connection;
         }
+
         public bool GetWsTryingToConnect()
         {
             return _wsTryingToConnect;
         }
+        
+        //Session unavailable cumple esta función
+        public void SetConnection(bool connection)
+        {
+            _connectionLost = !connection;
+        }
+
+
+        //No lo utilizamos, sabrememos que se conecta al tener exito en la creacion del ws
+        public void WaitConnection()
+        {
+            if (loadingBar.GetComponent<Canvas>().enabled && Application.internetReachability != NetworkReachability.NotReachable)
+            {
+                Debug.Log("vuelve la coneccion");
+                voice.Activate();
+                WsClient.Instance.StartConnection();
+                loadingBar.SetActive(false);
+                Continue(true);
+            }
+            else
+            {
+                Invoke(nameof(WaitConnection), 3.0f);
+            }
+        }
+                
+        //No lo utilizamos, si se pierde la conexion cierra la sesion directamente
+        private void HandleReconnection()
+        {
+            Debug.Log("vuelve la conexion");
+
+            if (voice != null)
+            {
+                voice.Activate();
+            }
+
+            WsClient.Instance.StartConnection();
+            ToggleLoadingBar(false);
+            Continue(true);
+        }
+
+        */
+        #endregion
     }
 }

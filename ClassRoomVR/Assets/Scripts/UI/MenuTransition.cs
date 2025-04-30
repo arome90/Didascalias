@@ -107,8 +107,9 @@ namespace ClassRoomVR
         /// </summary>
         private void GoStart()
         {
-            /////if (GameManager.Instance.GetWsConnection())
-            /////{
+            //Hay conexion, accedemos al aula con normalidad
+            if (GameManager.Instance.GetConnection())
+            {
                 ToggleUIElements(false);
                 _menus[_currentMenuIndex].SetActive(false);
                 if (GameManager.Instance.GetCurrentSettings().name != "Personalizado")
@@ -118,15 +119,7 @@ namespace ClassRoomVR
                 _textSession.gameObject.SetActive(true);
                 _textSession.text = WsClient.Instance.Session;
                 GameManager.Instance.LoadMainScene();
-            /////}
-            /////else
-            /////{
-            /////if (GameManager.Instance.GetWsTryingToConnect())
-            /////{
-            /////Debug.Log("Ya estamos intentando conectar con el servidor.");
-            /////return;
-            /////}
-            /////}
+            }
         }
 
         /// <summary>

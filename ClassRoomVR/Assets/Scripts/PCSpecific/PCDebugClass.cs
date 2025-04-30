@@ -16,14 +16,14 @@ public class PCDebugClass : MonoBehaviour
             if (GameManager.Instance.IsPause)
                 GameManager.Instance.Continue(false);
             else 
-                GameManager.Instance.Pause(false, false);
+                GameManager.Instance.Pause(false);
         }
         if (Input.GetKeyUp(KeyCode.O))
         {
             if (GameManager.Instance.IsPause)
                 GameManager.Instance.Continue(true);
             else
-                GameManager.Instance.Pause(false, true);
+                GameManager.Instance.Pause(true);
         }
     }
 }
