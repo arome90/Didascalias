@@ -62,7 +62,7 @@ public class Personality
         float value = 1.0f;
         foreach (PersonalityType personality in Enum.GetValues(typeof(PersonalityType)))
         {
-            value += (_traits[(int)personality] - 0.5f) * personalityEmotionInfluence[personality][emotion];
+            value += (_traits[(int)personality]*2.0f - 1.0f) * personalityEmotionInfluence[personality][emotion];
         }
         return value;
     }

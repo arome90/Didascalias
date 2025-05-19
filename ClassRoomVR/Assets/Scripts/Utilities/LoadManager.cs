@@ -126,16 +126,7 @@ namespace ClassRoomVR
             foreach (var outerPair in originalDict)
             {
                 if (Enum.TryParse(outerPair.Key, out TOuterKey outerKey))
-                {
-                    //var innerDict = new Dictionary<TInnerKey, TValue>();
-                    //foreach (var innerPair in outerPair.Value)
-                    //{
-                    //    if (Enum.TryParse(innerPair.Key, out TInnerKey innerKey))
-                    //    {
-                    //        innerDict[innerKey] = innerPair.Value;
-                    //    }
-                    //}
-
+                {    
                     newDict[outerKey] = ConvertDictionary<TInnerKey, TValue>(outerPair.Value);
                 }
             }

@@ -25,9 +25,6 @@ public class ExternalForceManager : SceneSingleton<ExternalForceManager>
     {
         LoadExternalForcesFromJson();
         _students = ClassManager.Instance.getStudents();
-
-        // Aplicar una fuerza de ejemplo al inicio
-        //ApplyExternalForce(ExternalForces.TeacherTooQuiet);
     }
 
     /// <summary>
@@ -52,17 +49,13 @@ public class ExternalForceManager : SceneSingleton<ExternalForceManager>
             {
                 if (System.Enum.TryParse(kvp.Key, out ExternalForces force))
                 {
-                    var emotionImpacts = new Dictionary<EmotionType, float>();
-
                     foreach (var emotionKvp in kvp.Value)
                     {
                         if (System.Enum.TryParse(emotionKvp.Key, out EmotionType emotion))
                         {
-                            emotionImpacts[emotion] = emotionKvp.Value;
+                            externalForceEmotionImpacts[force][emotion] = emotionKvp.Value;
                         }
                     }
-
-                    externalForceEmotionImpacts[force] = emotionImpacts;
                 }
             }
         }

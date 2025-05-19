@@ -4,6 +4,7 @@ using MathNet.Numerics.Statistics;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 namespace ClassRoomVR
@@ -26,16 +27,17 @@ namespace ClassRoomVR
         private Student _student;
         private Transform _player;
         private RunningStatistics _statistics;
+        private BehaviorTree _tree;
 
         private Dictionary<studentBehaviorParams, float> studentBehavoirValues;
         [SerializeField] private string studentBehavoirJsonPath;
 
-        [SerializeField] private BehaviorTree tree;
 
         private void Start()
         {
             _statistics = new RunningStatistics();
             _student = GetComponent<Student>();
+            _tree = GetComponent<BehaviorTree>();
             _player = Camera.main.transform;
             InvokeRepeating(nameof(MakeDecision), _decisionTime, _decisionTime);
         }
@@ -137,11 +139,11 @@ namespace ClassRoomVR
         {
             if(pause)
             {
-                tree.DisableBehavior();
+                _tree.DisableBehavior();
             }
             else
             {
-                tree.EnableBehavior();
+                _tree.EnableBehavior();
             }
         }
     }

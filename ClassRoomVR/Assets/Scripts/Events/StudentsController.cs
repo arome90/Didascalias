@@ -326,7 +326,7 @@ namespace ClassRoomVR
         {
             foreach (Student student in _students.Values)
             {
-                student.GetBehavior().SetPauseTree(pause);
+                student.GetBehavior()?.SetPauseTree(pause);
             }
         }
 

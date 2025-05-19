@@ -45,22 +45,20 @@ namespace BehaviorDesigner.Runtime.Tasks
             float emotionInfluence = emotion.GetEmotionValue(EmotionType.BoredomFascination) * BoredomFascinationInfluence + emotion.GetEmotionValue(EmotionType.DispiritedEncouraged) * DispiritedEncouragedInfluence +
                 emotion.GetEmotionValue(EmotionType.TerrorEnchantment) * TerrorEnchantmentInfluence + emotion.GetEmotionValue(EmotionType.FrustrationEuphoria) * FrustrationEuphoriaInfluence +
                emotion.GetEmotionValue(EmotionType.AnxietyConfidence) * AnxietyConfidenceInfluence;
-            float cont1 = (BoredomFascinationInfluence + DispiritedEncouragedInfluence + TerrorEnchantmentInfluence + FrustrationEuphoriaInfluence + AnxietyConfidenceInfluence);
+            //float cont1 = (BoredomFascinationInfluence + DispiritedEncouragedInfluence + TerrorEnchantmentInfluence + FrustrationEuphoriaInfluence + AnxietyConfidenceInfluence);
 
             float personalityInfluence = personality.GetTraitValue(PersonalityType.Openness) * OpennessInfluence + personality.GetTraitValue(PersonalityType.Agreeableness) * AgreeablenessInfluence +
                personality.GetTraitValue(PersonalityType.Conscientiousness) * ConscientiousnessInfluence + personality.GetTraitValue(PersonalityType.Extraversion) * ExtraversionInfluence + personality.GetTraitValue(PersonalityType.Neuroticism) * NeuroticismInfluence;
-            float cont2 = OpennessInfluence + AgreeablenessInfluence + ConscientiousnessInfluence + ExtraversionInfluence + NeuroticismInfluence;
+            //float cont2 = OpennessInfluence + AgreeablenessInfluence + ConscientiousnessInfluence + ExtraversionInfluence + NeuroticismInfluence;
 
 
-            return (emotionInfluence + personalityInfluence) * _priority / (cont1 + cont2);
+            return (emotionInfluence + personalityInfluence + 1.0f) * _priority;
         }
 
         public override bool CanExecute()
         {
             return executionStatus == TaskStatus.Inactive;
         }
-
-
 
         public override void OnChildExecuted(TaskStatus childStatus)
         {

@@ -14,7 +14,7 @@ namespace ClassRoomVR
         private WsClient ws;
         private HttpClient client;
         private GameData gameData = new GameData();
-        private int maxPlayerDataCount = 5; // N�mero m�ximo de PlayerData antes de enviar
+        private int maxPlayerDataCount = 50; // N�mero m�ximo de PlayerData antes de enviar
         private string Session;
 
         private string path;
