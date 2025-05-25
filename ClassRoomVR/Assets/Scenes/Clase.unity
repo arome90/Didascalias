@@ -859,8 +859,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65525fb5e567e646ab2b88983a69686, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapshotTime: 1
-  maxSnapshot: 0
+  snapshotInterval: 1
+  maxSnapshots: 10
 --- !u!4 &678730184
 Transform:
   m_ObjectHideFlags: 0
@@ -2223,7 +2223,6 @@ MonoBehaviour:
   silenceThreshold: -45
   whisperThreshold: -32
   normalThreshold: -15.5
-  shoutThreshold: 0
   targetTime: 2
 --- !u!1001 &1491266296
 PrefabInstance:

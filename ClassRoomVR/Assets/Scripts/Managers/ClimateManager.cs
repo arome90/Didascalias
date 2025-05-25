@@ -37,25 +37,11 @@ namespace ClassRoomVR
         private void LoadBehaviorValues()
         {
             string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, sittingBehaviorsJsonPath);
+            Dictionary<string, float> tempValues = LoadManager.Instance.LoadDataFromJson<string, float>(filePath);
 
-            if (File.Exists(filePath))
+            if (tempValues!=null)
             {
-                string json = File.ReadAllText(filePath);
-
-                // Deserializar el JSON en un diccionario
-                Dictionary<string, float> tempValues = JsonUtility.FromJson<KeyValueWrapper>(json).ToDictionary();
-
-                // Convertir las claves a enumeradores
-                behaviorValues = new Dictionary<EventSittingAnimations, float>();
-
-                foreach (var kvp in tempValues)
-                {
-                    if (System.Enum.TryParse(kvp.Key, out EventSittingAnimations behavior))
-                    {
-                        behaviorValues[behavior] = kvp.Value;
-                    }
-                }
-
+                behaviorValues = LoadManager.Instance.ConvertDictionary<EventSittingAnimations, float>(tempValues);
                 Debug.Log("Behavior values loaded successfully.");
             }
             else

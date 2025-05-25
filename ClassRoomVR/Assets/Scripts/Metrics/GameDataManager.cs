@@ -1,10 +1,6 @@
-using ClassRoomVR;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.WebSockets;
-using System.Threading;
 using UnityEngine;
 
 namespace ClassRoomVR
@@ -49,7 +45,9 @@ namespace ClassRoomVR
             {
                 if (gameData.datas[Session].Count > 0)
                 {
-                    client.sendJson(gameData.ToJson());
+                    string text = gameData.ToJson();
+                    client.sendJson(text);
+                    _ = WriterManager.Instance.WriteToStreamWriter(path, text);
                     gameData.datas[Session].Clear();
                 }
             }
@@ -76,7 +74,9 @@ namespace ClassRoomVR
 
             if (gameData.datas[Session].Count > 0)
             {
-                client.sendJson(gameData.ToJson());
+                string text = gameData.ToJson();
+                client.sendJson(text);
+                _ = WriterManager.Instance.WriteToStreamWriter(path, text);
                 gameData.datas[Session].Clear();
                 gameData.datas.Clear();
             }

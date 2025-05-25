@@ -30,8 +30,8 @@ namespace ClassRoomVR
         private float whisperThreshold = -32.0f; // Umbral de susurro en dB
         [SerializeField]
         private float normalThreshold = -15.5f; // Umbral de habla normal en dB
-        [SerializeField]
-        private float shoutThreshold = 0.0f; // Umbral de grito en dB (no se usa actualmente)
+        //[SerializeField]
+        //private float shoutThreshold = 0.0f; // Umbral de grito en dB 
         [SerializeField]
         private float targetTime = 10.0f; // Tiempo objetivo para enviar evento de estado
 

@@ -4,8 +4,12 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks
 {
 
-    [TaskDescription("Determine Influence.")]
+    [TaskDescription("Decorator node for Behavior Designer that determines the priority of a task based on the emotional and personality influences.")]
     [TaskIcon("{SkinColor}CooldownIcon.png")]
+    /// <summary>
+    /// Nodo decorador para Behavior Designer que determina la prioridad de una tarea
+    /// en función de la influencia emocional y de personalidad de un componente Student.
+    /// </summary>
     public class EmoInfluence : Decorator
     {
         [Range(0, 1)]
@@ -39,18 +43,35 @@ namespace BehaviorDesigner.Runtime.Tasks
             if (onlyPriority) return _priority;
 
             GameObject targetGameObject = gameObject;
-            //para generalizar se puede crear un componente especifico TODO
-            Emotion emotion = targetGameObject.GetComponent<Student>().GetEmotion();
-            Personality personality = targetGameObject.GetComponent<Student>().getPersonality();
-            float emotionInfluence = emotion.GetEmotionValue(EmotionType.BoredomFascination) * BoredomFascinationInfluence + emotion.GetEmotionValue(EmotionType.DispiritedEncouraged) * DispiritedEncouragedInfluence +
-                emotion.GetEmotionValue(EmotionType.TerrorEnchantment) * TerrorEnchantmentInfluence + emotion.GetEmotionValue(EmotionType.FrustrationEuphoria) * FrustrationEuphoriaInfluence +
-               emotion.GetEmotionValue(EmotionType.AnxietyConfidence) * AnxietyConfidenceInfluence;
-            //float cont1 = (BoredomFascinationInfluence + DispiritedEncouragedInfluence + TerrorEnchantmentInfluence + FrustrationEuphoriaInfluence + AnxietyConfidenceInfluence);
 
-            float personalityInfluence = personality.GetTraitValue(PersonalityType.Openness) * OpennessInfluence + personality.GetTraitValue(PersonalityType.Agreeableness) * AgreeablenessInfluence +
-               personality.GetTraitValue(PersonalityType.Conscientiousness) * ConscientiousnessInfluence + personality.GetTraitValue(PersonalityType.Extraversion) * ExtraversionInfluence + personality.GetTraitValue(PersonalityType.Neuroticism) * NeuroticismInfluence;
-            //float cont2 = OpennessInfluence + AgreeablenessInfluence + ConscientiousnessInfluence + ExtraversionInfluence + NeuroticismInfluence;
+            Student student = targetGameObject.GetComponent<Student>();
+            if (student == null)
+            {
+                Debug.LogWarning("Student component not found on " + targetGameObject.name);
+                return _priority;
+            }
 
+            Emotion emotion = student.GetEmotion();
+            Personality personality = student.getPersonality();
+            if (emotion == null || personality == null)
+            {
+                Debug.LogWarning("Emotion or Personality not found on " + targetGameObject.name);
+                return _priority;
+            }
+
+            float emotionInfluence =
+                emotion.GetEmotionValue(EmotionType.BoredomFascination) * BoredomFascinationInfluence +
+                emotion.GetEmotionValue(EmotionType.DispiritedEncouraged) * DispiritedEncouragedInfluence +
+                emotion.GetEmotionValue(EmotionType.TerrorEnchantment) * TerrorEnchantmentInfluence +
+                emotion.GetEmotionValue(EmotionType.FrustrationEuphoria) * FrustrationEuphoriaInfluence +
+                emotion.GetEmotionValue(EmotionType.AnxietyConfidence) * AnxietyConfidenceInfluence;
+
+            float personalityInfluence =
+                personality.GetTraitValue(PersonalityType.Openness) * OpennessInfluence +
+                personality.GetTraitValue(PersonalityType.Agreeableness) * AgreeablenessInfluence +
+                personality.GetTraitValue(PersonalityType.Conscientiousness) * ConscientiousnessInfluence +
+                personality.GetTraitValue(PersonalityType.Extraversion) * ExtraversionInfluence +
+                personality.GetTraitValue(PersonalityType.Neuroticism) * NeuroticismInfluence;
 
             return (emotionInfluence + personalityInfluence + 1.0f) * _priority;
         }

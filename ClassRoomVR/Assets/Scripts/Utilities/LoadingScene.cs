@@ -13,11 +13,11 @@ using UnityEngine.Networking;
 public class LoadingScene : MonoBehaviour
 {
     [SerializeField]
-    private string nextScene = "MainScene"; // Nombre de la escena principal
+    private int nextScene = 1;
     [SerializeField]
     private TextMeshProUGUI textMeshPro; // Texto para mostrar el porcentaje de progreso
     [SerializeField]
-    private TextMeshProUGUI text2; // Texto para mostrar el nombre del archivo actualmente cargado.
+    private TextMeshProUGUI currentFileText; // Texto para mostrar el nombre del archivo actualmente cargado.
     [SerializeField]
     string[] files; // Lista de archivos que deben copiarse a la ruta persistente.
 
@@ -39,7 +39,7 @@ public class LoadingScene : MonoBehaviour
         int cont = 0;
         foreach (string file in files)
         {
-            text2.text = file;
+            currentFileText.text = file;
             //string fileName = Path.GetFileName(file);
             string fileName = file;
             string persistentFile = Path.Combine(Application.persistentDataPath, fileName);
@@ -65,8 +65,7 @@ public class LoadingScene : MonoBehaviour
         // Cargar la siguiente escena
         //SceneManager.LoadScene(nextScene);
         //Con transición
-        //SceneTransitionManager.Singleton.GoToSceneAsync(SceneManager.GetSceneByName(nextScene).buildIndex);
-        SceneTransitionManager.Singleton.GoToSceneAsync(1);
+        SceneTransitionManager.Singleton.GoToSceneAsync(nextScene);
     }
 
     /// <summary>
@@ -76,7 +75,8 @@ public class LoadingScene : MonoBehaviour
     {
         string sourcePath = Path.Combine(Application.streamingAssetsPath, "config.json");
         string destinationPath = Path.Combine(Application.persistentDataPath, "config.json");
-        // Si ya existe el archivo en la ruta persistente, intentamos cargarlo y revisar la clave 'use'        if (File.Exists(destinationPath))
+        // Si ya existe el archivo en la ruta persistente, intentamos cargarlo y revisar la clave 'use'
+        if (File.Exists(destinationPath))
         {
             var dictionary1 = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
             if (dictionary1 == null)
@@ -92,6 +92,10 @@ public class LoadingScene : MonoBehaviour
                     if (value.GetType() == typeof(bool)) reload = !(bool)value;
                 }
 
+            }
+            if (!reload)
+            {
+                LoadManager.Instance.ForceSaveObject("config", dictionary1);
             }
         }
 
@@ -110,15 +114,16 @@ public class LoadingScene : MonoBehaviour
                 Debug.LogError($"Error copying config.json: {request.error}");
                 yield break;
             }
-        }
 
-        Dictionary<string, Dictionary<string, object>> config_ = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
-        if (config_ == null || !LoadManager.Instance.SaveObject("config", config_))
-        {
-            Debug.LogError("Failed to load config.json file");
-            yield break;
+            Dictionary<string, Dictionary<string, object>> config_ = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
+            LoadManager.Instance.ForceSaveObject("config", config_);
+            if (config_ == null)
+            {
+                Debug.LogError("Failed to load config.json file");
+                yield break;
+            }
         }
-                    
+        
         StartCoroutine(SetupGameFiles());
     }
 

@@ -10,17 +10,21 @@ using System.Threading.Tasks;
 public class WriterManager : GenericSingleton<WriterManager>
 {
     // Diccionario para guardar los StreamWriter por ruta de archivo.
-    private Dictionary<string, StreamWriter> streamWriters
+    private readonly Dictionary<string, StreamWriter> streamWriters
         = new Dictionary<string, StreamWriter>();
 
     // Diccionario de locks para asegurar acceso seguro a cada archivo.
-    private Dictionary<string, object> lockObjects = new Dictionary<string, object>();
+    private readonly Dictionary<string, object> lockObjects
+        = new Dictionary<string, object>();
+
+    // Lock para proteger la creación y acceso a streamWriters y lockObjects.
+    private readonly object dictionaryLock = new object();
 
     // Lista de tareas pendientes de escritura para poder esperar su finalización al salir.
-    private List<Task> pendingTasks = new List<Task>();
+    private readonly List<Task> pendingTasks = new List<Task>();
 
     // Lock general para modificar la lista de tareas pendientes.
-    private object pendingTasksLock = new object();
+    private readonly object pendingTasksLock = new object();
 
     // Bandera para indicar si la aplicación está cerrando.
     private bool isQuitting = false;
@@ -31,15 +35,16 @@ public class WriterManager : GenericSingleton<WriterManager>
     /// </summary>
     /// <param name="path">Ruta del archivo a abrir.</param>
     /// <returns>StreamWriter asociado a la ruta.</returns>
-    public StreamWriter CreateStreamWriter(string path)
+    private StreamWriter CreateStreamWriter(string path)
     {
+
         if (!streamWriters.ContainsKey(path))
         {
-            StreamWriter writer = new StreamWriter(path, true); // 'true' para añadir al archivo existente
-            streamWriters[path] = writer;
+            streamWriters[path] = new StreamWriter(path, true);
             lockObjects[path] = new object();
         }
         return streamWriters[path];
+
     }
 
     /// <summary>
@@ -52,8 +57,14 @@ public class WriterManager : GenericSingleton<WriterManager>
     {
         if (isQuitting) return;
 
-        StreamWriter writer = CreateStreamWriter(path);
-        object lockObject = lockObjects[path];
+        StreamWriter writer;
+        object lockObject;
+
+        lock (dictionaryLock)
+        {
+            writer = CreateStreamWriter(path);
+            lockObject = lockObjects[path];
+        }
 
         Task writeTask = Task.Run(() =>
         {
@@ -75,6 +86,29 @@ public class WriterManager : GenericSingleton<WriterManager>
         {
             pendingTasks.Remove(writeTask);
         }
+
+    }
+
+    /// <summary>
+    /// Cierra específicamente un archivo.
+    /// Espera tareas pendientes relacionadas antes de cerrar.
+    /// </summary>
+    public void CloseStreamWriter(string path)
+    {
+        lock (pendingTasksLock)
+        {
+            Task.WaitAll(pendingTasks.ToArray());
+        }
+
+        lock (dictionaryLock)
+        {
+            if (streamWriters.TryGetValue(path, out var writer))
+            {
+                writer.Close();
+                streamWriters.Remove(path);
+                lockObjects.Remove(path);
+            }
+        }
     }
 
     /// <summary>
@@ -84,15 +118,20 @@ public class WriterManager : GenericSingleton<WriterManager>
     private void OnApplicationQuit()
     {
         isQuitting = true;
+
         lock (pendingTasksLock)
         {
             Task.WaitAll(pendingTasks.ToArray());
         }
-        foreach (var writer in streamWriters.Values)
+
+        lock (dictionaryLock)
         {
-            writer.Close();
+            foreach (var writer in streamWriters.Values)
+            {
+                writer.Close();
+            }
+            streamWriters.Clear();
+            lockObjects.Clear();
         }
-        streamWriters.Clear();
-        lockObjects.Clear();
     }
 }
