@@ -297,7 +297,7 @@ namespace ClassRoomVR
 
         public void SetPause(bool pause)
         {
-            _studentsController.SetPauseTree(pause);
+            _studentsController?.SetPauseTree(pause);
         }
     }
 }
