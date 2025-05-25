@@ -1,35 +1,38 @@
 using ClassRoomVR;
-using OVR.OpenVR;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
-using Utilities.Extensions;
-using static OVRHaptics;
 
+/// <summary>
+/// Gestiona la carga de archivos necesarios y la transición entre escenas en la aplicación.
+/// Muestra el progreso de la carga usando componentes TextMeshProUGUI.
+/// </summary>
 public class LoadingScene : MonoBehaviour
 {
     [SerializeField]
     private string nextScene = "MainScene"; // Nombre de la escena principal
     [SerializeField]
-    private TextMeshProUGUI textMeshPro;
+    private TextMeshProUGUI textMeshPro; // Texto para mostrar el porcentaje de progreso
     [SerializeField]
-    private TextMeshProUGUI text2;
+    private TextMeshProUGUI text2; // Texto para mostrar el nombre del archivo actualmente cargado.
     [SerializeField]
-    string[] files;
+    string[] files; // Lista de archivos que deben copiarse a la ruta persistente.
 
-    int cont;
+    private int cont;
     bool reload;
+
     void Start()
     {
         cont = 0;
         reload = true;
         StartCoroutine(LoadConfig());
     }
-
+    /// <summary>
+    /// Copia todos los archivos necesarios a la ruta persistente, mostrando el progreso.
+    /// </summary>
     IEnumerator SetupGameFiles()
     {
         int N = files.Length;
@@ -42,12 +45,12 @@ public class LoadingScene : MonoBehaviour
             string persistentFile = Path.Combine(Application.persistentDataPath, fileName);
             if (!File.Exists(persistentFile) || reload) // Solo copia si no existe en persistentDataPath
             {
-                Debug.Log($"Copiando archivo: {fileName}");
+                Debug.Log($"Copying file: {fileName}");
                 yield return CopyFileToPersistentDataPath(fileName);
             }
             else
             {
-                Debug.Log($"Archivo ya copiado: {fileName}, saltando el proceso.");
+                Debug.Log($"File already copied: {fileName}, skipping process.");
             }
             cont++;
             int percentage = cont / N * 100;
@@ -66,12 +69,14 @@ public class LoadingScene : MonoBehaviour
         SceneTransitionManager.Singleton.GoToSceneAsync(1);
     }
 
+    /// <summary>
+    /// Carga y verifica el archivo de configuración principal antes de continuar.
+    /// </summary>
     IEnumerator LoadConfig()
     {
         string sourcePath = Path.Combine(Application.streamingAssetsPath, "config.json");
         string destinationPath = Path.Combine(Application.persistentDataPath, "config.json");
-        //Ver si va a modificar datos desde APK
-        if (File.Exists(destinationPath))
+        // Si ya existe el archivo en la ruta persistente, intentamos cargarlo y revisar la clave 'use'        if (File.Exists(destinationPath))
         {
             var dictionary1 = LoadManager.Instance.LoadDataFromJson<string, Dictionary<string, object>>(destinationPath);
             if (dictionary1 == null)
@@ -90,19 +95,19 @@ public class LoadingScene : MonoBehaviour
             }
         }
 
-
-        if (!File.Exists(destinationPath) || reload) // Solo copia si no existe en persistentDataPath
+        // Si el archivo no existe o se requiere recarga, lo copiamos desde los assets
+        if (!File.Exists(destinationPath) || reload) 
         {
             UnityWebRequest request = UnityWebRequest.Get(sourcePath);
             yield return request.SendWebRequest();
             if (request.result == UnityWebRequest.Result.Success)
             {
                 File.WriteAllText(destinationPath, request.downloadHandler.text);
-                Debug.Log($"Archivo copiado: {destinationPath}");
+                Debug.Log($"File copied: {destinationPath}");
             }
             else
             {
-                Debug.LogError($"Error al copiar {"config.json"}: {request.error}");
+                Debug.LogError($"Error copying config.json: {request.error}");
                 yield break;
             }
         }
@@ -117,6 +122,10 @@ public class LoadingScene : MonoBehaviour
         StartCoroutine(SetupGameFiles());
     }
 
+    /// <summary>
+    /// Copia un archivo específico desde los assets a la ruta persistente usando UnityWebRequest.
+    /// </summary>
+    /// <param name="fileName">Nombre del archivo a copiar.</param>
     IEnumerator CopyFileToPersistentDataPath(string fileName)
     {
         string sourcePath = Path.Combine(Application.streamingAssetsPath, fileName);
@@ -128,11 +137,11 @@ public class LoadingScene : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             File.WriteAllText(destinationPath, request.downloadHandler.text);
-            Debug.Log($"Archivo copiado: {destinationPath}");
+            Debug.Log($"File copied: {destinationPath}");
         }
         else
         {
-            Debug.LogError($"Error al copiar {fileName}: {request.error}");
+            Debug.LogError($"Error copying {fileName}: {request.error}");
         }
     }
 }

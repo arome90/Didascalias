@@ -6,15 +6,19 @@ using Utilities.Extensions;
 
 namespace ClassRoomVR
 {
+    /// <summary>
+    /// Gestiona la detección y clasificación del nivel de volumen de voz,
+    /// aplicando fuerzas externas según el umbral detectado.
+    /// </summary>
     public class VoiceEvent : MonoBehaviour
     {
         [SerializeField]
-        private VoiceVariables voiceVariables;
+        private VoiceVariables voiceVariables;// Referencia a variables de volumen de voz estándar (micrófono).
         [SerializeField]
-        private VoiceVariablesWit voiceVariablesWit;
+        private VoiceVariablesWit voiceVariablesWit;// Referencia a variables de volumen de voz con WitAI.
 
         [SerializeField]
-        private bool usemicrophone = true;
+        private bool usemicrophone = true;// Indica si se debe usar el micrófono local para medir el volumen.
 
         [SerializeField]
         private ExternalForceManager externalForceManager;
@@ -32,13 +36,14 @@ namespace ClassRoomVR
         private float targetTime = 10.0f; // Tiempo objetivo para enviar evento de estado
 
 
-        // Start is called before the first frame update
         void Start()
         {
-           
             InvokeRepeating(nameof(CheckVolume), targetTime, targetTime);
         }
 
+        /// <summary>
+        /// Comprueba el nivel de volumen actual y lo clasifica.
+        /// </summary>
         public void CheckVolume()
         {
             float dB;
@@ -55,7 +60,10 @@ namespace ClassRoomVR
             ClassifyVolume(dB);
         }
 
-        // Clasifica el tono detectado según los umbrales definidos
+        /// <summary>
+        /// Clasifica el volumen detectado y aplica la fuerza externa correspondiente.
+        /// </summary>
+        /// <param name="dB">Volumen medido en decibelios.</param>
         private void ClassifyVolume(float dB)
         {
             //Debug.Log("VoiceEvent: " + dB);

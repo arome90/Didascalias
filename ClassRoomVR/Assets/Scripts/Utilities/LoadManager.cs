@@ -5,12 +5,23 @@ using System.IO;
 using UnityEngine;
 namespace ClassRoomVR
 {
+    /// <summary>
+    /// Singleton para la gestión de carga y guardado de objetos y diccionarios genéricos,
+    /// con soporte para serialización y deserialización JSON.
+    /// </summary>
     public class LoadManager
     {
         private static LoadManager instance;
         private static readonly object lockObject = new object();
+
+        /// <summary>
+        /// Diccionario principal que almacena cualquier tipo de objeto utilizando una clave string.
+        /// </summary>
         Dictionary<string, object> mainDictionary = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Propiedad para acceder a la instancia Singleton de LoadManager.
+        /// </summary>
         public static LoadManager Instance
         {
             get
@@ -29,6 +40,10 @@ namespace ClassRoomVR
             }
         }
 
+
+        /// <summary>
+        /// Destruye la instancia Singleton y limpia sus datos.
+        /// </summary>
         public static void DestroyInstance()
         {
             lock (lockObject)
@@ -42,7 +57,13 @@ namespace ClassRoomVR
             }
         }
 
-        // Método para obtener un diccionario por clave y tipo (lectura/escritura)
+        /// <summary>
+        /// Obtiene un objeto de tipo T almacenado en el diccionario principal.
+        /// </summary>
+        /// <typeparam name="T">Tipo del objeto a recuperar.</typeparam>
+        /// <param name="key">Clave utilizada para el almacenamiento.</param>
+        /// <param name="d">Referencia de salida al objeto recuperado.</param>
+        /// <returns>True si se encuentra y el tipo coincide, false en caso contrario.</returns>
         public bool GetObject<T>(string key, ref T d)
         {
             if (mainDictionary.TryGetValue(key, out var value) && value is T dictionary)
@@ -53,6 +74,13 @@ namespace ClassRoomVR
             return false;
         }
 
+        /// <summary>
+        /// Carga un diccionario desde un archivo JSON utilizando Newtonsoft.Json.
+        /// </summary>
+        /// <typeparam name="TKey">Tipo de clave del diccionario.</typeparam>
+        /// <typeparam name="TValue">Tipo de valor del diccionario.</typeparam>
+        /// <param name="jsonPath">Ruta al archivo JSON.</param>
+        /// <returns>El diccionario cargado, o null si falla.</returns>
         public Dictionary<TKey, TValue> LoadDataFromJson<TKey, TValue>(string jsonPath)
         {
             var result = new Dictionary<TKey, TValue>();
@@ -62,7 +90,6 @@ namespace ClassRoomVR
                 try
                 {
                     // Deserializar el JSON a la estructura de datos
-                    //result = JsonUtility.FromJson<Dictionary<TKey, TValue>>(json);
                     result = JsonConvert.DeserializeObject<Dictionary<TKey, TValue>>(json);
                 }
                 catch (System.Exception ex)
@@ -79,21 +106,41 @@ namespace ClassRoomVR
             return result;
         }
 
+        /// <summary>
+        /// Guarda un objeto en el diccionario principal solo si la clave no existe.
+        /// </summary>
+        /// <typeparam name="T">Tipo del objeto.</typeparam>
+        /// <param name="key">Clave para almacenar.</param>
+        /// <param name="s">Objeto a guardar.</param>
+        /// <returns>True si se guarda, false si la clave ya existe.</returns>
         public bool SaveObject<T>(string key, T s)
         {
             if (mainDictionary.ContainsKey(key))
             {
                 return false;
             }
-            mainDictionary[key] = (T)s;
+            mainDictionary[key] = s;
             return true;
         }
 
+        /// <summary>
+        /// Fuerza el guardado (sobrescribe) de un objeto en el diccionario principal.
+        /// </summary>
+        /// <typeparam name="T">Tipo del objeto.</typeparam>
+        /// <param name="key">Clave para almacenar.</param>
+        /// <param name="s">Objeto a guardar.</param>
         public void ForceSaveObject<T>(string key, T s)
         {
-            mainDictionary[key] = (T)s;
+            mainDictionary[key] = s;
         }
 
+        /// <summary>
+        /// Convierte un diccionario con claves string a uno con claves Enum.
+        /// </summary>
+        /// <typeparam name="TKey">Tipo Enum para las claves.</typeparam>
+        /// <typeparam name="TValue">Tipo de los valores.</typeparam>
+        /// <param name="originalDict">Diccionario original con claves string.</param>
+        /// <returns>Nuevo diccionario con claves Enum.</returns>
         public Dictionary<TKey, TValue> ConvertDictionary<TKey, TValue>(Dictionary<string, TValue> originalDict)
             where TKey : struct, Enum
         {

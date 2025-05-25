@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4021712613598307605}
   - component: {fileID: 9179661390788717391}
   - component: {fileID: 1772622436140587433}
+  - component: {fileID: 4021680761224779618}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,6 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e35dc135878645345912afb513dc07cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _witAppsForLanguages: []
+  OnLanguageChanged:
+    m_PersistentCalls:
+      m_Calls: []
   IsPause: 0
   currentSettings: {fileID: 11400000, guid: 29f6f364e7b4552458c1333c05ef1a22, type: 2}
   availableSettings:
@@ -52,9 +57,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 29f6f364e7b4552458c1333c05ef1a22, type: 2}
   - {fileID: 11400000, guid: 71a45cec156aefa4fa1cd4975e98be35, type: 2}
   - {fileID: 11400000, guid: 635d34feef072b44faa62954f9854383, type: 2}
-  availablePackages: []
   currentClassInfo: {fileID: 11400000, guid: 50f7bbf0ad099714ba00d15980c2c0eb, type: 2}
-  isUsingVRHardware: 1
   isAutoSavingEnabled: 0
   saveAudio: 0
 --- !u!114 &1772622436140587433
@@ -66,9 +69,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4812924016416801407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b570e15a0eb350468bad9e9bfad1c27, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e817003eb22db04bb763c1f27695dd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  session: 
-  idDevice: 
-  connected: 0
+  _deviceId: 
+--- !u!114 &4021680761224779618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4812924016416801407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e691e0db5bf8b740861cf0dbc12309b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,5 +1,11 @@
 using UnityEngine;
 
+
+/// <summary>
+/// Clase base para implementar el patrón Singleton genérico en componentes MonoBehaviour.
+/// Garantiza que solo exista una instancia de T durante toda la ejecución.
+/// </summary>
+/// <typeparam name="T">Tipo del componente Singleton (debe heredar de MonoBehaviour).</typeparam>
 public class GenericSingleton<T> : MonoBehaviour where T : Component
 {
     private static T instance;
@@ -28,7 +34,10 @@ public class GenericSingleton<T> : MonoBehaviour where T : Component
             return instance;
         }
     }
-
+    /// <summary>
+    /// Asegura que solo exista una instancia. Si ya existe, destruye la nueva.
+    /// Marca el objeto como DontDestroyOnLoad para mantenerlo entre escenas.
+    /// </summary>
     public virtual void Awake()
     {
         if (instance == null)
