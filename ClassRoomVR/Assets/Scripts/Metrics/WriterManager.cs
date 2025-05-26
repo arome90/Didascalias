@@ -95,10 +95,13 @@ public class WriterManager : GenericSingleton<WriterManager>
     /// </summary>
     public void CloseStreamWriter(string path)
     {
+        List<Task> tasksCopy;
         lock (pendingTasksLock)
         {
-            Task.WaitAll(pendingTasks.ToArray());
+            tasksCopy = new List<Task>(pendingTasks);
         }
+
+        Task.WaitAll(tasksCopy.ToArray());
 
         lock (dictionaryLock)
         {
