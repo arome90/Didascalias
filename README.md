@@ -1,33 +1,8 @@
-# Classroom VR (Español)
-Trabajo de Fin de Grado para el Grado en Ingeniería Informática de la Universidad Complutense de Madrid realizado por Antonio Luis Suarez, Daniel Lopez, Sandra Alonso y Andrés Puente.
+# Desarrollo de entornos virtuales para la mejora de habilidades comunicativas: Personalización y Comportamiento
+Trabajo de Fin de Grado para el Grado en Desarrollo de Videojuegos de la Universidad Complutense de Madrid realizado por Naxin Qin, Likang Wu y Jianuo Wen.
+
+El presente trabajo presenta una serie de mejoras en Didascalias, una herramienta de simulación orientada a la formación docente, centradas en dos ejes principales: la incorporación de técnicas de Inteligencia Artificial para enriquecer el comportamiento de los personajes virtuales y la ampliación de las opciones de personalización estética. El objetivo ha sido aumentar la credibilidad del entorno simulado y favorecer interacciones más empáticas y contextualmente coherentes, de modo que el usuario experimente una sensación más inmersiva y útil durante el entrenamiento.
 
 
-## VR
-Hemos realizado la integración de Oculus siguiendo la documentacion oficial de Oculus en https://developer.oculus.com/documentation/unity/unity-gs-overview/.
-
-## Estructura del proyecto
-El proyecto de Unity consta de 2 escenas principales, ambas escenas tienen un objeto prefab "GameManager" que gestiona el desarrollo de la app. Este objeto es singleton y se va pasando de escena a escena actualizando su informacion.
-
-### MenuScene
-El manager de esta escena es "MenuManager"
-
-### PlayScene
-El manager de esta escena es "MySceneManager"
-
----
-
-# WIP
-- Manos/personaje -> linkear manos al person
-- Evitar que haya 2 listeners en MainMenu
-- Añadir audios femeninos
-
----
-
-# Classroom VR (English)
-End of Degree Project for Computer Engineering at Universidad Complutense de Madrid made by Antonio Luis Suarez, Daniel Lopez, Sandra Alonso y Andrés Puente.
-
-## VR
-We have performed the Oculus integraton by following the official Oculus Documentation at https://developer.oculus.com/documentation/unity/unity-gs-overview/.
-
-
-
+## Palabras clave
+Árbol de comportamiento emotivo, árbol de comportamientos, juego serio, realidad virtual, emoción, personalidad, modelado 3D, animaciones, shader, personalización de personajes.

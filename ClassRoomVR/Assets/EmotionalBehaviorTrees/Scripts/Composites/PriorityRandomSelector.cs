@@ -56,7 +56,7 @@ namespace BehaviorDesigner.Runtime.Tasks
     [TaskIcon("{SkinColor}PrioritySelectorIcon.png")]
     public class PriorityRandomSelector : Action
     {
-        [Tooltip("Probability factor [0,1]")]
+        [Tooltip("Probability factor [0.5,1.0]")]
         public float probability = 0.5f;
 
         [Tooltip("Seed the random number generator to make things easier to debug")]
@@ -71,6 +71,9 @@ namespace BehaviorDesigner.Runtime.Tasks
         private List<KeyValuePair<float, int>> executionOrder = new List<KeyValuePair<float, int>>();
 
         private List<EmoImpact> behaviorInfluences;
+
+        private List<float> cumulativeProbabilities;
+
         [SerializeField]
         private string behaviorInfluencesJsonPath;
         public override void OnAwake()
@@ -81,22 +84,19 @@ namespace BehaviorDesigner.Runtime.Tasks
                 UnityEngine.Random.InitState(seed);
             }
             LoadExternalForcesFromJson();
+            cumulativeProbabilities = BuildCumulativeProbabilities(probability, behaviorInfluences.Count);
+
         }
 
         public override void OnStart()
         {
             ComputeBehaviorPriorities();
             executionOrder.Sort((x, y) => y.Key.CompareTo(x.Key));
-
-            float end_num = probability * Mathf.Pow(1 - probability, behaviorInfluences.Count - 1);
-            float aux = UnityEngine.Random.Range(0, 1 - end_num);
+            int n=executionOrder.Count;
+            float aux = UnityEngine.Random.Range(0, cumulativeProbabilities[n-1]);
             int k = 0;
-            while (aux > 0)
-            {
-                k++;
-                aux -= probability * Mathf.Pow(1 - probability, k - 1);
-            }
-            intValue.SetValue(executionOrder[k - 1].Value);
+            while (aux > cumulativeProbabilities[k] && k < n) k++;
+            intValue.SetValue(executionOrder[k].Value);
         }
 
         public override void OnEnd()
@@ -180,6 +180,22 @@ namespace BehaviorDesigner.Runtime.Tasks
             LoadManager.Instance.SaveObject("behaviorInfluences", behaviorInfluences);        
             Debug.Log("Behavior influences loaded successfully.");
 
+        }
+
+        private List<float> BuildCumulativeProbabilities(float probability, int count)
+        {
+            List<float> cumulative = new List<float>(count);
+            float sum = 0f;
+            float remainingProb = 1f;
+
+            for (int i = 0; i < count; i++)
+            {
+                float p = probability * remainingProb;
+                sum += p;
+                cumulative.Add(sum);
+                remainingProb *= (1f - probability);
+            }
+            return cumulative;
         }
     }
 }
