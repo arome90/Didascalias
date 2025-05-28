@@ -250,15 +250,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1860505200}
-    - targetCorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1860505201}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d32c2f24d2e11a846b94503881728d3e, type: 3}
 --- !u!1 &69277133 stripped
 GameObject:
@@ -2426,46 +2418,6 @@ RectTransform:
   m_AnchoredPosition: {x: 4.4, y: 2.21}
   m_SizeDelta: {x: 679.5, y: 485.5}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1860505199 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4812924016416801407, guid: d32c2f24d2e11a846b94503881728d3e,
-    type: 3}
-  m_PrefabInstance: {fileID: 25366133}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1860505200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1860505199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39c5eced02dac1e40a1c970681675550, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DirectionalLight: {fileID: 174255112}
-  Preset: {fileID: 11400000, guid: 43b4701c1f462af419a976419b339412, type: 2}
-  TimeOfDay: 12.24
-  transitionSpeed: 0.05
-  dayNightProgress: 0
-  material: {fileID: 0}
-  skyBoxTimeScale: 0.2
-  transitionDuration: 5
-  nightGameObjects: []
-  dayGameObjects: []
---- !u!114 &1860505201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1860505199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebbb85e256f18774e8863398ce8decb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2101349846 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2676354202956083678, guid: a2a7f9524fec97d4cb29ad24e487ae1c,
@@ -2557,6 +2509,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5296002192511676390, guid: 9d57decff4009d14da9c166c3076bbb1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 493455963278496419}
     - targetCorrespondingSourceObject: {fileID: 468310873852146817, guid: 9d57decff4009d14da9c166c3076bbb1,
         type: 3}
       insertIndex: -1
@@ -2574,6 +2530,34 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 493455963278496415}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &493455963278496418 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5296002192511676390, guid: 9d57decff4009d14da9c166c3076bbb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 493455963278496415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &493455963278496419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493455963278496418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39c5eced02dac1e40a1c970681675550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DirectionalLight: {fileID: 174255112}
+  Preset: {fileID: 11400000, guid: 43b4701c1f462af419a976419b339412, type: 2}
+  TimeOfDay: 12.24
+  transitionSpeed: 0.05
+  dayNightProgress: 0
+  material: {fileID: 0}
+  skyBoxTimeScale: 0.2
+  transitionDuration: 5
+  nightGameObjects: []
+  dayGameObjects: []
 --- !u!4 &1403025453263349025
 Transform:
   m_ObjectHideFlags: 0
