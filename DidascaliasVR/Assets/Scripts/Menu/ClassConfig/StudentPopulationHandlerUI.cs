@@ -47,10 +47,10 @@ public class StudentPopulationHandlerUI : MonoBehaviour
         _boysHandler.OnValueChanged.RemoveListener(AdjustBoyValues);
         _girlsHandler.OnValueChanged.RemoveListener(AdjustGirlValues);
     }
+
     void AdjustBoyValues(float current, float last)
     {
         AdjustValues(current, last, _boysHandler, _girlsHandler);
-
     }
 
     void AdjustGirlValues(float current, float last)

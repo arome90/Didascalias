@@ -12,17 +12,32 @@ public class ClassSettings : ScriptableObject
     public enum Shape { Square, Circular, U }
 
     [Header("Parameters")]
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Número máximo de estudiantes permitidos")]
     private int _maxStudents = 30;
+
+    /// <summary>
+    /// Número máximo de estudiantes permitidos
+    /// </summary>
     public int MaxStudents { get { return _maxStudents; } set { _maxStudents = value; } }
 
     [SerializeField,
         Tooltip("Si se aplican los números de estudiantes por género o se hacen aleatoriamente")]
     private bool _genderSpecified = false;
+
+    /// <summary>
+    /// Si se aplican los números de estudiantes por género o se hacen aleatoriamente
+    /// </summary>
     public bool GenderSpecified { get { return _genderSpecified; } set { _genderSpecified = value; } }
 
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Número de chicos en el aula")]
     private int _numBoys = 0;
+
+    /// <summary>
+    /// Número de chicos en el aula
+    /// Se ajusta según el número máximo de estudiantes y el número de chicas
+    /// </summary>
     public int NumBoys { get { return _numBoys; } 
         set 
         {
@@ -39,8 +54,14 @@ public class ClassSettings : ScriptableObject
             else _numBoys = value; 
         } }
 
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Número de chicas en el aula")]
     private int _numGirls = 0;
+
+    /// <summary>
+    /// Número de chicas en el aula
+    /// Se ajusta según el número máximo de estudiantes y el número de chicos
+    /// </summary>
     public int NumGirls { get { return _numGirls; } 
         set 
         { 
@@ -58,36 +79,66 @@ public class ClassSettings : ScriptableObject
         } }
 
     [Header("Shape Options")]
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Layout de la clase")]
     private Shape _shape = Shape.Square;
+
+    /// <summary>
+    /// Layout de la clase
+    /// </summary>
     public Shape ClassShape { get { return _shape; } set { _shape = value;  } }
 
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Número de escritorios")]
     private int _numDesks = 10;
+
+    /// <summary>
+    /// Número de escritorios en el aula. 
+    /// Si resultan ser más que el número total de alumnos,
+    /// quedarán vacíos los que estén más al fondo.
+    /// Si resultan ser menos que el número total de alumnos,
+    /// se ajustará para que sean tantos escritorios como alumnos
+    /// </summary>
     public int NumDesks { get {return _numDesks; } set { _numDesks = value; } }
 
     // Square Options
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Cuántas filas tiene la clase. Solo se usa en Shape.Square"), Range(1,5)]
     private int _rows = 2;
+    /// <summary>
+    /// Cuántas filas tiene la clase. 
+    /// Solo se usa en Shape.Square
+    /// </summary>
     public int Rows { get { return _rows; } set { _rows = value; } }
 
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Cuántas columnas tiene la clase. Solo se usa en Shape.Square"), Range(1,5)]
     private int _cols = 2;
+    /// <summary>
+    /// Cuántas columnas tiene la clase. 
+    /// Solo se usa en Shape.Square
+    /// </summary>
     public int Cols { get { return _cols; } set { _cols = value; } }
 
     // Circular Options
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Radio de la circunferencia descrita en la forma de clase U o Circular")]
     /*Both Circular and U options*/
     private float _radius = 10.0f;
+
+    /// <summary>
+    /// Radio de la circunferencia descrita en la forma de clase U o Circular
+    /// </summary>
     public float Radius { get { return _radius; } set { _radius = value; } }
 
-    [SerializeField]
-    private float _angleSeparation = 15.0f;
-    public float AngleSeparation { get { return _angleSeparation; } set { _angleSeparation = value; } }
-
     // U Options
-    [SerializeField]
+    [SerializeField,
+        Tooltip("Número máximo de escritorios que forman la semicircunferencia del layout en forma de U")]
     private int _maxDesksInSemicircle = 7;
+
+    /// <summary>
+    /// Número máximo de escritorios que forman la semicircunferencia del layout en forma de U
+    /// </summary>
     public int MaxDesksInSemiCircle { get { return _maxDesksInSemicircle; } set { _maxDesksInSemicircle = value; } }
 
 
@@ -103,7 +154,7 @@ public class ClassSettings : ScriptableObject
         private void OnEnable()
         {
             string[] propertyNames = {
-                    "_maxStudents", "_shape", "_rows", "_cols", "_radius", "_angleSeparation",
+                    "_maxStudents", "_shape", "_rows", "_cols", "_radius",
                     "_numDesks", "_numBoys", "_numGirls", "_genderSpecified", "_maxDesksInSemicircle"
                 };
             _properties = new Dictionary<string, SerializedProperty>();
@@ -137,7 +188,6 @@ public class ClassSettings : ScriptableObject
                     break;
                 case Shape.Circular:
                     DrawProperty(_properties["_radius"], "Radius");
-                    DrawProperty(_properties["_angleSeparation"], "Angle Separation");
                     break;
                 case Shape.U:
                     DrawProperty(_properties["_radius"], "Radius");

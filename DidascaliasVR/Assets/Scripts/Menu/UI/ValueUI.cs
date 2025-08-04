@@ -36,6 +36,10 @@ public class ValueUI : MonoBehaviour
     [SerializeField, 
         Tooltip("Valor inicial, comprendido entre Min Value y Max Value")] 
     float _initialValue;
+    /// <summary>
+    /// Valor inicial, comprendido entre Min Value y Max Value
+    /// </summary>
+    public float InitialValue { get { return _initialValue; } set { _initialValue = value; } }
 
     [SerializeField,
         Tooltip("Evento llamado cuando se settea el valor. Se incluyen como argumentos el valor nuevo y el anterior")] 
@@ -99,6 +103,9 @@ public class ValueUI : MonoBehaviour
             }
         }
 
+        // Como no sabemos si el botón cuenta ya con el Listener adecuado,
+        // probamos a quitarlo de ambos botones, para posteriormente volver a aplicarlo
+        // No tengo una solución mejor... Ayuda
         _decreaseButton.onClick.RemoveListener(DecreaseValue);
         _increaseButton.onClick.RemoveListener(IncreaseValue);
 
@@ -162,7 +169,7 @@ public class ValueUI : MonoBehaviour
     /// CheckConsistency, ya que ahí no se pueden llamar a eventos
     /// </summary>
     /// <param name="newValue"> El nuevo valor </param>
-    private void SetValueNotRaiseEvent(float newValue)
+    public void SetValueNotRaiseEvent(float newValue)
     {
         _value = Mathf.Clamp(newValue, _minValue, _maxValue);
         
