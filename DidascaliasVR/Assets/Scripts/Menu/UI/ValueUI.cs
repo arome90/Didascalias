@@ -66,12 +66,15 @@ public class ValueUI : MonoBehaviour
         _maxValue = max;
         SetValue(_value);
     }
+    public float GetMaxValue() { return _maxValue; }
 
     public void SetMinValue(float min)
     {
         _minValue = min;
         SetValue(_value);
     }
+    public float GetMinValue() { return _minValue; }
+
 
     private void OnValidate()
     {

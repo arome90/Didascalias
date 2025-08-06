@@ -22,15 +22,6 @@ public class ClassSettings : ScriptableObject
     public int MaxStudents { get { return _maxStudents; } set { _maxStudents = value; } }
 
     [SerializeField,
-        Tooltip("Si se aplican los números de estudiantes por género o se hacen aleatoriamente")]
-    private bool _genderSpecified = false;
-
-    /// <summary>
-    /// Si se aplican los números de estudiantes por género o se hacen aleatoriamente
-    /// </summary>
-    public bool GenderSpecified { get { return _genderSpecified; } set { _genderSpecified = value; } }
-
-    [SerializeField,
         Tooltip("Número de chicos en el aula")]
     private int _numBoys = 0;
 
@@ -51,7 +42,9 @@ public class ClassSettings : ScriptableObject
                 _numBoys = value;
                 _numGirls = _maxStudents - _numBoys;
             }
-            else _numBoys = value; 
+            else _numBoys = value;
+
+            if (_numDesks < NumStudents) _numDesks = NumStudents;
         } }
 
     [SerializeField,
@@ -75,8 +68,37 @@ public class ClassSettings : ScriptableObject
                 _numGirls = value;
                 _numBoys = _maxStudents - _numGirls;
             }
-            else _numGirls = value; 
+            else _numGirls = value;
+
+            if (_numDesks < NumStudents) _numDesks = NumStudents;
         } }
+
+    /// <summary>
+    /// Número de estudiantes totales. Devuelve una suma del número de chicas y chicos.
+    /// Al settear el valor, el número de chicos y chicas pasa a ser la mitad de dicho
+    /// valor.
+    /// </summary>
+    public int NumStudents
+    {
+        get
+        {
+            return _numGirls + _numBoys;
+        }
+        set
+        {
+            value = Mathf.Min(value, _maxStudents);
+            if (value % 2 == 0)
+            {
+                _numGirls = value / 2;
+                _numBoys = value / 2;
+            }
+            else
+            {
+                _numGirls = value / 2 + 1;
+                _numBoys = value / 2;
+            }
+        }
+    }
 
     [Header("Shape Options")]
     [SerializeField,
@@ -170,12 +192,8 @@ public class ClassSettings : ScriptableObject
             EditorGUI.BeginChangeCheck();
 
             DrawProperty(_properties["_maxStudents"], "Max Students");
-
-            if (_properties["_genderSpecified"].boolValue)
-            {
-                DrawProperty(_properties["_numBoys"], "Number of Boys");
-                DrawProperty(_properties["_numGirls"], "Number of Girls");
-            }
+            DrawProperty(_properties["_numBoys"], "Boys");
+            DrawProperty(_properties["_numGirls"], "Girls");
 
             DrawProperty(_properties["_shape"], "Shape");
             DrawProperty(_properties["_numDesks"], "Number of Desks");

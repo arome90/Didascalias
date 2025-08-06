@@ -32,17 +32,25 @@ MonoBehaviour:
     lang: pt
     isPrivate: 0
     createdAt: 2024-10-11T00:48:05-0700
-    trainingStatus: 3
-    lastTrainDuration: 49
-    lastTrainedAt: 2024-10-11T02:08:21-0700
-    nextTrainAt: 2024-10-11T02:12:17-0700
+    trainingStatus: 1
+    lastTrainDuration: 82
+    lastTrainedAt: 2025-06-13T06:55:44-0700
+    nextTrainAt: 2025-06-13T06:54:22-0700
     intents:
     - id: 498011286547356
       name: Advertencia
-      entities: []
+      entities:
+      - name: Objeto:Objeto
+        id: 1069922508187922
+      - name: Posiciones:Posiciones
+        id: 441769141785611
     - id: 3742247649377300
       name: BajarVoz
-      entities: []
+      entities:
+      - name: Posiciones:Posiciones
+        id: 441769141785611
+      - name: wit$contact:student
+        id: 1027692779103939
     - id: 890324496023659
       name: CambiarAlumno
       entities: []
@@ -64,7 +72,9 @@ MonoBehaviour:
         id: 1027692779103939
     - id: 1216436282743934
       name: LlamarAlumno
-      entities: []
+      entities:
+      - name: wit$contact:student
+        id: 1027692779103939
     - id: 331859766651980
       name: MoverAlumno
       entities:
@@ -74,19 +84,25 @@ MonoBehaviour:
         id: 1027692779103939
     - id: 463551260063105
       name: Postponer
-      entities: []
+      entities:
+      - name: Posiciones:Posiciones
+        id: 441769141785611
     - id: 889464282729968
       name: Preguntar
       entities: []
     - id: 1714391212680171
       name: SacarMaterial
-      entities: []
+      entities:
+      - name: Objeto:Objeto
+        id: 1069922508187922
     - id: 1048131016641230
       name: Saludos
       entities: []
     - id: 571433288561586
       name: Sentarse
       entities:
+      - name: Objeto:Objeto
+        id: 1069922508187922
       - name: Posiciones:Posiciones
         id: 441769141785611
       - name: wit$contact:student
@@ -96,8 +112,40 @@ MonoBehaviour:
       entities: []
     - id: 1705965986846288
       name: Trabajar
-      entities: []
+      entities:
+      - name: Objeto:Objeto
+        id: 1069922508187922
     entities:
+    - name: Action
+      id: 757345443416132
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Action
+        id: 1018001793579340
+      keywords:
+      - keyword: guardar os materiais
+        synonyms:
+        - guardar os materiais
+      - keyword: levantar
+        synonyms:
+        - "ficar de p\xE9"
+        - "fique de p\xE9"
+        - levantar
+        - levantar-se
+        - levante-se
+      - keyword: sentae
+        synonyms:
+        - se sentar
+        - sentar
+        - sentar direito
+        - sente-se
+      - keyword: trocar de atividade
+        synonyms:
+        - fazer a atividade
+        - "fazer o exerc\xEDcio"
+        - trocar de atividade
     - name: Castigo
       id: 3075364319269834
       lookups:
@@ -107,22 +155,41 @@ MonoBehaviour:
       - name: Castigo
         id: 1083189806700867
       keywords:
+      - keyword: "fica de p\xE9"
+        synonyms:
+        - "voc\xEA fica de p\xE9"
+        - "voc\xEA fica en p\xE9"
+        - "voc\xEA permanece de p\xE9"
+      - keyword: fica na aula
+        synonyms:
+        - ficas aqui
+        - "voc\xEA fica aqui durante o recreio"
       - keyword: hora do recreio
         synonyms:
         - hora do recreio
       - keyword: parte grave
         synonyms:
         - parte grave
-      - keyword: "voc\xEA fica de p\xE9"
+    - name: Despedida
+      id: 1415332606321052
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Despedida
+        id: 728052416575200
+      keywords:
+      - keyword: Tchau
         synonyms:
-        - "voc\xEA fica de p\xE9"
-        - "voc\xEA fica en p\xE9"
-        - "voc\xEA permanece de p\xE9"
-      - keyword: "voc\xEA fica na aula"
-        synonyms:
-        - ficas aqui
-        - "voc\xEA fica aqui durante o recreio"
-        - "voc\xEA fica na aula"
+        - Tchau
+        - "a gente se v\xEA"
+        - adeus
+        - "at\xE9 a pr\xF3xima"
+        - "at\xE9 j\xE1"
+        - "at\xE9 logo"
+        - "at\xE9 mais"
+        - tchau tchau
+        - valeu
     - name: Insultos
       id: 1202966130760358
       lookups:
@@ -134,16 +201,30 @@ MonoBehaviour:
       keywords:
       - keyword: insultos
         synonyms:
+        - abestado
         - atrasado
+        - besta
         - buceta
+        - burro
         - "cabr\xE3o"
+        - cachorra
         - cadela
         - caralho
+        - "cuz\xE3o"
+        - desajeitado
         - fag
+        - "filho da m\xE3e"
         - filho da puta
+        - foda-se
         - idiota
         - merda
+        - nojento
+        - porra
         - puta
+        - puta merda
+        - teu cu
+        - trepar
+        - vagabundo
     - name: Objeto
       id: 506160962239382
       lookups:
@@ -153,34 +234,42 @@ MonoBehaviour:
       - name: Objeto
         id: 1069922508187922
       keywords:
-      - keyword: "apresenta\xE7ao"
+      - keyword: cadeira
         synonyms:
-        - "apresenta\xE7ao"
-      - keyword: biros
+        - assento
+        - assentos
+        - banquinho
+        - banquinhos
+        - cadeira
+        - cadeiras
+      - keyword: livro
         synonyms:
-        - biros
+        - apostila
+        - caderno
+        - livro
+        - manual
+      - keyword: "l\xE1pis"
+        synonyms:
         - "bir\xF4"
         - "bir\xF4s"
         - caneta
+        - lapiseira
         - "l\xE1pis"
-      - keyword: caderno
-        synonyms:
-        - caderno
-        - notebook
-      - keyword: deveres
-        synonyms:
-        - deveres
-        - "li\xE7ao da casa"
-      - keyword: livro
-        synonyms:
-        - livro
       - keyword: material
         synonyms:
+        - coisas
+        - itens
         - materiais escolares
         - material
-      - keyword: papel
+      - keyword: mesa
         synonyms:
-        - papel
+        - carteira
+        - mesa
+      - keyword: quadro
+        synonyms:
+        - lousa
+        - painel
+        - quadro
     - name: Posiciones
       id: 1056902816142534
       lookups:
@@ -190,6 +279,9 @@ MonoBehaviour:
       - name: Posiciones
         id: 441769141785611
       keywords:
+      - keyword: Venha
+        synonyms:
+        - venha
       - keyword: aproxime-se
         synonyms:
         - aproxime-se
@@ -207,10 +299,20 @@ MonoBehaviour:
         - "m\xE1is perto"
         - perto de min
         - "\xE1 minha mesa"
+      - keyword: "atr\xE1s"
+        synonyms:
+        - "atr\xE1s"
       - keyword: essa mesa
         synonyms:
         - essa mesa
         - essa tabela
+      - keyword: "fica em p\xE9"
+        synonyms:
+        - "fica em p\xE9"
+      - keyword: final da clase
+        synonyms:
+        - final da clase
+        - final da classe
       - keyword: fora
         synonyms:
         - casa
@@ -223,6 +325,9 @@ MonoBehaviour:
         - fora da cl
         - fora da clase
         - fora da sala de aula
+      - keyword: "f\xF3ra da clase"
+        synonyms:
+        - "f\xF3ra da clase"
       - keyword: gabinete da diretora
         synonyms:
         - chefa de estudos
@@ -243,9 +348,179 @@ MonoBehaviour:
         - escrivaninha
         - mesa
         - tabela
+      - keyword: parado
+        synonyms:
+        - parado
       - keyword: sitio
         synonyms:
         - sitio
+    - name: Saludos
+      id: 1858868688293263
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Saludos
+        id: 991209362892658
+      keywords:
+      - keyword: "Ol\xE1"
+        synonyms:
+        - beleza?
+        - boa noite
+        - boa tarde
+        - bom dia
+        - "e a\xED?"
+        - oi
+        - oie
+        - opa
+    - name: emotion_type
+      id: 778379638180792
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: emotion_type
+        id: 677088112020157
+      keywords:
+      - keyword: felicidade
+        synonyms:
+        - alegria
+        - contentamento
+        - felicidade
+      - keyword: "motiva\xE7\xE3o"
+        synonyms:
+        - "for\xE7a"
+        - "motiva\xE7\xE3o"
+        - "\xE2nimo"
+      - keyword: orgulho
+        synonyms:
+        - "admira\xE7\xE3o"
+        - orgulho
+        - "satisfa\xE7\xE3o"
+      - keyword: "seguran\xE7a"
+        synonyms:
+        - apoio
+        - "confian\xE7a"
+        - "seguran\xE7a"
+      - keyword: tranquilidade
+        synonyms:
+        - calma
+        - paz
+        - tranquilidade
+    - name: feedback_type
+      id: 2094908637957389
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: feedback_type
+        id: 1097894231842843
+      keywords:
+      - keyword: elogio
+        synonyms:
+        - elogio
+        - muito bem
+        - "parab\xE9ns"
+      - keyword: incentivo
+        synonyms:
+        - continue assim
+        - incentivo
+        - "voc\xEA consegue"
+      - keyword: reasseguramento
+        synonyms:
+        - "n\xE3o tem problema errar"
+        - reasseguramento
+        - vai dar certo
+      - keyword: reconhecimento
+        synonyms:
+        - bom progresso
+        - melhorou muito
+        - reconhecimento
+    - name: material_didatico
+      id: 1278717123792424
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: material_didatico
+        id: 720258030998331
+      keywords:
+      - keyword: "apresenta\xE7\xE3o"
+        synonyms:
+        - "apresenta\xE7\xE3o"
+        - "exposi\xE7\xE3o"
+        - oral
+        - trabalho em grupo
+      - keyword: atividade
+        synonyms:
+        - atividade
+        - proposta
+        - tarefa
+      - keyword: "exerc\xEDcio"
+        synonyms:
+        - "exerc\xEDcio"
+        - "quest\xE3o"
+        - resposta
+      - keyword: folha
+        synonyms:
+        - ficha
+        - folha
+        - folhinha
+        - papel
+    - name: target_person
+      id: 1400969321205270
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: target_person
+        id: 9925044487601093
+      keywords:
+      - keyword: "algu\xE9m"
+        synonyms:
+        - "algu\xE9m"
+        - um colega
+        - uma pessoa
+      - keyword: todo mundo
+        synonyms:
+        - a turma
+        - galera
+        - pessoal
+        - todo mundo
+        - todos
+      - keyword: "voc\xEA"
+        synonyms:
+        - "voc\xEA"
+      - keyword: "voc\xEAs"
+        synonyms:
+        - "voc\xEAs"
+    - name: time_frame
+      id: 761950576310111
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: time_frame
+        id: 1293400329112174
+      keywords:
+      - keyword: 5 minutos
+        synonyms:
+        - 5 minutos
+      - keyword: "pra come\xE7ar"
+        synonyms:
+        - "pra come\xE7ar"
+        - "quando come\xE7ar"
+      - keyword: quando terminar
+        synonyms:
+        - "ap\xF3s a tarefa"
+        - depois que acabar
+        - quando acabar
+        - quando terminar
+      - keyword: um tempinho
+        synonyms:
+        - alguns minutos
+        - "s\xF3 um pouco"
+        - um tempinho
     - name: wit$agenda_entry
       id: 54175655-e50a-4ec6-b35b-8f59009c8946
       lookups: []
@@ -260,7 +535,46 @@ MonoBehaviour:
       - name: student
         id: 1027692779103939
       keywords: []
-    traits: []
+    traits:
+    - name: emotional_tone
+      id: 1089214339829797
+      values:
+      - id: 1708502516444325
+        value: affection
+      - id: 1111588430856452
+        value: empathy
+      - id: 1084841597182799
+        value: encouragement
+      - id: 1033414141964928
+        value: feedback
+      - id: 1451291836005197
+        value: motivation
+      - id: 1429265145066899
+        value: praise
+      - id: 647743157733217
+        value: reassurance
+      - id: 24567791819511856
+        value: support
+    - name: instruction_type
+      id: 1267727838286545
+      values:
+      - id: 1902947250529658
+        value: academic
+      - id: 794239693249168
+        value: behavioral
+      - id: 1281358496979363
+        value: organizational
+      - id: 1773946566530713
+        value: participation
+      - id: 4182207408676024
+        value: transition
+    - name: social_intent
+      id: 1408869230165536
+      values:
+      - id: 1060118322985357
+        value: affection
+      - id: 1037541698533451
+        value: peer_support
     versionTags: []
     voices:
     - name: wit$British Butler

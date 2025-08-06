@@ -8,6 +8,14 @@ using UnityEngine;
 public class LayoutValuePersistency : MonoBehaviour
 {
     [SerializeField,
+    Tooltip("UI que modifica el número de chicos")]
+    List<ValueUI> _boysValueUIs = new List<ValueUI>();
+
+    [SerializeField,
+    Tooltip("UI que modifica el número de chicas")]
+    List<ValueUI> _girlsValueUIs = new List<ValueUI>();
+
+    [SerializeField,
         Tooltip("UI que modifica el número de escritorios")]
     List<ValueUI> _deskValueUIs = new List<ValueUI>();
 
@@ -27,7 +35,15 @@ public class LayoutValuePersistency : MonoBehaviour
     {
         ClassSettings settings = ClassManager.Instance.Settings;
 
-        foreach(ValueUI item in _deskValueUIs)
+        foreach (ValueUI item in _boysValueUIs)
+        {
+            item.SetValueNotRaiseEvent(settings.NumBoys);
+        }
+        foreach (ValueUI item in _girlsValueUIs)
+        {
+            item.SetValueNotRaiseEvent(settings.NumGirls);
+        }
+        foreach (ValueUI item in _deskValueUIs)
         {
             item.SetValueNotRaiseEvent(settings.NumDesks);
         }

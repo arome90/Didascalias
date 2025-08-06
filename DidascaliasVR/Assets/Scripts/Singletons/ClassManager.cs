@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Maneja la configuración de la clase y la aplica según corresponda.
@@ -41,9 +42,19 @@ public class ClassManager : Singleton<ClassManager>
         _settings.NumBoys = numBoys;
     }
 
+    public void SetBoysNumber(Single numBoys, Single _)
+    {
+        SetBoysNumber((int)numBoys);
+    }
+
     public void SetGirlsNumber(int numGirls)
     {
         _settings.NumGirls = numGirls;
+    }
+
+    public void SetGirlsNumber(Single numGirls, Single _)
+    {
+        SetGirlsNumber((int)numGirls);
     }
 
     public void SetNumDeks(int numDesks)
@@ -285,12 +296,6 @@ public class ClassManager : Singleton<ClassManager>
             
             AddDesk(currentPosition, Quaternion.identity);
         }
-
-        //// Añadimos dos escritorios, uno a cada lado del semicírculo
-        
-        //currentPosition = _classRoot.position - Vector3.right * _settings.Radius;
-        //currentPosition += Vector3.forward * (_settings.Radius / 2.0f);
-        //AddDesk(currentPosition, Quaternion.identity);
     }
 
     /// <summary>
@@ -310,6 +315,14 @@ public class ClassManager : Singleton<ClassManager>
     /// </summary>
     void AddStudentsToDesks()
     {
-        Debug.Log("Adding Students is: NOT IMPLEMENTED YET");
+        List<Student> students = StudentManager.Instance.GenerateStudents();
+        int i = 0;
+        foreach (Student st in students)
+        {
+            st.transform.parent = _desks[i].transform;
+            st.transform.localPosition = Vector3.zero;
+            st.transform.localRotation = Quaternion.identity;
+            i++;
+        }
     }
 }
