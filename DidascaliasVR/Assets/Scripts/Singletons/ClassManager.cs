@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
 
 /// <summary>
 /// Maneja la configuración de la clase y la aplica según corresponda.
@@ -28,6 +27,9 @@ public class ClassManager : Singleton<ClassManager>
     [SerializeField,
         Tooltip("Punto central de la clase, desde la cuál se generarán los escritorios.")]
     private Transform _classRoot;
+    [SerializeField,
+        Tooltip("Donde se encuentra la puerta de la clase")]
+    private Transform _door;
 
     /// <summary>
     /// Lista de los escritorios generados
@@ -122,6 +124,12 @@ public class ClassManager : Singleton<ClassManager>
         Tooltip("Distancia desde el centro de la clase hasta cada lateral de la misma. Utilizado para saber cómmo colocar los escritorios"), 
         Range(2.0f, 4.5f)]
     private float _classWidth = 3.4f;
+
+    /// <summary>
+    /// Devuelve la posición de la puerta de la clase
+    /// </summary>
+    /// <returns> Posición de la puerta de la clase </returns>
+    public Vector3 GetDoorPosition() { return _door.position; }
 
     /// <summary>
     /// Llamamos a este método para generar una clase con escritorios según
@@ -319,10 +327,12 @@ public class ClassManager : Singleton<ClassManager>
         int i = 0;
         foreach (Student st in students)
         {
-            st.transform.parent = _desks[i].transform;
+            st.transform.parent = _desks[i].transform.GetChild(0);
             st.transform.localPosition = Vector3.zero;
             st.transform.localRotation = Quaternion.identity;
             i++;
         }
+
+        // FindAnyObjectByType<NavMeshSurface>().BuildNavMesh();
     }
 }
