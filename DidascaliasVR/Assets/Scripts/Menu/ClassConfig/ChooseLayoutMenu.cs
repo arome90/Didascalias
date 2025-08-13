@@ -18,7 +18,7 @@ public class ChooseLayoutMenu : MonoBehaviour
     [SerializeField]
     GameObject _uConfigurationMenu = null;
 
-    void Start()
+    private void OnEnable()
     {
         _settings = ClassManager.Instance.Settings;
         Refresh();

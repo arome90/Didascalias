@@ -1027,7 +1027,7 @@ MonoBehaviour:
     callbackEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 7509973540603057216}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: ClassRoomVR.Student, Assembly-CSharp
           m_MethodName: getEmotionlityString
           m_Mode: 0
@@ -1044,7 +1044,7 @@ MonoBehaviour:
     callbackEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 7509973540603057216}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: ClassRoomVR.Student, Assembly-CSharp
           m_MethodName: getAnimatorAction
           m_Mode: 0
@@ -2696,21 +2696,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1805749416763871098}
   - component: {fileID: 6394200175754609986}
-  - component: {fileID: 7509973540603057216}
-  - component: {fileID: -4003894230735117553}
-  - component: {fileID: 8089880809311193109}
-  - component: {fileID: -5770127364650121690}
   - component: {fileID: -7728425489250237141}
-  - component: {fileID: 9202623821141003789}
   - component: {fileID: 4252507083906446710}
   - component: {fileID: 425534648888875691}
   - component: {fileID: 7955519135228652122}
-  - component: {fileID: 8089822018792531412}
-  - component: {fileID: 8024393512368406280}
   - component: {fileID: 3688080226689136329}
   - component: {fileID: 7014386623587385495}
-  - component: {fileID: 6474379660071257}
-  - component: {fileID: 2166182782530620160}
   m_Layer: 0
   m_Name: Student
   m_TagString: Untagged
@@ -2759,84 +2750,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7509973540603057216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21bfddb18390c954da519c79fa0af5a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  personalityEmotionJsonPath: PersonalityEmotion.json
-  _distracted: -1
-  _state: 0
-  _gender: 0
-  _problematic: 0
-  _studentNameText: {fileID: 813558317919732908}
-  _attentionText: {fileID: 4496128837668229746}
-  _target: {fileID: 5893043990474631000}
-  _headConstraint: {fileID: 7980371750097749196}
-  phone: {fileID: 9145094849906531879}
-  pencil: {fileID: 7050651106520696115}
-  model1: {fileID: 11400000, guid: 8335f242c76ce954fa052be12a2ad89b, type: 2}
-  model2: {fileID: 11400000, guid: 2e1e386bb284bfb4ab21ceeabd29fdf8, type: 2}
-  animator: {fileID: 6394200175754609986}
---- !u!114 &-4003894230735117553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b752a859fadbaec4db44765a112610d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _decisionTime: 2.5
-  studentBehavoirJsonPath: EmoTreeParams.json
---- !u!195 &8089880809311193109
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.15
-  m_Speed: 1
-  m_Acceleration: 2
-  avoidancePriority: 50
-  m_AngularSpeed: 180
-  m_StoppingDistance: 0.15
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1.5
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &-5770127364650121690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[{"name":"Atento/DistraidoFrontera","value":{"$content":65,"$type":"System.Int32"},"typeHandle":{"Identification":"System.Int32,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
-    _objectReferences: []
 --- !u!82 &-7728425489250237141
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2933,21 +2846,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &9202623821141003789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efe58df89b5b74a97a123b5ed2b70422, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    _json: '{"nest":{"source":"Embed","macro":null,"embed":{"title":null,"summary":null,"pan":{"x":-217.0,"y":-90.9},"zoom":1.0,"elements":[{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":"Atento","summary":null,"pan":{"x":259.0,"y":-22.60011},"zoom":1.0,"elements":[{"coroutine":true,"defaultValues":{},"position":{"x":-232.0,"y":-209.0},"guid":"e57c2b01-2fc1-4fd7-aa84-4a512c67920f","$version":"A","$type":"Unity.VisualScripting.OnEnterState","$id":"14"},{"chainable":false,"parameterNames":[],"member":{"name":"PayAttention","parameterTypes":[],"targetType":"ClassRoomVR.Student","targetTypeName":"ClassRoomVR.Student","$version":"A"},"defaultValues":{"target":null},"position":{"x":24.0,"y":-178.0},"guid":"76497577-b75c-4bca-ad23-6f5e282ab6a9","$version":"A","$type":"Unity.VisualScripting.InvokeMember","$id":"16"},{"sourceUnit":{"$ref":"14"},"sourceKey":"trigger","destinationUnit":{"$ref":"16"},"destinationKey":"enter","guid":"eeae5ceb-1e4b-4176-82bd-110950928f1a","$type":"Unity.VisualScripting.ControlConnection"}],"$version":"A"}},"isStart":false,"position":{"x":-418.0,"y":-128.0},"width":170.0,"guid":"24062dd2-6972-4014-95c0-0a011ef4019e","$version":"A","$type":"Unity.VisualScripting.FlowState","$id":"4"},{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":"Distraido","summary":null,"pan":{"x":73.59998,"y":35.79999},"zoom":1.0,"elements":[{"coroutine":true,"defaultValues":{},"position":{"x":-362.0,"y":-228.0},"guid":"c674e5a8-8a2e-41a0-a34b-82dd7054f9df","$version":"A","$type":"Unity.VisualScripting.OnEnterState","$id":"31"},{"chainable":false,"parameterNames":[],"member":{"name":"GetDistracted","parameterTypes":[],"targetType":"ClassRoomVR.Student","targetTypeName":"ClassRoomVR.Student","$version":"A"},"defaultValues":{"target":null},"position":{"x":378.0,"y":19.0},"guid":"415960ef-6923-45e5-a429-7a8404ba64d5","$version":"A","$type":"Unity.VisualScripting.InvokeMember","$id":"33"},{"defaultValues":{"seconds":{"$content":5.0,"$type":"System.Single"},"unscaledTime":{"$content":false,"$type":"System.Boolean"}},"position":{"x":160.0,"y":-159.0},"guid":"71b9183c-10ad-481c-8b9a-371e0b2a55a2","$version":"A","$type":"Unity.VisualScripting.WaitForSecondsUnit","$id":"37"},{"member":{"name":"DecisionTime","parameterTypes":null,"targetType":"ClassRoomVR.StudentBehavior","targetTypeName":"ClassRoomVR.StudentBehavior","$version":"A"},"defaultValues":{"target":null},"position":{"x":-384.0,"y":15.0},"guid":"61eb727d-6338-42b4-8fef-4c05861fa210","$version":"A","$type":"Unity.VisualScripting.GetMember","$id":"39"},{"defaultValues":{},"position":{"x":-31.0,"y":-2.0},"guid":"510b060f-3e51-42ad-9c36-67c791e3b514","$version":"A","$type":"Unity.VisualScripting.GenericMultiply","$id":"42"},{"type":"System.Int32","value":{"$content":4,"$type":"System.Int32"},"defaultValues":{},"position":{"x":-285.0,"y":154.0},"guid":"94f35afe-9d54-4edb-b66c-646d1aa4254a","$version":"A","$type":"Unity.VisualScripting.Literal","$id":"44"},{"sourceUnit":{"$ref":"37"},"sourceKey":"exit","destinationUnit":{"$ref":"33"},"destinationKey":"enter","guid":"640ca197-4b95-4b06-af79-f528dd6ec03e","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"31"},"sourceKey":"trigger","destinationUnit":{"$ref":"37"},"destinationKey":"enter","guid":"c231d3c9-f71e-4023-94b9-6858d9d2f8c3","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"33"},"sourceKey":"exit","destinationUnit":{"$ref":"37"},"destinationKey":"enter","guid":"58baff8d-1245-41aa-bce9-3ce45c9e6146","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"44"},"sourceKey":"output","destinationUnit":{"$ref":"42"},"destinationKey":"b","guid":"6f783b35-85d2-4f7a-a21a-239a6cc82849","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"39"},"sourceKey":"value","destinationUnit":{"$ref":"42"},"destinationKey":"a","guid":"32ca2f7f-40a4-4f08-b548-c5f66bdaac0a","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"42"},"sourceKey":"product","destinationUnit":{"$ref":"37"},"destinationKey":"seconds","guid":"f6e8f3c0-10d4-499f-813f-e40184173bed","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}},"isStart":true,"position":{"x":-112.0,"y":-144.0},"width":170.0,"guid":"3364f2b3-14a7-43e6-becc-41078a54e5f8","$version":"A","$type":"Unity.VisualScripting.FlowState","$id":"21"},{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":-71.80682,"y":31.76721},"zoom":1.0,"elements":[{"defaultValues":{},"position":{"x":337.0,"y":-130.0},"guid":"c7ddea1a-72dc-4ac2-8df3-55edb4dbecac","$version":"A","$type":"Unity.VisualScripting.TriggerStateTransition","$id":"62"},{"specifyFallback":false,"kind":"Object","defaultValues":{"name":{"$content":"Atento/DistraidoFrontera","$type":"System.String"},"object":null},"position":{"x":-367.0,"y":78.0},"guid":"0f1c24a4-046d-49a1-a97c-efc6ed00fc0b","$version":"A","$type":"Unity.VisualScripting.GetVariable","$id":"64"},{"numeric":true,"defaultValues":{"b":{"$content":0.0,"$type":"System.Single"}},"position":{"x":-66.0,"y":-51.0},"guid":"65151125-2a94-4837-8e02-3ba3b0cc3665","$version":"A","$type":"Unity.VisualScripting.Less","$id":"66"},{"coroutine":false,"defaultValues":{},"position":{"x":-187.0,"y":-181.0},"guid":"280af761-70db-4cea-b3e8-f3462cf8f0ba","$version":"A","$type":"Unity.VisualScripting.Update","$id":"68"},{"defaultValues":{},"position":{"x":126.0,"y":-108.0},"guid":"ac85f957-6e03-4a1a-b373-0198d797664b","$version":"A","$type":"Unity.VisualScripting.If","$id":"70"},{"member":{"name":"AttentionLevel","parameterTypes":null,"targetType":"ClassRoomVR.StudentBehavior","targetTypeName":"ClassRoomVR.StudentBehavior","$version":"A"},"defaultValues":{"target":null},"position":{"x":-497.0,"y":-152.0},"guid":"9199f13c-40f3-456c-b54d-2b588445ca3e","$version":"A","$type":"Unity.VisualScripting.GetMember","$id":"72"},{"sourceUnit":{"$ref":"68"},"sourceKey":"trigger","destinationUnit":{"$ref":"70"},"destinationKey":"enter","guid":"cd941488-5c97-4258-b1ea-40d2756b158d","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"70"},"sourceKey":"ifTrue","destinationUnit":{"$ref":"62"},"destinationKey":"trigger","guid":"ad0bbb62-0a53-4983-b0b9-8736c74c4723","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"64"},"sourceKey":"value","destinationUnit":{"$ref":"66"},"destinationKey":"b","guid":"c2c131a4-08d0-476e-bdc3-8acb23302bdd","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"66"},"sourceKey":"comparison","destinationUnit":{"$ref":"70"},"destinationKey":"condition","guid":"415fbbd9-de8c-449b-bc91-2c70a228c40e","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"72"},"sourceKey":"value","destinationUnit":{"$ref":"66"},"destinationKey":"a","guid":"66326993-64c8-4468-86a2-6f858ea23c35","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}},"source":{"$ref":"4"},"destination":{"$ref":"21"},"guid":"ea1cdae8-0cdb-481e-bd6e-352f99b763a6","$version":"A","$type":"Unity.VisualScripting.FlowStateTransition"},{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":736.6492,"y":358.6748},"zoom":0.8,"elements":[{"defaultValues":{},"position":{"x":740.0,"y":218.0},"guid":"83c20b20-1247-4122-8368-f66d1b0b4545","$version":"A","$type":"Unity.VisualScripting.TriggerStateTransition","$id":"90"},{"specifyFallback":false,"kind":"Object","defaultValues":{"name":{"$content":"Atento/DistraidoFrontera","$type":"System.String"},"object":null},"position":{"x":49.0,"y":435.0},"guid":"282fda54-da03-4917-9c37-d5412582adee","$version":"A","$type":"Unity.VisualScripting.GetVariable","$id":"92"},{"coroutine":false,"defaultValues":{},"position":{"x":229.0,"y":176.0},"guid":"bacf0bc4-f632-4d74-a290-fd58e3303970","$version":"A","$type":"Unity.VisualScripting.Update","$id":"94"},{"defaultValues":{},"position":{"x":542.0,"y":249.0},"guid":"37289a2d-80b9-45e5-86ae-989a1cdaa990","$version":"A","$type":"Unity.VisualScripting.If","$id":"96"},{"numeric":true,"defaultValues":{"b":{"$content":0.0,"$type":"System.Single"}},"position":{"x":350.0,"y":306.0},"guid":"a13cf208-e910-4446-b6f2-f16dbce7333c","$version":"A","$type":"Unity.VisualScripting.GreaterOrEqual","$id":"98"},{"member":{"name":"AttentionLevel","parameterTypes":null,"targetType":"ClassRoomVR.StudentBehavior","targetTypeName":"ClassRoomVR.StudentBehavior","$version":"A"},"defaultValues":{"target":null},"position":{"x":28.0,"y":164.0},"guid":"d0d23122-1512-4929-aea2-d2945730b72b","$version":"A","$type":"Unity.VisualScripting.GetMember","$id":"100"},{"sourceUnit":{"$ref":"94"},"sourceKey":"trigger","destinationUnit":{"$ref":"96"},"destinationKey":"enter","guid":"6321d196-7353-4b90-8ed0-5b2daefdb5cf","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"96"},"sourceKey":"ifTrue","destinationUnit":{"$ref":"90"},"destinationKey":"trigger","guid":"8a794dbf-210f-490f-9785-6b5a7743cc6e","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"92"},"sourceKey":"value","destinationUnit":{"$ref":"98"},"destinationKey":"b","guid":"79dee681-e729-43e9-a083-2c7174ed941b","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"98"},"sourceKey":"comparison","destinationUnit":{"$ref":"96"},"destinationKey":"condition","guid":"05b9b2f3-dc0f-4848-85e0-2d5cf50226e9","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"100"},"sourceKey":"value","destinationUnit":{"$ref":"98"},"destinationKey":"a","guid":"2a6f18cd-2ba1-4905-949a-6a0bee6b6bd5","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}},"source":{"$ref":"21"},"destination":{"$ref":"4"},"guid":"8ccf1f55-ce62-4a57-b7b4-1742d05a3d1c","$version":"A","$type":"Unity.VisualScripting.FlowStateTransition"}],"$version":"A"}}}'
-    _objectReferences: []
 --- !u!114 &4252507083906446710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2996,152 +2894,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _extraBonesBody: []
   _characterAssets: {fileID: 11400000, guid: 25c9a5510e52909448274c61d6d39b8b, type: 2}
---- !u!114 &8089822018792531412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0adc7a4dcfafb4d49a0863e458e4433e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dateId: '[DATE]'
---- !u!114 &8024393512368406280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b15403450229c3a4b8455a61d6143a6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _events:
-    OnTextPlaybackStart:
-      m_PersistentCalls:
-        m_Calls: []
-    OnTextPlaybackCancelled:
-      m_PersistentCalls:
-        m_Calls: []
-    OnTextPlaybackFinished:
-      m_PersistentCalls:
-        m_Calls: []
-    OnAudioClipPlaybackReady:
-      m_PersistentCalls:
-        m_Calls: []
-    OnAudioClipPlaybackStart:
-      m_PersistentCalls:
-        m_Calls: []
-    OnAudioClipPlaybackCancelled:
-      m_PersistentCalls:
-        m_Calls: []
-    OnAudioClipPlaybackFinished:
-      m_PersistentCalls:
-        m_Calls: []
-    _onInit:
-      m_PersistentCalls:
-        m_Calls: []
-    _onComplete:
-      m_PersistentCalls:
-        m_Calls: []
-    _onLoadBegin:
-      m_PersistentCalls:
-        m_Calls: []
-    _onLoadAbort:
-      m_PersistentCalls:
-        m_Calls: []
-    _onLoadFailed:
-      m_PersistentCalls:
-        m_Calls: []
-    _onLoadSuccess:
-      m_PersistentCalls:
-        m_Calls: []
-    _onPlaybackReady:
-      m_PersistentCalls:
-        m_Calls: []
-    _onPlaybackStart:
-      m_PersistentCalls:
-        m_Calls: []
-    _onPlaybackCancelled:
-      m_PersistentCalls:
-        m_Calls: []
-    _onPlaybackClipUpdated:
-      m_PersistentCalls:
-        m_Calls: []
-    _onPlaybackComplete:
-      m_PersistentCalls:
-        m_Calls: []
-    _onPlaybackQueueBegin:
-      m_PersistentCalls:
-        m_Calls: []
-    _onPlaybackQueueComplete:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataQueued:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipLoadBegin:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataLoadBegin:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipLoadAbort:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataLoadAbort:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipLoadFailed:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataLoadFailed:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipLoadSuccess:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataLoadSuccess:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataPlaybackReady:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStartSpeaking:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataPlaybackStart:
-      m_PersistentCalls:
-        m_Calls: []
-    OnCancelledSpeaking:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataPlaybackCancelled:
-      m_PersistentCalls:
-        m_Calls: []
-    OnFinishedSpeaking:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipDataPlaybackFinished:
-      m_PersistentCalls:
-        m_Calls: []
-  PrependedText: 
-  AppendedText: 
-  _ttsService: {fileID: 0}
-  presetVoiceID: 
-  customWitVoiceSettings:
-    SettingsId: 
-    PrependedText: 
-    AppendedText: 
-    voice: Charlie
-    style: default
-    speed: 100
-    pitch: 100
 --- !u!65 &3688080226689136329
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3176,58 +2928,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterProps: {fileID: 11400000, guid: 32f6969bb19126c448b1e9590e38555f, type: 2}
---- !u!114 &6474379660071257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b98eacd08740ef4ab2d7d6bfa958d90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2166182782530620160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786677739925861320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d7b55c7ecdb49a4a89fa5e6f9022861, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startWhenEnabled: 1
-  asynchronousLoad: 0
-  pauseWhenDisabled: 0
-  restartWhenComplete: 0
-  logTaskChanges: 0
-  group: -1
-  resetValuesOnRestart: 0
-  externalBehavior: {fileID: 11400000, guid: 9c9bec56fbff15444ad38450f35945fa, type: 2}
-  mBehaviorSource:
-    behaviorName: Behavior
-    behaviorDescription: 
-    mTaskData:
-      types: []
-      parentIndex: 
-      startIndex: 
-      variableStartIndex: 
-      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"EmotionChanged","IsShared":true,"BooleanmValue":true},{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"selectedAction","IsShared":true,"Int32mValue":-1},{"Type":"BehaviorDesigner.Runtime.SharedString","Name":"Action","IsShared":true},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"Wait","IsShared":true,"BooleanmValue":false},{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"prevAction","IsShared":true,"Int32mValue":-1}]}'
-      fieldSerializationData:
-        typeName: []
-        fieldNameHash: 
-        startIndex: 
-        dataPosition: 
-        unityObjects: []
-        byteData: 
-        byteDataArray: 
-      Version: 1.7.9
-  gizmoViewMode: 2
-  showBehaviorDesignerGizmo: 1
 --- !u!1 &5831688827198029842
 GameObject:
   m_ObjectHideFlags: 0
@@ -4388,12 +4088,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7051689979574197997}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7050651106520696115 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1217707077934046, guid: acd1035e6037f5340b25cdc9d4460022,
-    type: 3}
-  m_PrefabInstance: {fileID: 7051689979574197997}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8225981407481291638
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4480,12 +4174,6 @@ PrefabInstance:
 --- !u!4 &8476399007212405917 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6547d1b675f58504ebddad320b7d0e60,
-    type: 3}
-  m_PrefabInstance: {fileID: 8225981407481291638}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &9145094849906531879 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6547d1b675f58504ebddad320b7d0e60,
     type: 3}
   m_PrefabInstance: {fileID: 8225981407481291638}
   m_PrefabAsset: {fileID: 0}
