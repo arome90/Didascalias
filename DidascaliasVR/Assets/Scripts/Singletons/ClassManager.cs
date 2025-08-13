@@ -79,6 +79,15 @@ public class ClassManager : Singleton<ClassManager>
         _settings.Radius = radius;
     }
 
+    public void SetShape(ClassSettings.Shape shape)
+    {
+        _settings.ClassShape = shape;
+    }
+
+    public void SetShape(int shape)
+    {
+        _settings.ClassShape = (ClassSettings.Shape)shape;
+    }
     #endregion
 
     // Métodos públicos para UI con los que cambiar las settings
@@ -138,7 +147,7 @@ public class ClassManager : Singleton<ClassManager>
     /// <param name="shape"> La forma de la clase </param>
     public void ArrangeClass(ClassSettings.Shape shape)
     {
-        _settings.ClassShape = shape;
+        SetShape(shape);
         
         // Casos especiales
         if(_settings.NumDesks == 1)
