@@ -17,6 +17,8 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     private static T _instance = null;
     public static T Instance { get { return _instance; } }
 
+    protected bool _destroyOnLoad = false;
+
     protected virtual void Awake()
     {
         if(_instance == null)
@@ -31,7 +33,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             {
                 current = current.parent;
             }
-            DontDestroyOnLoad(current.gameObject);
+            if(!_destroyOnLoad) DontDestroyOnLoad(current.gameObject);
         }
         else
         {

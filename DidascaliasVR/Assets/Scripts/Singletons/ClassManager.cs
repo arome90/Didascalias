@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
+using Unity.AI.Navigation;
 
 /// <summary>
 /// Maneja la configuración de la clase y la aplica según corresponda.
@@ -138,7 +140,7 @@ public class ClassManager : Singleton<ClassManager>
     /// Devuelve la posición de la puerta de la clase
     /// </summary>
     /// <returns> Posición de la puerta de la clase </returns>
-    public Vector3 GetDoorPosition() { return _door.position; }
+    public Transform GetDoor() { return _door; }
 
     /// <summary>
     /// Llamamos a este método para generar una clase con escritorios según
@@ -196,6 +198,7 @@ public class ClassManager : Singleton<ClassManager>
         {
             GenerateClass();
             AddStudentsToDesks();
+            ConnectionManager.Instance.ClassStarted();
         }
     }
 
@@ -336,12 +339,18 @@ public class ClassManager : Singleton<ClassManager>
         int i = 0;
         foreach (Student st in students)
         {
+            // agent.enabled = false;
+
             st.transform.parent = _desks[i].transform.GetChild(0);
             st.transform.localPosition = Vector3.zero;
             st.transform.localRotation = Quaternion.identity;
             i++;
+
+            NavMeshAgent agent = st.GetComponent<NavMeshAgent>();
+            agent.Warp(st.transform.position);
+            agent.enabled = true;
         }
 
-        // FindAnyObjectByType<NavMeshSurface>().BuildNavMesh();
+        FindAnyObjectByType<NavMeshSurface>().BuildNavMesh();
     }
 }

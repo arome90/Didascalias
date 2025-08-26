@@ -83,7 +83,5 @@ namespace ClassRoomVR
             return JsonConvert.SerializeObject(datas, Formatting.Indented);
         }
     }
-
-
 }
 

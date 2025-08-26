@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -107,7 +108,8 @@ public class StudentManager : Singleton<StudentManager>
 
         for (int i = 0; i < _settings.NumStudents; ++i)
         {
-            Student st = Instantiate(_studentPrefab).GetComponent<Student>();
+            GameObject go = Instantiate(_studentPrefab);
+            Student st = go.GetComponent<Student>();
 
             string name;
             if ((Random.Range(0, 2) == 0 && numBoys < _settings.NumBoys) || numGirls == _settings.NumGirls)
@@ -136,11 +138,21 @@ public class StudentManager : Singleton<StudentManager>
             lookAt.constraintActive = true;
 
             st.Name = name;
+            go.name = name;
             students.Add(st);
             _students.Add(st.Name, st);
         }
 
         return students;
+    }
+
+    /// <summary>
+    /// Devuelve los estudiantes (por orden de creación)
+    /// </summary>
+    /// <returns> Estudiantes por orden de creación </returns>
+    public List<Student> GetStudents()
+    {
+        return _students.Values.ToList();
     }
 
     /// <summary>
@@ -178,10 +190,50 @@ public class StudentManager : Singleton<StudentManager>
     /// </summary>
     public void OnStudentExpelled()
     {
-        Vector3 door = ClassManager.Instance.GetDoorPosition();
         foreach(string st in _selectedStudents)
         {
-            _students[st].MoveToPoint(door);
+            _students[st].GetComponent<StudentBehaviour>().ExpelStudent();
         }
     }
+
+    public void OnStudentSit()
+    {
+        if (_selectedStudents.Count == 0) return;
+
+        StudentBehaviour st = _students[_selectedStudents[0]].GetComponent<StudentBehaviour>();
+        st.OnSitDownRequested.Invoke();
+    }
+
+    public void OnChangePlaces()
+    {
+        if(_selectedStudents.Count <= 1) { return; }
+        else
+        {
+            StudentBehaviour _st1 = _students[_selectedStudents[0]].GetComponent<StudentBehaviour>();
+            StudentBehaviour _st2 = _students[_selectedStudents[1]].GetComponent<StudentBehaviour>();
+
+            _st1.ChangeSitSpotWithStudent(_st2);
+
+            _st1.OnChangePlacesRequested.Invoke();
+            _st2.OnChangePlacesRequested.Invoke();
+        }
+    }
+
+    #region DEBUG MUERTE Y DESTRUCCION BORRAR
+    private void Update()
+    {
+        if(Input.GetKeyUp(KeyCode.V))
+        {
+            _selectedStudents.Clear();
+            int i = 0;
+            foreach(string name in _students.Keys)
+            {
+                _selectedStudents.Add(name);
+                ++i;
+                if (i == 2) break;
+            }
+            OnChangePlaces();
+        }
+    }
+    #endregion
 }

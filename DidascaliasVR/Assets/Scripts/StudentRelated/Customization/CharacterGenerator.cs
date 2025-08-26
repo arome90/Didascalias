@@ -104,7 +104,7 @@ namespace ClassRoomVR
             }
 
             //Modelar cara aleatoriamente 
-            // RandomFaceModeling(selectedBody.Body, -100, 100);
+            RandomFaceModeling(selectedBody.Body, -100, 100);
 
             // var complement = selectedBody.HeadBone.Complements[Random.Range(0, selectedBody.HeadBone.Complements.Count)];
             //    int colorIndex = Random.Range(0, complement.color.Length);

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 /// <summary>
 /// Chico (0) o Chica (1) (de momento)
@@ -56,13 +57,6 @@ public class Student : MonoBehaviour
         _nameTag.color = Color.white;
     }
 
-    public void MoveToPoint(Vector3 point)
-    {
-        // Aquí habría que hacer un montón de comprobaciones en función 
-        // del estado del estudiante (sentado, haciendo el bobo, etc.)
-        _agent.destination = point;
-    }
-
     private void Start()
     {
         if(!_nameTag)
@@ -72,5 +66,4 @@ public class Student : MonoBehaviour
         }
         _agent = GetComponent<NavMeshAgent>();
     }
-
 }
