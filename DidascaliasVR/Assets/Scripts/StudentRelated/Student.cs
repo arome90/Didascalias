@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 
 /// <summary>
 /// Chico (0) o Chica (1) (de momento)
@@ -16,6 +15,17 @@ public class Student : MonoBehaviour
     [SerializeField,
         Tooltip("Texto que muestra el nombre del estudiante al jugador")]
     TextMeshProUGUI _nameTag;
+
+    /// <summary>
+    /// Estudiante que está justo antes de nuestro estudiante
+    /// Puede tomar valor 'null' si es el primero
+    /// </summary>
+    [HideInInspector] public Student PreviousStudent = null;
+    /// <summary>
+    /// Estudiante que está justo después de nuestro estudiante
+    /// Puede tomar valor 'null' si es el último
+    /// </summary>
+    [HideInInspector] public Student NextStudent = null;
 
     NavMeshAgent _agent;
 
@@ -49,12 +59,22 @@ public class Student : MonoBehaviour
 
     public void Select()
     {
-        _nameTag.color = Color.blue;
+        if(_nameTag.color == Color.white) _nameTag.color = Color.blue;
     }
 
     public void Deselect()
     {
         _nameTag.color = Color.white;
+    }
+
+    public void Speak(string speak)
+    {
+        Debug.LogWarning("Speak not implemened yet.");
+    }
+
+    public void SetAsConflictive()
+    {
+        _nameTag.color = Color.red;
     }
 
     private void Start()

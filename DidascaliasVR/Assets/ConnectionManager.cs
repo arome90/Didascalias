@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 using WebSocketSharp;
 
@@ -84,13 +85,28 @@ public struct WebStudent
     public VectorJson posicion; // no cambiar nombre
 }
 
+/// <summary>
+/// Esto es para los eventos que se llaman
+/// al pulsar los botones en web
+/// </summary>
+public enum WebEventType
+{
+    Message = -1,
+    Disrespect = 0,
+    SitTogether = 1,
+    StandUp = 2,
+    // ...
+    Restart = 3
+}
+
 [Serializable]
 // Mensaje recibido
 public struct ReceivedWebMessage
 {
     public string type;
-    public string id;
+    public WebEventType id;
     public string data;
+    public string studentName;
 }
 
 // Tipo de mensaje a enviar
@@ -171,6 +187,12 @@ public class ConnectionManager : Singleton<ConnectionManager>
     /// </summary>
     public string SessionID { get { return _sessionID; } }
 
+    [SerializeField]
+    private UnityEvent<ReceivedWebMessage> _onWebEventCalled;
+
+    private bool _newWebMessage = false;
+    private ReceivedWebMessage _currentMessage;
+
     private void Start()
     {
         _socket = new WebSocket(_url);
@@ -180,6 +202,11 @@ public class ConnectionManager : Singleton<ConnectionManager>
         _socket.OnClose += OnClose;
 
         _clientID = SystemInfo.deviceUniqueIdentifier;
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(CheckForWebEvent());
     }
 
     /// <summary>
@@ -213,11 +240,10 @@ public class ConnectionManager : Singleton<ConnectionManager>
             _sessionID,
             _clientID);
         SendWebMessage(message);
-
     }
 
     /// <summary>
-    /// Llamado cuan    do el WebSocket recibe un mensaje desde el servidor
+    /// Llamado cuando el WebSocket recibe un mensaje desde el servidor
     /// </summary>
     /// <param name="sender"> objeto que manda el mensaje </param>
     /// <param name="e"> Argumentos con los que se mandó el mensaje </param>
@@ -239,10 +265,36 @@ public class ConnectionManager : Singleton<ConnectionManager>
             case "error":
                 Debug.LogError("Error reported from web. Data: " + message.data);
                 break;
+            case "callEvent":
+                WebEventReceived(message);
+                break;
             default:
                 Debug.LogWarning('\'' + message.type + "' message type received from WebSocket not recognized.\n" +
                     "Message Data:"+e.Data);
                 break;
+        }
+    }
+
+    private void WebEventReceived(ReceivedWebMessage message)
+    {
+        _currentMessage = message;
+        _newWebMessage = true;
+    }
+
+    IEnumerator CheckForWebEvent()
+    {
+        _newWebMessage = false;
+        _currentMessage = new ReceivedWebMessage();
+
+        while (gameObject.activeSelf)
+        {
+            yield return new WaitUntil(
+                () => _newWebMessage
+                );
+
+            _onWebEventCalled.Invoke(_currentMessage);
+
+            _newWebMessage = false;
         }
     }
 
@@ -283,8 +335,9 @@ public class ConnectionManager : Singleton<ConnectionManager>
     private void SendInitialMessage()
     {
         WebStudent[] webStudents = GenerateWebStudentsInfo();
-        
-        WebOptions options = new WebOptions
+
+        WebOptions options;
+        options = new WebOptions
         {
             opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse", "Restart" }
         };
@@ -392,7 +445,6 @@ public class ConnectionManager : Singleton<ConnectionManager>
     /// <summary>
     /// Comienza la conexión con el WebSocket
     /// </summary>
-
     public void StartConnection()
     {
         _socket.ConnectAsync();

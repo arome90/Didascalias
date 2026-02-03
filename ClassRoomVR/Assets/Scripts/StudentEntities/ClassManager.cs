@@ -14,7 +14,7 @@ namespace ClassRoomVR
         [SerializeField] private AudioClip _beforeClassBell;
         [SerializeField] private AudioClip _afterClassBell;
         [SerializeField] private GameObject _player;
-        [SerializeField] private Student _body;
+        [SerializeField] private GameObject _body;
         [SerializeField] private bool _generateOnStart;
 
         private Transform _studentsPositions;
@@ -156,7 +156,7 @@ namespace ClassRoomVR
         /// <returns>Instancia del estudiante creado.</returns>
         private Student CreateStudent(string name, Gender gender)
         {
-            Student pickedStudent = Instantiate(_body, transform);
+            Student pickedStudent = Instantiate(_body, transform).GetComponent<Student>();
             pickedStudent.SetParameters(_player.transform, name, gender, studentSittingPlaceOffset);
             _students.Add(name, pickedStudent);
             return pickedStudent;

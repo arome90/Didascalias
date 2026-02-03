@@ -51,7 +51,7 @@ namespace ClassRoomVR
 
             _targetZRotation = Mathf.Lerp(_targetZRotation, frequency * 10, currentSmoothSpeed * _timeUpdate);
             _targetZRotation = Mathf.Clamp(_targetZRotation, 0, 40);
-            _jaw.localRotation = Quaternion.Euler(_initialJawAngles.x, _initialJawAngles.y, _initialJawAngles.z + _targetZRotation);
+            _jaw.localRotation = Quaternion.Euler(_initialJawAngles.x + _targetZRotation, _initialJawAngles.y, _initialJawAngles.z);
 
             _lastMaxValue = maxValue;
         }

@@ -106,6 +106,9 @@ namespace ClassRoomVR
             //Modelar cara aleatoriamente 
             RandomFaceModeling(selectedBody.Body, -100, 100);
 
+            SetExpressionBlendShape(selectedBody.Body, Expressions.Smile, 100.0f);
+            
+
             // var complement = selectedBody.HeadBone.Complements[Random.Range(0, selectedBody.HeadBone.Complements.Count)];
             //    int colorIndex = Random.Range(0, complement.color.Length);
 
@@ -222,6 +225,11 @@ namespace ClassRoomVR
         public void SetModelBlendShape(SkinnedMeshRenderer mesh, ModelingProperties prop, float value)
         {
             mesh.SetBlendShapeWeight((int)prop, value);
+        }
+
+        public void SetExpressionBlendShape(SkinnedMeshRenderer mesh, Expressions expression, float value)
+        {
+            mesh.SetBlendShapeWeight((int)expression, value);
         }
     }
 }

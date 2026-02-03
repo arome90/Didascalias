@@ -167,22 +167,22 @@ namespace ClassRoomVR
             phone.SetActive(false);
             pencil.SetActive(false);
 
-            if (PlayerPrefs.HasKey("TreeModel")) {
-            // PRUEBA
+            //if (PlayerPrefs.HasKey("TreeModel")) {
+            //// PRUEBA
            
-                if (PlayerPrefs.GetInt("TreeModel") == 0)
-                {
-                    _behaviorTree.SetActive(false);
-                }
-                else if (PlayerPrefs.GetInt("TreeModel") == 1)
-                {
-                    _behaviorTree.ExternalBehavior = model1;
-                }
-                else if (PlayerPrefs.GetInt("TreeModel") == 2)
-                {
-                    _behaviorTree.ExternalBehavior = model2;
-                }
-            }
+            //    if (PlayerPrefs.GetInt("TreeModel") == 0)
+            //    {
+            //        _behaviorTree.SetActive(false);
+            //    }
+            //    else if (PlayerPrefs.GetInt("TreeModel") == 1)
+            //    {
+            //        _behaviorTree.ExternalBehavior = model1;
+            //    }
+            //    else if (PlayerPrefs.GetInt("TreeModel") == 2)
+            //    {
+            //        _behaviorTree.ExternalBehavior = model2;
+            //    }
+            //}
             _beforeAttention = -1;
         }
         /// <summary>
@@ -387,7 +387,7 @@ namespace ClassRoomVR
         {
             Transform nameTransform = _studentNameText.transform.parent;
             nameTransform.LookAt(_player);
-            nameTransform.rotation = Quaternion.LookRotation(_player.forward);
+            // nameTransform.rotation = Quaternion.LookRotation(_player.forward);
         }
 
         /// <summary>

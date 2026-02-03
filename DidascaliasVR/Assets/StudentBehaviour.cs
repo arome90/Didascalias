@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.InputSystem.OnScreen;
 
 public enum StudentState
 {
@@ -21,6 +20,7 @@ public class StudentBehaviour : MonoBehaviour
 {
     Animator _animator;
     NavMeshAgent _agent;
+    Student _st;
 
     public Transform SitSpot { get { return transform.parent; } }
 
@@ -38,28 +38,14 @@ public class StudentBehaviour : MonoBehaviour
     public UnityEvent OnSitDownRequested = new UnityEvent();
     public UnityEvent OnExpellingRequested = new UnityEvent();
     public UnityEvent OnChangePlacesRequested = new UnityEvent();
-
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.O))
-        {
-            OnStandUp.Invoke();
-        }
-        if(Input.GetKeyUp(KeyCode.P))
-        {
-            OnSitDownRequested.Invoke();
-        }
-        if (Input.GetKeyUp(KeyCode.I))
-        {
-            OnExpellingRequested.Invoke();
-        }
-    }
+    public UnityEvent OnSitTogetherRequested = new UnityEvent();
 
     public StudentState State { get { return _state; } }
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
+        _st = GetComponent<Student>();
 
         OnStandUp.AddListener(ChangeStateOnStandUp);
 
@@ -135,9 +121,8 @@ public class StudentBehaviour : MonoBehaviour
 
     public void MoveTo(Transform transform)
     {
-        StartCoroutine(MovingTowardsPoint(transform.position));
+        StartCoroutine(MovingTowardsPoint(transform.position)); 
     }
-
     IEnumerator MovingTowardsPoint(Vector3 point)
     {
         float speed = _agent.speed;
@@ -145,18 +130,13 @@ public class StudentBehaviour : MonoBehaviour
         _agent.SetDestination(point);
 
         if(_state == StudentState.Sitting) StartStandUpAnimation();
-        while (_state == StudentState.Sitting)
-        {
-            yield return null;
-        }
+        yield return new WaitUntil(() => _state != StudentState.Sitting);
 
         StartWalking(0.65f);
         _agent.speed = speed;
 
-        while (_agent.pathPending || _agent.remainingDistance > _agent.stoppingDistance * 2)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        yield return new WaitUntil(() => !_agent.pathPending);
+        yield return new WaitUntil(() => _agent.remainingDistance <= _agent.stoppingDistance * 2);
 
         StopWalking(0.95f);
         ChangeState(StudentState.Standing);
@@ -167,6 +147,13 @@ public class StudentBehaviour : MonoBehaviour
     public void StartStandUpAnimation()
     {
         _animator.SetBool("OnFoot", true);
+    }
+    #endregion
+
+    #region Yell
+    public void Yell()
+    {
+        Debug.LogWarning("Yell Animation is not avaliable");
     }
     #endregion
 }

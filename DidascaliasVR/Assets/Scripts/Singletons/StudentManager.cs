@@ -15,6 +15,15 @@ public class StudentManager : Singleton<StudentManager>
     GameObject _studentPrefab;
 
     [SerializeField,
+        Tooltip("Prefab que representa un conflicto (con el script Conflict)")]
+    GameObject _conflictPrefab;
+
+    [SerializeField, Range(1, 5)]
+    private int _maxActiveConflicts = 1;
+
+    private Dictionary<string, Conflict> _activeConflicts = null;
+
+    [SerializeField,
         Tooltip("Nombres de estudiantes")]
     StudentNames _studentNames;
 
@@ -34,6 +43,7 @@ public class StudentManager : Singleton<StudentManager>
     {
         base.Awake();
         _settings = ClassManager.Instance.Settings;
+        _activeConflicts = new Dictionary<string, Conflict>();
     }
 
     private void OnEnable()
@@ -106,10 +116,15 @@ public class StudentManager : Singleton<StudentManager>
             { sourceTransform = FindAnyObjectByType<XROrigin>().
             GetComponentInChildren<Camera>().transform, weight = 1.0f };
 
+        Student last = null;
         for (int i = 0; i < _settings.NumStudents; ++i)
         {
             GameObject go = Instantiate(_studentPrefab);
             Student st = go.GetComponent<Student>();
+
+            if (last != null) last.NextStudent = st;
+
+            st.PreviousStudent = last;
 
             string name;
             if ((Random.Range(0, 2) == 0 && numBoys < _settings.NumBoys) || numGirls == _settings.NumGirls)
@@ -141,6 +156,14 @@ public class StudentManager : Singleton<StudentManager>
             go.name = name;
             students.Add(st);
             _students.Add(st.Name, st);
+
+            last = st;
+        }
+
+        if(students.Count > 1 && ClassManager.Instance.Settings.ClassShape == ClassSettings.Shape.Circular)
+        {
+            students[0].PreviousStudent = students[students.Count - 1];
+            students[students.Count - 1] = students[0];
         }
 
         return students;
@@ -219,21 +242,147 @@ public class StudentManager : Singleton<StudentManager>
         }
     }
 
-    #region DEBUG MUERTE Y DESTRUCCION BORRAR
-    private void Update()
+    private Student TryGetStudentByNameOrGetRandom(string studentName)
     {
-        if(Input.GetKeyUp(KeyCode.V))
+        Student st = null;
+        if(studentName != null)
         {
-            _selectedStudents.Clear();
-            int i = 0;
-            foreach(string name in _students.Keys)
-            {
-                _selectedStudents.Add(name);
-                ++i;
-                if (i == 2) break;
-            }
-            OnChangePlaces();
+            st = GetStudent(studentName);
+        } 
+        else if (st == null)
+        {
+            st = GetStudents()[Random.Range(0, _students.Count)];
+        }
+        return st;
+    }
+
+    public Student GetStudentFarFromOtherStudent(Student other)
+    {
+        // Hacemos una lista por copia de los valores de los estudiantes y quitamos los que NO queremos coger
+        List<Student> students = _students.Values.ToList();
+        students.Remove(other);
+        students.Remove(other.NextStudent);
+        students.Remove(other.PreviousStudent);
+
+        Student st = students[Random.Range(0, students.Count)];
+
+        return st;
+    }
+
+    #region WEB EVENTS
+    public void MakeStudentTalk(string studentName, string message)
+    {
+        Student st = TryGetStudentByNameOrGetRandom(studentName);
+
+        st.Speak(message);        
+    }
+
+    public enum ConflictType
+    {
+        Disrespect = 0,
+        SitTogether = 1,
+        StandUp = 2,
+    }
+
+    public void GenerateConflict(ConflictType type, string studentName)
+    {
+        Conflict conflict;
+        if (_activeConflicts.Count < _maxActiveConflicts)
+        {
+            conflict = Instantiate(_conflictPrefab).GetComponent<Conflict>();
+        }
+        else return;
+
+        Student st = TryGetStudentByNameOrGetRandom(studentName);
+        conflict.SetConflictiveStudent(st);
+        _activeConflicts.Add(st.Name, conflict);
+
+        switch (type)
+        {
+            case ConflictType.Disrespect:
+
+                st.Speak("¡Prueba de Insulto!");
+
+                // Aquí cogeríamos lo correspondiente para hacer una animación de faltar al respeto
+                st.GetComponent<StudentBehaviour>().Yell();
+
+                break;
+
+            case ConflictType.SitTogether:
+                // Si solo hay un estudiante, esto no puede tener efecto. 
+                // TODO: Cambiar el mensaje que se envía al servidor,
+                // pero para eso hay que cambiar cómo recibe el servidor las cosas :p
+                if (_students.Count < 3) break;
+
+                List<Student> sts = GetStudents();
+
+                // En el caso específico de que existan 3 estudiantes y sea el del medio el seleccionado,
+                // el del medio ya está sentado junto a sus dos compañeros, por lo que no puede ser
+                // este conflicto. Tenemos que escoger otro estudiante, ya sea el primer o el último
+                if (_students.Count == 3 && st == sts[1])
+                {
+                    st.Deselect();
+                    _activeConflicts.Remove(st.Name);
+                    st = sts[Random.Range(0,2) == 0 ? 0 : 2];
+                    conflict.SetConflictiveStudent(st);
+                }
+
+                st.GetComponent<StudentBehaviour>().OnSitTogetherRequested.Invoke();
+                //Student otherSt = null; 
+
+                //// esta es una forma fea de coger un segundo estudiante aleatorio, pero no se me ocurre ahora cómo cambiarlo
+                //// TODO: Lista de estudiantes "disponibles" para seleccionar
+                //while ((otherSt == null || otherSt.Name == st.Name) && 
+                //    // Buscamos un estudiante que no esté cerca del original
+                //    otherSt != st.NextStudent && otherSt != st.PreviousStudent)
+                //{
+                //    otherSt = TryGetStudentByNameOrGetRandom(null);
+                //}
+
+                //otherSt.SetAsConflictive();
+
+
+                // Student nonConflictiveStudent = otherSt.NextStudent == null ? otherSt.PreviousStudent : otherSt.NextStudent;
+
+                break;
+
+            case ConflictType.StandUp:
+                st.GetComponent<StudentBehaviour>().StartStandUpAnimation();
+                break;
         }
     }
+
+    public void ResolveConflicts()
+    {
+        foreach(string st in _selectedStudents)
+        {
+            _activeConflicts[st].ReceivePositiveResolution();
+        }
+
+        _activeConflicts.Clear();
+    }
+
+    public void RemoveConflict(Student s)
+    {
+        _activeConflicts.Remove(s.Name);
+    }
+    #endregion
+
+    #region DEBUG MUERTE Y DESTRUCCION BORRAR
+    //private void Update()
+    //{
+    //    if(Input.GetKeyUp(KeyCode.V))
+    //    {
+    //        _selectedStudents.Clear();
+    //        int i = 0;
+    //        foreach(string name in _students.Keys)
+    //        {
+    //            _selectedStudents.Add(name);
+    //            ++i;
+    //            if (i == 2) break;
+    //        }
+    //        OnChangePlaces();
+    //    }
+    //}
     #endregion
 }

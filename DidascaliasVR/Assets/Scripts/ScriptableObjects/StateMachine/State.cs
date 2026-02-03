@@ -21,7 +21,7 @@ namespace Didascalia.StateMachine
             foreach(StateBehaviour behaviour in _behaviours)
             {
                 _behaviours[i] = Instantiate(behaviour);
-                _behaviours[i].Initialize(_machine);
+                _behaviours[i++].Initialize(machine);
             }
 
             Transitions = new Transition[_transitions.Length];

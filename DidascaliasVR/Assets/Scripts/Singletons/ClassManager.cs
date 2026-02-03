@@ -38,6 +38,10 @@ public class ClassManager : Singleton<ClassManager>
     /// </summary>
     private List<GameObject> _desks = null;
 
+    private float _deskDistance;
+
+    public float DeskDistance { get { return _deskDistance; } }
+
     // Métodos públicos con los que cambiar las settings
     #region Settings Change
 
@@ -157,7 +161,7 @@ public class ClassManager : Singleton<ClassManager>
             CleanClass();
 
             _desks.Add(Instantiate(_deskPrefab, _classRoot));
-
+            _deskDistance = 0.0f;
             return;
         }
         
@@ -173,6 +177,8 @@ public class ClassManager : Singleton<ClassManager>
                 ArrangeUClass();
                 break;
         }
+
+        _deskDistance = (_desks[0].transform.position - _desks[1].transform.position).magnitude;
     }
 
     private void Start()
@@ -352,5 +358,34 @@ public class ClassManager : Singleton<ClassManager>
         }
 
         FindAnyObjectByType<NavMeshSurface>().BuildNavMesh();
+    }
+
+    public void ResolveConflicts()
+    {
+        StudentManager.Instance.ResolveConflicts();
+    }
+
+    public void OnWebEventCalled(ReceivedWebMessage message)
+    {
+        Debug.Log("WebMessageType: " + message.id);
+
+        switch(message.id)
+        {
+            case WebEventType.Message:
+                Debug.Log("Student Name: " + message.studentName);
+                StudentManager.Instance.MakeStudentTalk(message.studentName, message.data);
+                break;
+            case WebEventType.Disrespect:
+                StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.Disrespect, message.studentName);
+                break;
+            case WebEventType.StandUp:
+                StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.StandUp, message.studentName);
+                break;
+            case WebEventType.SitTogether:
+                StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.SitTogether, message.studentName);
+                break;
+            case WebEventType.Restart:
+                break;
+        }
     }
 }
