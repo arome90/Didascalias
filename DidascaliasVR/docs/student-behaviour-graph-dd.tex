@@ -1,0 +1,43 @@
+%!TEX output_directory = ./tmp/
+%!TEX program = pdflatex
+
+\documentclass[10pt, a4paper]{article}
+\usepackage{tikz}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[
+    top=2cm, bottom=2cm, left=2cm, right=2cm
+]{geometry}
+
+\begin{document}
+
+\title{Student Behaviour Graph Design Document}
+\author{
+    {José Narciso Robles Durán} \\
+    {Universidad Complutense de Madrid} \\
+    {Departamento de Informática e Inteligencia Artificial | ActLab}
+}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\section{Motivación}
+    La herramienta \textit{Didascalias-VR} permite interactuar con estudiantes virtuales dirigidos por comportamientos por inteligencia artificial.\par
+
+    Estos comportamientos son programables en el motor \textit{Unity}. Actualmente, se usa una máquina de estados para escoger y transicionar entre ellos. Los estados, junto con sus transiciones, se reprsentan con \textit{ScriptableObjects}.\par
+
+    Cada estado contiene una lista de transiciones que se evalúan cada frame si eres el estado activo. Si una transición se cumple, se cambia al estado objetivo de esa transición.\par
+
+    Esta implementación tiene como ventaja el razonamiento local para un diseñador de las transiciones para un estado dado. En el inspector de \textit{Unity}, se ve una lista detallada de las referencias a los otros \textit{ScriptableObjects} que representan las transiciones entre dos estados.\par
+
+    Sin embargo, esta implementación tiene como desventaja que no se puede ver el panorama general de los estados y sus transiciones, así como el flujo de la red. Esto hace difícil detectar errores de diseño, como estados sin transiciones incidentes o transiciones que no se cumplen nunca.\par
+
+\section{Propuesta}
+
+
+\end{document}
