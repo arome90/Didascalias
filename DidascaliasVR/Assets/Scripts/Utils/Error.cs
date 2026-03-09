@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Didascalia.Utils
 {
     internal static class Error
@@ -9,28 +7,31 @@ namespace Didascalia.Utils
         //     DebugbreakFailMessage("DebugbreakFail called", context);
         // }
 
-        public static void DebugbreakFailMessage(string message, Object context)
+        public static void DebugbreakFailMessage(string message, UnityEngine.Object context)
         {
             string logMessage =
-                new LogString("[Didascalia]").Color(Color.mediumPurple)
-                + new LogString(" [error]").Color(Color.red)
+                new LogString("[Didascalia]").Color(UnityEngine.Color.mediumPurple)
+                + new LogString(" [error]").Color(UnityEngine.Color.red)
                 + ": " + message;
 #if UNITY_EDITOR
-            Debug.Assert(false, logMessage, context);
+            UnityEngine.Debug.Assert(false, logMessage, context);
+            UnityEngine.Debug.Break();
 #else
-            throw new System.Exception(logMessage);
+            _ = context;
+            System.Diagnostics.Trace.Assert(false, "[Didascalia] [error]: " + message);
+            System.Environment.Exit(1);
 #endif
 
         }
 
-        public static void DebugbreakFailUnless(bool condition, string message, Object context)
+        public static void DebugbreakFailUnless(bool condition, string message, UnityEngine.Object context)
         {
             if (!condition)
             {
                 DebugbreakFailMessage(message, context);
             }
         }
-        public static void DebugbreakFailIf(bool condition, string message, Object context)
+        public static void DebugbreakFailIf(bool condition, string message, UnityEngine.Object context)
         {
             if (condition)
             {

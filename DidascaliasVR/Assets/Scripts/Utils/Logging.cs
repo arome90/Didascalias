@@ -35,6 +35,7 @@ namespace Didascalia.Utils
                 + ": " + message;
             Debug.Log(logMessage, context);
 #else
+            _ = context;
             Console.WriteLine("[Didascalia]: " + message);
 #endif
         }
@@ -47,6 +48,7 @@ namespace Didascalia.Utils
                 + ": " + message;
             Debug.LogWarning(logMessage, context);
 #else
+            _ = context;
             Console.WriteLine("[Didascalia] [warning]: " + message);
 #endif
         }
@@ -59,6 +61,7 @@ namespace Didascalia.Utils
                 + ": " + message;
             Debug.Log(logMessage, context);
 #else
+            _ = context;
             Console.WriteLine("[Didascalia] [info]: " + message);
 #endif
         }

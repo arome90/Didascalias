@@ -386,6 +386,9 @@ public class ClassManager : Singleton<ClassManager>
                 break;
             case WebEventType.Restart:
                 break;
+            default:
+                Didascalia.Utils.Error.DebugbreakFailMessage("WebMessageType not recognized: " + message.id, this);
+                break;
         }
     }
 }
