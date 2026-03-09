@@ -7,9 +7,9 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Añade funcionalidad genérica a los eventos recibidos por Wit,
-/// además de activar permanentemente el micrófono cuando el jugador 
-/// esté hablando 
+/// Aï¿½ade funcionalidad genï¿½rica a los eventos recibidos por Wit,
+/// ademï¿½s de activar permanentemente el micrï¿½fono cuando el jugador 
+/// estï¿½ hablando 
 /// </summary>
 public class VoiceActivation : Singleton<VoiceActivation>
 {
@@ -24,8 +24,8 @@ public class VoiceActivation : Singleton<VoiceActivation>
 
     [Header("Events")]
     /// <summary>
-    /// Diccionario que contiene una intención y el método al que queremos
-    /// llamar cuando se registre una entrada con dicha intención
+    /// Diccionario que contiene una intenciï¿½n y el mï¿½todo al que queremos
+    /// llamar cuando se registre una entrada con dicha intenciï¿½n
     /// </summary>
     [SerializeField, SerializedDictionary("Intention", "On response to intention")]
     SerializedDictionary<Intention, UnityEvent<WitMessageData>> _onResponseToIntent;
@@ -42,7 +42,7 @@ public class VoiceActivation : Singleton<VoiceActivation>
     }
 
     /// <summary>
-    /// Activa o desactiva el panel de debug de información
+    /// Activa o desactiva el panel de debug de informaciï¿½n
     /// </summary>
     /// <param name="active"> Si se activa o no </param>
     public void ActivateDebugPanel(bool active)
@@ -71,8 +71,8 @@ public class VoiceActivation : Singleton<VoiceActivation>
     }
 
     /// <summary>
-    /// Añade a los eventos de Wit las funciones necesarias para el
-    /// funcionamiento de la aplicación
+    /// Aï¿½ade a los eventos de Wit las funciones necesarias para el
+    /// funcionamiento de la aplicaciï¿½n
     /// </summary>
     void AddVoiceListeners()
     {
@@ -83,20 +83,20 @@ public class VoiceActivation : Singleton<VoiceActivation>
 
         _onValidatePartialResponse.AddListener(ChangeSelectedStudents);
 
-        // Cuando se complete la petición, volvemos a activar la 
+        // Cuando se complete la peticiï¿½n, volvemos a activar la 
         // voz de nuestro jugador para realizar una escucha continua
         appVoiceExperience.VoiceEvents.OnComplete.AddListener((a) =>
         {
             ActivateVoice();
         });
 
-        // En caso de que exista algún error, volvemos a activar
-        // el comando de voz. Deberían tratarse los errores de conectividad
+        // En caso de que exista algï¿½n error, volvemos a activar
+        // el comando de voz. Deberï¿½an tratarse los errores de conectividad
         // en un ConnectionManager, o algo parecido
         appVoiceExperience.VoiceEvents.OnError.AddListener((a, b) =>
         {
             ActivateVoice();
-            /* NO HACE FALTA QUE ESTÉ AQUÍ SI LO COMPROBAMOS EN EL HTTPCLIENT CONTINUAMENTE
+            /* NO HACE FALTA QUE ESTï¿½ AQUï¿½ SI LO COMPROBAMOS EN EL HTTPCLIENT CONTINUAMENTE
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 Debug.Log("nO HAY INTERNET");
@@ -111,7 +111,7 @@ public class VoiceActivation : Singleton<VoiceActivation>
             OnResponse(response);
         });
 
-        // Al recibir una respuesta todavía parcial, vemos qué estudiantes han sido
+        // Al recibir una respuesta todavï¿½a parcial, vemos quï¿½ estudiantes han sido
         // llamados por el jugador
         appVoiceExperience.VoiceEvents.OnValidatePartialResponse.AddListener((sessionData) =>
         {
@@ -158,7 +158,7 @@ public class VoiceActivation : Singleton<VoiceActivation>
     }
 
     /// <summary>
-    /// Añade un panel de DEBUG con los estudiantes seleccionados
+    /// Aï¿½ade un panel de DEBUG con los estudiantes seleccionados
     /// </summary>
     /// <param name="data"> Datos de respuesta de Wit </param>
     void ChangeSelectedStudents(WitMessageData data)
@@ -171,7 +171,7 @@ public class VoiceActivation : Singleton<VoiceActivation>
     }
 
     /// <summary>
-    /// Añade un panel con la intención a ejecutar y los estudiantes afectados
+    /// Aï¿½ade un panel con la intenciï¿½n a ejecutar y los estudiantes afectados
     /// </summary>
     /// <param name="data"> Datos de respuesta de Wit </param>
     void AddPanelWithIntent(WitMessageData data)
@@ -186,11 +186,11 @@ public class VoiceActivation : Singleton<VoiceActivation>
     #endregion
 
     /// <summary>
-    /// Generamos el mensaje según los datos de la sesión de Wit
-    /// Estos datos rellenan el nombre de los estudiantes afectados y la intención del mensaje
+    /// Generamos el mensaje segï¿½n los datos de la sesiï¿½n de Wit
+    /// Estos datos rellenan el nombre de los estudiantes afectados y la intenciï¿½n del mensaje
     /// </summary>
-    /// <param name="response"> Datos de la sesión de Wit </param>
-    /// <returns> Información del mensaje transcrito </returns>
+    /// <param name="response"> Datos de la sesiï¿½n de Wit </param>
+    /// <returns> Informaciï¿½n del mensaje transcrito </returns>
     WitMessageData MakeMessage(Meta.WitAi.Json.WitResponseNode response)
     {
         if (response == null) return new WitMessageData { Intention = Intention.None };
@@ -216,7 +216,7 @@ public class VoiceActivation : Singleton<VoiceActivation>
     /// <summary>
     /// Recibimos la respuesta final de Wit.
     /// La parseamos e invocamos a los eventos correspondientes para que
-    /// se activen según hemos designado en el inspector
+    /// se activen segï¿½n hemos designado en el inspector
     /// </summary>
     /// <param name="response"> Respuesta final de Wit </param>
     public void OnResponse(Meta.WitAi.Json.WitResponseNode response)
