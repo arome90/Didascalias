@@ -6,18 +6,18 @@ using UnityEngine.AI;
 using Unity.AI.Navigation;
 
 /// <summary>
-/// Maneja la configuración de la clase y la aplica según corresponda.
-/// Encargada de hacer la disposición de los escritorios.
+/// Maneja la configuraciï¿½n de la clase y la aplica segï¿½n corresponda.
+/// Encargada de hacer la disposiciï¿½n de los escritorios.
 /// </summary>
 public class ClassManager : Singleton<ClassManager>
 {
     [Header("Class Settings")]
     [SerializeField,
-        Tooltip("Configuración del aula actual")] 
+        Tooltip("Configuraciï¿½n del aula actual")] 
     private ClassSettings _settings;
 
     /// <summary>
-    /// Configuración del aula actual
+    /// Configuraciï¿½n del aula actual
     /// </summary>
     public ClassSettings Settings { get { return _settings; } }
 
@@ -27,7 +27,7 @@ public class ClassManager : Singleton<ClassManager>
     private GameObject _deskPrefab;
 
     [SerializeField,
-        Tooltip("Punto central de la clase, desde la cuál se generarán los escritorios.")]
+        Tooltip("Punto central de la clase, desde la cuï¿½l se generarï¿½n los escritorios.")]
     private Transform _classRoot;
     [SerializeField,
         Tooltip("Donde se encuentra la puerta de la clase")]
@@ -42,7 +42,7 @@ public class ClassManager : Singleton<ClassManager>
 
     public float DeskDistance { get { return _deskDistance; } }
 
-    // Métodos públicos con los que cambiar las settings
+    // Mï¿½todos pï¿½blicos con los que cambiar las settings
     #region Settings Change
 
     public void SetBoysNumber(int numBoys)
@@ -96,7 +96,7 @@ public class ClassManager : Singleton<ClassManager>
     }
     #endregion
 
-    // Métodos públicos para UI con los que cambiar las settings
+    // Mï¿½todos pï¿½blicos para UI con los que cambiar las settings
     #region UI_Layout_Generation 
 
     public void SetRowsAndGenerate(Single rows, Single _)
@@ -136,18 +136,18 @@ public class ClassManager : Singleton<ClassManager>
 
     [Header("Generation Settings")]
     [SerializeField,
-        Tooltip("Distancia desde el centro de la clase hasta cada lateral de la misma. Utilizado para saber cómmo colocar los escritorios"), 
+        Tooltip("Distancia desde el centro de la clase hasta cada lateral de la misma. Utilizado para saber cï¿½mmo colocar los escritorios"), 
         Range(2.0f, 4.5f)]
     private float _classWidth = 3.4f;
 
     /// <summary>
-    /// Devuelve la posición de la puerta de la clase
+    /// Devuelve la posiciï¿½n de la puerta de la clase
     /// </summary>
-    /// <returns> Posición de la puerta de la clase </returns>
+    /// <returns> Posiciï¿½n de la puerta de la clase </returns>
     public Transform GetDoor() { return _door; }
 
     /// <summary>
-    /// Llamamos a este método para generar una clase con escritorios según
+    /// Llamamos a este mï¿½todo para generar una clase con escritorios segï¿½n
     /// una forma dada
     /// </summary>
     /// <param name="shape"> La forma de la clase </param>
@@ -195,7 +195,7 @@ public class ClassManager : Singleton<ClassManager>
     /// Genera la clase y sus estudiantes cuando la escena
     /// cambia de la llamada "Menu" a la de "Clase"
     /// </summary>
-    /// <param name="menuScene"> Escena del menú </param>
+    /// <param name="menuScene"> Escena del menï¿½ </param>
     /// <param name="classScene"> Escena de la clase </param>
     void ActivateClassOnSceneChanged(string menuScene, Scene classScene)
     {
@@ -209,7 +209,7 @@ public class ClassManager : Singleton<ClassManager>
     }
 
     /// <summary>
-    /// Quita los escritorios de la clase y deja vacía la lista de escritorios
+    /// Quita los escritorios de la clase y deja vacï¿½a la lista de escritorios
     /// </summary>
     public void CleanClass()
     {
@@ -234,8 +234,8 @@ public class ClassManager : Singleton<ClassManager>
         int rows = _settings.Rows;
         int cols = _settings.Cols;
 
-        // 5 es el número máximo de columnas y filas
-        // Me gustaría ver cómo incorporarlo de otra forma
+        // 5 es el nï¿½mero mï¿½ximo de columnas y filas
+        // Me gustarï¿½a ver cï¿½mo incorporarlo de otra forma
         // que no sea a mano
         float generalOffset = _classWidth / 5.0f;
 
@@ -288,7 +288,7 @@ public class ClassManager : Singleton<ClassManager>
         int desksInCircle = (Mathf.Min(_settings.NumDesks, _settings.MaxDesksInSemiCircle));
         if(desksInCircle == _settings.MaxDesksInSemiCircle && _settings.NumDesks % 2 == 0)
         {
-            // restamos 1 para que no quede un lado más largo que otro en la U
+            // restamos 1 para que no quede un lado mï¿½s largo que otro en la U
             //
             // ||
             // ||     ||       <== Para evitar esto
@@ -325,11 +325,11 @@ public class ClassManager : Singleton<ClassManager>
     }
 
     /// <summary>
-    /// Añade un escritorio a la clase
+    /// Aï¿½ade un escritorio a la clase
     /// Lo hace hijo del Class Root
     /// </summary>
-    /// <param name="position"> Posición del escritorio </param>
-    /// <param name="rot"> Rotación del escritorio </param>
+    /// <param name="position"> Posiciï¿½n del escritorio </param>
+    /// <param name="rot"> Rotaciï¿½n del escritorio </param>
     void AddDesk(Vector3 position, Quaternion rot)
     {
         _desks.Add(Instantiate(_deskPrefab, position, rot));
@@ -337,7 +337,7 @@ public class ClassManager : Singleton<ClassManager>
     }
 
     /// <summary>
-    /// Añade a los estudiantes en cada escritorio según las Class Settings
+    /// Aï¿½ade a los estudiantes en cada escritorio segï¿½n las Class Settings
     /// </summary>
     void AddStudentsToDesks()
     {
@@ -367,12 +367,12 @@ public class ClassManager : Singleton<ClassManager>
 
     public void OnWebEventCalled(ReceivedWebMessage message)
     {
-        Debug.Log("WebMessageType: " + message.id);
+        Didascalia.Utils.Log.Info("WebMessageType: " + message.id, this);
 
         switch(message.id)
         {
             case WebEventType.Message:
-                Debug.Log("Student Name: " + message.studentName);
+                Didascalia.Utils.Log.Info("Student Name: " + message.studentName, this);
                 StudentManager.Instance.MakeStudentTalk(message.studentName, message.data);
                 break;
             case WebEventType.Disrespect:
