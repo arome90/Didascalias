@@ -249,7 +249,7 @@ public class ConnectionManager : Singleton<ConnectionManager>
     /// <param name="e"> Argumentos con los que se mandó el mensaje </param>
     private void OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
     {
-        Debug.Log("MESSAGE DATA: " + e.Data);
+        Didascalia.Utils.Log.Info("Message received from WebSocket. Data: " + e.Data, this);
 
         ReceivedWebMessage message = new ReceivedWebMessage();
         TryDeserializeMessage(e.Data, ref message);

@@ -6,7 +6,7 @@ using UnityEngine.Animations;
 
 /// <summary>
 /// Singleton que nos permite acceder a los diferentes estudiantes, 
-/// además de manejarlos y generarlos según queramos
+/// ademï¿½s de manejarlos y generarlos segï¿½n queramos
 /// </summary>
 public class StudentManager : Singleton<StudentManager>
 {
@@ -35,7 +35,7 @@ public class StudentManager : Singleton<StudentManager>
     ClassSettings _settings;
 
     /// <summary>
-    /// Lista de estudiantes seleccionados, sobre los que se aplicarán las acciones
+    /// Lista de estudiantes seleccionados, sobre los que se aplicarï¿½n las acciones
     /// </summary>
     List<string> _selectedStudents = new List<string>();
 
@@ -79,7 +79,7 @@ public class StudentManager : Singleton<StudentManager>
     /// Devuelve el estudiante de nombre "name"
     /// </summary>
     /// <param name="name"> nombre del estudiante </param>
-    /// <returns> el estudiante en cuestión. "null" en caso de error </returns>
+    /// <returns> el estudiante en cuestiï¿½n. "null" en caso de error </returns>
     public Student GetStudent(string name)
     {
         if (_students.TryGetValue(name, out Student st)) return st;
@@ -93,9 +93,9 @@ public class StudentManager : Singleton<StudentManager>
 
     /// <summary>
     /// Borra a los antiguos estudiantes y genera tantos
-    /// estudiantes como estén especificados en las ClassSettings
+    /// estudiantes como estï¿½n especificados en las ClassSettings
     /// 
-    /// AVISO: Este método no coloca a los estudiantes en ningún lugar, tan solo los instancia
+    /// AVISO: Este mï¿½todo no coloca a los estudiantes en ningï¿½n lugar, tan solo los instancia
     /// </summary>
     /// <returns> La lista de estudiantes generados </returns>
     public List<Student> GenerateStudents()
@@ -110,8 +110,8 @@ public class StudentManager : Singleton<StudentManager>
         int numGirls = 0;
 
         // Esto sirve para decirle al componente LookAtConstaint de la Name Tag del estudiante
-        // que mira constantemente a la cámra del jugador. Para encontrar al jugador, buscamos
-        // el XR Origin, que es un componente único del jugador.
+        // que mira constantemente a la cï¿½mra del jugador. Para encontrar al jugador, buscamos
+        // el XR Origin, que es un componente ï¿½nico del jugador.
         ConstraintSource constraintSource = new ConstraintSource 
             { sourceTransform = FindAnyObjectByType<XROrigin>().
             GetComponentInChildren<Camera>().transform, weight = 1.0f };
@@ -170,20 +170,20 @@ public class StudentManager : Singleton<StudentManager>
     }
 
     /// <summary>
-    /// Devuelve los estudiantes (por orden de creación)
+    /// Devuelve los estudiantes (por orden de creaciï¿½n)
     /// </summary>
-    /// <returns> Estudiantes por orden de creación </returns>
+    /// <returns> Estudiantes por orden de creaciï¿½n </returns>
     public List<Student> GetStudents()
     {
         return _students.Values.ToList();
     }
 
     /// <summary>
-    /// Selecciona a los estudiantes que la transcripción de Wit haya entendido
+    /// Selecciona a los estudiantes que la transcripciï¿½n de Wit haya entendido
     /// Primero, deselecciona a los anteriores que estaban seleccionados antes
     /// de continuar
     /// </summary>
-    /// <param name="data"> Transcripción de Wit </param>
+    /// <param name="data"> Transcripciï¿½n de Wit </param>
     public void SelectStudents(WitMessageData data)
     {
         // Solo quitamos a los estudiantes anteriormente seleccionados
@@ -301,24 +301,24 @@ public class StudentManager : Singleton<StudentManager>
         {
             case ConflictType.Disrespect:
 
-                st.Speak("¡Prueba de Insulto!");
+                st.Speak("ï¿½Prueba de Insulto!");
 
-                // Aquí cogeríamos lo correspondiente para hacer una animación de faltar al respeto
+                // Aquï¿½ cogerï¿½amos lo correspondiente para hacer una animaciï¿½n de faltar al respeto
                 st.GetComponent<StudentBehaviour>().Yell();
 
                 break;
 
             case ConflictType.SitTogether:
                 // Si solo hay un estudiante, esto no puede tener efecto. 
-                // TODO: Cambiar el mensaje que se envía al servidor,
-                // pero para eso hay que cambiar cómo recibe el servidor las cosas :p
+                // TODO: Cambiar el mensaje que se envï¿½a al servidor,
+                // pero para eso hay que cambiar cï¿½mo recibe el servidor las cosas :p
                 if (_students.Count < 3) break;
 
                 List<Student> sts = GetStudents();
 
-                // En el caso específico de que existan 3 estudiantes y sea el del medio el seleccionado,
-                // el del medio ya está sentado junto a sus dos compañeros, por lo que no puede ser
-                // este conflicto. Tenemos que escoger otro estudiante, ya sea el primer o el último
+                // En el caso especï¿½fico de que existan 3 estudiantes y sea el del medio el seleccionado,
+                // el del medio ya estï¿½ sentado junto a sus dos compaï¿½eros, por lo que no puede ser
+                // este conflicto. Tenemos que escoger otro estudiante, ya sea el primer o el ï¿½ltimo
                 if (_students.Count == 3 && st == sts[1])
                 {
                     st.Deselect();
@@ -330,10 +330,10 @@ public class StudentManager : Singleton<StudentManager>
                 st.GetComponent<StudentBehaviour>().OnSitTogetherRequested.Invoke();
                 //Student otherSt = null; 
 
-                //// esta es una forma fea de coger un segundo estudiante aleatorio, pero no se me ocurre ahora cómo cambiarlo
+                //// esta es una forma fea de coger un segundo estudiante aleatorio, pero no se me ocurre ahora cï¿½mo cambiarlo
                 //// TODO: Lista de estudiantes "disponibles" para seleccionar
                 //while ((otherSt == null || otherSt.Name == st.Name) && 
-                //    // Buscamos un estudiante que no esté cerca del original
+                //    // Buscamos un estudiante que no estï¿½ cerca del original
                 //    otherSt != st.NextStudent && otherSt != st.PreviousStudent)
                 //{
                 //    otherSt = TryGetStudentByNameOrGetRandom(null);

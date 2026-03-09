@@ -36,6 +36,7 @@ public class SitTogetherRequested : Transition
         Student other = st.NextStudent == null ? st.PreviousStudent : st.NextStudent;
 
         _behaviour.MoveTo(other.transform);
+        // TODO: async state transitions?
 
         _behaviour.OnSitTogetherRequested.RemoveListener(OnSitTogetherRequested);
 
