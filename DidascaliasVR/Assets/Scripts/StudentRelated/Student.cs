@@ -17,13 +17,13 @@ public class Student : MonoBehaviour
     TextMeshProUGUI _nameTag;
 
     /// <summary>
-    /// Estudiante que está justo antes de nuestro estudiante
+    /// Estudiante que estï¿½ justo antes de nuestro estudiante
     /// Puede tomar valor 'null' si es el primero
     /// </summary>
     [HideInInspector] public Student PreviousStudent = null;
     /// <summary>
-    /// Estudiante que está justo después de nuestro estudiante
-    /// Puede tomar valor 'null' si es el último
+    /// Estudiante que estï¿½ justo despuï¿½s de nuestro estudiante
+    /// Puede tomar valor 'null' si es el ï¿½ltimo
     /// </summary>
     [HideInInspector] public Student NextStudent = null;
 
@@ -32,9 +32,9 @@ public class Student : MonoBehaviour
     string _name;
     /// <summary>
     /// Nombre del estudiante.
-    /// Debería ser único entre los demás estudiantes.
-    /// Será el identificador de cada estudiante, lo usaremos
-    /// también para refererinos a ellos mediante voz.
+    /// Deberï¿½a ser ï¿½nico entre los demï¿½s estudiantes.
+    /// Serï¿½ el identificador de cada estudiante, lo usaremos
+    /// tambiï¿½n para refererinos a ellos mediante voz.
     /// </summary>
     public string Name { get { return _name; } 
         set 
@@ -46,7 +46,7 @@ public class Student : MonoBehaviour
 
     Gender _gender;
     /// <summary>
-    /// Género del estudiante.
+    /// Gï¿½nero del estudiante.
     /// </summary>
     public Gender Gender
     {
@@ -69,7 +69,7 @@ public class Student : MonoBehaviour
 
     public void Speak(string speak)
     {
-        Debug.LogWarning("Speak not implemened yet.");
+        Didascalia.Utils.Error.DebugbreakFailUnimplemented("Speak not implemened yet.", this);
     }
 
     public void SetAsConflictive()

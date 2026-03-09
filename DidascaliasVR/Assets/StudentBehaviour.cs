@@ -13,8 +13,8 @@ public enum StudentState
 }
 
 /// <summary>
-/// Contiene todos los métodos que se encargan del comportamiento del estudiante.
-/// Todos ellos son llamados en la máquina de estados del prefab de Student
+/// Contiene todos los mï¿½todos que se encargan del comportamiento del estudiante.
+/// Todos ellos son llamados en la mï¿½quina de estados del prefab de Student
 /// </summary>
 public class StudentBehaviour : MonoBehaviour
 {
@@ -153,7 +153,7 @@ public class StudentBehaviour : MonoBehaviour
     #region Yell
     public void Yell()
     {
-        Debug.LogWarning("Yell Animation is not avaliable");
+        Didascalia.Utils.Error.DebugbreakFailUnimplemented("Yell Animation is not avaliable", this);
     }
     #endregion
 }

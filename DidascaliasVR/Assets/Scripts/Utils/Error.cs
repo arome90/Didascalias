@@ -9,11 +9,11 @@ namespace Didascalia.Utils
 
         public static void DebugbreakFailMessage(string message, UnityEngine.Object context)
         {
+#if UNITY_EDITOR
             string logMessage =
                 new LogString("[Didascalia]").Color(UnityEngine.Color.mediumPurple)
                 + new LogString(" [error]").Color(UnityEngine.Color.red)
                 + ": " + message;
-#if UNITY_EDITOR
             UnityEngine.Debug.Assert(false, logMessage, context);
             UnityEngine.Debug.Break();
 #else
@@ -37,6 +37,23 @@ namespace Didascalia.Utils
             {
                 DebugbreakFailMessage(message, context);
             }
+        }
+
+        
+        public static void DebugbreakFailUnimplemented(string message, UnityEngine.Object context)
+        {
+#if UNITY_EDITOR
+            string logMessage =
+                new LogString("[Didascalia]").Color(UnityEngine.Color.mediumPurple)
+                + new LogString(" [unimplemented]").Color(UnityEngine.Color.yellow)
+                + ": " + message;
+            UnityEngine.Debug.Assert(false, logMessage, context);
+            UnityEngine.Debug.Break();
+#else
+            _ = context;
+            System.Diagnostics.Trace.Assert(false, "[Didascalia] [unimplemented]: " + message);
+            System.Environment.Exit(1);
+#endif
         }
     }
 }
