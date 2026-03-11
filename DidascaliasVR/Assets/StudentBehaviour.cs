@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -35,6 +36,7 @@ public class StudentBehaviour : MonoBehaviour
     private StudentState _state;
 
     public UnityEvent OnStandUp = new UnityEvent();
+    public UnityEvent OnStandUpRequested = new UnityEvent();
     public UnityEvent OnSitDownRequested = new UnityEvent();
     public UnityEvent OnExpellingRequested = new UnityEvent();
     public UnityEvent OnChangePlacesRequested = new UnityEvent();
@@ -129,7 +131,7 @@ public class StudentBehaviour : MonoBehaviour
         _agent.speed = 0.0f;
         _agent.SetDestination(point);
 
-        if(_state == StudentState.Sitting) StartStandUpAnimation();
+        if(_state == StudentState.Sitting) StandUp();
         yield return new WaitUntil(() => _state != StudentState.Sitting);
 
         StartWalking(0.65f);
@@ -144,9 +146,32 @@ public class StudentBehaviour : MonoBehaviour
     #endregion
 
     #region StandUp
-    public void StartStandUpAnimation()
+    internal void SetOnFoot()
     {
         _animator.SetBool("OnFoot", true);
+    }
+    internal void UnsetOnFoot()
+    {
+        _animator.SetBool("OnFoot", false);
+    }
+    public void StandUp()
+    {
+        OnStandUpRequested.Invoke();
+        if (_animator.GetBehaviour<OnStandUp>() == null)
+        {
+            Didascalia.Utils.Error.DebugbreakFailMessage("OnStandUp behaviour not found in animator", this);
+        } 
+        // XXX: We should be able to run this safety check to ensure the event invocation causes
+        // transition to 'Stand Up' state but it seems that the transition is not registered in the same frame, so we can't check it here.
+        // else if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Stand Up"))
+        // {
+        //     Didascalia.Utils.Error.DebugbreakFailMessage(
+        //         "Current animator state is not 'Stand Up'\n"
+        //         + "This is a safety check to ensure the dependency that hooks to the OnStandUpRequested event"
+        //         + "properly sets up the transition to the 'Stand Up' state",
+        //         this
+        //     );
+        // }
     }
     #endregion
 
@@ -155,5 +180,13 @@ public class StudentBehaviour : MonoBehaviour
     {
         Didascalia.Utils.Error.DebugbreakFailUnimplemented("Yell Animation is not avaliable", this);
     }
+
+    #region SitTogether
+    public void SitTogether()
+    {
+        OnSitTogetherRequested.Invoke();
+    }
+    #endregion
+
     #endregion
 }

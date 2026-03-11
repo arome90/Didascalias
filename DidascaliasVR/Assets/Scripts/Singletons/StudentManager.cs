@@ -327,7 +327,7 @@ public class StudentManager : Singleton<StudentManager>
                     conflict.SetConflictiveStudent(st);
                 }
 
-                st.GetComponent<StudentBehaviour>().OnSitTogetherRequested.Invoke();
+                st.GetComponent<StudentBehaviour>().SitTogether();
                 //Student otherSt = null; 
 
                 //// esta es una forma fea de coger un segundo estudiante aleatorio, pero no se me ocurre ahora c�mo cambiarlo
@@ -347,7 +347,10 @@ public class StudentManager : Singleton<StudentManager>
                 break;
 
             case ConflictType.StandUp:
-                st.GetComponent<StudentBehaviour>().StartStandUpAnimation();
+                st.GetComponent<StudentBehaviour>().StandUp();
+                break;
+            default:
+                Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
                 break;
         }
     }

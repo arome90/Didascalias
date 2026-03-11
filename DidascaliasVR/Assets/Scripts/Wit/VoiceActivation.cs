@@ -222,9 +222,17 @@ public class VoiceActivation : Singleton<VoiceActivation>
     public void OnResponse(Meta.WitAi.Json.WitResponseNode response)
     {
         WitMessageData messageData = MakeMessage(response);
-
-        _onResponseToIntent[messageData.Intention].Invoke(messageData);
-
-        AddPanelWithIntent(messageData);
+        if (_onResponseToIntent.TryGetValue(messageData.Intention, out var action))
+        {
+            action.Invoke(messageData);
+            AddPanelWithIntent(messageData);
+        }
+        else
+        {
+            Didascalia.Utils.Error.DebugbreakFailMessage(
+                "Missing action in response to Intention: " + messageData.Intention,
+                this
+            );   
+        }
     }
 }

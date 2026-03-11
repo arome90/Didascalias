@@ -384,6 +384,9 @@ AnimatorStateMachine:
   m_EntryTransitions:
   - {fileID: -720344232772624161}
   m_StateMachineTransitions:
+  - first: {fileID: 8070207539619553184}
+    second:
+    - {fileID: -3537977597037378507}
   - first: {fileID: -5725321315746668640}
     second:
     - {fileID: -6961902759343458835}
@@ -396,15 +399,24 @@ AnimatorStateMachine:
     - {fileID: -6889955326594945620}
     - {fileID: 493000603784616502}
     - {fileID: -3043585946769286255}
-  - first: {fileID: 8070207539619553184}
-    second:
-    - {fileID: -3537977597037378507}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 140, y: 200, z: 0}
   m_ExitPosition: {x: 840, y: 110, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 742086248753379553}
+--- !u!114 &-6531324763291035813
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d90a4a8b45fc79946a0d4e2c48c0b85b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnStandUp
 --- !u!114 &-6462573733967832062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -658,18 +670,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!114 &-5062593066954081314
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d90a4a8b45fc79946a0d4e2c48c0b85b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-4948251456516327889
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1349,7 +1349,7 @@ AnimatorState:
   m_Transitions:
   - {fileID: 7000898322691614424}
   m_StateMachineBehaviours:
-  - {fileID: -5062593066954081314}
+  - {fileID: -6531324763291035813}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

@@ -1,3 +1,4 @@
+using System;
 using Didascalia.StateMachine;
 using UnityEngine;
 
@@ -11,7 +12,14 @@ public class ShouldStandUp : Transition
         base.Initialize(machine);
 
         _behaviour = machine.GetComponent<StudentBehaviour>();
+        _behaviour.OnStandUpRequested.AddListener(OnStandUpRequested);
     }
+
+    private void OnStandUpRequested()
+    {
+        _behaviour.SetOnFoot();
+    }
+
     public override bool Check()
     {
         return _behaviour.State != StudentState.Sitting;
@@ -19,6 +27,7 @@ public class ShouldStandUp : Transition
 
     public override void OnCheck()
     {
-        _behaviour.StartStandUpAnimation();
+        _behaviour.OnStandUpRequested.RemoveListener(OnStandUpRequested);
+        _behaviour.SetOnFoot();
     }
 }

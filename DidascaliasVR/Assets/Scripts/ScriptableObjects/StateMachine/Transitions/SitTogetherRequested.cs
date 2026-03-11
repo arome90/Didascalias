@@ -7,11 +7,18 @@ public class SitTogetherRequested : Transition
     StudentBehaviour _behaviour;
 
     bool _sitTogether = false;
+    public bool SitTogether
+    {
+        get { return _sitTogether; }
+        private set
+        {
+            _sitTogether = value;
+        }
+    }
     private void OnSitTogetherRequested()
     {
-        _sitTogether = true;
+        SitTogether = true;
     }
-
     public override void Initialize(StateMachine machine)
     {
         base.Initialize(machine);
