@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Meta.WitAi.TTS.Integrations;
+using Meta.WitAi.TTS.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -21,6 +23,12 @@ public class StudentBehaviour : MonoBehaviour
 {
     Animator _animator;
     NavMeshAgent _agent;
+    [System.Obsolete(
+        "A TTSWit component is not to be attached each GameObject that wants to speak but\n"
+        + "only one shall be contained per scene in a 'configuration global wit tts object'.\n"
+        + "Each Student should have attached instead: WitSpeaker. From which we can issue calls to the scene's TTSWit to `.Speak()`"
+    )]
+    TTSWit _tts;
     Student _st;
 
     public Transform SitSpot { get { return transform.parent; } }
@@ -48,9 +56,15 @@ public class StudentBehaviour : MonoBehaviour
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _st = GetComponent<Student>();
+        _tts = GetComponent<TTSWit>();
+
+        Didascalia.Utils.Error.DebugbreakFailIf(_animator == null, "Animator component not found", this);
+        Didascalia.Utils.Error.DebugbreakFailIf(_agent == null, "NavMeshAgent component not found", this);
+        Didascalia.Utils.Error.DebugbreakFailIf(_tts == null, "TTS component not found", this);
+        Didascalia.Utils.Error.DebugbreakFailIf(_st == null, "Student component not found", this);
+
 
         OnStandUp.AddListener(ChangeStateOnStandUp);
-
         ChangeState(StudentState.Sitting);
     }
 
@@ -178,6 +192,8 @@ public class StudentBehaviour : MonoBehaviour
     #region Yell
     public void Yell()
     {
+        // TTSSpeaker;
+        // _tts.AudioSystem.pla
         Didascalia.Utils.Error.DebugbreakFailUnimplemented("Yell Animation is not avaliable", this);
     }
 
