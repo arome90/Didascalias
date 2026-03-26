@@ -307,17 +307,20 @@ public class StudentManager : Singleton<StudentManager>
         public string StudentName;
     }
 
-    [StructLayout(LayoutKind.Explicit)]
+    // XXX: Treat this type like an union
+    // [StructLayout(LayoutKind.Explicit)]
     internal struct ConflictDescriptor
     {
-        [FieldOffset(0)]
+        // [FieldOffset(0)]
         public ConflictType Type;
+        
 
-        [FieldOffset(sizeof(ConflictType))]
+        // XXX: [FieldOffset(sizeof(ConflictType))] was not correct because it missaligned the pointer type inside the string variable inside the variants
+        // [FieldOffset(8)]
         public ConflictDescriptorDisrespect Disrespect;
-        [FieldOffset(sizeof(ConflictType))]
+        // [FieldOffset(8)]
         public ConflictDescriptorSitTogether SitTogether;
-        [FieldOffset(sizeof(ConflictType))]
+        // [FieldOffset(8)]
         public ConflictDescriptorStandUp StandUp;
     }
 
@@ -466,11 +469,12 @@ public class StudentManager : Singleton<StudentManager>
         {
             name = GetStudents()[UnityEngine.Random.Range(0, _students.Count)].Name;
         } 
-        var descriptor = GenerateConflictDescriptorExpectSame(type, studentName);
+        var descriptor = GenerateConflictDescriptorExpectSame(type, name);
         if (_activeConflicts.Count == _maxActiveConflicts)
         {
-            Didascalia.Utils.Error.DebugbreakFailMessage(
-                $"Cannot generate conflict of type {type} for student {studentName} because the maximum number of active conflicts has been reached.\n"
+            // Didascalia.Utils.Error.DebugbreakFailMessage(
+            Didascalia.Utils.Log.Warning(
+                $"Cannot generate conflict of type {type} for student {name} because the maximum number of active conflicts has been reached.\n"
                 + "Conflict will not be generated.",
                 this
             );
@@ -485,7 +489,7 @@ public class StudentManager : Singleton<StudentManager>
         if ((descriptor.Type & ConflictTypeNonFeasible) != 0)
         {
             Didascalia.Utils.Log.Warning(
-                $"Generated conflict of type {type} for student {studentName} is not feasible. Conflict will not be generated.",
+                $"Generated conflict of type {type} for student {name} is not feasible. Conflict will not be generated.",
                 this
             );
             return new ConflictGenerationResult
@@ -512,7 +516,7 @@ public class StudentManager : Singleton<StudentManager>
             if (_activeConflicts.ContainsKey(descriptorName))
             {
                 Didascalia.Utils.Log.Warning(
-                    $"Generated conflict of type {type} for student {studentName} cannot be generated "
+                    $"Generated conflict of type {type} for student {name} cannot be generated "
                     + "because there is already an active conflict for this student.\n"
                     + "Conflict will not be generated.",
                     this
