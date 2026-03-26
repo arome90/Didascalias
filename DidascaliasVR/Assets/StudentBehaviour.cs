@@ -194,7 +194,10 @@ public class StudentBehaviour : MonoBehaviour
     {
         // TTSSpeaker;
         // _tts.AudioSystem.pla
-        Didascalia.Utils.Error.DebugbreakFailUnimplemented("Yell Animation is not avaliable", this);
+
+        // XXX: @DavidRainder suggested not a fatal-error but a warning
+        // Didascalia.Utils.Error.DebugbreakFailUnimplemented("Yell Animation is not avaliable", this);
+        Didascalia.Utils.Log.Warning("Yell Animation is not avaliable", this);
     }
 
     #region SitTogether

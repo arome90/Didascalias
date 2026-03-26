@@ -369,6 +369,7 @@ public class ClassManager : Singleton<ClassManager>
     {
         Didascalia.Utils.Log.Info("WebMessageType: " + message.id, this);
 
+        StudentManager.ConflictGenerationResult result = default;
         switch(message.id)
         {
             case WebEventType.Message:
@@ -376,19 +377,40 @@ public class ClassManager : Singleton<ClassManager>
                 StudentManager.Instance.MakeStudentTalk(message.studentName, message.data);
                 break;
             case WebEventType.Disrespect:
-                StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.Disrespect, message.studentName);
+                result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.Disrespect, message.studentName);
                 break;
             case WebEventType.StandUp:
-                StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.StandUp, message.studentName);
+                result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.StandUp, message.studentName);
                 break;
             case WebEventType.SitTogether:
-                StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.SitTogether, message.studentName);
+                result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.SitTogether, message.studentName);
                 break;
             case WebEventType.Restart:
                 break;
             default:
                 Didascalia.Utils.Error.DebugbreakFailMessage("WebMessageType not recognized: " + message.id, this);
                 break;
+        }
+
+        if (result.Error != StudentManager.ConflictGenerationError.None)
+        {
+            string OutOfRange()
+            {
+                Didascalia.Utils.Error.DebugbreakFailMessage($"ConflictGenerationError not recognized: {result.Error}", this);
+                return "Unknown Student(s)";
+            }
+            string studentName = result.Descriptor.Type switch
+            {
+                StudentManager.ConflictType.Disrespect => result.Descriptor.Disrespect.StudentName,
+                StudentManager.ConflictType.StandUp => result.Descriptor.StandUp.StudentName,
+                StudentManager.ConflictType.SitTogether => result.Descriptor.SitTogether.StudentName,
+                _ => OutOfRange()
+            };
+            Didascalia.Utils.Log.Warning(
+                $"Conflict of type {result.Descriptor.Type} is not feasible for student {studentName} "
+                + $"due to error of type: {result.Error}. Conflict will not be generated.",
+                this
+            );
         }
     }
 }
