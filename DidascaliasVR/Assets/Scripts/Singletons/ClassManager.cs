@@ -399,7 +399,8 @@ public class ClassManager : Singleton<ClassManager>
                 Didascalia.Utils.Error.DebugbreakFailMessage($"ConflictGenerationError not recognized: {result.Error}", this);
                 return "Unknown Student(s)";
             }
-            string studentName = result.Descriptor.Type switch
+            StudentManager.ConflictType type = result.Descriptor.Type & ~StudentManager.ConflictTypeNonFeasible;
+            string studentName = type switch
             {
                 StudentManager.ConflictType.Disrespect => result.Descriptor.Disrespect.StudentName,
                 StudentManager.ConflictType.StandUp => result.Descriptor.StandUp.StudentName,
@@ -407,7 +408,7 @@ public class ClassManager : Singleton<ClassManager>
                 _ => OutOfRange()
             };
             Didascalia.Utils.Log.Warning(
-                $"Conflict of type {result.Descriptor.Type} is not feasible for student {studentName} "
+                $"Conflict of type {type} is not feasible for student {studentName} "
                 + $"due to error of type: {result.Error}. Conflict will not be generated.",
                 this
             );

@@ -292,7 +292,7 @@ public class StudentManager : Singleton<StudentManager>
         StandUp = 2,
         // NonFeasible = 1 << 31
     }
-    const ConflictType ConflictTypeNonFeasible = (ConflictType)(1 << 31);
+    public const ConflictType ConflictTypeNonFeasible = (ConflictType)(1 << 31);
     internal struct ConflictDescriptorDisrespect
     {
         public string StudentName;
@@ -452,7 +452,8 @@ public class StudentManager : Singleton<StudentManager>
         None,
         MaxActiveConflictsReached,
         NotFeasible,
-        AlreadyActiveConflictForStudent
+        AlreadyActiveConflictForStudent,
+        Unimplemented
     }
     internal struct ConflictGenerationResult
     {
@@ -469,7 +470,8 @@ public class StudentManager : Singleton<StudentManager>
         {
             name = GetStudents()[UnityEngine.Random.Range(0, _students.Count)].Name;
         } 
-        var descriptor = GenerateConflictDescriptorExpectSame(type, name);
+        // var descriptor = GenerateConflictDescriptorExpectSame(type, name);
+        var descriptor = GenerateConflictDescriptor(type, name);
         if (_activeConflicts.Count == _maxActiveConflicts)
         {
             // Didascalia.Utils.Error.DebugbreakFailMessage(
@@ -524,6 +526,20 @@ public class StudentManager : Singleton<StudentManager>
                 return new ConflictGenerationResult
                 {
                     Error = ConflictGenerationError.AlreadyActiveConflictForStudent,
+                    Descriptor = descriptor,
+                    ConflictInstance = null
+                };
+            }
+            // TODO: remove this check when all conflict types are implemented, because it should be the responsibility of the caller to not generate unimplemented conflict types
+            else if (descriptor.Type == ConflictType.Disrespect)
+            {
+                Didascalia.Utils.Log.Warning(
+                    $"Generated conflict of type {type} for student {name} is not implemented yet. Conflict will not be generated.",
+                    this
+                );
+                return new ConflictGenerationResult
+                {
+                    Error = ConflictGenerationError.Unimplemented,
                     Descriptor = descriptor,
                     ConflictInstance = null
                 };
