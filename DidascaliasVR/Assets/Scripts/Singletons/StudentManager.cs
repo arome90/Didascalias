@@ -174,6 +174,7 @@ public class StudentManager : Singleton<StudentManager>
             students[students.Count - 1] = students[0];
         }
 
+        Didascalia.Utils.Log.Info("Generated students: " + string.Join(", ", students.Select(s => s.Name)), this);
         return students;
     }
 

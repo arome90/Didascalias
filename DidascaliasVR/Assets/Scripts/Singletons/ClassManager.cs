@@ -4,6 +4,7 @@ using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
+using System.Linq;
 
 /// <summary>
 /// Maneja la configuraci�n de la clase y la aplica seg�n corresponda.
@@ -137,7 +138,7 @@ public class ClassManager : Singleton<ClassManager>
     [Header("Generation Settings")]
     [SerializeField,
         Tooltip("Distancia desde el centro de la clase hasta cada lateral de la misma. Utilizado para saber c�mmo colocar los escritorios"), 
-        Range(2.0f, 4.5f)]
+        Range(2.0f, 40.5f)]
     private float _classWidth = 3.4f;
 
     /// <summary>
@@ -199,9 +200,11 @@ public class ClassManager : Singleton<ClassManager>
     /// <param name="classScene"> Escena de la clase </param>
     void ActivateClassOnSceneChanged(string menuScene, Scene classScene)
     {
-        if (classScene.name == "Class" &&
-            menuScene == "Menu")
-        {
+        if (
+            // FIXME: this is a temporary solution, we should find a better way to determine when to generate the class
+            (classScene.name == "Class" || classScene.name == "newClass")
+            && menuScene == "Menu"
+        ) {
             GenerateClass();
             AddStudentsToDesks();
             ConnectionManager.Instance.ClassStarted();
@@ -255,6 +258,7 @@ public class ClassManager : Singleton<ClassManager>
             }
             startingPoint += Vector3.forward * -zDeskOffset;
         }
+        Didascalia.Utils.Log.Warning("outdated: Square disposition of desks is outdated", this);
     }
 
     /// <summary>
@@ -276,6 +280,7 @@ public class ClassManager : Singleton<ClassManager>
 
             AddDesk(currentPosition, rot);
         }
+        Didascalia.Utils.Log.Warning("outdated: Circular disposition of desks is outdated", this);
     }
 
     /// <summary>
@@ -322,6 +327,7 @@ public class ClassManager : Singleton<ClassManager>
             
             AddDesk(currentPosition, Quaternion.identity);
         }
+        Didascalia.Utils.Log.Warning("outdated: U disposition of desks is outdated", this);
     }
 
     /// <summary>
@@ -346,10 +352,11 @@ public class ClassManager : Singleton<ClassManager>
         foreach (Student st in students)
         {
             // agent.enabled = false;
-
-            st.transform.parent = _desks[i].transform.GetChild(0);
-            st.transform.localPosition = Vector3.zero;
-            st.transform.localRotation = Quaternion.identity;
+            
+            st.transform.parent = _desks[i]
+                .GetComponentsInChildren<Transform>()
+                .First(t => t.gameObject.layer == LayerMask.NameToLayer("Marker"));
+            st.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             i++;
 
             NavMeshAgent agent = st.GetComponent<NavMeshAgent>();
@@ -412,6 +419,27 @@ public class ClassManager : Singleton<ClassManager>
                 + $"due to error of type: {result.Error}. Conflict will not be generated.",
                 this
             );
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (_classRoot == null)
+        {
+            Didascalia.Utils.Log.Warning(
+                "Class Root is not assigned. Please assign a Transform to ClassManager's Class Root field.",
+                this
+            );
+        }
+        else
+        {
+            var previousColor = Gizmos.color;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(
+                _classRoot.position,
+                new Vector3(_classWidth, 0.1f, _classWidth)
+            );
+            Gizmos.color = previousColor;
         }
     }
 }
