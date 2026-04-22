@@ -20,5 +20,6 @@ public class ShouldSitDown : Transition
     public override void OnCheck()
     {
         _behaviour.StartSitDownAnimation();
+        _behaviour.StartAcquireTargetRotation(_behaviour.SitSpot.rotation, 1.5f);
     }
 }

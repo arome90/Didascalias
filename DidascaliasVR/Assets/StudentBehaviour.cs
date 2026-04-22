@@ -135,10 +135,44 @@ public class StudentBehaviour : MonoBehaviour
         }
     }
 
-    public void MoveTo(Transform transform)
+    public Coroutine MoveTo(Transform transform)
     {
-        StartCoroutine(MovingTowardsPoint(transform.position)); 
+        return StartCoroutine(MovingTowardsPoint(transform.position)); 
     }
+
+    IEnumerator AcquireTargetRotation(Quaternion rotation, float time)
+    {
+        Quaternion initialRotation = transform.rotation;
+
+        float elapsedTime = 0.0f;
+        var wait = new WaitForEndOfFrame();
+        while(elapsedTime < time)
+        {
+            elapsedTime += Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(initialRotation, rotation, elapsedTime / time);
+
+            yield return wait;
+        }
+
+        transform.rotation = rotation;
+        yield return wait;
+        Didascalia.Utils.Error.DebugbreakFailUnimplemented("AcquireTargetRotation is not fully implemented, it should be able to be interrupted by other calls to this method or to MoveTo", this);
+    }
+    public Coroutine StartAcquireTargetRotation(Quaternion rotation, float time)
+    {
+        return StartCoroutine(AcquireTargetRotation(rotation, time));
+    }
+
+    IEnumerator MovementAnimationAndRotate(Transform transform, float rotateTime)
+    {
+        yield return MoveTo(transform);
+        yield return AcquireTargetRotation(transform.rotation, rotateTime);
+    }
+    public Coroutine MoveToAndRotate(Transform transform, float rotateTime)
+    {
+        return StartCoroutine(MovementAnimationAndRotate(transform, rotateTime));
+    }
+
     IEnumerator MovingTowardsPoint(Vector3 point)
     {
         float speed = _agent.speed;

@@ -32,6 +32,7 @@ public class GoSitDown : Transition
 
         _stBehaviour.OnSitDownRequested.RemoveListener(OnSitDownRequested);
 
-        _stBehaviour.MoveTo(_stBehaviour.SitSpot);
+        // _stBehaviour.MoveTo(_stBehaviour.SitSpot);
+        _stBehaviour.MoveToAndRotate(_stBehaviour.SitSpot, 1.5f);
     }
 }
