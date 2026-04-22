@@ -89,8 +89,52 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1480344123429328861, guid: 9a40af44762a8fb40a402c844df3e28e, type: 3}
       insertIndex: 0
       addedObject: {fileID: 434269655002498239}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7897222696171209072, guid: 9a40af44762a8fb40a402c844df3e28e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 921450148480305654}
+    - targetCorrespondingSourceObject: {fileID: 7897222696171209072, guid: 9a40af44762a8fb40a402c844df3e28e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3456336579330487697}
   m_SourcePrefab: {fileID: 100100000, guid: 9a40af44762a8fb40a402c844df3e28e, type: 3}
+--- !u!1 &689437279488289213 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7897222696171209072, guid: 9a40af44762a8fb40a402c844df3e28e, type: 3}
+  m_PrefabInstance: {fileID: 7208518898398767309}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &921450148480305654
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689437279488289213}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.45, z: -0.25}
+  m_TimeToStationary: 0.5
+--- !u!114 &3456336579330487697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689437279488289213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 1, y: 1.5, z: 1}
+  m_Center: {x: 0, y: 0.25, z: -0.25}
+  m_Area: 3
+  m_AffectedAgents: ffffffff
 --- !u!4 &8107306840379375376 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1480344123429328861, guid: 9a40af44762a8fb40a402c844df3e28e, type: 3}
