@@ -1,5 +1,9 @@
 using UnityEngine;
 
+#if !UNITY_EDITOR
+using System;
+#endif
+
 namespace System.Runtime.CompilerServices
 {
     class IsExternalInit { }
@@ -27,39 +31,39 @@ namespace Didascalia.Utils
 
     internal static class Log
     {
-        public static void Message(string message, Object context)
+        public static void Message(string message, UnityEngine.Object context)
         {
 #if UNITY_EDITOR
             string logMessage =
                 new LogString("[Didascalia]").Color(Color.mediumPurple)
                 + ": " + message;
-            Debug.Log(logMessage, context);
+            UnityEngine.Debug.Log(logMessage, context);
 #else
             _ = context;
             Console.WriteLine("[Didascalia]: " + message);
 #endif
         }
-        public static void Warning(string message, Object context)
+        public static void Warning(string message, UnityEngine.Object context)
         {
 #if UNITY_EDITOR
             string logMessage =
                 new LogString("[Didascalia]").Color(Color.mediumPurple)
                 + new LogString(" [warning]").Color(Color.yellow)
                 + ": " + message;
-            Debug.LogWarning(logMessage, context);
+            UnityEngine.Debug.LogWarning(logMessage, context);
 #else
             _ = context;
             Console.WriteLine("[Didascalia] [warning]: " + message);
 #endif
         }
-        public static void Info(string message, Object context)
+        public static void Info(string message, UnityEngine.Object context)
         {
 #if UNITY_EDITOR
             string logMessage =
                 new LogString("[Didascalia]").Color(Color.mediumPurple)
                 + new LogString(" [info]").Color(Color.cyan)
                 + ": " + message;
-            Debug.Log(logMessage, context);
+            UnityEngine.Debug.Log(logMessage, context);
 #else
             _ = context;
             Console.WriteLine("[Didascalia] [info]: " + message);

@@ -156,7 +156,7 @@ public class StudentBehaviour : MonoBehaviour
 
         transform.rotation = rotation;
         yield return wait;
-        Didascalia.Utils.Error.DebugbreakFailUnimplemented("AcquireTargetRotation is not fully implemented, it should be able to be interrupted by other calls to this method or to MoveTo", this);
+        // Didascalia.Utils.Error.DebugbreakFailUnimplemented("AcquireTargetRotation is not fully implemented, it should be able to be interrupted by other calls to this method or to MoveTo", this);
     }
     public Coroutine StartAcquireTargetRotation(Quaternion rotation, float time)
     {
