@@ -1,5 +1,6 @@
 using System;
 using System.Net.Sockets;
+using UnityEngine;
 
 public enum ConnectionEvent
 {
@@ -31,7 +32,9 @@ public class ClientWebRTC
 
     public int port;
 
-    NetworkStream stream;
+    public NetworkStream stream;
+
+    public Camera cam;
 
     public ClientWebRTC(ConnectionData connData, NetworkStream stream)
     {

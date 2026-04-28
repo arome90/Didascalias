@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.tvOS;
 
 public class SignalingServer : MonoBehaviour {
@@ -15,8 +17,10 @@ public class SignalingServer : MonoBehaviour {
     #region Variables
 
     bool running;
+    bool searchingDevices;
 
-    int port = 8053;
+    int listenPort = 443;
+    int broadcastPort = 8053;
 
     string ipAddress;
 
@@ -26,36 +30,50 @@ public class SignalingServer : MonoBehaviour {
 
     int bufferSize;
 
-    /// <summary>
-    /// All currently connected clients, keyed by their IP.
-    /// ConcurrentDictionary is used instead of Dictionary + lock because multiple background
-    /// threads (one per client) may add or remove entries simultaneously. All individual
-    /// operations (TryAdd, TryRemove, TryGetValue) are atomic, and its enumerator works on
-    /// a snapshot so Broadcast iteration is safe without an external lock.
-    /// </summary>
-    readonly ConcurrentDictionary<string, ClientWebRTC> clients = new ConcurrentDictionary<string, ClientWebRTC>();
-
     #endregion
 
     #region Conection
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void CreateInstance()
-    {
-        var obj = new GameObject("SignalingServer");
-        obj.AddComponent<SignalingServer>();
-        UnityEngine.Object.DontDestroyOnLoad(obj);
-    }
 
     private void StartServer()
     {
         running = true;
         GetIpAddress();
-        InvokeRepeating(nameof(SendBroadcast), 0f, 2f);
         
-        listener = new TcpListener(IPAddress.Parse(ipAddress), port);
+        listener = new TcpListener(IPAddress.Parse(ipAddress), listenPort);
         listener.Start();
         listenThread = new Thread(ListenLoop) { IsBackground = true, Name = "TCP Listen" };
         listenThread.Start();
+
+        //InvokeRepeating(nameof(SendBroadcast), 0f, 2f);
+        searchingDevices = true;
+        StartCoroutine(SendBroadcast());
+    }
+
+    IEnumerator SendBroadcast()
+    {
+        try
+        {
+            string json = JsonUtility.ToJson(new ConnectionData(ipAddress, listenPort, ConnectionEvent.BROADCAST));
+            byte[] data = Encoding.UTF8.GetBytes(json);
+
+            using (var sender = new UdpClient())
+            {
+                sender.EnableBroadcast = true;
+                var endpoint = new IPEndPoint(IPAddress.Broadcast, broadcastPort);
+                sender.Send(data, data.Length, endpoint);
+            }
+
+            UnityEngine.Debug.Log($"[Host] Broadcast enviado -> {json}");
+        }
+        catch (Exception e)
+        {
+            UnityEngine.Debug.LogWarning($"[Host] Error al enviar broadcast: {e.Message}");
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        if (searchingDevices)
+            StartCoroutine(SendBroadcast());
     }
 
     private void ListenLoop()
@@ -107,9 +125,19 @@ public class SignalingServer : MonoBehaviour {
             }
 
             ClientWebRTC newClient = new ClientWebRTC(decodedData, stream);
-            clients.TryAdd(decodedData.ipAddress, newClient);
+            StreamManager.Instance?.addClient(decodedData.ipAddress, newClient);
 
             Debug.Log($"[SignalingServer] Client connected: {decodedData.ipAddress}");
+
+            // Data process loop ---
+            while (running)
+            {
+                int bytes = stream.Read(data, 0, data.Length);
+                if (bytes == 0) break;
+                 
+                string incoming = Encoding.UTF8.GetString(data, 0, bytes);
+                // Procesar mensaje...
+            }
         }
         catch (Exception ex)
         {
@@ -118,29 +146,9 @@ public class SignalingServer : MonoBehaviour {
         }
     }
 
-    void SendBroadcast()
-    {
-        //if (mobileConnected) return; // no envía si ya hay conexión
+    #endregion
 
-        try
-        {
-            string json = JsonUtility.ToJson(new ConnectionData(ipAddress, port, ConnectionEvent.BROADCAST));
-            byte[] data = Encoding.UTF8.GetBytes(json);
-
-            using (var sender = new UdpClient())
-            {
-                sender.EnableBroadcast = true;
-                var endpoint = new IPEndPoint(IPAddress.Broadcast, port);
-                sender.Send(data, data.Length, endpoint);
-            }
-
-            UnityEngine.Debug.Log($"[Host] Broadcast enviado -> {json}");
-        }
-        catch (Exception e)
-        {
-            UnityEngine.Debug.LogWarning($"[Host] Error al enviar broadcast: {e.Message}");
-        }
-    }
+    #region Getters
 
     private void GetIpAddress()
     {
@@ -158,9 +166,26 @@ public class SignalingServer : MonoBehaviour {
 
     #endregion
 
+    #region Monobehaviour
+
+    /// <summary>
+    /// Creates an GameObject and attaches this component to ensure it is initialized
+    /// before any scene is loaded. The object is marked as DontDestroyOnLoad so it
+    /// persists across scene transitions.
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void CreateInstance()
+    {
+        var obj = new GameObject("SignalingServer");
+        obj.AddComponent<SignalingServer>();
+        DontDestroyOnLoad(obj);
+    }
+
     public void Start()
     {
         bufferSize = 1024;
         StartServer();
     }
+
+    #endregion
 }
