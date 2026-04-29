@@ -66,7 +66,13 @@ public class StreamManager : MonoBehaviour
 
         if (msg.type == ConnectionEvent.ICE)
         {
-            var init = JsonUtility.FromJson<RTCIceCandidateInit>(msg.body);
+            var data = JsonUtility.FromJson<IceCandidateData>(msg.body);
+            var init = new RTCIceCandidateInit
+            {
+                candidate = data.candidate,
+                sdpMid = data.sdpMid,
+                sdpMLineIndex = data.sdpMLineIndex
+            };
             peer.AddIceCandidate(init);
         }
         else if (msg.type == ConnectionEvent.SDP)

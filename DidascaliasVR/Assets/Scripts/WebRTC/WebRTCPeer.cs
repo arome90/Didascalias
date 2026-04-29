@@ -30,7 +30,7 @@ public class WebRTCPeer : MonoBehaviour
                 sourceIp = SignalingServer.ipAddress,
                 destinationIp = RemoteIp,
                 type = ConnectionEvent.ICE,
-                body = JsonUtility.ToJson(candidate)
+                body = JsonUtility.ToJson(new IceCandidateData(candidate))
             };
             OnSignalingMessage?.Invoke(msg);
         };

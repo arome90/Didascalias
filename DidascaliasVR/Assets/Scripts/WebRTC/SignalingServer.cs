@@ -203,5 +203,15 @@ public class SignalingServer : MonoBehaviour {
         StartServer();
     }
 
+    void OnDestroy()
+    {
+        running = false;
+        searchingDevices = false;
+
+        try { listener?.Stop(); } catch { }
+
+        listenThread?.Join(500); // espera max 500ms a que el hilo termine
+    }
+
     #endregion
 }

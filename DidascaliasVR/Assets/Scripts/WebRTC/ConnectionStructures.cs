@@ -1,5 +1,6 @@
 using System;
 using System.Net.Sockets;
+using Unity.WebRTC;
 using UnityEngine;
 
 public enum ConnectionEvent
@@ -20,6 +21,21 @@ public class SignalingMessage
     public string destinationIp;       // IP destino, vacío = broadcast
     public ConnectionEvent type;
     public string body;    // SDP serializado o JSON del ICE candidate
+}
+
+[Serializable]
+public class IceCandidateData
+{
+    public string candidate;
+    public string sdpMid;
+    public int sdpMLineIndex;
+
+    public IceCandidateData(RTCIceCandidate c)
+    {
+        candidate = c.Candidate;
+        sdpMid = c.SdpMid;
+        sdpMLineIndex = c.SdpMLineIndex ?? 0;
+    }
 }
 
 [Serializable]

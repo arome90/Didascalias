@@ -10,12 +10,12 @@ public class FrameCaptureDebug : MonoBehaviour
     /// <summary>
     /// Key to press to trigger the capture. Space by default.
     /// </summary>
-    [SerializeField] KeyCode captureKey = KeyCode.Space;
+    //[SerializeField] KeyCode captureKey = KeyCode.Space;
 
     /// <summary>
     /// Folder where the PNG will be saved, relative to the project root.
     /// </summary>
-    [SerializeField] string outputFolder = "DebugCaptures";
+    //[SerializeField] string outputFolder = "DebugCaptures";
 
     private void Start()
     {
