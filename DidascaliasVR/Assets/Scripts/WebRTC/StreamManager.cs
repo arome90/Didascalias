@@ -1,5 +1,8 @@
 using Didascalia;
 using System.Collections.Concurrent;
+using System.IO;
+using System.Runtime.InteropServices.ComTypes;
+using Unity.WebRTC;
 using UnityEngine;
 
 public class StreamManager : MonoBehaviour
@@ -29,9 +32,47 @@ public class StreamManager : MonoBehaviour
     {
         foreach (var cl in clients)
         {
-            // Instanciar gb
+            CreatePeerForClient(cl.Value.ipAddress, FrameCaptureFeature.Instance?.GetFrame());
+        }
+    }
 
-            // Guardar referencia -> cl.Value.cam 
+    readonly ConcurrentDictionary<string, WebRTCPeer> peers = new();
+
+    public void CreatePeerForClient(string ip, RenderTexture source)
+    {
+        var go = new GameObject($"Peer_{ip}");
+        var peer = go.AddComponent<WebRTCPeer>();
+        peer.RemoteIp = ip;
+        peer.OnSignalingMessage = msg => SendSignalingMessage(ip, msg);
+        peer.Initialize(source);
+        peers[ip] = peer;
+        StartCoroutine(peer.CreateOffer());
+    }
+
+    void SendSignalingMessage(string ip, SignalingMessage msg)
+    {
+        if (!clients.TryGetValue(ip, out var client)) return;
+        string json = JsonUtility.ToJson(msg);
+        byte[] data = System.Text.Encoding.UTF8.GetBytes(json);
+        byte[] header = System.BitConverter.GetBytes(data.Length);
+        client.stream.Write(header, 0, 4);
+        client.stream.Write(data, 0, data.Length);
+        client.stream.Flush();
+    }
+
+    public void HandleIncomingSignaling(string fromIp, SignalingMessage msg)
+    {
+        if (!peers.TryGetValue(fromIp, out var peer)) return;
+
+        if (msg.type == ConnectionEvent.ICE)
+        {
+            var init = JsonUtility.FromJson<RTCIceCandidateInit>(msg.body);
+            peer.AddIceCandidate(init);
+        }
+        else if (msg.type == ConnectionEvent.SDP)
+        {
+            var answer = JsonUtility.FromJson<RTCSessionDescription>(msg.body);
+            StartCoroutine(peer.SetRemoteAnswer(answer));
         }
     }
 

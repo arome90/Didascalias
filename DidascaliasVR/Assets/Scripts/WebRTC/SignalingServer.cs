@@ -22,7 +22,7 @@ public class SignalingServer : MonoBehaviour {
     int listenPort = 443;
     int broadcastPort = 8053;
 
-    string ipAddress;
+    public static string ipAddress { get; private set; }
 
     TcpListener listener;
 
@@ -118,7 +118,7 @@ public class SignalingServer : MonoBehaviour {
             ConnectionData decodedData = JsonUtility.FromJson<ConnectionData>(message);
 
             // Check if the data recieved is truly a ConnectionData class
-            if (decodedData.connEvent != ConnectionEvent.HANDSHAKE)
+            if (decodedData.type != ConnectionEvent.HANDSHAKE)
             {
                 Debug.LogError("[Signaling Server] Not a Connection Data recieved during Handshake.");
                 return;
@@ -129,14 +129,30 @@ public class SignalingServer : MonoBehaviour {
 
             Debug.Log($"[SignalingServer] Client connected: {decodedData.ipAddress}");
 
+            RenderTexture frame = FrameCaptureFeature.Instance?.GetFrame();
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                StreamManager.Instance?.CreatePeerForClient(decodedData.ipAddress, frame));
+
             // Data process loop ---
             while (running)
             {
-                int bytes = stream.Read(data, 0, data.Length);
-                if (bytes == 0) break;
-                 
-                string incoming = Encoding.UTF8.GetString(data, 0, bytes);
-                // Procesar mensaje...
+                // Leer header de 4 bytes con el tamaño del mensaje
+                byte[] header = new byte[4];
+                int headerBytes = stream.Read(header, 0, 4);
+                if (headerBytes == 0) break;
+
+                int size = BitConverter.ToInt32(header, 0);
+                byte[] body = new byte[size];
+                int total = 0;
+                while (total < size)
+                    total += stream.Read(body, total, size - total);
+
+                string incoming = Encoding.UTF8.GetString(body);
+                var sigMsg = JsonUtility.FromJson<SignalingMessage>(incoming);
+
+                // Ejecutar en el hilo principal de Unity (los peers WebRTC lo necesitan)
+                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    StreamManager.Instance?.HandleIncomingSignaling(decodedData.ipAddress, sigMsg));
             }
         }
         catch (Exception ex)
