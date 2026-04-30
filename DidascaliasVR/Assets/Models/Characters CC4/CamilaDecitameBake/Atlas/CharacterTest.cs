@@ -75,17 +75,18 @@ public class CharacterTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // FIXME: should have a field `InputActionReference ...` and subscribe to that instead of hardcoding the key
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Debug.Log("PRE SUB");
             hideCharacter();
         }
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Keyboard.current.vKey.wasPressedThisFrame)
         {
             Debug.Log("PRE ADD");
             showCharacter();
         }
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Keyboard.current.bKey.wasPressedThisFrame)
         {
             Debug.Log("PRE ADD");
             changeSet();

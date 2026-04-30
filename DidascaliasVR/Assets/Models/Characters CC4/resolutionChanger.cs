@@ -39,7 +39,8 @@ public class resolutionChanger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        // FIXME: should have a field `InputActionReference quality` and subscribe to that instead of hardcoding the key
+        if (Keyboard.current.cKey.wasPressedThisFrame)
         {
             quality();
         }

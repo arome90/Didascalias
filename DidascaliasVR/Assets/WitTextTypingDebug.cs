@@ -1,6 +1,7 @@
 using Oculus.Voice;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 public class WitTextTypingDebug : MonoBehaviour
@@ -42,7 +43,8 @@ public class WitTextTypingDebug : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyUp(KeyCode.T))
+        // FIXME: should have a field `InputActionReference enableInput` and subscribe to that instead of hardcoding the key
+        if(Keyboard.current.tKey.wasReleasedThisFrame)
         {
             EnableInputField();
         }
