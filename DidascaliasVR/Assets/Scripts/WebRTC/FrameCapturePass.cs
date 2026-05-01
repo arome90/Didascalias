@@ -88,6 +88,7 @@ public class FrameCapturePass : ScriptableRenderPass
 
     public RenderTexture GetFrame()
     {
+        Debug.Log("Pillando textura");
         return outputTexture;
     }
 

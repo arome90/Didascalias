@@ -30,13 +30,13 @@ public class StreamManager : MonoBehaviour
 
     readonly ConcurrentDictionary<string, WebRTCPeer> peers = new();
 
-    public void CreatePeerForClient(string ip, RenderTexture source)
+    public void CreatePeerForClient(string ip)
     {
         GameObject go = new GameObject($"Peer_{ip}");
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
         peer.RemoteIp = ip;
         peer.OnSignalingMessage = msg => SendSignalingMessage(ip, msg);
-        peer.Initialize(source);
+        peer.Initialize();
         peers[ip] = peer;
         StartCoroutine(peer.CreateOffer());
     }

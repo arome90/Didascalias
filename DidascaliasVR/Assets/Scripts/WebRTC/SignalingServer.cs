@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Unity.WebRTC;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -130,11 +131,7 @@ public class SignalingServer : MonoBehaviour {
             Debug.Log($"[SignalingServer] Client connected: {decodedData.ipAddress}");
 
 
-            UnityMainThreadDispatcher.Instance().Enqueue(() =>
-            {
-                RenderTexture frame = FrameCaptureFeature.Instance?.GetFrame();
-                StreamManager.Instance?.CreatePeerForClient(decodedData.ipAddress, frame);
-            });
+            UnityMainThreadDispatcher.Instance().Enqueue(() => StreamManager.Instance?.CreatePeerForClient(decodedData.ipAddress));
 
             // Data process loop ---
             while (running)
@@ -203,6 +200,7 @@ public class SignalingServer : MonoBehaviour {
     public void Start()
     {
         bufferSize = 1024;
+        StartCoroutine(WebRTC.Update());
         StartServer();
     }
 

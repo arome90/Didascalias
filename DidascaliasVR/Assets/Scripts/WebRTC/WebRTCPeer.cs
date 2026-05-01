@@ -6,13 +6,21 @@ public class WebRTCPeer : MonoBehaviour
 {
     RTCPeerConnection peer;
     VideoStreamTrack videoTrack;
+    RenderTexture renderTexture;
 
     // Callback para enviar SDP/ICE al cliente remoto vía TCP
     public System.Action<SignalingMessage> OnSignalingMessage;
     public string RemoteIp;
 
-    public void Initialize(RenderTexture source)
+    public void Initialize()
     {
+        // Crear textura
+        RenderTexture capture = FrameCaptureFeature.Instance?.GetFrame();
+        renderTexture = new RenderTexture(capture.width, capture.height, 0, RenderTextureFormat.BGRA32);
+        renderTexture.useMipMap = false;
+        renderTexture.antiAliasing = 1;
+        renderTexture.Create();
+
         // Configuración de la conexión. Se usa STUN para descubrir la IP pública del dispositivo
         var config = new RTCConfiguration
         {
@@ -34,7 +42,7 @@ public class WebRTCPeer : MonoBehaviour
             Debug.Log($"[WebRTCPeer] ICE state -> {state}");
 
         // Añadir el track de vídeo
-        videoTrack = new VideoStreamTrack(source);
+        videoTrack = new VideoStreamTrack(renderTexture);
         peer.AddTrack(videoTrack);
     }
 
@@ -67,6 +75,15 @@ public class WebRTCPeer : MonoBehaviour
         // Envía el mensaje
         SignalingMessage msg = new SignalingMessage(SignalingServer.ipAddress, RemoteIp, ConnectionEvent.SDP, JsonUtility.ToJson(new SessionDescriptionData(offer)));
         OnSignalingMessage?.Invoke(msg);
+    }
+
+    private void Update()
+    {
+        RenderTexture capture = FrameCaptureFeature.Instance?.GetFrame();
+        if (capture != null)
+        {
+            Graphics.Blit(capture, renderTexture);
+        }
     }
 
     void OnDestroy()
