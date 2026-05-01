@@ -28,14 +28,6 @@ public class StreamManager : MonoBehaviour
         clients.TryRemove(str, out var client);
     }
 
-    void createClients()
-    {
-        foreach (var cl in clients)
-        {
-            CreatePeerForClient(cl.Value.ipAddress, FrameCaptureFeature.Instance?.GetFrame());
-        }
-    }
-
     readonly ConcurrentDictionary<string, WebRTCPeer> peers = new();
 
     public void CreatePeerForClient(string ip, RenderTexture source)
@@ -77,7 +69,8 @@ public class StreamManager : MonoBehaviour
         }
         else if (msg.type == ConnectionEvent.SDP)
         {
-            var answer = JsonUtility.FromJson<RTCSessionDescription>(msg.body);
+            var data = JsonUtility.FromJson<SessionDescriptionData>(msg.body);
+            var answer = data.ToDesc();
             StartCoroutine(peer.SetRemoteAnswer(answer));
         }
     }

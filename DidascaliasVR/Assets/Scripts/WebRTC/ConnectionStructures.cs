@@ -39,6 +39,28 @@ public class IceCandidateData
 }
 
 [Serializable]
+public class SessionDescriptionData
+{
+    public string type;  // "offer" o "answer"
+    public string sdp;
+
+    public SessionDescriptionData(RTCSessionDescription desc)
+    {
+        type = desc.type.ToString().ToLower();  // RTCSdpType.Offer -> "offer"
+        sdp = desc.sdp;
+    }
+
+    public RTCSessionDescription ToDesc()
+    {
+        return new RTCSessionDescription
+        {
+            type = type == "offer" ? RTCSdpType.Offer : RTCSdpType.Answer,
+            sdp = this.sdp
+        };
+    }
+}
+
+[Serializable]
 public class ConnectionData
 {
     public string ipAddress;

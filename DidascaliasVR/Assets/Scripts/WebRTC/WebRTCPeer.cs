@@ -76,7 +76,7 @@ public class WebRTCPeer : MonoBehaviour
             sourceIp = SignalingServer.ipAddress,
             destinationIp = RemoteIp,
             type = ConnectionEvent.SDP,
-            body = JsonUtility.ToJson(offer)
+            body = JsonUtility.ToJson(new SessionDescriptionData(offer))
         };
         OnSignalingMessage?.Invoke(msg);
     }

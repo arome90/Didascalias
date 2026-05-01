@@ -129,9 +129,12 @@ public class SignalingServer : MonoBehaviour {
 
             Debug.Log($"[SignalingServer] Client connected: {decodedData.ipAddress}");
 
-            RenderTexture frame = FrameCaptureFeature.Instance?.GetFrame();
+
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                StreamManager.Instance?.CreatePeerForClient(decodedData.ipAddress, frame));
+            {
+                RenderTexture frame = FrameCaptureFeature.Instance?.GetFrame();
+                StreamManager.Instance?.CreatePeerForClient(decodedData.ipAddress, frame);
+            });
 
             // Data process loop ---
             while (running)
