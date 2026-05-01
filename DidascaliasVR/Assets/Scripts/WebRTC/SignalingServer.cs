@@ -56,10 +56,10 @@ public class SignalingServer : MonoBehaviour {
             string json = JsonUtility.ToJson(new ConnectionData(ipAddress, listenPort, ConnectionEvent.BROADCAST));
             byte[] data = Encoding.UTF8.GetBytes(json);
 
-            using (var sender = new UdpClient())
+            using (UdpClient sender = new UdpClient())
             {
                 sender.EnableBroadcast = true;
-                var endpoint = new IPEndPoint(IPAddress.Broadcast, broadcastPort);
+                IPEndPoint endpoint = new IPEndPoint(IPAddress.Broadcast, broadcastPort);
                 sender.Send(data, data.Length, endpoint);
             }
 

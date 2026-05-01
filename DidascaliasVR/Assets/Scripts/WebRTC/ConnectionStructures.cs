@@ -21,6 +21,14 @@ public class SignalingMessage
     public string destinationIp;       // IP destino, vacío = broadcast
     public ConnectionEvent type;
     public string body;    // SDP serializado o JSON del ICE candidate
+
+    public SignalingMessage(string sIP, string dIP, ConnectionEvent e, string b)
+    {
+        sourceIp = sIP;
+        destinationIp = dIP;
+        type = e;
+        body = b;
+    }
 }
 
 [Serializable]
@@ -50,7 +58,7 @@ public class SessionDescriptionData
         sdp = desc.sdp;
     }
 
-    public RTCSessionDescription ToDesc()
+    public RTCSessionDescription ToRTCDesc()
     {
         return new RTCSessionDescription
         {

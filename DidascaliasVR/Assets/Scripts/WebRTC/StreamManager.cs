@@ -32,8 +32,8 @@ public class StreamManager : MonoBehaviour
 
     public void CreatePeerForClient(string ip, RenderTexture source)
     {
-        var go = new GameObject($"Peer_{ip}");
-        var peer = go.AddComponent<WebRTCPeer>();
+        GameObject go = new GameObject($"Peer_{ip}");
+        WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
         peer.RemoteIp = ip;
         peer.OnSignalingMessage = msg => SendSignalingMessage(ip, msg);
         peer.Initialize(source);
@@ -58,8 +58,8 @@ public class StreamManager : MonoBehaviour
 
         if (msg.type == ConnectionEvent.ICE)
         {
-            var data = JsonUtility.FromJson<IceCandidateData>(msg.body);
-            var init = new RTCIceCandidateInit
+            IceCandidateData data = JsonUtility.FromJson<IceCandidateData>(msg.body);
+            RTCIceCandidateInit init = new RTCIceCandidateInit
             {
                 candidate = data.candidate,
                 sdpMid = data.sdpMid,
@@ -69,8 +69,8 @@ public class StreamManager : MonoBehaviour
         }
         else if (msg.type == ConnectionEvent.SDP)
         {
-            var data = JsonUtility.FromJson<SessionDescriptionData>(msg.body);
-            var answer = data.ToDesc();
+            SessionDescriptionData data = JsonUtility.FromJson<SessionDescriptionData>(msg.body);
+            RTCSessionDescription answer = data.ToRTCDesc();
             StartCoroutine(peer.SetRemoteAnswer(answer));
         }
     }

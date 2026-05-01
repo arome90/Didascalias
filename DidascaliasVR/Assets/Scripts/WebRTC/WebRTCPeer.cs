@@ -25,13 +25,7 @@ public class WebRTCPeer : MonoBehaviour
         // Recibir la información de un candidato y llamar a un callback
         peer.OnIceCandidate = candidate =>
         {
-            var msg = new SignalingMessage
-            {
-                sourceIp = SignalingServer.ipAddress,
-                destinationIp = RemoteIp,
-                type = ConnectionEvent.ICE,
-                body = JsonUtility.ToJson(new IceCandidateData(candidate))
-            };
+            SignalingMessage msg = new SignalingMessage(SignalingServer.ipAddress, RemoteIp, ConnectionEvent.ICE, JsonUtility.ToJson(new IceCandidateData(candidate)));
             OnSignalingMessage?.Invoke(msg);
         };
 
@@ -47,7 +41,7 @@ public class WebRTCPeer : MonoBehaviour
     // Llamado cuando el cliente remoto nos envía su SDP Answer
     public IEnumerator SetRemoteAnswer(RTCSessionDescription answer)
     {
-        var op = peer.SetRemoteDescription(ref answer);
+        RTCSetSessionDescriptionAsyncOperation op = peer.SetRemoteDescription(ref answer);
         yield return op;
         if (op.IsError) Debug.LogError($"[WebRTCPeer] SetRemoteDescription: {op.Error.message}");
     }
@@ -62,22 +56,16 @@ public class WebRTCPeer : MonoBehaviour
     public IEnumerator CreateOffer()
     {
         // Crea la oferta
-        var offerOp = peer.CreateOffer();
+        RTCSessionDescriptionAsyncOperation offerOp = peer.CreateOffer();
         yield return offerOp;
 
         // Asigna las cualidades de este dispositivo
-        var offer = offerOp.Desc;
-        var setOp = peer.SetLocalDescription(ref offer);
+        RTCSessionDescription offer = offerOp.Desc;
+        RTCSetSessionDescriptionAsyncOperation setOp = peer.SetLocalDescription(ref offer);
         yield return setOp;
 
         // Envía el mensaje
-        var msg = new SignalingMessage
-        {
-            sourceIp = SignalingServer.ipAddress,
-            destinationIp = RemoteIp,
-            type = ConnectionEvent.SDP,
-            body = JsonUtility.ToJson(new SessionDescriptionData(offer))
-        };
+        SignalingMessage msg = new SignalingMessage(SignalingServer.ipAddress, RemoteIp, ConnectionEvent.SDP, JsonUtility.ToJson(new SessionDescriptionData(offer)));
         OnSignalingMessage?.Invoke(msg);
     }
 
