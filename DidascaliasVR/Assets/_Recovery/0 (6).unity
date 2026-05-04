@@ -303,6 +303,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &457720824 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6546018886006458579, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+  m_PrefabInstance: {fileID: 8941104705063897803}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &582002871
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +481,24 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
   m_PrefabInstance: {fileID: 8941104705063897803}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &882499251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457720824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.SpatialTracking::UnityEngine.SpatialTracking.TrackedPoseDriver
+  m_Device: 0
+  m_PoseSource: 2
+  m_PoseProviderComponent: {fileID: 0}
+  m_TrackingType: 0
+  m_UpdateType: 0
+  m_UseRelativeTransform: 0
 --- !u!1001 &1082783866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1140,6 +1163,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 465829828799749661, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: 'm_StartingGroupMembers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 911707917866816305, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5552735947163275660, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.73
@@ -1184,10 +1215,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Origin (MENU)
       objectReference: {fileID: 0}
+    - target: {fileID: 6326897953695398687, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: 'm_StartingGroupMembers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: field of view
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: far clip plane
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6546018886006458579, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 882499251}
   m_SourcePrefab: {fileID: 100100000, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
 --- !u!4 &8941104705063897804 stripped
 Transform:
