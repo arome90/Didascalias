@@ -14,25 +14,22 @@ public class FrameCapturePass : ScriptableRenderPass
     /// <summary>
     /// The captured frame
     /// </summary>
-    protected RenderTexture outputTexture;
+    private RenderTexture outputTexture;
 
     /// <summary>
     /// Handle to OutputTexture so that Unity's RenderGraph system can track and manage it (wrapper)
     /// </summary>
-    protected RTHandle outputHandle;
+    private RTHandle outputHandle;
 
     /// <summary>
     /// Width of the captured frame (reduce to lower streaming bandwith)
     /// </summary>
-    protected int width = 1280;
+    private int width = 1280;
 
     /// <summary>
     /// Height of the captured frame (reduce to lower streaming bandwith)
     /// </summary>
-    protected int height = 720;
-
-    protected TextureHandle source;
-    protected TextureHandle destination;
+    private int height = 720;
     #endregion
 
     #region Methods
@@ -69,7 +66,7 @@ public class FrameCapturePass : ScriptableRenderPass
         // Obtain the camera's color buffer and check if it points to a valid buffer (should
         // never happen otherwise because it's being captured in AfterRenderingPostProcessing,
         // but just in case)
-        source = resourceData.cameraColor;
+        TextureHandle source = resourceData.cameraColor;
         if (!source.IsValid())
         {
             Debug.LogWarning("[FrameCapturePass] cameraColor is not valid, skipping capture");
@@ -78,7 +75,15 @@ public class FrameCapturePass : ScriptableRenderPass
 
         // Imports the external RenderTexture into the render graph so it can be used as
         // the destination of the copy of the camera's color buffer
-        destination = renderGraph.ImportTexture(outputHandle);
+        TextureHandle destination = renderGraph.ImportTexture(outputHandle);
+
+        // Defines the parameters for the blit operation:
+        //  - source -> the camera's active color buffer (what URP just rendered)
+        //  - destination -> our OutputTexture
+        //  - scale -> (1, 1), which means the whole source texture
+        //  - offset -> (0, 0), no offset
+        //  name of the pass
+        renderGraph.AddBlitPass(source, destination, Vector2.one, Vector2.zero, passName: "FrameCapture");
     }
 
     public RenderTexture GetFrame()

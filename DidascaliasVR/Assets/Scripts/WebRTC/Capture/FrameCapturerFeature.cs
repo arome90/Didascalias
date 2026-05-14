@@ -20,12 +20,7 @@ public class FrameCaptureFeature : ScriptableRendererFeature
     /// <summary>
     /// The URP pass incharge of capturing the frame each render cycle.
     /// </summary>
-    URPFrameCapturePass urpPass;
-
-    /// <summary>
-    /// The XR pass incharge of capturing the frame each render cycle.
-    /// </summary>
-    XRFrameCapturePass xrPass;
+    FrameCapturePass pass;
     #endregion
 
     #region Methods
@@ -39,14 +34,12 @@ public class FrameCaptureFeature : ScriptableRendererFeature
         Instance = this;
 
         // Create the passes for each render type
-        urpPass = new URPFrameCapturePass();
-        xrPass = new XRFrameCapturePass();
+        pass = new FrameCapturePass();
 
         // Adds the passes to URP's render pipeline after everything has been rendered. This way
         // allows postprocessing and UI to be included in the captured frame because it will
         // always be the last pass the pipeline will do.
-        urpPass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
-        xrPass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
+        pass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
     }
 
 
@@ -66,15 +59,9 @@ public class FrameCaptureFeature : ScriptableRendererFeature
         if (renderingData.cameraData.cameraType != CameraType.Game)
             return;
 
-        // In XR, only capture the left eye
-        if (renderingData.cameraData.xrRendering &&
-            renderingData.cameraData.camera.stereoActiveEye == Camera.MonoOrStereoscopicEye.Right)
-        {
+        // If it is an XR Camera, don't capture it
+        if (renderingData.cameraData.xrRendering)
             return;
-        }
-
-        // Choose render pass depending of the camera
-        FrameCapturePass pass = renderingData.cameraData.xrRendering ? xrPass : urpPass;
 
         // Adds the pass into URP's render loop for this frame
         renderer.EnqueuePass(pass);
@@ -87,7 +74,7 @@ public class FrameCaptureFeature : ScriptableRendererFeature
     /// <returns>Captured frame, null if one wasn't captured</returns>
     public RenderTexture GetFrame()
     {
-        return xrPass?.GetFrame() ?? urpPass?.GetFrame();
+        return pass.GetFrame();
     }
     
 
@@ -98,8 +85,7 @@ public class FrameCaptureFeature : ScriptableRendererFeature
     /// <param name="disposing"></param>
     protected override void Dispose(bool disposing)
     {
-        urpPass?.Cleanup();
-        xrPass?.Cleanup();
+        pass?.Cleanup();
     }
     #endregion
 }

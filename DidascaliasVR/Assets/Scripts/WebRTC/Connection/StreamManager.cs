@@ -7,6 +7,11 @@ using UnityEngine;
 
 public class StreamManager : MonoBehaviour
 {
+
+    #region Variables
+    /// <summary>
+    /// Instance of StreamManager (Singleton)
+    /// </summary>
     public static StreamManager Instance { get; private set; }
 
     /// <summary>
@@ -16,28 +21,63 @@ public class StreamManager : MonoBehaviour
     /// operations (TryAdd, TryRemove, TryGetValue) are atomic, and its enumerator works on
     /// a snapshot so Broadcast iteration is safe without an external lock.
     /// </summary>
-    readonly ConcurrentDictionary<string, ClientWebRTC> clients = new ConcurrentDictionary<string, ClientWebRTC>();
+    readonly ConcurrentDictionary<string, ClientData> clients = new ConcurrentDictionary<string, ClientData>();
+    #endregion
 
-    public void addClient(string str, ClientWebRTC client)
+    #region Methods
+
+    /// <summary>
+    /// Adds a client to the dictionary
+    /// </summary>
+    /// <param name="str">IP of the client</param>
+    /// <param name="client">Client data</param>
+    public void addClient(string ip, ClientData client)
     {
-        clients.TryAdd(str, client);
+        clients.TryAdd(ip, client);
     }
 
-    public void removeClient(string str)
+    /// <summary>
+    /// Removes a client form the dictionary
+    /// </summary>
+    /// <param name="str">IP of the client</param>
+    public void removeClient(string ip)
     {
-        clients.TryRemove(str, out var client);
+        clients.TryRemove(ip, out var client);
     }
 
-    readonly ConcurrentDictionary<string, WebRTCPeer> peers = new();
-
-    public void CreatePeerForClient(string ip)
+    /// <summary>
+    /// Creates the client object and completes the WebRTC connection exchange
+    /// </summary>
+    /// <param name="ip">IP of the client</param>
+    public void CreatePeerForClient(ClientData client)
     {
-        GameObject go = new GameObject($"Peer_{ip}");
+        // Add client to the dictionary
+        string ip = client.ipAddress;
+        addClient(ip, client);
+
+        // Create GameObject
+        GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
+        go.GetComponent<Transform>().position = Vector3.zero;
+        
+        RenderTexture rt;
+        // Player
+        if (client.type == ClientType.PLAYER)
+        {
+            Camera cam = go.AddComponent<Camera>();
+            rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.BGRA32);
+            rt.enableRandomWrite = true;
+            rt.useMipMap = false;
+            rt.antiAliasing = 1;
+            rt.Create();
+            cam.targetTexture = rt;
+        }
+        // Streaming
+        else rt = FrameCaptureFeature.Instance.GetFrame();
+
+        // Create RTC connection Peer
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
-        peer.RemoteIp = ip;
-        peer.OnSignalingMessage = msg => SendSignalingMessage(ip, msg);
-        peer.Initialize();
-        peers[ip] = peer;
+        peer.Initialize(ip, rt, msg => SendSignalingMessage(ip, msg));
+        clients[ip].webRtcPeer = peer;
         StartCoroutine(peer.CreateOffer());
     }
 
@@ -54,7 +94,7 @@ public class StreamManager : MonoBehaviour
 
     public void HandleIncomingSignaling(string fromIp, SignalingMessage msg)
     {
-        if (!peers.TryGetValue(fromIp, out var peer)) return;
+        if (!clients.TryGetValue(fromIp, out var peer)) return;
 
         if (msg.type == ConnectionEvent.ICE)
         {
@@ -65,16 +105,18 @@ public class StreamManager : MonoBehaviour
                 sdpMid = data.sdpMid,
                 sdpMLineIndex = data.sdpMLineIndex
             };
-            peer.AddIceCandidate(init);
+            peer.webRtcPeer.AddIceCandidate(init);
         }
         else if (msg.type == ConnectionEvent.SDP)
         {
             SessionDescriptionData data = JsonUtility.FromJson<SessionDescriptionData>(msg.body);
             RTCSessionDescription answer = data.ToRTCDesc();
-            StartCoroutine(peer.SetRemoteAnswer(answer));
+            StartCoroutine(peer.webRtcPeer.SetRemoteAnswer(answer));
         }
     }
+    #endregion
 
+    #region Monobehaviour
     void Awake()
     {
         if (Instance)
@@ -85,16 +127,5 @@ public class StreamManager : MonoBehaviour
 
         Instance = this;
     }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    #endregion
 }

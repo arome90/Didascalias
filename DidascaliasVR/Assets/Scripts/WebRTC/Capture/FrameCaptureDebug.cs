@@ -62,6 +62,6 @@ public class FrameCaptureDebug : MonoBehaviour
         Debug.Log($"[FrameCaptureDebug] Frame saved to: {Path.GetFullPath(path)}");
 
         //StreamManager.Instance?.SendFrame(FrameCaptureFeature.Instance?.GetFrame());
-        Debug.Log("[Sender] Image sent");
+        //Debug.Log("[Sender] Image sent");
     }
 }

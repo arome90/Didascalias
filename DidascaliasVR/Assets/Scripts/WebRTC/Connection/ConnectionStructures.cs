@@ -14,6 +14,13 @@ public enum ConnectionEvent
     ICE         // ICE: Interactive Connectivity Establishment (ICE candidates)
 }
 
+public enum ClientType
+{
+    NONE,
+    STREAM,
+    PLAYER
+}
+
 [Serializable]
 public class SignalingMessage
 {
@@ -49,7 +56,7 @@ public class IceCandidateData
 [Serializable]
 public class SessionDescriptionData
 {
-    public string type;  // "offer" o "answer"
+    public string type;  // "offer" or "answer"
     public string sdp;
 
     public SessionDescriptionData(RTCSessionDescription desc)
@@ -73,31 +80,31 @@ public class ConnectionData
 {
     public string ipAddress;
     public int port;
-    public ConnectionEvent type;
+    public ConnectionEvent connType;
+    public ClientType clientType;
 
-    public ConnectionData(string ipAddress, int port, ConnectionEvent connEvent)
+    public ConnectionData(string ipAddress, int port, ConnectionEvent connEvent, ClientType clientType = ClientType.NONE)
     {
         this.ipAddress = ipAddress;
         this.port = port;
-        this.type = connEvent;
+        this.connType = connEvent;
+        this.clientType = clientType;
     }
 }
 
-public class ClientWebRTC
-{   
+public class ClientData
+{
     public string ipAddress;
-
     public int port;
-
+    public ClientType type;
     public NetworkStream stream;
-    // public WebRTCPeer webRtcPeer;
+    public WebRTCPeer webRtcPeer;
 
-    public Camera cam;
-
-    public ClientWebRTC(ConnectionData connData, NetworkStream stream)
+    public ClientData(ClientType type, ConnectionData connData, NetworkStream stream)
     {
         this.ipAddress = connData.ipAddress;
         this.port = connData.port;
         this.stream = stream;
+        this.type = type;
     }
 }

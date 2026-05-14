@@ -119,19 +119,16 @@ public class SignalingServer : MonoBehaviour {
             ConnectionData decodedData = JsonUtility.FromJson<ConnectionData>(message);
 
             // Check if the data recieved is truly a ConnectionData class
-            if (decodedData.type != ConnectionEvent.HANDSHAKE)
+            if (decodedData.connType != ConnectionEvent.HANDSHAKE)
             {
                 Debug.LogError("[Signaling Server] Not a Connection Data recieved during Handshake.");
                 return;
             }
 
-            ClientWebRTC newClient = new ClientWebRTC(decodedData, stream);
-            StreamManager.Instance?.addClient(decodedData.ipAddress, newClient);
-
+            ClientData newClient = new ClientData(ClientType.PLAYER, decodedData, stream);
+            UnityMainThreadDispatcher.Instance().Enqueue(() => StreamManager.Instance?.CreatePeerForClient(newClient));
+            
             Debug.Log($"[SignalingServer] Client connected: {decodedData.ipAddress}");
-
-
-            UnityMainThreadDispatcher.Instance().Enqueue(() => StreamManager.Instance?.CreatePeerForClient(decodedData.ipAddress));
 
             // Data process loop ---
             while (running)
