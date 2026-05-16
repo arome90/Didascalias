@@ -78,8 +78,10 @@ public class SessionDescriptionData
 [Serializable]
 public class ConnectionData
 {
-    public string ipAddress;
     public int port;
+    public string name;
+    public string info;
+    public string ipAddress;
     public ConnectionEvent connType;
     public ClientType clientType;
 
