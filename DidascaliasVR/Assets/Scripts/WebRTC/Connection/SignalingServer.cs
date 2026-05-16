@@ -1,17 +1,12 @@
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Unity.WebRTC;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.tvOS;
 
 public class SignalingServer : MonoBehaviour {
 
@@ -30,6 +25,8 @@ public class SignalingServer : MonoBehaviour {
     Thread listenThread;
 
     int bufferSize;
+
+    private const string MulticastGroup = "239.0.0.1";
 
     #endregion
 
@@ -59,16 +56,17 @@ public class SignalingServer : MonoBehaviour {
 
             using (UdpClient sender = new UdpClient())
             {
-                sender.EnableBroadcast = true;
-                IPEndPoint endpoint = new IPEndPoint(IPAddress.Broadcast, broadcastPort);
+                sender.Client.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), 0));
+                sender.Ttl = 4;
+                IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(MulticastGroup), broadcastPort);
                 sender.Send(data, data.Length, endpoint);
             }
 
-            UnityEngine.Debug.Log($"[Host] Broadcast enviado -> {json}");
+            Debug.Log($"[Host] Multicast enviado -> {json}");
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.LogWarning($"[Host] Error al enviar broadcast: {e.Message}");
+            Debug.LogWarning($"[Host] Error al enviar multicast: {e.Message}");
         }
 
         yield return new WaitForSeconds(2f);
@@ -84,6 +82,7 @@ public class SignalingServer : MonoBehaviour {
             try
             {
                 TcpClient tcp = listener.AcceptTcpClient();
+                Debug.Log($"[Server] TCP connection from: {((IPEndPoint)tcp.Client.RemoteEndPoint).Address}");
 
                 // Each client gets its own thread for reading
                 Thread clientThread = new Thread(() => HandleClient(tcp))
@@ -168,12 +167,17 @@ public class SignalingServer : MonoBehaviour {
         ipAddress = "No disponible";
         try
         {
-            foreach (IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    ipAddress = ip.ToString();
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect(MulticastGroup, 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                ipAddress = endPoint.Address.ToString();
+            }
+            Debug.Log($"[Network] IP seleccionada: {ipAddress}");
         }
-        catch (System.Exception e) {
-            Debug.LogError(e);
+        catch (Exception e)
+        {
+            Debug.LogError($"[Network] Error obteniendo IP: {e}");
         }
     }
 
