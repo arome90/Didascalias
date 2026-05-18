@@ -12,27 +12,27 @@ public class ValueUI : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField,
-        Tooltip("Botón que decrementará el valor")] Button _decreaseButton;
+        Tooltip("Botï¿½n que decrementarï¿½ el valor")] Button _decreaseButton;
     [SerializeField,
-        Tooltip("Botón que incrementará el valor")] Button _increaseButton;
+        Tooltip("Botï¿½n que incrementarï¿½ el valor")] Button _increaseButton;
     [SerializeField] TextMeshProUGUI _valueText;
 
     [Header("Parameters")]
     [SerializeField,
-        Tooltip("Valor por el que se incrementará el valor al darle al bótón de incremento")] 
+        Tooltip("Valor por el que se incrementarï¿½ el valor al darle al bï¿½tï¿½n de incremento")] 
     float _increment;
     [SerializeField, 
-        Tooltip("Valor (no negativo) por el que decrementará el valor al pulsar el botón de decremento")]
+        Tooltip("Valor (no negativo) por el que decrementarï¿½ el valor al pulsar el botï¿½n de decremento")]
     float _decrement;
 
     [SerializeField,
-        Tooltip("Si queremos que valor numérico se interprete como int en el campo de texto")] 
+        Tooltip("Si queremos que valor numï¿½rico se interprete como int en el campo de texto")] 
     bool _valueIsInt = true;
 
     [SerializeField,
-        Tooltip("Valor mínimo")] float _minValue;
+        Tooltip("Valor mï¿½nimo")] float _minValue;
     [SerializeField,
-        Tooltip("Valor máximo")] float _maxValue;
+        Tooltip("Valor mï¿½ximo")] float _maxValue;
     [SerializeField, 
         Tooltip("Valor inicial, comprendido entre Min Value y Max Value")] 
     float _initialValue;
@@ -57,7 +57,7 @@ public class ValueUI : MonoBehaviour
     float _value = 0.0f;
 
     /// <summary>
-    /// Referencia pública al valor modificado por el componente
+    /// Referencia pï¿½blica al valor modificado por el componente
     /// </summary>
     public float Value { get { return _value; } }
 
@@ -75,53 +75,108 @@ public class ValueUI : MonoBehaviour
     }
     public float GetMinValue() { return _minValue; }
 
-
-    private void OnValidate()
+    public (Button decrease, Button increase) FindButtonsFromChildren(Button currentDecrease = null, Button currentIncrease = null)
     {
-        bool decreaseNotFound = _decreaseButton == null;
-        bool increaseNotFound = _increaseButton == null;
-
-        // Para encontrar los diferentes botones, estamos asumiendo
-        // que son los dos primeros botones que tenemos como hijos de este objeto
-        if (decreaseNotFound || increaseNotFound) 
+        Button decrease = currentDecrease;
+        Button increase = currentIncrease;
+        uint next = 0;
+        var buttons = GetComponentsInChildren<Button>();
+        if (decrease == null)
         {
-            var buttons = GetComponentsInChildren<Button>();
-            if(decreaseNotFound) _decreaseButton = buttons[0];
-            if(increaseNotFound) _increaseButton = buttons[1];
+            Didascalia.Utils.Error.DebugbreakFailUnless(
+                next < buttons.Length, "ValueUI: No se han encontrado suficientes botones hijos en el objeto: " + name, this
+            );
+            decrease = buttons[next];
+        }
+        ++next;
+        if (increase == null)
+        {
+            Didascalia.Utils.Error.DebugbreakFailUnless(
+                next < buttons.Length, "ValueUI: No se han encontrado suficientes botones hijos en el objeto: " + name, this
+            );
+            increase = buttons[next];
+        }
+        ++next;
+        _ = next;
+
+        _decreaseButton = decrease;
+        _increaseButton = increase;
+
+        return (decrease, increase);
+    }
+    public void AssignButtonsFromChildren() {
+        var (decrease, increase) = FindButtonsFromChildren(_decreaseButton, _increaseButton);
+        _decreaseButton = decrease;
+        _increaseButton = increase;
+    }
+
+    public TextMeshProUGUI FindValueTextFromChildren(TextMeshProUGUI currentValueText = null) {
+        TextMeshProUGUI text = currentValueText;
+        if (text != null) {
+            return text;
         }
 
-        // Para buscar el texto, asumimos que encontramos el valor
-        // en el último hijo de este objeto, ya que el primero de todos
-        // normalmente suele ser el 'Label' que describe qué es el valor
-        if(_valueText == null)
-        {
-            TextMeshProUGUI text;
-            for(int i = 0; i < transform.childCount; ++i)
-            {
-                text = transform.GetChild(i).GetComponent<TextMeshProUGUI>();
-                if(text != null)
-                {
-                    _valueText = text;
-                }
+        foreach (Transform child in transform) {
+            if (child.TryGetComponent(out TextMeshProUGUI found)) {
+                text = found;
             }
         }
-
-        // Como no sabemos si el botón cuenta ya con el Listener adecuado,
-        // probamos a quitarlo de ambos botones, para posteriormente volver a aplicarlo
-        // No tengo una solución mejor... Ayuda
+        Didascalia.Utils.Error.DebugbreakFailUnless(
+            text != null, "ValueUI: No se ha encontrado un TextMeshProUGUI hijo en el objeto: " + name, this
+        );
+        return text;
+    }
+    public void AssignValueTextFromChildren() {
+        _valueText = FindValueTextFromChildren(_valueText);
+    }
+    public void AssignButtonListeners() {
+        Didascalia.Utils.Error.DebugbreakFailUnless(
+            _decreaseButton != null && _increaseButton != null, "ValueUI: No se han asignado los botones de incremento y decremento en el objeto: " + name, this
+        );
         _decreaseButton.onClick.RemoveListener(DecreaseValue);
         _increaseButton.onClick.RemoveListener(IncreaseValue);
 
         _decreaseButton.onClick.AddListener(DecreaseValue);
         _increaseButton.onClick.AddListener(IncreaseValue);
+    }
+    private void OnValidate()
+    {
+        AssignButtonsFromChildren();
 
-        // No queremos llamar al evento porque eso supondría
-        // una llamada en un OnValidate, que no está permitida
+        // Para buscar el texto, asumimos que encontramos el valor
+        // en el ï¿½ltimo hijo de este objeto, ya que el primero de todos
+        // normalmente suele ser el 'Label' que describe quï¿½ es el valor
+        AssignValueTextFromChildren();
+
+        // Como no sabemos si el botï¿½n cuenta ya con el Listener adecuado,
+        // probamos a quitarlo de ambos botones, para posteriormente volver a aplicarlo
+        // No tengo una soluciï¿½n mejor... Ayuda
+        AssignButtonListeners();
+
+        // No queremos llamar al evento porque eso supondrï¿½a
+        // una llamada en un OnValidate, que no estï¿½ permitida
         SetValueNotRaiseEvent(_initialValue);
     }
 
-    private void OnEnable()
-    {
+    private void Awake() {
+        AssignButtonsFromChildren();
+
+        // Para buscar el texto, asumimos que encontramos el valor
+        // en el ï¿½ltimo hijo de este objeto, ya que el primero de todos
+        // normalmente suele ser el 'Label' que describe quï¿½ es el valor
+        AssignValueTextFromChildren();
+
+        // Como no sabemos si el botï¿½n cuenta ya con el Listener adecuado,
+        // probamos a quitarlo de ambos botones, para posteriormente volver a aplicarlo
+        // No tengo una soluciï¿½n mejor... Ayuda
+        AssignButtonListeners();
+
+        // No queremos llamar al evento porque eso supondrï¿½a
+        // una llamada en un OnValidate, que no estï¿½ permitida
+        SetValueNotRaiseEvent(_initialValue);        
+    }
+
+    private void OnEnable() {
         SetValue(_value);
     }
 
@@ -151,8 +206,8 @@ public class ValueUI : MonoBehaviour
     }
 
     /// <summary>
-    /// El valor se asigna al argumento recibido en este función, acotado 
-    /// por el valor mínimo y máximo del componente
+    /// El valor se asigna al argumento recibido en este funciï¿½n, acotado 
+    /// por el valor mï¿½nimo y mï¿½ximo del componente
     /// </summary>
     /// <param name="newValue"></param>
     public void SetValue(float newValue)
@@ -164,12 +219,12 @@ public class ValueUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Settea el valor dado, acotado entre el mínimo y el máximo.
-    /// También actualiza el texto y lo muestra como entero en caso necesario
+    /// Settea el valor dado, acotado entre el mï¿½nimo y el mï¿½ximo.
+    /// Tambiï¿½n actualiza el texto y lo muestra como entero en caso necesario
     /// 
-    /// Esta función solo settea el valor, pero no llama al evento
+    /// Esta funciï¿½n solo settea el valor, pero no llama al evento
     /// OnValueChanged. Existe para ser utilizado en OnValidate, Awake o
-    /// CheckConsistency, ya que ahí no se pueden llamar a eventos
+    /// CheckConsistency, ya que ahï¿½ no se pueden llamar a eventos
     /// </summary>
     /// <param name="newValue"> El nuevo valor </param>
     public void SetValueNotRaiseEvent(float newValue)
@@ -183,8 +238,8 @@ public class ValueUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Actualiza el texto según el nuevo valor.
-    /// En caso de ser un valor de tipo 'int', se redondea al más cercano
+    /// Actualiza el texto segï¿½n el nuevo valor.
+    /// En caso de ser un valor de tipo 'int', se redondea al mï¿½s cercano
     /// </summary>
     private void UpdateTextValue()
     {
