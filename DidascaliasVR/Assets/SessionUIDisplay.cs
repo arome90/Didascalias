@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class SessionUIDisplay : MonoBehaviour
 {
     [SerializeField]
+    [TextArea]
+    private string format = "{0}";
+    [SerializeField]
     TextMeshProUGUI _text = null;
 
     [SerializeField]
@@ -23,7 +26,7 @@ public class SessionUIDisplay : MonoBehaviour
 
         AnimateCharacters anim = _text.GetComponent<AnimateCharacters>();
         if (anim != null) anim.StopAnimation();
-        _text.text = ConnectionManager.Instance.SessionID;
+        _text.text = string.Format(format, ConnectionManager.Instance.SessionID);
         _button.interactable = true;
     }
 }
