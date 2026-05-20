@@ -15,7 +15,7 @@ public class SignalingServer : MonoBehaviour {
     bool running;
     bool searchingDevices;
 
-    int listenPort = 443;
+    int listenPort = 7777;
     int broadcastPort = 8053;
 
     public static string ipAddress { get; private set; }
@@ -167,17 +167,34 @@ public class SignalingServer : MonoBehaviour {
         ipAddress = "No disponible";
         try
         {
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
-                socket.Connect(MulticastGroup, 65530);
-                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                ipAddress = endPoint.Address.ToString();
+                if (ni.OperationalStatus != OperationalStatus.Up) continue;
+                if (ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
+                if (ni.NetworkInterfaceType == NetworkInterfaceType.Tunnel) continue;
+
+                // Excluir adaptadores virtuales (VirtualBox, VMware, Hyper-V, etc.)
+                string name = ni.Name.ToLower();
+                string desc = ni.Description.ToLower();
+                if (name.Contains("virtual") || desc.Contains("virtual") ||
+                    name.Contains("vmware") || desc.Contains("vmware") ||
+                    name.Contains("vbox") || desc.Contains("vbox")) continue;
+
+                IPInterfaceProperties props = ni.GetIPProperties();
+                if (props.GatewayAddresses.Count == 0) continue;
+
+                foreach (UnicastIPAddressInformation addr in props.UnicastAddresses)
+                {
+                    if (addr.Address.AddressFamily != AddressFamily.InterNetwork) continue;
+                    ipAddress = addr.Address.ToString();
+                    Debug.Log($"[Network] Adaptador: {ni.Name} — IP: {ipAddress}");
+                    return;
+                }
             }
-            Debug.Log($"[Network] IP seleccionada: {ipAddress}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"[Network] Error obteniendo IP: {e}");
+            Debug.LogError(e);
         }
     }
 
