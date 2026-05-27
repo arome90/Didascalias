@@ -102,11 +102,30 @@ public class ClientData
     public NetworkStream stream;
     public WebRTCPeer webRtcPeer;
 
-    public ClientData(ClientType type, ConnectionData connData, NetworkStream stream)
+    public ClientData(ConnectionData connData, NetworkStream stream)
     {
         this.ipAddress = connData.ipAddress;
         this.port = connData.port;
         this.stream = stream;
-        this.type = type;
+        this.type = connData.clientType;
+    }
+}
+
+[Serializable]
+public class InputData
+{
+    public Vector2 move;      // Dirección de movimiento
+    public Vector2 rotation;      // Delta de rotación
+    public bool sprint;
+    public bool moveUp;
+    public bool moveDown;
+
+    public InputData(Vector2 move, Vector2 rotation, bool sprint, bool moveUp, bool moveDown)
+    {
+        this.move = move;
+        this.rotation = rotation;
+        this.sprint = sprint;
+        this.moveUp = moveUp;
+        this.moveDown = moveDown;
     }
 }

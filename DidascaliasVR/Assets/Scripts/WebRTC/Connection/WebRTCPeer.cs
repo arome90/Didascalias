@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using Unity.WebRTC;
 using UnityEngine;
 using UnityEngine.tvOS;
@@ -37,6 +38,11 @@ public class WebRTCPeer : MonoBehaviour
     /// </summary>
     public System.Action<SignalingMessage> OnSignalingMessage;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    PeerMovementComponent peerMovementComponent;
+
     #endregion
 
     #region Methods
@@ -74,13 +80,14 @@ public class WebRTCPeer : MonoBehaviour
         var dataChannelConfig = new RTCDataChannelInit { ordered = true };
         dataChannel = peer.CreateDataChannel("input", dataChannelConfig);
 
-        dataChannel.OnOpen = () => Debug.Log("[DataChannel] Openn");
+        dataChannel.OnOpen = () => Debug.Log("[DataChannel] Open");
         dataChannel.OnClose = () => Debug.Log("[DataChannel] Closed");
         dataChannel.OnMessage = bytes =>
         {
             string msg = System.Text.Encoding.UTF8.GetString(bytes);
             Debug.Log($"[DataChannel] Recieved Message: {msg}");
-            // Proccess client input
+            var inputMsg = JsonUtility.FromJson<InputData>(msg);
+            peerMovementComponent.ApplyNetworkInput(inputMsg);
         };
     }
 
@@ -117,6 +124,11 @@ public class WebRTCPeer : MonoBehaviour
     #endregion
 
     #region Monobehaviour
+    private void Start()
+    {
+        peerMovementComponent = GetComponent<PeerMovementComponent>();
+    }
+
     void OnDestroy()
     {
         videoTrack?.Dispose();

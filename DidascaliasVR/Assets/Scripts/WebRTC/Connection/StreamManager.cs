@@ -22,6 +22,12 @@ public class StreamManager : MonoBehaviour
     /// a snapshot so Broadcast iteration is safe without an external lock.
     /// </summary>
     readonly ConcurrentDictionary<string, ClientData> clients = new ConcurrentDictionary<string, ClientData>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [SerializeField]
+    private GameObject VRCameraObject;
     #endregion
 
     #region Methods
@@ -59,20 +65,31 @@ public class StreamManager : MonoBehaviour
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
         go.GetComponent<Transform>().position = Vector3.zero;
         
+        // Create texture
         RenderTexture rt;
+        rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.BGRA32);
+        rt.enableRandomWrite = true;
+        rt.useMipMap = false;
+        rt.antiAliasing = 1;
+        rt.Create();
+        
+        Camera cam;
         // Player
         if (client.type == ClientType.PLAYER)
         {
-            Camera cam = go.AddComponent<Camera>();
-            rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.BGRA32);
-            rt.enableRandomWrite = true;
-            rt.useMipMap = false;
-            rt.antiAliasing = 1;
-            rt.Create();
-            cam.targetTexture = rt;
+            cam = go.AddComponent<Camera>();
+            go.AddComponent<PeerMovementComponent>();
         }
         // Streaming
-        else rt = FrameCaptureFeature.Instance.GetFrame();
+        else
+        {
+            GameObject streamGo = new GameObject($"StreamCamera-Peer_{ip}");
+            streamGo.transform.position = VRCameraObject.transform.position;
+            streamGo.transform.rotation = VRCameraObject.transform.rotation;
+            streamGo.transform.SetParent(VRCameraObject.transform);
+            cam = streamGo.AddComponent<Camera>();
+        }
+        cam.targetTexture = rt;
 
         // Create RTC connection Peer
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();

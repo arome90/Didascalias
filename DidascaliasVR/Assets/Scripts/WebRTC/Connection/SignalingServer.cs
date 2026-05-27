@@ -11,13 +11,29 @@ using UnityEngine;
 public class SignalingServer : MonoBehaviour {
 
     #region Variables
-
+    /// <summary>
+    /// Wether if the server is running or not
+    /// </summary>
     bool running;
+
+    /// <summary>
+    /// Wether if the server is searching for new devieces or not
+    /// </summary>
     bool searchingDevices;
 
+    /// <summary>
+    /// Port where the server will listen to upcoming network data
+    /// </summary>
     int listenPort = 7777;
+
+    /// <summary>
+    /// Port from where the broadcast is going to be made
+    /// </summary>
     int broadcastPort = 8053;
 
+    /// <summary>
+    /// The IP address of the server
+    /// </summary>
     public static string ipAddress { get; private set; }
 
     TcpListener listener;
@@ -26,6 +42,9 @@ public class SignalingServer : MonoBehaviour {
 
     int bufferSize;
 
+    /// <summary>
+    /// Multicast IP group for specific broadcasting
+    /// </summary>
     private const string MulticastGroup = "239.0.0.1";
 
     #endregion
@@ -62,7 +81,7 @@ public class SignalingServer : MonoBehaviour {
                 sender.Send(data, data.Length, endpoint);
             }
 
-            Debug.Log($"[Host] Multicast enviado -> {json}");
+            //Debug.Log($"[Host] Multicast enviado -> {json}");
         }
         catch (Exception e)
         {
@@ -124,7 +143,7 @@ public class SignalingServer : MonoBehaviour {
                 return;
             }
 
-            ClientData newClient = new ClientData(ClientType.PLAYER, decodedData, stream);
+            ClientData newClient = new ClientData(decodedData, stream);
             UnityMainThreadDispatcher.Instance().Enqueue(() => StreamManager.Instance?.CreatePeerForClient(newClient));
             
             Debug.Log($"[SignalingServer] Client connected: {decodedData.ipAddress}");
@@ -167,6 +186,7 @@ public class SignalingServer : MonoBehaviour {
         ipAddress = "No disponible";
         try
         {
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if (ni.OperationalStatus != OperationalStatus.Up) continue;
@@ -191,10 +211,19 @@ public class SignalingServer : MonoBehaviour {
                     return;
                 }
             }
+#elif UNITY_ANDROID
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect(MulticastGroup, 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                ipAddress = endPoint.Address.ToString();
+            }
+            Debug.Log($"[Network] IP seleccionada: {ipAddress}");
+#endif
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            Debug.LogError($"[Network] Error obteniendo IP: {e}");
         }
     }
 
