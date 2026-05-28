@@ -55,7 +55,12 @@ public class WebRTCPeer : MonoBehaviour
         // Configuración de la conexión. Se usa STUN para descubrir la IP pública del dispositivo
         var config = new RTCConfiguration
         {
-            iceServers = new[] { new RTCIceServer { urls = new[] { "stun:stun.l.google.com:19302" } } }
+            iceServers = new[]
+                {
+                    new RTCIceServer { urls = new[] { "stun:stun.l.google.com:19302" } },
+                    // Candidato host directo como fallback
+                    new RTCIceServer { urls = new[] { "stun:stun1.l.google.com:19302" } }
+                }
         };
 
         // Crear la conexión a partir de la configuración anterior

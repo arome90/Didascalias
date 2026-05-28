@@ -1,5 +1,6 @@
 using System;
 using System.Net.Sockets;
+using System.Net.WebSockets;
 using Unity.WebRTC;
 using UnityEngine;
 
@@ -128,4 +129,17 @@ public class InputData
         this.moveUp = moveUp;
         this.moveDown = moveDown;
     }
+}
+
+// Estructuras para la comunicacion con WebSocket
+[Serializable] public class WSBaseMessage { public int type; }
+
+[Serializable] public class WSNewClientMessage { public int type; public int clientId; }
+
+[Serializable]
+public class WSTaggedMessage
+{
+    public int type;
+    public int clientId;
+    public string body;
 }
