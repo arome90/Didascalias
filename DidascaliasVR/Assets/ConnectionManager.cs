@@ -155,7 +155,7 @@ public struct WebMessage
 public class ConnectionManager : Singleton<ConnectionManager>
 {
     [SerializeField]
-    string _url = "wss://cyclops-dev.uab.cat/game/";
+    string _initialUrl = "wss://cyclops-dev.uab.cat/game/";
 
     WebSocket _socket = null;
 
@@ -195,13 +195,44 @@ public class ConnectionManager : Singleton<ConnectionManager>
 
     private void Start()
     {
-        _socket = new WebSocket(_url);
+        ResetConnection(_initialUrl);
+        _clientID = SystemInfo.deviceUniqueIdentifier;
+    }
 
+    /// <summary>
+    /// Comienza la conexión con el WebSocket
+    /// </summary>
+    public void StartConnection()
+    {
+        _socket.ConnectAsync();
+    }
+
+    /// <summary>
+    /// Para la conexión con el WebSocket
+    /// </summary>
+    public void StopConnection()
+    {
+        _socket.CloseAsync();
+    }
+
+    public void ResetConnection(string url)
+    {
+        if (_socket != null)
+        {
+            _socket.OnOpen -= OnOpen;
+            _socket.OnMessage -= OnMessage;
+            _socket.OnClose -= OnClose;
+
+            if (_socket.IsAlive)
+            {
+                StopConnection();
+            }
+        }
+
+        _socket = new WebSocket(url);
         _socket.OnOpen += OnOpen;
         _socket.OnMessage += OnMessage;
         _socket.OnClose += OnClose;
-
-        _clientID = SystemInfo.deviceUniqueIdentifier;
     }
 
     private void OnEnable()
@@ -405,7 +436,7 @@ public class ConnectionManager : Singleton<ConnectionManager>
     /// <param name="jsonData"> Datos a enviar en formato JSON </param>
     private IEnumerator SendWebRequestCoroutine(string jsonData)
     {
-        using (UnityWebRequest www = UnityWebRequest.Post(_url, jsonData, "application/json"))
+        using (UnityWebRequest www = UnityWebRequest.Post(_socket.Url, jsonData, "application/json"))
         {
             yield return www.SendWebRequest();
 
@@ -440,21 +471,5 @@ public class ConnectionManager : Singleton<ConnectionManager>
             Debug.LogError($"Error al procesar el mensaje Web. Excepción: {ex.Message}");
             return false;
         }
-    }
-
-    /// <summary>
-    /// Comienza la conexión con el WebSocket
-    /// </summary>
-    public void StartConnection()
-    {
-        _socket.ConnectAsync();
-    }
-
-    /// <summary>
-    /// Para la conexión con el WebSocket
-    /// </summary>
-    public void StopConnection()
-    {
-        _socket.CloseAsync();
     }
 }
