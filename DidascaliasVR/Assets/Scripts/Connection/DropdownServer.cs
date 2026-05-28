@@ -22,8 +22,11 @@ namespace Didascalia.Connection
 
         private void Awake()
         {
+            Utils.Error.DebugbreakFailUnless(label != null, "Label reference is not set", this);
             EnsureServerUrls();
+
             dropdown = GetComponent<TMP_Dropdown>();
+            Utils.Error.DebugbreakFailUnless(dropdown != null, "TMP_Dropdown component is missing", this);
             EnsureDropdownValues(dropdown);
 
             dropdown.onValueChanged.AddListener(OnValueChanged);
