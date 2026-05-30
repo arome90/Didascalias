@@ -247,23 +247,7 @@ public class SignalingServer : MonoBehaviour {
         bufferSize = 1024;
         StartCoroutine(WebRTC.Update());
         StartServer();
-        StartCoroutine(WaitAndConnectWebSocket());
-    }
-
-    // Intercepta el frame de renderizado para mandarlo en la transmision
-    IEnumerator WaitAndConnectWebSocket()
-    {
-        yield return new WaitUntil(() => FrameCaptureFeature.Instance != null);
-
-        RenderTexture rt = null;
-        yield return new WaitUntil(() =>
-        {
-            rt = FrameCaptureFeature.Instance.GetFrame();
-            return rt != null;
-        });
-
-        // Solo conectar al servidor Node, NO crear peer todavía
-        StreamManager.Instance?.ConnectToNode(rt);
+        StreamManager.Instance?.ConnectToNode();
     }
 
     void OnDestroy()

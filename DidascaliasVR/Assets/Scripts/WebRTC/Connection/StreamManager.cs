@@ -43,14 +43,35 @@ public class StreamManager : MonoBehaviour
     [SerializeField] int nodePort = 8080;
 
     ClientWebSocket ws;
-    RenderTexture sharedRt;
+    #endregion
+
+    #region SharedMethods
+
+    private RenderTexture CreateAnchoredCamera(string ip)
+    {
+        RenderTexture rt;
+        rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.BGRA32);
+        rt.enableRandomWrite = true;
+        rt.useMipMap = false;
+        rt.antiAliasing = 1;
+        rt.Create();
+
+        GameObject streamGo = new GameObject($"StreamCamera-Peer_{ip}");
+        streamGo.transform.position = VRCameraObject.transform.position;
+        streamGo.transform.rotation = VRCameraObject.transform.rotation;
+        streamGo.transform.SetParent(VRCameraObject.transform);
+        Camera cam = streamGo.AddComponent<Camera>();
+        cam.targetTexture = rt;
+        //cam.enabled = false -> TO-DO: que se active o desactive segun si es Streamer o Player;
+        return rt;
+    }
+
     #endregion
 
     #region WebSocket
     // Inicia la conexion al servidor de Node
-    public async void ConnectToNode(RenderTexture rt)
+    public async void ConnectToNode()
     {
-        sharedRt = rt;
         ws = new ClientWebSocket();
         Uri uri = new Uri($"ws://{nodeHost}:{nodePort}?type=unity");
 
@@ -124,7 +145,8 @@ public class StreamManager : MonoBehaviour
 
         GameObject go = new GameObject($"WS-Peer_Browser_{clientId}");
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
-        peer.Initialize("browser", sharedRt, msg => SendToNode(msg, clientId));
+        RenderTexture rt = CreateAnchoredCamera(clientId.ToString());
+        peer.Initialize("browser", rt, msg => SendToNode(msg, clientId));
         browserPeers[clientId] = peer;
         StartCoroutine(peer.CreateOffer());
         Debug.Log($"[StreamManager] Peer creado para browser {clientId}");
@@ -205,31 +227,19 @@ public class StreamManager : MonoBehaviour
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
         go.GetComponent<Transform>().position = Vector3.zero;
         
-        // Create texture
-        RenderTexture rt;
-        rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.BGRA32);
-        rt.enableRandomWrite = true;
-        rt.useMipMap = false;
-        rt.antiAliasing = 1;
-        rt.Create();
-        
-        Camera cam;
+        RenderTexture rt = null;
         // Player
         if (client.type == ClientType.PLAYER)
         {
-            cam = go.AddComponent<Camera>();
+            Camera cam = go.AddComponent<Camera>();
+            cam.targetTexture = rt;
             go.AddComponent<PeerMovementComponent>();
         }
         // Streaming
         else
         {
-            GameObject streamGo = new GameObject($"StreamCamera-Peer_{ip}");
-            streamGo.transform.position = VRCameraObject.transform.position;
-            streamGo.transform.rotation = VRCameraObject.transform.rotation;
-            streamGo.transform.SetParent(VRCameraObject.transform);
-            cam = streamGo.AddComponent<Camera>();
+            rt = CreateAnchoredCamera(ip);
         }
-        cam.targetTexture = rt;
 
         // Create RTC connection Peer
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
