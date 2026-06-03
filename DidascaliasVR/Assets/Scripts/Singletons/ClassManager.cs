@@ -383,34 +383,36 @@ public class ClassManager : Singleton<ClassManager>
                 Didascalia.Utils.Log.Info("Student Name: " + message.studentName, this);
                 StudentManager.Instance.MakeStudentTalk(message.studentName, message.data);
                 break;
-
-            case WebEventType.Disrespect:
-                result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.Disrespect, message.studentName);
-                break;
-            case WebEventType.StandUp:
-                result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.StandUp, message.studentName);
-                break;
-            case WebEventType.SitTogether:
-                result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.SitTogether, message.studentName);
-                break;
-
-            case WebEventType.Hyperstimulation:
-                break;
-            case WebEventType.Frustration:
-                break;
-
-            case WebEventType.Disorganization:
-                break;
-            case WebEventType.Impulsivity:
-                break;
-            case WebEventType.Inattention:
-                break;
-
+            // TODO: what do we do on restart
             case WebEventType.Restart:
+                Didascalia.Utils.Log.Warning("Requested restart but we do not know how to handle it. Message ID: " + message.id, this);
                 break;
             default:
-                Didascalia.Utils.Error.DebugbreakFailMessage("WebMessageType not recognized: " + message.id, this);
+            {
+                StudentManager.ConflictType Unrecognized()
+                {    
+                    Didascalia.Utils.Error.DebugbreakFailMessage("WebMessageType not recognized: " + message.id, this);
+                    return StudentManager.ConflictTypeNonFeasible;
+                }
+                StudentManager.ConflictType type = message.id switch
+                {
+                    WebEventType.Disrespect => StudentManager.ConflictType.Disrespect,
+                    WebEventType.SitTogether => StudentManager.ConflictType.SitTogether,
+                    WebEventType.StandUp => StudentManager.ConflictType.StandUp,
+
+                    WebEventType.Hyperstimulation => StudentManager.ConflictType.Hyperstimulation,
+                    WebEventType.Frustration => StudentManager.ConflictType.Frustration,
+
+                    WebEventType.Disorganization => StudentManager.ConflictType.Disorganization,
+                    WebEventType.Impulsivity => StudentManager.ConflictType.Impulsivity,
+                    WebEventType.Inattention => StudentManager.ConflictType.Inattention,
+
+                    _ => Unrecognized()
+                };
+
+                result = StudentManager.Instance.GenerateConflict(type, message.studentName);
                 break;
+            }
         }
 
         if (result.Error != StudentManager.ConflictGenerationError.None)

@@ -318,6 +318,32 @@ public class StudentManager : Singleton<StudentManager>
         public string StudentName;
     }
 
+    internal struct ConflictDescriptorHyperstimulation
+    {
+        public string StudentName;
+    }
+    internal struct ConflictDescriptorFrustration
+    {
+        public string StudentName;
+        public Vector3 LookAtPoint;
+    }
+
+    internal struct ConflictDescriptorDisorganization
+    {
+        public string StudentName;
+        [System.Obsolete("This field is not currently used but it is reserved for future implementation")]
+        public byte unusedBackpackData;
+    }
+    internal struct ConflictDescriptorImpulsivity
+    {
+        public string StudentName;
+        public string TargetBotherStudentName;
+    }
+    internal struct ConflictDescriptorInattention
+    {
+        public string StudentName;
+    }
+
     // XXX: Treat this type like an union
     // [StructLayout(LayoutKind.Explicit)]
     internal struct ConflictDescriptor
@@ -333,6 +359,13 @@ public class StudentManager : Singleton<StudentManager>
         public ConflictDescriptorSitTogether SitTogether;
         // [FieldOffset(8)]
         public ConflictDescriptorStandUp StandUp;
+
+        public ConflictDescriptorHyperstimulation Hyperstimulation;
+        public ConflictDescriptorFrustration Frustration;
+
+        public ConflictDescriptorDisorganization Disorganization;
+        public ConflictDescriptorImpulsivity Impulsivity;
+        public ConflictDescriptorInattention Inattention;
     }
 
     internal ConflictDescriptor GenerateConflictDescriptor(ConflictType type, string studentName)
@@ -390,6 +423,46 @@ public class StudentManager : Singleton<StudentManager>
             }
             case ConflictType.StandUp:
                 descriptor.StandUp = new ConflictDescriptorStandUp { StudentName = studentName };
+                break;
+            case ConflictType.Hyperstimulation:
+                descriptor.Hyperstimulation = new ConflictDescriptorHyperstimulation { StudentName = studentName };
+                break;
+            case ConflictType.Frustration:
+            {
+                Didascalia.Utils.Error.DebugbreakFailUnimplemented(
+                    "Conflict type " + type + " is not fully implemented because it requires a look at point that has not been implemented yet.",
+                    this
+                );
+                descriptor.Frustration = new ConflictDescriptorFrustration { StudentName = studentName, LookAtPoint = Vector3.zero };
+                break;
+            }
+            case ConflictType.Disorganization:
+                descriptor.Disorganization = new ConflictDescriptorDisorganization { StudentName = studentName, unusedBackpackData = 0xFF };
+                break;
+            case ConflictType.Impulsivity:
+            {
+                if (_students.Count < 2)
+                {
+                    descriptor.Type |= ConflictTypeNonFeasible;
+                    descriptor.Impulsivity = new ConflictDescriptorImpulsivity { StudentName = studentName, TargetBotherStudentName = null };
+                }
+                else                {
+                    var targetSeatStudentNext = GetStudentExpect(studentName).NextStudent;
+                    var targetSeatStudentPrevious = GetStudentExpect(studentName).PreviousStudent;
+                    Didascalia.Utils.Error.DebugbreakFailIf(
+                        targetSeatStudentNext == null && targetSeatStudentPrevious == null,
+                        "Selected student has no next or previous student to sit together with", this
+                    );
+                    descriptor.Impulsivity = new ConflictDescriptorImpulsivity {
+                        StudentName = studentName,
+                        TargetBotherStudentName =
+                            targetSeatStudentNext != null ? targetSeatStudentNext.Name : targetSeatStudentPrevious.Name
+                    };
+                }
+                break;
+            }
+            case ConflictType.Inattention:
+                descriptor.Inattention = new ConflictDescriptorInattention { StudentName = studentName };
                 break;
             default:
                 Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
