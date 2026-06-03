@@ -370,7 +370,24 @@ public class ConnectionManager : Singleton<ConnectionManager>
         WebOptions options;
         options = new WebOptions
         {
-            opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse", "Restart" }
+            opcionesGlobales = new string[] {
+                // original
+                "Faltar el respeto", 
+                "Sentarse juntos",
+                "Levantarse",
+                
+                // tea
+                "Hiperestimulación",
+                "Frustración",
+
+                // tdah
+                "Desorganización",
+                "Impulsividad",
+                "Inatención",
+
+                // reset
+                "Restart"
+            }
         };
         InitialMessageData data = new InitialMessageData(webStudents, options);
 
