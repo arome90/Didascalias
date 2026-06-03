@@ -434,7 +434,7 @@ public class StudentManager : Singleton<StudentManager>
                 break;
             case ConflictType.Frustration:
             {
-                Didascalia.Utils.Error.DebugbreakFailUnimplemented(
+                Didascalia.Utils.Log.Warning(
                     "Conflict type " + type + " is not fully implemented because it requires a look at point that has not been implemented yet.",
                     this
                 );
