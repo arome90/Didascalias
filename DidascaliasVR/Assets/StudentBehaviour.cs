@@ -21,7 +21,9 @@ public enum StudentState
 /// </summary>
 public class StudentBehaviour : MonoBehaviour
 {
-    Animator _animator;
+    // Animator _animator;
+    Didascalia.Student.StudentAnimatorController _animator;
+    internal Didascalia.Student.StudentAnimatorController Animator => _animator;
     NavMeshAgent _agent;
     [System.Obsolete(
         "A TTSWit component is not to be attached each GameObject that wants to speak but\n"
@@ -50,10 +52,19 @@ public class StudentBehaviour : MonoBehaviour
     public UnityEvent OnChangePlacesRequested = new UnityEvent();
     public UnityEvent OnSitTogetherRequested = new UnityEvent();
 
+    [System.Obsolete("Yell is not implemented yet. Remove this attribute when it is implemented")]
+    public UnityEvent OnYellRequested = new UnityEvent();
+
+    public UnityEvent OnHyperstimulateRequested = new UnityEvent();
+    public UnityEvent OnFrustrateRequested = new UnityEvent();
+    public UnityEvent OnGetMaterialOutRequested = new UnityEvent();
+    public UnityEvent OnFailToPayAttentionRequested = new UnityEvent();
+    public UnityEvent OnGetDistractedRequested = new UnityEvent();
+
     public StudentState State { get { return _state; } }
     private void Start()
     {
-        _animator = GetComponent<Animator>();
+        _animator = GetComponent<Didascalia.Student.StudentAnimatorController>();
         _agent = GetComponent<NavMeshAgent>();
         _st = GetComponent<Student>();
         _tts = GetComponent<TTSWit>();
@@ -96,7 +107,7 @@ public class StudentBehaviour : MonoBehaviour
     #region SitDown
     public void StartSitDownAnimation()
     {
-        _animator.SetBool("OnFoot", false);
+        UnsetOnFoot();
     }
     #endregion
 
@@ -113,7 +124,8 @@ public class StudentBehaviour : MonoBehaviour
 
     IEnumerator MovementAnimation(bool wantsToWalk, float time)
     {
-        float speed = _animator.GetFloat("Speed");
+        int hashFloatSpeed = Didascalia.Student.StudentAnimatorController.HashFloatSpeed;
+        float speed = _animator.Animator.GetFloat(hashFloatSpeed);
         float initialSpeed = speed;
 
         float goal;
@@ -127,7 +139,7 @@ public class StudentBehaviour : MonoBehaviour
             elapsedTime += Time.deltaTime;
             speed = Mathf.Lerp(initialSpeed, goal, elapsedTime / time);
 
-            _animator.SetFloat("Speed", speed);
+            _animator.Animator.SetFloat(hashFloatSpeed, speed);
 
             yield return new WaitForEndOfFrame();
 
@@ -193,19 +205,20 @@ public class StudentBehaviour : MonoBehaviour
     }
     #endregion
 
+    #region Conflicts
     #region StandUp
     internal void SetOnFoot()
     {
-        _animator.SetBool("OnFoot", true);
+        _animator.SetOnFoot();
     }
     internal void UnsetOnFoot()
     {
-        _animator.SetBool("OnFoot", false);
+        _animator.UnsetOnFoot();
     }
     public void StandUp()
     {
         OnStandUpRequested.Invoke();
-        if (_animator.GetBehaviour<OnStandUp>() == null)
+        if (_animator.Animator.GetBehaviour<OnStandUp>() == null)
         {
             Didascalia.Utils.Error.DebugbreakFailMessage("OnStandUp behaviour not found in animator", this);
         } 
@@ -233,6 +246,7 @@ public class StudentBehaviour : MonoBehaviour
         // Didascalia.Utils.Error.DebugbreakFailUnimplemented("Yell Animation is not avaliable", this);
         Didascalia.Utils.Log.Warning("Yell Animation is not avaliable", this);
     }
+    #endregion
 
     #region SitTogether
     public void SitTogether()
@@ -240,6 +254,28 @@ public class StudentBehaviour : MonoBehaviour
         OnSitTogetherRequested.Invoke();
     }
     #endregion
+
+
+    public void Hyperstimulate()
+    {
+        OnHyperstimulateRequested.Invoke();
+    }
+    public void Frustrate()
+    {
+        OnFrustrateRequested.Invoke();
+    }
+    public void GetMaterialOut()
+    {
+        OnGetMaterialOutRequested.Invoke();
+    }
+    public void FailToPayAttention()
+    {
+        OnFailToPayAttentionRequested.Invoke();
+    }
+    public void GetDistracted()
+    {
+        OnGetDistractedRequested.Invoke();
+    }
 
     #endregion
 }

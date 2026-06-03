@@ -91,12 +91,26 @@ public struct WebStudent
 /// </summary>
 public enum WebEventType
 {
+    // special
     Message = -1,
+    
+    // original
     Disrespect = 0,
-    SitTogether = 1,
-    StandUp = 2,
+    SitTogether,
+    StandUp,
+
+    // tea
+    Hyperstimulation,
+    Frustration,
+
+    // tdah
+    Disorganization,
+    Impulsivity,
+    Inattention,
+
+
     // ...
-    Restart = 3
+    Restart
 }
 
 [Serializable]
@@ -154,6 +168,8 @@ public struct WebMessage
 /// </summary>
 public class ConnectionManager : Singleton<ConnectionManager>
 {
+    const uint WebEventTypeConflictCount = 9;
+
     [SerializeField]
     string _initialUrl = "wss://cyclops-dev.uab.cat/game/";
 
@@ -368,9 +384,33 @@ public class ConnectionManager : Singleton<ConnectionManager>
         WebStudent[] webStudents = GenerateWebStudentsInfo();
 
         WebOptions options;
+        var optionsTexts = new string[WebEventTypeConflictCount];
+        {
+            optionsTexts[(int)WebEventType.Disrespect] = "Faltar el respeto";
+            optionsTexts[(int)WebEventType.SitTogether] = "Sentarse juntos";
+            optionsTexts[(int)WebEventType.StandUp] = "Levantarse";
+
+            optionsTexts[(int)WebEventType.Hyperstimulation] = "Hiperestimulación";
+            optionsTexts[(int)WebEventType.Frustration] = "Frustración";
+            
+            optionsTexts[(int)WebEventType.Disorganization] = "Desorganización";
+            optionsTexts[(int)WebEventType.Impulsivity] = "Impulsividad";
+            optionsTexts[(int)WebEventType.Inattention] = "Inatención";
+
+            optionsTexts[(int)WebEventType.Restart] = "Restart";
+        }
+        foreach (var text in optionsTexts)
+        {
+            Didascalia.Utils.Error.DebugbreakFailIf(
+                string.IsNullOrEmpty(text),
+                "WebEventTypeConflictCount is set to " + WebEventTypeConflictCount + " but not all events have a text assigned.",
+                this
+            );
+        }
+
         options = new WebOptions
         {
-            opcionesGlobales = new string[] { "Faltar el respeto", "Sentarse juntos", "Levantarse", "Restart" }
+            opcionesGlobales = optionsTexts
         };
         InitialMessageData data = new InitialMessageData(webStudents, options);
 
