@@ -377,12 +377,13 @@ public class ClassManager : Singleton<ClassManager>
         Didascalia.Utils.Log.Info("WebMessageType: " + message.id, this);
 
         StudentManager.ConflictGenerationResult result = default;
-        switch(message.id)
+        switch (message.id)
         {
             case WebEventType.Message:
                 Didascalia.Utils.Log.Info("Student Name: " + message.studentName, this);
                 StudentManager.Instance.MakeStudentTalk(message.studentName, message.data);
                 break;
+
             case WebEventType.Disrespect:
                 result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.Disrespect, message.studentName);
                 break;
@@ -392,6 +393,19 @@ public class ClassManager : Singleton<ClassManager>
             case WebEventType.SitTogether:
                 result = StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.SitTogether, message.studentName);
                 break;
+
+            case WebEventType.Hyperstimulation:
+                break;
+            case WebEventType.Frustration:
+                break;
+
+            case WebEventType.Disorganization:
+                break;
+            case WebEventType.Impulsivity:
+                break;
+            case WebEventType.Inattention:
+                break;
+
             case WebEventType.Restart:
                 break;
             default:

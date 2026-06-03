@@ -289,8 +289,18 @@ public class StudentManager : Singleton<StudentManager>
     public enum ConflictType
     {
         Disrespect = 0,
-        SitTogether = 1,
-        StandUp = 2,
+        SitTogether,
+        StandUp,
+
+        // tea
+        Hyperstimulation,
+        Frustration,
+
+        // tdah
+        Disorganization,
+        Impulsivity,
+        Inattention,
+
         // NonFeasible = 1 << 31
     }
     public const ConflictType ConflictTypeNonFeasible = (ConflictType)(1 << 31);
@@ -464,6 +474,98 @@ public class StudentManager : Singleton<StudentManager>
         public Conflict? ConflictInstance;
         #nullable restore
     }
+
+    private bool GenerateConflictIsCapacityOk(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+    {
+        if (_activeConflicts.Count == _maxActiveConflicts)
+        {
+            erroneousResult = new ConflictGenerationResult
+            {
+                Error = ConflictGenerationError.MaxActiveConflictsReached,
+                Descriptor = descriptor,
+                ConflictInstance = null
+            };
+            return false;
+        }
+        else
+        {
+            erroneousResult = default;
+            return true;
+        }
+    }
+    private bool GenerateConflictIsConflictFeasible(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+    {
+        if ((descriptor.Type & ConflictTypeNonFeasible) != 0)
+        {
+            erroneousResult = new ConflictGenerationResult
+            {
+                Error = ConflictGenerationError.NotFeasible,
+                Descriptor = descriptor,
+                ConflictInstance = null
+            };
+            return false;
+        }
+        else
+        {
+            erroneousResult = default;
+            return true;
+        }
+    }
+    private bool GenerateConflictIsStudentConflictFree(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult, out string descriptorName)
+    {
+        string OutOfRange()
+        {
+            Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
+            return string.Empty;
+        }
+        descriptorName = descriptor.Type switch
+        {
+            ConflictType.Disrespect => descriptor.Disrespect.StudentName,
+            ConflictType.SitTogether => descriptor.SitTogether.StudentName,
+            ConflictType.StandUp => descriptor.StandUp.StudentName,
+            _ => OutOfRange()
+        };
+
+        if (_activeConflicts.ContainsKey(descriptorName))
+        {
+            erroneousResult = new ConflictGenerationResult
+            {
+                Error = ConflictGenerationError.AlreadyActiveConflictForStudent,
+                Descriptor = descriptor,
+                ConflictInstance = null
+            };
+            return false;
+        }
+        else
+        {
+            erroneousResult = default;
+            return true;
+        }
+    }
+    private bool GenerateConflictIsTypeImplemented(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+    {
+        erroneousResult = new ConflictGenerationResult
+        {
+            Error = ConflictGenerationError.Unimplemented,
+            Descriptor = descriptor,
+            ConflictInstance = null
+        };
+        return descriptor.Type switch
+        {
+            ConflictType.Disrespect => false,
+            ConflictType.SitTogether => true,
+            ConflictType.StandUp => true,
+
+            ConflictType.Hyperstimulation => false,
+            ConflictType.Frustration => false,
+            
+            ConflictType.Disorganization => false,
+            ConflictType.Impulsivity => false,
+            ConflictType.Inattention => false,
+
+            _ => false
+        };
+    }
     internal ConflictGenerationResult GenerateConflict(ConflictType type, string studentName)
     {
         string name = studentName;
@@ -473,7 +575,8 @@ public class StudentManager : Singleton<StudentManager>
         } 
         // var descriptor = GenerateConflictDescriptorExpectSame(type, name);
         var descriptor = GenerateConflictDescriptor(type, name);
-        if (_activeConflicts.Count == _maxActiveConflicts)
+
+        if (!GenerateConflictIsCapacityOk(descriptor, out ConflictGenerationResult capacityErrorResult))
         {
             // Didascalia.Utils.Error.DebugbreakFailMessage(
             Didascalia.Utils.Log.Warning(
@@ -481,84 +584,49 @@ public class StudentManager : Singleton<StudentManager>
                 + "Conflict will not be generated.",
                 this
             );
-            return new ConflictGenerationResult
-            {
-                Error = ConflictGenerationError.MaxActiveConflictsReached,
-                Descriptor = descriptor,
-                ConflictInstance = null
-            };
+            return capacityErrorResult;
         }
 
-        if ((descriptor.Type & ConflictTypeNonFeasible) != 0)
+        if (!GenerateConflictIsConflictFeasible(descriptor, out ConflictGenerationResult feasibilityErrorResult))
         {
             Didascalia.Utils.Log.Warning(
                 $"Generated conflict of type {type} for student {name} is not feasible. Conflict will not be generated.",
                 this
             );
-            return new ConflictGenerationResult
-            {
-                Error = ConflictGenerationError.NotFeasible,
-                Descriptor = descriptor,
-                ConflictInstance = null
-            };
+            return feasibilityErrorResult;
+        }
+        else if (!GenerateConflictIsStudentConflictFree(descriptor, out ConflictGenerationResult studentConflictErrorResult, out string descriptorName))
+        {
+            Didascalia.Utils.Log.Warning(
+                $"Generated conflict of type {type} for student {name} cannot be generated "
+                + "because there is already an active conflict for this student.\n"
+                + "Conflict will not be generated.",
+                this
+            );
+            return studentConflictErrorResult;
+        }
+        // TODO: remove this check when all conflict types are implemented, because it should be the responsibility of the caller to not generate unimplemented conflict types
+        else if (!GenerateConflictIsTypeImplemented(descriptor, out ConflictGenerationResult unimplementedErrorResult))
+        {
+            Didascalia.Utils.Log.Warning(
+                $"Generated conflict of type {type} for student {name} is not implemented yet. Conflict will not be generated.",
+                this
+            );
+            return unimplementedErrorResult;
         }
         else
         {
-            string OutOfRange()
+            Conflict conflict = Instantiate(_conflictPrefab, transform).GetComponent<Conflict>();
+            conflict.name = $"Conflict_{type}_{descriptorName}";
+            conflict.SetConflictiveStudent(GetStudentExpect(descriptorName));
+            _activeConflicts.Add(descriptorName, conflict);
+            HandleConflict(descriptor);
+            return new ConflictGenerationResult
             {
-                Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
-                return string.Empty;
-            }
-            string descriptorName = type switch
-            {
-                ConflictType.Disrespect => descriptor.Disrespect.StudentName,
-                ConflictType.SitTogether => descriptor.SitTogether.StudentName,
-                ConflictType.StandUp => descriptor.StandUp.StudentName,
-                _ => OutOfRange()
+                Error = ConflictGenerationError.None,
+                Descriptor = descriptor,
+                ConflictInstance = conflict
             };
-            if (_activeConflicts.ContainsKey(descriptorName))
-            {
-                Didascalia.Utils.Log.Warning(
-                    $"Generated conflict of type {type} for student {name} cannot be generated "
-                    + "because there is already an active conflict for this student.\n"
-                    + "Conflict will not be generated.",
-                    this
-                );
-                return new ConflictGenerationResult
-                {
-                    Error = ConflictGenerationError.AlreadyActiveConflictForStudent,
-                    Descriptor = descriptor,
-                    ConflictInstance = null
-                };
-            }
-            // TODO: remove this check when all conflict types are implemented, because it should be the responsibility of the caller to not generate unimplemented conflict types
-            else if (descriptor.Type == ConflictType.Disrespect)
-            {
-                Didascalia.Utils.Log.Warning(
-                    $"Generated conflict of type {type} for student {name} is not implemented yet. Conflict will not be generated.",
-                    this
-                );
-                return new ConflictGenerationResult
-                {
-                    Error = ConflictGenerationError.Unimplemented,
-                    Descriptor = descriptor,
-                    ConflictInstance = null
-                };
-            }
-            else
-            {
-                Conflict conflict = Instantiate(_conflictPrefab, transform).GetComponent<Conflict>();
-                conflict.name = $"Conflict_{type}_{descriptorName}";
-                conflict.SetConflictiveStudent(GetStudentExpect(descriptorName));
-                _activeConflicts.Add(descriptorName, conflict);
-                HandleConflict(descriptor);
-                return new ConflictGenerationResult
-                {
-                    Error = ConflictGenerationError.None,
-                    Descriptor = descriptor,
-                    ConflictInstance = conflict
-                };
-            }
         }
     }
 
