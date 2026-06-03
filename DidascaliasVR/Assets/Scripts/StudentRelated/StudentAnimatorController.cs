@@ -6,7 +6,15 @@ namespace Didascalia.Student
     [RequireComponent(typeof(Animator))]
     internal class StudentAnimatorController : MonoBehaviour
     {
-        private Animator animator;
+        private Animator animator = null;
+        public Animator Animator => animator;
+        
+        // top-level states
+        public static readonly int HashIsOnFoot = Animator.StringToHash("OnFoot");
+
+        // other
+        public static readonly int HashFloatSpeed = Animator.StringToHash("Speed");
+
 
         // Standing
         public static readonly int HashTriggerEnterDesk = Animator.StringToHash("TriggerEnterDesk");
@@ -92,6 +100,9 @@ namespace Didascalia.Student
         };
         private static readonly HashSet<int> ValidBooleanParameterHashes = new HashSet<int>
         {
+            HashIsOnFoot,
+
+
             HashIsFloor,
             HashIsFloorAnxiety,
             HashIsFloorAnxietyTEA,
@@ -179,8 +190,8 @@ namespace Didascalia.Student
             EnsureBooleanHash(hash);
             animator.SetBool(hash, value);
         }
-        public void SetBooleanParameterValue(int hash) => SetBooleanParameterValue(hash, true);
-        public void ResetBooleanParameterValue(int hash) => SetBooleanParameterValue(hash, false);
+        public void SetBooleanParameter(int hash) => SetBooleanParameterValue(hash, true);
+        public void ResetBooleanParameter(int hash) => SetBooleanParameterValue(hash, false);
 
         public void SetTriggerParameter(int hash)
         {
@@ -192,5 +203,9 @@ namespace Didascalia.Student
             EnsureTriggerHash(hash);
             animator.ResetTrigger(hash);
         }
+
+
+        public void SetOnFoot() => SetBooleanParameter(HashIsOnFoot);
+        public void UnsetOnFoot() => ResetBooleanParameter(HashIsOnFoot);
     }
 }

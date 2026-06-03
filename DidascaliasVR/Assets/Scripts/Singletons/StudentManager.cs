@@ -530,6 +530,29 @@ public class StudentManager : Singleton<StudentManager>
                 student = GetStudentExpect(descriptor.StandUp.StudentName);
                 student.GetComponent<StudentBehaviour>().StandUp();
                 break;
+            
+            case ConflictType.Hyperstimulation:
+                student = GetStudentExpect(descriptor.Hyperstimulation.StudentName);
+                student.GetComponent<StudentBehaviour>().Hyperstimulate();
+                break;
+            case ConflictType.Frustration:
+                student = GetStudentExpect(descriptor.Frustration.StudentName);
+                student.GetComponent<StudentBehaviour>().Frustrate();
+                break;
+            
+            case ConflictType.Disorganization:
+                student = GetStudentExpect(descriptor.Disorganization.StudentName);
+                student.GetComponent<StudentBehaviour>().GetDistracted();
+                break;
+            case ConflictType.Impulsivity:
+                student = GetStudentExpect(descriptor.Impulsivity.StudentName);
+                student.GetComponent<StudentBehaviour>().GetMaterialOut();
+                break;
+            case ConflictType.Inattention:
+                student = GetStudentExpect(descriptor.Inattention.StudentName);
+                student.GetComponent<StudentBehaviour>().FailToPayAttention();
+                break;
+
             default:
                 Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
                 break;
@@ -641,12 +664,12 @@ public class StudentManager : Singleton<StudentManager>
             ConflictType.SitTogether => true,
             ConflictType.StandUp => true,
 
-            ConflictType.Hyperstimulation => false,
-            ConflictType.Frustration => false,
+            ConflictType.Hyperstimulation => true,
+            ConflictType.Frustration => true,
             
-            ConflictType.Disorganization => false,
-            ConflictType.Impulsivity => false,
-            ConflictType.Inattention => false,
+            ConflictType.Disorganization => true,
+            ConflictType.Impulsivity => true,
+            ConflictType.Inattention => true,
 
             _ => false
         };
