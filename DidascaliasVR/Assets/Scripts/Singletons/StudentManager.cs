@@ -345,26 +345,31 @@ public class StudentManager : Singleton<StudentManager>
     }
 
     // XXX: Treat this type like an union
-    // [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit)]
     internal struct ConflictDescriptor
     {
-        // [FieldOffset(0)]
+        [FieldOffset(0)]
         public ConflictType Type;
         
 
         // XXX: [FieldOffset(sizeof(ConflictType))] was not correct because it missaligned the pointer type inside the string variable inside the variants
-        // [FieldOffset(8)]
+        [FieldOffset(16)]
         public ConflictDescriptorDisrespect Disrespect;
-        // [FieldOffset(8)]
+        [FieldOffset(16)]
         public ConflictDescriptorSitTogether SitTogether;
-        // [FieldOffset(8)]
+        [FieldOffset(16)]
         public ConflictDescriptorStandUp StandUp;
 
+        [FieldOffset(16)]
         public ConflictDescriptorHyperstimulation Hyperstimulation;
+        [FieldOffset(16)]
         public ConflictDescriptorFrustration Frustration;
 
+        [FieldOffset(16)]
         public ConflictDescriptorDisorganization Disorganization;
+        [FieldOffset(16)]
         public ConflictDescriptorImpulsivity Impulsivity;
+        [FieldOffset(16)]
         public ConflictDescriptorInattention Inattention;
     }
 
