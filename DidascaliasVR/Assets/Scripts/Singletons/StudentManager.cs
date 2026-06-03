@@ -596,6 +596,13 @@ public class StudentManager : Singleton<StudentManager>
             ConflictType.Disrespect => descriptor.Disrespect.StudentName,
             ConflictType.SitTogether => descriptor.SitTogether.StudentName,
             ConflictType.StandUp => descriptor.StandUp.StudentName,
+
+            ConflictType.Hyperstimulation => descriptor.Hyperstimulation.StudentName,
+            ConflictType.Frustration => descriptor.Frustration.StudentName,
+
+            ConflictType.Disorganization => descriptor.Disorganization.StudentName,
+            ConflictType.Impulsivity => descriptor.Impulsivity.StudentName,
+            ConflictType.Inattention => descriptor.Inattention.StudentName,
             _ => OutOfRange()
         };
 

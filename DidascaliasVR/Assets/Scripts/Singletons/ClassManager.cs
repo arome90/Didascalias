@@ -428,6 +428,13 @@ public class ClassManager : Singleton<ClassManager>
                 StudentManager.ConflictType.Disrespect => result.Descriptor.Disrespect.StudentName,
                 StudentManager.ConflictType.StandUp => result.Descriptor.StandUp.StudentName,
                 StudentManager.ConflictType.SitTogether => result.Descriptor.SitTogether.StudentName,
+
+                StudentManager.ConflictType.Hyperstimulation => result.Descriptor.Hyperstimulation.StudentName,
+                StudentManager.ConflictType.Frustration => result.Descriptor.Frustration.StudentName,
+                
+                StudentManager.ConflictType.Disorganization => result.Descriptor.Disorganization.StudentName,
+                StudentManager.ConflictType.Impulsivity => result.Descriptor.Impulsivity.StudentName,
+                StudentManager.ConflictType.Inattention => result.Descriptor.Inattention.StudentName,
                 _ => OutOfRange()
             };
             Didascalia.Utils.Log.Warning(
