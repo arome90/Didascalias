@@ -40,6 +40,11 @@ namespace Didascalia.StateMachine.NonNormative
         {
             // FIXME: PLACEHOLDER
             _behaviour.Animator.SetBooleanParameter(Student.StudentAnimatorController.HashIsStimulatedTEA);
+            // FIXME: message logging about student entering the conflict albeit the animations for it do not work well yet
+            Didascalia.Utils.Log.Info(
+                "[Conflict] Hyperestimulation conflict triggered. NOTE: animations for this conflict do not work well yet. This message is displayed instead.",
+                _behaviour
+            );
 
             _behaviour.OnHyperstimulateRequested.RemoveListener(OnHyperestimulationRequested);
         }
