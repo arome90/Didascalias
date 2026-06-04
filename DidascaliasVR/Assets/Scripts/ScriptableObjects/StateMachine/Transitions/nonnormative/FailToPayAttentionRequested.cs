@@ -40,12 +40,6 @@ namespace Didascalia.StateMachine.NonNormative
         {
             // XXX: PLACEHOLDER
             _behaviour.Animator.SetBooleanParameter(Student.StudentAnimatorController.HashIsTalkingFront);
-            // FIXME: message logging about student entering the conflict albeit the animations for it do not work well yet
-            Didascalia.Utils.Log.Info(
-                "[Conflict] Fail to pay attention conflict triggered. NOTE: animations for this conflict do not work well yet. This message is displayed instead.",
-                _behaviour
-            );
-
             _behaviour.OnFailToPayAttentionRequested.RemoveListener(OnFailToPayAttentionRequested);
         }
     }
