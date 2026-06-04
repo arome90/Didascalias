@@ -1342,12 +1342,12 @@ AnimatorStateMachine:
   m_EntryTransitions:
   - {fileID: -720344232772624161}
   m_StateMachineTransitions:
-  - first: {fileID: -4077245943067960568}
-    second:
-    - {fileID: -1151345488726692011}
   - first: {fileID: -5725321315746668640}
     second:
     - {fileID: -6961902759343458835}
+  - first: {fileID: -4077245943067960568}
+    second:
+    - {fileID: -1151345488726692011}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 140, y: 200, z: 0}
@@ -3267,9 +3267,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -3559320879497049972}
     m_Position: {x: 760, y: 1120, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: 6043706521733263288}
-    m_Position: {x: 420, y: 60, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -6723,7 +6720,7 @@ BlendTree:
   m_Name: Movement
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 1055271325313466987, guid: 6307f38d53c46354f9ec14bed9245202, type: 3}
+    m_Motion: {fileID: 7400000, guid: c77d800c2862eac4b894229248ff64e8, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -6731,7 +6728,7 @@ BlendTree:
     m_DirectBlendParameter: Aburrimiento
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -3863415479947880419, guid: a5151d10c6b066c40bb2034f465c7100, type: 3}
+    m_Motion: {fileID: 7400000, guid: 01d256d4e0f14e34fa9cbe4742f8481a, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -8639,32 +8636,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &6043706521733263288
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 'NOTA: falta la motion ''root|running'' para este blend tree'
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1101 &6085881183827804501
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
