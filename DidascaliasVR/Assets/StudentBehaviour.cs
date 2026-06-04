@@ -64,7 +64,7 @@ public class StudentBehaviour : MonoBehaviour
     public StudentState State { get { return _state; } }
     private void Start()
     {
-        _animator = GetComponent<Didascalia.Student.StudentAnimatorController>();
+        _animator = GetComponentInChildren<Didascalia.Student.StudentAnimatorController>();
         _agent = GetComponent<NavMeshAgent>();
         _st = GetComponent<Student>();
         _tts = GetComponent<TTSWit>();
