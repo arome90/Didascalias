@@ -1,4 +1,4 @@
-\section{Descripcion Extensa de la Actividad técnica (10-20 paginas)}
+\section{Descripcion de la actividad técnica}
 
 \subsection{Analisis y optimizacion inicial de rendimiento en VR}
 El primer encargo tecnico estuvo centrado en mejorar la experiencia en Realidad Virtual desde el punto de vista del rendimiento percibido. Se revisaron elementos de escena, configuraciones de render y decisiones de pipeline que afectaban a los FPS y a la estabilidad temporal. Se hizo uso extensivo del las herramientas de diagnostico de Unity, como el \emph{Profiler} y el \emph{Frame Debugger}, para identificar cuellos de botella en CPU y GPU, y se aplicaron optimizaciones como la reduccion de \textit{draw calls}, la simplificacion de materiales y la gestion más eficiente de las jerarquias de objetos. Se observó que los materiales utilizados podían ser optimizados para permitir \textit{batching}. Esto se logró mediante la unificación de materiales y la reducción de variantes, lo que permitió que Unity agrupara objetos con el mismo material en una sola llamada de dibujo, reduciendo significativamente los draw calls y mejorando el rendimiento general.\par
