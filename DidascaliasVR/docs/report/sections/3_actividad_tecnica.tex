@@ -1,123 +1,47 @@
 \section{Descripcion Extensa de la Actividad Tecnica (10-20 paginas)}
 
 \subsection{Bloque I: Analisis y optimizacion inicial de rendimiento en VR}
-El primer encargo tecnico estuvo centrado en mejorar la experiencia en Realidad Virtual desde el punto de vista de rendimiento percibido. Se revisaron elementos de escena, configuraciones de render y decisiones de pipeline que afectaban a FPS y estabilidad temporal.
+El primer encargo tecnico estuvo centrado en mejorar la experiencia en Realidad Virtual desde el punto de vista del rendimiento percibido. Se revisaron elementos de escena, configuraciones de render y decisiones de pipeline que afectaban a los FPS y a la estabilidad temporal. En esta fase se ajustaron configuraciones de build y paquetes para alinear el proyecto con el objetivo VR, se revisaron escenas y prefabs XR para reducir problemas visuales y mejorar el confort del usuario, y se comprobo la compatibilidad entre sistemas de entrada y rastreo, incluyendo la coexistencia de componentes legacy y del New Input System cuando fue necesario para mantener el funcionamiento en distintas rutas de ejecucion. El bloque se cerro con una validacion del flujo de build y de la configuracion XR orientada al dispositivo objetivo.
 
-Entre las acciones realizadas se incluyen:
-\begin{itemize}[leftmargin=1.5em]
-    \item Ajustes de configuracion de build y paquetes para alinear el proyecto con el objetivo VR.
-    \item Modificaciones de escena/prefabs XR para reducir problemas visuales y mejorar confort (por ejemplo, ajuste de plano cercano para evitar interseccion visual de manos).
-    \item Revision de compatibilidad entre sistemas de entrada y rastreo, incluyendo coexistencia de componentes legacy y New Input System cuando fue necesario para mantener funcionamiento en distintas rutas de ejecucion.
-    \item Validacion de flujo de build y configuraciones de XR orientadas a dispositivo objetivo.
-\end{itemize}
-
-Este bloque permitio establecer una base mas estable para el resto de desarrollos funcionales, reduciendo incidencias de tirones y errores de integracion entre editor y build final.
+Este trabajo inicial permitio establecer una base mas estable para el resto de desarrollos funcionales, reduciendo incidencias de tirones y errores de integracion entre editor y build final.
 
 \subsection{Bloque II: Diseno de herramienta de comportamientos basada en grafos}
-Una vez estabilizado el arranque tecnico del proyecto, se inicio el trabajo de diseno de una herramienta para modelar comportamientos del alumnado mediante grafos/maquinas de estados. Esta linea resultaba especialmente relevante para la evolucion hacia comportamientos mas complejos, incluyendo casos de alumnado no normativo.
-
-Las tareas ejecutadas incluyeron:
-\begin{itemize}[leftmargin=1.5em]
-    \item Definicion inicial del documento de dise\~no tecnico del sistema de grafo de comportamiento.
-    \item Incorporacion de recursos y estructura de toolkit orientada a facilitar extension futura.
-    \item Revision de transiciones de estado y condiciones, introduciendo criterios mas estrictos de validacion para detectar inconsistencias en tiempo de ejecucion.
-    \item Preparacion de la base para crecimiento modular de nuevos conflictos y respuestas animadas.
-\end{itemize}
+Una vez estabilizado el arranque tecnico del proyecto, se inicio el trabajo de diseno de una herramienta para modelar comportamientos del alumnado mediante grafos y maquinas de estados. Esta linea resultaba especialmente relevante para la evolucion hacia comportamientos mas complejos, incluyendo casos de alumnado no normativo. Se redacto el documento inicial de diseno tecnico del sistema de grafo de comportamiento y se incorporo la estructura necesaria para que la herramienta pudiera crecer con el proyecto. Junto a ello se revisaron las transiciones de estado y sus condiciones, introduciendo criterios mas estrictos de validacion para detectar inconsistencias durante la ejecucion. Con estas decisiones quedo preparada la base para extender de forma modular nuevos conflictos y sus respuestas animadas.
 
 Como resultado, el proyecto paso de una configuracion menos estructurada a un enfoque mas mantenible, con mejor trazabilidad entre conflicto recibido, transicion de estado aplicada y animacion reproducida.
 
 \subsection{Bloque III: Robustecimiento de conexion web, mensajeria y aserciones}
-El bloque con mayor continuidad temporal fue la verificacion y mejora de la conexion con la web a la que se enlaza la aplicacion VR. El objetivo principal fue aumentar fiabilidad y capacidad de diagnostico ante mensajes incompletos, inesperados o no implementados.
+El bloque con mayor continuidad temporal fue la verificacion y mejora de la conexion con la web a la que se enlaza la aplicacion VR. El objetivo principal fue aumentar la fiabilidad y la capacidad de diagnostico ante mensajes incompletos, inesperados o no implementados. Se reforzo el sistema de logging y de errores para facilitar la depuracion de mensajes y de rutas de ejecucion no implementadas. Tambien se introdujeron comprobaciones explicitas para eventos web desconocidos y aserciones sobre condiciones de transicion, distinguiendo entre modos mas estrictos o mas relajados segun el contexto. En paralelo, se ajusto la creacion de botones web para garantizar la correspondencia correcta entre interfaz y conflicto objetivo, y se integro un selector de servidor que permitiera alternar entre entornos de desarrollo y produccion.
 
-Las principales actuaciones fueron:
-\begin{itemize}[leftmargin=1.5em]
-    \item Implementacion de controles de validez para eventos web desconocidos y rutas no implementadas.
-    \item Introduccion de mecanismos de logging y error centralizados para acelerar depuracion.
-    \item Inclusion de aserciones y comprobaciones de precondiciones/postcondiciones en flujos de transicion.
-    \item Correcciones sobre diccionarios y mapeos de intenciones/respuestas para evitar claves ausentes en tiempo de ejecucion.
-    \item Ajustes sobre flujos asincronos en transiciones de varios pasos para mantener coherencia temporal del estado.
-\end{itemize}
-
-Esta fase tuvo impacto directo en la robustez del sistema: se redujeron fallos silenciosos y se facilito la identificacion temprana de problemas durante pruebas funcionales.
+Parte del sistema fue reestructurada con una orientacion mas dirigida a datos, mediante descriptores y pipelines de generacion de conflictos. El objetivo era que la incorporacion de nuevos tipos no exigiera reescrituras extensas de codigo procedural, sino ampliaciones localizadas y mas seguras. Con esta base se redujo la fragilidad del flujo de conexion, mejoro la observabilidad de los fallos y se habilito una operativa de pruebas mas realista para el resto del equipo al poder alternar servidores de forma controlada.
 
 \subsection{Bloque IV: Reescritura parcial y orientacion a datos para escalabilidad}
-Para sostener el aumento de complejidad funcional, se acometieron cambios estructurales en sistemas de gestion de clase/estudiantes. El objetivo fue permitir escalado de conflictos y simplificar la incorporacion de nuevos tipos sin reescrituras masivas.
+Para sostener el aumento de complejidad funcional, se acometieron cambios estructurales en sistemas de gestion de clase y estudiantes. El objetivo fue permitir el escalado de conflictos y simplificar la incorporacion de nuevos tipos sin reescrituras masivas. Se refinaron los descriptores de conflicto y su representacion interna, se corrigieron problemas de alineacion y de punteros en layouts de datos que podian provocar lecturas incorrectas, y se gestionaron con mayor seguridad los casos limite, como estudiantes insuficientes, repeticion de alumno conflictivo o conflictos no implementados. Tambien se ajusto el pipeline de generacion para asegurar que todos los conflictos definidos se procesaran y reportaran correctamente.
 
-En particular, se trabajaron los siguientes aspectos:
-\begin{itemize}[leftmargin=1.5em]
-    \item Refinamiento de descriptores de conflicto y su representacion interna.
-    \item Correccion de problemas de alineacion/punteros en layouts de datos que podian provocar lecturas incorrectas.
-    \item Gestion mas segura de casos limite: estudiantes insuficientes, repeticion de alumno conflictivo o conflictos no implementados.
-    \item Ajustes de pipeline de generacion para asegurar que todos los conflictos definidos se procesan y reportan correctamente.
-\end{itemize}
+Este enfoque orientado a datos mejoro la extensibilidad del sistema y redujo el acoplamiento entre logica de generacion, estado y presentacion.
 
-Este enfoque orientado a datos mejoro la extensibilidad del sistema y redujo acoplamiento entre logica de generacion, estado y presentacion.
+\subsection{Bloque V: Ampliacion y validacion de nuevos conflictos}
+Una de las aportaciones nucleares de la practica fue la validacion de los conflictos existentes y la ampliacion funcional con nuevos conflictos asociados a TEA y TDAH. La ampliacion se materializo en la incorporacion de nuevos descriptores de conflicto y en el paso de estos por el pipeline de generacion. A nivel de comportamiento, se implementaron nuevas transiciones de maquina de estados para cubrir situaciones no normativas y se ajustaron los gestores de clase y alumnado para asegurar que todos los tipos de conflicto pudieran asignarse y ejecutarse correctamente. Tambien se revisaron estados no implementados y rutas de contingencia para evitar bloqueos de ejecucion.
 
-\subsection{Bloque V: Ampliacion y validacion de conflictos (TEA y TDAH)}
-Una de las aportaciones nucleares de la practica fue la validacion de los conflictos existentes y la ampliacion funcional con nuevos conflictos asociados a TEA/TDAH.
-
-Trabajo realizado:
-\begin{itemize}[leftmargin=1.5em]
-    \item Verificacion de ejecucion correcta de los conflictos ya soportados por el proyecto (3 existentes).
-    \item Incorporacion de 5 conflictos nuevos y su cadena completa de soporte: descriptor, transicion, generacion y activacion.
-    \item Ajustes de correspondencia entre botones/eventos web y conflicto interno para evitar desajustes de disparo.
-    \item Pruebas de cobertura para confirmar que el pipeline de generacion reconoce y procesa todos los tipos activos.
-\end{itemize}
-
-A nivel funcional, este bloque incremento la riqueza de escenarios disponibles y dejo el sistema preparado para nuevas ampliaciones con menor friccion tecnica.
+El trabajo no se limito a anadir casos; incluyo una validacion sistematica de compatibilidad con sistemas ya existentes, como la asignacion de alumnos, las condiciones de entrada y salida de estado, y la sincronizacion con la interfaz y la animacion. A nivel funcional, este bloque incremento la riqueza de escenarios disponibles y dejo el sistema preparado para futuras ampliaciones con menor friccion tecnica.
 
 \subsection{Bloque VI: Integracion de animaciones y adaptacion de prefabs}
-La incorporacion de nuevos conflictos requirio sincronizacion con contenido audiovisual y jerarquias de personajes. Se realizaron cambios tanto en controladores de animacion como en prefabs para garantizar ejecucion coherente de estados y transiciones.
+La incorporacion de nuevos conflictos requirio sincronizacion con contenido audiovisual y con las jerarquias de personajes. Se ajustaron y depuraron los controladores de animacion para los nuevos estados y transiciones, se verificaron los disparadores ligados a las condiciones de conflicto y se adaptaron los prefabs de alumnado y de elementos relacionados para asegurar referencias y componentes correctos en la jerarquia. Tambien se corrigieron comportamientos de sentado, levantado y orientacion en escena.
 
-Se abordaron las siguientes tareas:
-\begin{itemize}[leftmargin=1.5em]
-    \item Ajuste y depuracion de controladores de animacion para nuevos estados/transiciones.
-    \item Verificacion de disparadores de animacion ligados a condiciones de conflicto.
-    \item Adaptacion de prefabs de alumnado y elementos relacionados para asegurar referencias/componentes correctos en jerarquia.
-    \item Correccion de comportamientos de sentado/levantado y orientacion en escena.
-\end{itemize}
-
-Con ello se consiguio una representacion mas consistente del comportamiento en escena, evitando desincronizaciones entre estado logico y respuesta visual.
+Con ello se consiguio una representacion mas consistente del comportamiento en escena, evitando desincronizaciones entre el estado logico y la respuesta visual.
 
 \subsection{Bloque VII: Soporte a multiples servidores de prueba}
-Para facilitar el trabajo de QA y coordinacion con otros miembros del equipo, se habilito la seleccion de distintos servidores de conexion desde interfaz.
-
-Concretamente:
-\begin{itemize}[leftmargin=1.5em]
-    \item Se anadio un componente de \textit{dropdown} de servidor en menu.
-    \item Se conecto la seleccion a la logica de conexion para alternar entre entornos (por ejemplo, desarrollo y produccion).
-    \item Se verifico funcionamiento en build para evitar dependencias exclusivas del modo editor.
-\end{itemize}
+Para facilitar el trabajo de QA y la coordinacion con otros miembros del equipo, se habilito la seleccion de distintos servidores de conexion desde interfaz. Se anadio un componente de \textit{dropdown} de servidor en el menu y se conecto su seleccion a la logica de conexion para alternar entre entornos, por ejemplo desarrollo y produccion. Posteriormente se verifico su funcionamiento en build para evitar dependencias exclusivas del modo editor.
 
 Esta mejora redujo tiempos de prueba y errores de configuracion manual al cambiar de entorno backend.
 
 \subsection{Bloque VIII: Verificacion y exportacion satisfactoria a Meta Quest 3}
-Finalmente, se completaron ajustes de compatibilidad y configuracion para exportar y ejecutar correctamente en Meta Quest 3 sin incidencias graves reportadas.
+Finalmente, se completaron ajustes de compatibilidad y configuracion para exportar y ejecutar correctamente en Meta Quest 3 sin incidencias graves reportadas. Se revisaron las configuraciones de XR y de entrada relevantes para el dispositivo, se corrigieron camaras y componentes de seguimiento para mantener un trazado estable y se realizaron comprobaciones en las escenas de menu y aula para validar el ciclo de uso principal.
 
-El trabajo incluyo:
-\begin{itemize}[leftmargin=1.5em]
-    \item Revision de configuraciones de XR/entrada relevantes para dispositivo.
-    \item Correcciones sobre camaras y componentes de seguimiento para mantener trazado estable.
-    \item Comprobaciones en escena de menu y aula para validar ciclo de uso principal.
-\end{itemize}
-
-La exportacion funcional a Quest 3 se considera un hito de cierre tecnico de la practica por su impacto en validacion de producto real.
+La exportacion funcional a Quest 3 se considera un hito de cierre tecnico de la practica por su impacto en la validacion de producto real.
 
 \subsection{Incidencias tecnicas destacadas y resolucion}
-Durante el periodo de practicas aparecieron incidencias que requirieron diagnostico especifico. Entre las mas relevantes:
-\begin{itemize}[leftmargin=1.5em]
-    \item Desajustes entre conflicto solicitado desde web y conflicto realmente activado.
-    \item Estados de animacion no disparados pese a transicion logica correcta.
-    \item Errores por rutas no implementadas o mensajes inesperados.
-    \item Casos limite en asignacion de estudiantes conflictivos.
-\end{itemize}
-
-La estrategia general de resolucion se baso en instrumentacion (logs y aserciones), validacion incremental y pruebas dirigidas por caso de uso.
+Durante el periodo de practicas aparecieron incidencias que requirieron diagnostico especifico. Las mas relevantes fueron desajustes entre el conflicto solicitado desde la web y el conflicto realmente activado, estados de animacion no disparados pese a una transicion logica correcta, errores por rutas no implementadas o mensajes inesperados, y casos limite en la asignacion de estudiantes conflictivos. La estrategia general de resolucion se baso en instrumentacion mediante logs y aserciones, validacion incremental y pruebas dirigidas por caso de uso.
 
 \subsection{Valor tecnico aportado al proyecto}
-La contribucion realizada no se limito a cambios puntuales, sino que mejoro la base del proyecto en terminos de robustez, extensibilidad y capacidad de prueba. Destacan tres aportes transversales:
-\begin{enumerate}[leftmargin=1.5em]
-    \item Mayor tolerancia a errores y mejor observabilidad del sistema de conexion y estados.
-    \item Estructuras mas escalables para crecimiento de conflictos/comportamientos.
-    \item Integracion funcional completa entre backend de eventos, logica de estado y representacion animada en VR.
-\end{enumerate}
+La contribucion realizada no se limito a cambios puntuales, sino que mejoro la base del proyecto en terminos de robustez, extensibilidad y capacidad de prueba. En conjunto, el trabajo dejo un sistema mas tolerante a errores y mas observable en la capa de conexion y estados, unas estructuras mas escalables para el crecimiento de conflictos y comportamientos, y una integracion funcional mas completa entre el backend de eventos, la logica de estado y la representacion animada en VR.
