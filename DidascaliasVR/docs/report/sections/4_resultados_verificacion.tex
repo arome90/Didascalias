@@ -1,0 +1,56 @@
+\section{Resultados, Validacion y Evidencias}
+
+\subsection{Resultados tecnicos alcanzados}
+Al cierre del periodo de practicas se consideran alcanzados los siguientes resultados:
+\begin{itemize}[leftmargin=1.5em]
+    \item Estabilizacion inicial del comportamiento en VR tras ajustes de configuracion y escena.
+    \item Sistema de comportamientos orientado a crecimiento mediante estructura de estados/transiciones mas clara.
+    \item Conexion web reforzada con comprobaciones explicitas para eventos desconocidos o no implementados.
+    \item Cobertura funcional de conflictos existente verificada e incremento del catalogo con cinco nuevos conflictos (TEA/TDAH).
+    \item Integracion de animaciones y prefabs para representar los nuevos casos en escena.
+    \item Ejecucion validada en Meta Quest 3 sin bloqueos graves observados en el flujo principal.
+    \item Mejora operativa para el equipo gracias a seleccion de servidores de prueba desde interfaz.
+\end{itemize}
+
+\subsection{Criterios de verificacion aplicados}
+La validacion no se realizo como una prueba unica al final, sino mediante controles recurrentes durante cada iteracion. Los criterios principales fueron:
+\begin{itemize}[leftmargin=1.5em]
+    \item Correctitud funcional: el conflicto solicitado debe derivar en la transicion y animacion esperadas.
+    \item Robustez: ante mensajes anomalos o incompletos, el sistema debe registrar el error y evitar estado inconsistente.
+    \item Reproducibilidad: los casos de prueba deben poder repetirse entre editor y build.
+    \item Integracion: cambios de codigo, prefabs y animacion deben mantenerse sincronizados.
+    \item Compatibilidad objetivo: flujo estable en dispositivo Quest 3.
+\end{itemize}
+
+\subsection{Impacto en el flujo de equipo}
+Las mejoras introducidas han tenido impacto directo en la colaboracion:
+\begin{itemize}[leftmargin=1.5em]
+    \item Menor coste de depuracion por disponer de logs y aserciones mas explicitas.
+    \item Mayor rapidez en pruebas cruzadas al poder alternar entorno de servidor.
+    \item Menor friccion para incorporar nuevos conflictos al existir una ruta de integracion mas definida.
+\end{itemize}
+
+\subsection{Limitaciones detectadas y trabajo futuro}
+Aunque los objetivos principales se completaron, quedan lineas de continuidad recomendadas:
+\begin{itemize}[leftmargin=1.5em]
+    \item Formalizar una bateria de pruebas automatizadas de regresion para conflictos y transiciones.
+    \item Profundizar en metricas cuantitativas de rendimiento en Quest 3 (FPS medio, p95/p99 de frametime, consumo de memoria).
+    \item Consolidar documentacion funcional de los nuevos conflictos para perfiles no tecnicos del equipo.
+    \item Evaluar herramientas de telemetria para diagnostico remoto de sesiones.
+\end{itemize}
+
+\subsection{Resumen ejecutivo de hitos}
+\begin{center}
+\begin{tabular}{p{0.26\linewidth} p{0.67\linewidth}}
+\toprule
+\textbf{Hito} & \textbf{Resultado} \\
+\midrule
+Optimizar base VR & Reduccion de fricciones visuales y ajustes de entrada/rastreo para estabilidad de uso. \\
+Dise\~nar base de comportamientos & Estructura de estados/transiciones preparada para ampliar casos no normativos. \\
+Reforzar conexion web & Mayor control de errores, deteccion de eventos desconocidos y trazabilidad de fallos. \\
+Extender conflictos & Verificados 3 existentes y a\~nadidos 5 nuevos (TEA/TDAH) con soporte de pipeline. \\
+Integrar contenido & Animaciones y prefabs adaptados para representar correctamente nuevos escenarios. \\
+Exportar a Quest 3 & Build funcional validada en dispositivo objetivo. \\
+\bottomrule
+\end{tabular}
+\end{center}
