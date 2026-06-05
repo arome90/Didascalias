@@ -3,6 +3,13 @@
 \subsection{Analisis y optimizacion inicial de rendimiento en VR}
 El primer encargo tecnico estuvo centrado en mejorar la experiencia en Realidad Virtual desde el punto de vista del rendimiento percibido. Se revisaron elementos de escena, configuraciones de render y decisiones de pipeline que afectaban a los FPS y a la estabilidad temporal. Se hizo uso extensivo del las herramientas de diagnostico de Unity, como el \emph{Profiler} y el \emph{Frame Debugger}, para identificar cuellos de botella en CPU y GPU, y se aplicaron optimizaciones como la reduccion de \textit{draw calls}, la simplificacion de materiales y la gestion más eficiente de las jerarquias de objetos. Se observó que los materiales utilizados podían ser optimizados para permitir \textit{batching}. Esto se logró mediante la unificación de materiales y la reducción de variantes, lo que permitió que Unity agrupara objetos con el mismo material en una sola llamada de dibujo, reduciendo significativamente los draw calls y mejorando el rendimiento general.\par
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\columnwidth]{./src/class.png}
+    \captionof{figure}{Nuevo escenario de clase}
+    \label{fig:class}
+\end{figure}
+
 En esta fase se ajustaron configuraciones de build y paquetes para alinear el proyecto con el objetivo VR, se revisaron escenas y prefabs XR para reducir problemás visuales y mejorar el confort del usuario. Entre otros, llegó un nuevo escenario por parte del equipo de arte. Toda la escena principal, de la clase, fue portada al nuevo escenario, asegurando que los elementos de interacción y de animación se mantuvieran funcionales.\par
 
 Posteriormente, se comprobo la compatibilidad entre sistemas de entrada y rastreo de movimientos en VR, incluyendo la coexistencia de componentes legacy y del New Input System cuando fue necesario para mantener el funcionamiento en distintas rutas de ejecucion. Debido a esta disparidad, se unificó el uso de los sistemas de input, migrando exclusivamente al New Input System. El bloque se cerro con una validación del flujo de build y de la configuracion XR orientada al dispositivo objetivo.\par
@@ -11,6 +18,13 @@ Este trabajo inicial permitio establecer una base más estable para el resto de 
 
 \subsection{Diseno y programación de estados para describir comportamientos}
 Una vez estabilizado el arranque técnico del proyecto, se inicio el trabajo de diseno de una herramienta para modelar comportamientos del alumnado mediante grafos y maquinas de estados. Esta linea resultaba especialmente relevante para la evolucion hacia comportamientos más complejos, incluyendo casos de alumnado no normativo. Se redacto el documento inicial de diseno técnico del sistema de grafo de comportamiento. Junto a ello se revisaron las transiciones de estado y sus condiciones, introduciendo criterios más estrictos de validación para detectar inconsistencias durante la ejecucion. Con estas decisiones quedo preparada la base para extender de forma modular nuevos conflictos y sus respuestas animadas.\par
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\columnwidth]{./src/behaviour.png}
+    \captionof{figure}{Diagrama que describe los estados que representan un conflicto de un niño con TEA o TDAH}
+    \label{fig:behaviour}
+\end{figure}
 
 Como resultado, el proyecto paso de una configuracion menos estructurada a un enfoque más mantenible, con mejor trazabilidad entre conflicto recibido, transicion de estado aplicada y animación reproducida.\par
 
@@ -26,6 +40,13 @@ En esto último, cuando hubo que expandir la herramienta para soportar cinco nue
 \subsection{Reescritura parcial y orientacion a datos para escalabilidad}
 Para sostener el aumento de complejidad funcional, se acometieron cambios estructurales en sistemas de gestion de clase y estudiantes. El objetivo fue permitir el escalado de conflictos y simplificar la incorporación de nuevos tipos sin reescrituras másivas.\par
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\columnwidth]{./src/union.png}
+    \captionof{figure}{Estructura de datos como unión discriminada para orientar por datos la descripción de los conflictos}
+    \label{fig:union}
+\end{figure}
+
 Se introdujeron los descriptores de conflicto y su representación interna como unión discriminada, se corrigieron problemas de alineacion y de punteros en layouts de datos que podian provocar lecturas incorrectas, y se gestionaron con mayor seguridad los casos límite, como estudiantes insuficientes, repeticion de alumno conflictivo o conflictos no implementados. También se ajusto el pipeline de generación para asegurar que todos los conflictos definidos se procesaran y reportaran correctamente.\par
 
 \subsection{Ampliación y validación de nuevos conflictos}
@@ -39,10 +60,30 @@ El trabajo no se limito a anadir casos; incluyo una validación sistematica de c
 \subsection{Integracion de animaciones y adaptacion de prefabs}
 La incorporación de nuevos conflictos requirió sincronizacion con contenido audiovisual y con las jerarquias de personajes. Se ajustaron y depuraron los controladores de animación para los nuevos estados y transiciones, se verificaron los disparadores ligados a las condiciones de conflicto y se adaptaron los prefabs de alumnado y de elementos relacionados para asegurar referencias y componentes correctos en la jerarquía. También se corrigieron comportamientos de sentado, levantado y orientacion en escena.\par
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\columnwidth]{./src/animator0.png}
+    \captionof{figure}{Ventana de la máquina de estados del animator de Unity para comportamientos de pie}
+    \label{fig:animator0}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\columnwidth]{./src/animator1.png}
+    \captionof{figure}{Ventana de la máquina de estados del animator de Unity para comportamientos sentados}
+    \label{fig:animator1}
+\end{figure}
+
 Con ello se consiguio una representación más consistente del comportamiento en escena, evitando desincronizaciones entre el estado lógico y la respuesta visual.
 
 \subsection{Soporte a multiples servidores de prueba}
 Para facilitar el trabajo de QA y la coordinacion con otros miembros del equipo, se habilitó la seleccion de distintos servidores de conexión desde interfaz. Se añadió un componente de \textit{dropdown} de servidor en el menú y se conecto su seleccion a la lógica de conexión para alternar entre entornos, por ejemplo desarrollo y producción. Posteriormente se verificó su funcionamiento en build para evitar dependencias exclusivas del modo editor.\par
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\columnwidth]{./src/server.png}
+    \captionof{figure}{Desplegable con servidores dev y prod}
+    \label{fig:server}
+\end{figure}
 
 Esta mejora redujo tiempos de prueba y errores de configuracion manual al cambiar de entorno backend.\par
 
