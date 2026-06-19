@@ -1,17 +1,13 @@
-using Didascalia;
-using NUnit.Framework.Interfaces;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.WebSockets;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using TMPro;
+using Unity.Android.Gradle;
 using Unity.WebRTC;
+using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
+using WebSocketSharp.Server;
 
 public class StreamManager : MonoBehaviour
 {
@@ -30,19 +26,46 @@ public class StreamManager : MonoBehaviour
     /// a snapshot so Broadcast iteration is safe without an external lock.
     /// </summary>
     readonly ConcurrentDictionary<string, ClientData> clients = new ConcurrentDictionary<string, ClientData>();
-
+    
+    /// <summary>
+    /// URP Camera attached to the VR Camera in order to stream the frames rendered without the
+    /// perks of VR.
+    /// </summary>
     [SerializeField]
     private GameObject VRCameraObject;
 
     /// <summary>
-    /// Mapa de conexiones de navegador
+    /// Server that works through a WebSocket. It connects to an external siganling server.
     /// </summary>
-    Dictionary<int, WebRTCPeer> browserPeers = new Dictionary<int, WebRTCPeer>();
-    // Debe ser la IP del dispositivo que corre el servidor de Node
-    [SerializeField] string nodeHost = "192.168.1.21";
-    [SerializeField] int nodePort = 8080;
+    WebSocketServerRTC webSocketServer;
 
-    ClientWebSocket ws;
+    /// <summary>
+    /// An embeded Signaling Server in the game.
+    /// </summary>
+    SignalingServer signalingServer;
+
+    UIConnectionComponent connectionUI;
+    #endregion
+
+    #region Methods
+    public void SetUIComponent(UIConnectionComponent ui)
+    {
+        connectionUI = ui;
+    }
+
+    public void CreateSignalingServer()
+    {
+        GameObject obj = new GameObject("SignalingServer");
+        signalingServer = obj.AddComponent<SignalingServer>();
+        DontDestroyOnLoad(obj);
+    }
+
+    private void CreateWebSocketServer()
+    {
+        GameObject obj = new GameObject("WebSocketServer");
+        webSocketServer = obj.AddComponent<WebSocketServerRTC>();
+        DontDestroyOnLoad(obj);
+    }
     #endregion
 
     #region SharedMethods
@@ -66,152 +89,47 @@ public class StreamManager : MonoBehaviour
         return rt;
     }
 
-    #endregion
-
-    #region WebSocket
-    // Inicia la conexion al servidor de Node
-    public async void ConnectToNode()
-    {
-        ws = new ClientWebSocket();
-        Uri uri = new Uri($"ws://{nodeHost}:{nodePort}?type=unity");
-
-        try
-        {
-            await ws.ConnectAsync(uri, CancellationToken.None);
-            Debug.Log($"[StreamManager] Conectado a Node: {uri}");
-            _ = ReceiveLoop();
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"[StreamManager] Error conectando a Node: {ex.Message}");
-        }
-    }
-
-    // Bucle de recepcion de mensajes WebSockets
-    async Task ReceiveLoop()
-    {
-        var buffer = new byte[8192];
-        var sb = new StringBuilder();
-
-        while (ws.State == WebSocketState.Open)
-        {
-            try
-            {
-                WebSocketReceiveResult result;
-                do
-                {
-                    result = await ws.ReceiveAsync(
-                        new ArraySegment<byte>(buffer), CancellationToken.None);
-                    if (result.MessageType == WebSocketMessageType.Close) return;
-                    sb.Append(Encoding.UTF8.GetString(buffer, 0, result.Count));
-                }
-                while (!result.EndOfMessage);
-
-                string json = sb.ToString();
-                sb.Clear();
-
-                UnityMainThreadDispatcher.Instance().Enqueue(() => HandleIncoming(json));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"[StreamManager] ReceiveLoop: {ex.Message}");
-                break;
-            }
-        }
-    }
-
-    // Manejo de informacion recibida del servidor de Node
-    void HandleIncoming(string rawJson)
-    {
-        WSBaseMessage baseMsg = JsonUtility.FromJson<WSBaseMessage>(rawJson);
-
-        if (baseMsg.type == 99) // newClient
-        {
-            WSNewClientMessage newClient = JsonUtility.FromJson<WSNewClientMessage>(rawJson);
-            CreatePeerForBrowser(newClient.clientId);
-        }
-        else // SDP o ICE de un browser existente
-        {
-            WSTaggedMessage taggedMsg = JsonUtility.FromJson<WSTaggedMessage>(rawJson);
-            ProcessSignaling(taggedMsg.clientId, taggedMsg.type, taggedMsg.body);
-        }
-    }
-
-    // Creacion de objeto en escena que representa un cliente Navegador
-    void CreatePeerForBrowser(int clientId)
-    {
-        // Si ese navegador ya esta conectado, se ignora
-        if (browserPeers.ContainsKey(clientId)) return;
-
-        GameObject go = new GameObject($"WS-Peer_Browser_{clientId}");
-        WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
-        RenderTexture rt = CreateAnchoredCamera(clientId.ToString());
-        peer.Initialize("browser", rt, msg => SendToNode(msg, clientId));
-        browserPeers[clientId] = peer;
-        StartCoroutine(peer.CreateOffer());
-        Debug.Log($"[StreamManager] Peer creado para browser {clientId}");
-    }
-
-    // Manejo de mensajes de conexion
-    void ProcessSignaling(int clientId, int type, string body)
-    {
-        if (!browserPeers.TryGetValue(clientId, out var peer)) return;
-
-        if (type == (int)ConnectionEvent.ICE)
-        {
-            IceCandidateData data = JsonUtility.FromJson<IceCandidateData>(body);
-            peer.AddIceCandidate(new RTCIceCandidateInit
-            {
-                candidate = data.candidate,
-                sdpMid = data.sdpMid,
-                sdpMLineIndex = data.sdpMLineIndex
-            });
-        }
-        else if (type == (int)ConnectionEvent.SDP)
-        {
-            SessionDescriptionData data = JsonUtility.FromJson<SessionDescriptionData>(body);
-            StartCoroutine(peer.SetRemoteAnswer(data.ToRTCDesc()));
-        }
-        else if (type == (int)ConnectionEvent.DISCONNECT)
-        {
-            Destroy(peer.gameObject);
-            browserPeers.Remove(clientId);
-            Debug.Log($"[StreamManager] Peer eliminado para browser {clientId}");
-        }
-    }
-
-    // Envia informacion al servidor de node
-    async void SendToNode(SignalingMessage msg, int clientId)
-    {
-        if (ws?.State != WebSocketState.Open) return;
-        string escapedBody = msg.body.Replace("\\", "\\\\").Replace("\"", "\\\"");
-        string json = $"{{\"type\":{(int)msg.type},\"body\":\"{escapedBody}\",\"clientId\":{clientId}}}";
-        byte[] data = Encoding.UTF8.GetBytes(json);
-        await ws.SendAsync(new ArraySegment<byte>(data),
-            WebSocketMessageType.Text, true, CancellationToken.None);
-    }
-    #endregion
-
-    #region TCP
-
     /// <summary>
     /// Adds a client to the dictionary
     /// </summary>
     /// <param name="str">IP of the client</param>
     /// <param name="client">Client data</param>
-    public void addClient(string ip, ClientData client)
+    public bool addClient(string ip, ClientData client)
     {
-        clients.TryAdd(ip, client);
+        return clients.TryAdd(ip, client);
     }
 
     /// <summary>
     /// Removes a client form the dictionary
     /// </summary>
     /// <param name="str">IP of the client</param>
-    public void removeClient(string ip)
+    public bool removeClient(string ip)
     {
-        clients.TryRemove(ip, out var client);
+        return clients.TryRemove(ip, out var client);
     }
+
+    #endregion
+
+    #region WebSocket
+    // Creacion de objeto en escena que representa un cliente Navegador
+    public void CreatePeerForBrowser(ClientData client)
+    {
+        // Si ese navegador ya esta conectado, se ignora
+        string ip = client.ipAddress;
+        if (!addClient(ip, client)) return;
+
+        GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
+        WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
+        RenderTexture rt = CreateAnchoredCamera(ip);
+        peer.Initialize(ip, rt, msg => webSocketServer.SendToNode(msg, ip));
+        StartCoroutine(peer.CreateOffer());
+        clients[ip].webRtcPeer = peer;
+        Debug.Log($"[StreamManager] Created browser peer: {ip}");
+    }
+
+    #endregion
+
+    #region TCP
 
     /// <summary>
     /// Creates the client object and completes the WebRTC connection exchange
@@ -221,7 +139,7 @@ public class StreamManager : MonoBehaviour
     {
         // Add client to the dictionary
         string ip = client.ipAddress;
-        addClient(ip, client);
+        if (!addClient(ip, client)) return;
 
         // Create GameObject
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
@@ -246,6 +164,9 @@ public class StreamManager : MonoBehaviour
         peer.Initialize(ip, rt, msg => SendSignalingMessage(ip, msg));
         clients[ip].webRtcPeer = peer;
         StartCoroutine(peer.CreateOffer());
+        Debug.Log($"[StreamManager] Created device peer: {ip}");
+
+        connectionUI?.CreateUIRepresentation(ip);
     }
 
     void SendSignalingMessage(string ip, SignalingMessage msg)
@@ -280,6 +201,12 @@ public class StreamManager : MonoBehaviour
             RTCSessionDescription answer = data.ToRTCDesc();
             StartCoroutine(peer.webRtcPeer.SetRemoteAnswer(answer));
         }
+        else if (msg.type == ConnectionEvent.DISCONNECT)
+        {
+            Destroy(peer.webRtcPeer.gameObject);
+            removeClient(peer.ipAddress);
+            Debug.Log($"[StreamManager] Removed peer: {peer.ipAddress}");
+        }
     }
     #endregion
 
@@ -295,12 +222,9 @@ public class StreamManager : MonoBehaviour
         Instance = this;
     }
 
-    async void OnDestroy()
+    private void Start()
     {
-        if (ws?.State == WebSocketState.Open)
-            await ws.CloseAsync(WebSocketCloseStatus.NormalClosure,
-                "Bye", CancellationToken.None);
-        ws?.Dispose();
+        CreateWebSocketServer();
     }
     #endregion
 }

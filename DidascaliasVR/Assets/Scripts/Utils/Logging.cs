@@ -36,7 +36,7 @@ namespace Didascalia.Utils
             Debug.Log(logMessage, context);
 #else
             _ = context;
-            Console.WriteLine("[Didascalia]: " + message);
+            //Console.WriteLine("[Didascalia]: " + message);
 #endif
         }
         public static void Warning(string message, Object context)
@@ -49,7 +49,7 @@ namespace Didascalia.Utils
             Debug.LogWarning(logMessage, context);
 #else
             _ = context;
-            Console.WriteLine("[Didascalia] [warning]: " + message);
+            //Console.WriteLine("[Didascalia] [warning]: " + message);
 #endif
         }
         public static void Info(string message, Object context)
@@ -62,7 +62,7 @@ namespace Didascalia.Utils
             Debug.Log(logMessage, context);
 #else
             _ = context;
-            Console.WriteLine("[Didascalia] [info]: " + message);
+            //Console.WriteLine("[Didascalia] [info]: " + message);
 #endif
         }
     }

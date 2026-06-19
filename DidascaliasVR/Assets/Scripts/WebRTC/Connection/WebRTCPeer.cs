@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Text;
 using Unity.WebRTC;
 using UnityEngine;
-using UnityEngine.tvOS;
 
 public class WebRTCPeer : MonoBehaviour
 {

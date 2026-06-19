@@ -229,25 +229,11 @@ public class SignalingServer : MonoBehaviour {
 
     #region Monobehaviour
 
-    /// <summary>
-    /// Creates an GameObject and attaches this component to ensure it is initialized
-    /// before any scene is loaded. The object is marked as DontDestroyOnLoad so it
-    /// persists across scene transitions.
-    /// </summary>
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void CreateInstance()
-    {
-        var obj = new GameObject("SignalingServer");
-        obj.AddComponent<SignalingServer>();
-        DontDestroyOnLoad(obj);
-    }
-
     public void Start()
     {
         bufferSize = 1024;
         StartCoroutine(WebRTC.Update());
         StartServer();
-        StreamManager.Instance?.ConnectToNode();
     }
 
     void OnDestroy()
