@@ -44,7 +44,28 @@ public class StreamManager : MonoBehaviour
     /// </summary>
     SignalingServer signalingServer;
 
+    /// <summary>
+    /// Component for connection visual representation
+    /// </summary>
     UIConnectionComponent connectionUI;
+
+    /// <summary>
+    /// Frame's width
+    /// </summary>
+    [SerializeField]
+    uint frameWidth = 1280;
+
+    /// <summary>
+    /// Frame's heigth
+    /// </summary>
+    [SerializeField]
+    uint frameHeight = 720;
+
+    /// <summary>
+    /// Frame's depth
+    /// </summary>
+    [SerializeField]
+    uint frameDepth = 24;
     #endregion
 
     #region Methods
@@ -70,15 +91,8 @@ public class StreamManager : MonoBehaviour
 
     #region SharedMethods
 
-    private RenderTexture CreateAnchoredCamera(string ip)
+    private void CreateAnchoredCamera(string ip, ref RenderTexture rt)
     {
-        RenderTexture rt;
-        rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.BGRA32);
-        rt.enableRandomWrite = true;
-        rt.useMipMap = false;
-        rt.antiAliasing = 1;
-        rt.Create();
-
         GameObject streamGo = new GameObject($"StreamCamera-Peer_{ip}");
         streamGo.transform.position = VRCameraObject.transform.position;
         streamGo.transform.rotation = VRCameraObject.transform.rotation;
@@ -86,7 +100,6 @@ public class StreamManager : MonoBehaviour
         Camera cam = streamGo.AddComponent<Camera>();
         cam.targetTexture = rt;
         //cam.enabled = false -> TO-DO: que se active o desactive segun si es Streamer o Player;
-        return rt;
     }
 
     /// <summary>
@@ -120,10 +133,19 @@ public class StreamManager : MonoBehaviour
 
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
-        RenderTexture rt = CreateAnchoredCamera(ip);
+
+        RenderTexture rt;
+        rt = new RenderTexture((int)frameWidth, (int)frameHeight, (int)frameDepth, RenderTextureFormat.BGRA32);
+        rt.enableRandomWrite = true;
+        rt.useMipMap = false;
+        rt.antiAliasing = 1;
+        rt.Create();
+        CreateAnchoredCamera(ip, ref rt);
+        
         peer.Initialize(ip, rt, msg => webSocketServer.SendToNode(msg, ip));
         StartCoroutine(peer.CreateOffer());
         clients[ip].webRtcPeer = peer;
+
         Debug.Log($"[StreamManager] Created browser peer: {ip}");
     }
 
@@ -144,8 +166,13 @@ public class StreamManager : MonoBehaviour
         // Create GameObject
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
         go.GetComponent<Transform>().position = Vector3.zero;
-        
-        RenderTexture rt = null;
+
+        RenderTexture rt;
+        rt = new RenderTexture((int)frameWidth, (int)frameHeight, (int)frameDepth, RenderTextureFormat.BGRA32);
+        rt.enableRandomWrite = true;
+        rt.useMipMap = false;
+        rt.antiAliasing = 1;
+        rt.Create();
         // Player
         if (client.type == ClientType.PLAYER)
         {
@@ -156,7 +183,7 @@ public class StreamManager : MonoBehaviour
         // Streaming
         else
         {
-            rt = CreateAnchoredCamera(ip);
+            CreateAnchoredCamera(ip, ref rt);
         }
 
         // Create RTC connection Peer
@@ -164,9 +191,10 @@ public class StreamManager : MonoBehaviour
         peer.Initialize(ip, rt, msg => SendSignalingMessage(ip, msg));
         clients[ip].webRtcPeer = peer;
         StartCoroutine(peer.CreateOffer());
-        Debug.Log($"[StreamManager] Created device peer: {ip}");
 
         connectionUI?.CreateUIRepresentation(ip);
+
+        Debug.Log($"[StreamManager] Created device peer: {ip}");
     }
 
     void SendSignalingMessage(string ip, SignalingMessage msg)

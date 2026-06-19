@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIConnectionComponent : MonoBehaviour
 {
@@ -9,16 +10,17 @@ public class UIConnectionComponent : MonoBehaviour
     {
         transform.GetChild(0).gameObject.SetActive(false);
         transform.GetChild(1).gameObject.SetActive(true);
+        StreamManager.Instance?.SetUIComponent(this);
         StreamManager.Instance?.CreateSignalingServer();
     }
 
     public void CreateUIRepresentation(string ip)
     {
-        GameObject obj = Instantiate(UIPrefab);
+        GameObject obj = Instantiate(UIPrefab, gameObject.transform);
         Color color = new Color(Random.value, Random.value, Random.value);
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        Image sr = obj.transform.GetChild(0).GetComponent<Image>();
         sr.color = color;
-        TextMeshProUGUI text = GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI text = obj.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         text.color = color;
         text.text = ip;
     }
@@ -27,5 +29,4 @@ public class UIConnectionComponent : MonoBehaviour
     {
         SceneChanger.Instance?.ChangeScene(scene);
     }
-
 }

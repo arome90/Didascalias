@@ -869,6 +869,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StreamManager
   VRCameraObject: {fileID: 957171442}
+  frameWidth: 1280
+  frameHeight: 720
+  frameDepth: 24
 --- !u!1 &1291991530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1112,7 +1115,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1511617263}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 386233959}
+        m_TargetAssemblyTypeName: UIConnectionComponent, Assembly-CSharp
+        m_MethodName: SetConnection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1511617263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1201,9 +1216,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135cfb878325a6a428353403dd296f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimateCharacters
-  _text: {fileID: 0}
+  _text: {fileID: 1726191555}
   _additive: 0
-  _baseText: Conectando dispositivos...
+  _baseText: Conectando dispositivos
   _addedText: ...
   _characterEachTick: 1
   _tickTime: 0.5
@@ -1228,7 +1243,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Conectando dispositivos...
+  m_text: Conectando dispositivos
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
