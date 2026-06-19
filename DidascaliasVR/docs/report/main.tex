@@ -1,0 +1,77 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{anysize}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+
+\marginsize{2.2cm}{2.2cm}{1.5cm}{2.2cm}
+\setlength\columnsep{18pt}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=CadetBlue,
+	filecolor=CadetBlue,
+	urlcolor=CadetBlue,
+}
+
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{15pt}
+
+\begin{document}
+	\pagestyle{fancy}
+	\thispagestyle{empty}
+	\fancyhead[R]{\textit{Memoria técnica de prácticas curriculares}}
+	\fancyhead[L]{}
+
+	\begin{center}
+		\Large{\textbf{Memoria técnica de prácticas curriculares}}\\
+		\vspace{0.35cm}
+		\normalsize
+		Proyecto: \textbf{Didascalia VC - ACTLAB}\\
+		\vspace{0.15cm}
+		Alumno: \textbf{José Narciso Robles Durán}\\
+		Titulación: \textbf{Grado en diseño y desarrollo de videojuegos}\\
+		Universidad: \textbf{Universidad Complutense de Madrid}\\
+		Curso académico: \textbf{3.o}\\
+		Periodo de prácticas: \textbf{Desde: lunes 23 de febrero de 2026. Hasta: jueves 28 de mayo de 2026}\\
+		Lugar de realización: \textbf{ActLab, Facultad de Informática, remoto}\\
+	\end{center}
+
+	{\color{gray}\hrule}
+	\vspace{0.3cm}
+
+	\begin{abstract}
+		\input{./abstract.tex}
+	\end{abstract}
+
+	\vspace{0.2cm}
+	{\color{gray}\hrule}
+
+	\tableofcontents
+	\newpage
+
+	\input{./sections/1_datos_y_entidad.tex}
+	\input{./sections/2_contexto_proyecto.tex}
+	\input{./sections/3_actividad_tecnica.tex}
+	\input{./sections/4_resultados_verificacion.tex}
+	\input{./sections/5_relacion_estudios.tex}
+	\input{./sections/6_conclusion.tex}
+
+	\appendix
+	\input{./appendix.tex}
+\end{document}
