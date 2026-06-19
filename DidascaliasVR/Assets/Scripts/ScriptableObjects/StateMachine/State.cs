@@ -4,6 +4,9 @@ namespace Didascalia.StateMachine
 {
     public class State : ScriptableObject
     {
+        public const string MenuDirectory = "StateMachine/States/";
+        public const string MenuDirectoryNonNormative = MenuDirectory + "NonNormative/";
+
         protected StateMachine _machine;
 
         [SerializeField]

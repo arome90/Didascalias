@@ -95,4 +95,10 @@ namespace Didascalia.StateMachine.NonNormative
             };
         }
     }
+
+    internal struct ConflictAnimationPool
+    {
+        public Student.StudentAnimatorController.BooleanParameter[] BooleanAnimations;
+        public Student.StudentAnimatorController.TriggerParameter[] TriggerAnimations;
+    }
 }
