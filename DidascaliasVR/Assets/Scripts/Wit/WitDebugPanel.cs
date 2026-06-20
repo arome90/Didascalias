@@ -12,6 +12,9 @@ public class WitDebugPanel : MonoBehaviour
 
     [SerializeField]
     TextMeshProUGUI _studentsPanelText = null;
+    [SerializeField]
+    [TextArea]
+    private string _studentsPanelFormat = "Selected student:\n{0}";
 
     VerticalLayoutGroup _layout;
 
@@ -33,6 +36,6 @@ public class WitDebugPanel : MonoBehaviour
 
     public void ChangeStudentPanel(string students)
     {
-        _studentsPanelText.text = students;
+        _studentsPanelText.text = string.Format(_studentsPanelFormat, students);
     }
 }
