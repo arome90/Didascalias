@@ -96,9 +96,12 @@ namespace Didascalia.StateMachine.NonNormative
         }
     }
 
+    [System.Serializable]
     internal struct ConflictAnimationPool
     {
+        [SerializeField]
         public Student.StudentAnimatorController.BooleanParameter[] BooleanAnimations;
+        [SerializeField]
         public Student.StudentAnimatorController.TriggerParameter[] TriggerAnimations;
     }
 }

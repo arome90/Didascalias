@@ -81,7 +81,7 @@ namespace Didascalia.Student
         public static readonly int HashIsTalkingAnxiouslyTEA =          Animator.StringToHash("IsTalkingAnxiouslyTEA");
         public static readonly int HashIsStimulatedTEA =                Animator.StringToHash("IsStimulatedTEA");
 
-
+        [System.Serializable]
         public enum TriggerParameter
         {
             None,
@@ -100,6 +100,7 @@ namespace Didascalia.Student
             PlaceForgottenMaterial,
             GetMaterialOut
         }
+        [System.Serializable]
         public enum BooleanParameter
         {
             None,
