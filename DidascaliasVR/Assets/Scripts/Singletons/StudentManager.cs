@@ -14,7 +14,7 @@ public class StudentManager : Singleton<StudentManager>
 {
     [SerializeField,
         Tooltip("Prefab de estudiante")]
-    GameObject _studentPrefab;
+    GameObject[] _studentPrefab;
 
     [SerializeField,
         Tooltip("Prefab que representa un conflicto (con el script Conflict)")]
@@ -127,7 +127,9 @@ public class StudentManager : Singleton<StudentManager>
         Student last = null;
         for (int i = 0; i < _settings.NumStudents; ++i)
         {
-            GameObject go = Instantiate(_studentPrefab);
+            // TO DO -> cambiar la creacion de personajes por algo definitivo y no aleatorio 
+            int studentMeshID = UnityEngine.Random.Range(0, _studentPrefab.Length);
+            GameObject go = Instantiate(_studentPrefab[studentMeshID]);
             Student st = go.GetComponent<Student>();
 
             if (last != null) last.NextStudent = st;
