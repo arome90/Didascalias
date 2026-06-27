@@ -39,10 +39,10 @@ public class SceneChanger : Singleton<SceneChanger>
     /// tras hacer un fade-out
     /// </summary>
     /// <param name="newSceneName"> Escena a cargar </param>
-    public void ChangeScene(string newSceneName)
+    public static void ChangeScene(string newSceneName)
     {
-        this.newSceneName = newSceneName;
-        _fader.FadeOut(LoadScenes);
+        Instance.newSceneName = newSceneName;
+        Instance._fader.FadeOut(Instance.LoadScenes);
     }
 
     private async void LoadScenes()

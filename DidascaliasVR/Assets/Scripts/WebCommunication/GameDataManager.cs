@@ -21,7 +21,9 @@ namespace Didascalia
         /// </summary>
         private GameData _gameData = new GameData();
 
-        private string _sessionID;
+        private int maxPlayerDataCount = 50;
+
+        private string sessionID { get { return _connectionManager.SessionID; } }
 
         private string _path;
 
@@ -37,16 +39,17 @@ namespace Didascalia
         void Start()
         {
             _connectionManager = ConnectionManager.Instance;
-            _sessionID = _connectionManager.SessionID;
-            CreateNewEntry();
+            // CreateNewEntry();
+
+            if (sessionID != null && !_gameData.datas.ContainsKey(sessionID)) { CreateNewEntry(); }
             
             InvokeRepeating("SendDataByTime", timer, timer);
         }
 
-        private void CreateNewEntry()
+        public void CreateNewEntry()
         {
-            _gameData.datas[_sessionID] = new List<BaseData>();
-            _gameData.Session = _sessionID;
+            _gameData.datas[sessionID] = new List<BaseData>();
+            _gameData.Session = sessionID;
             string folderPath = Path.Combine(Application.persistentDataPath, "SessionData");
 
             // Crear la carpeta si no existe
@@ -55,15 +58,31 @@ namespace Didascalia
                 Directory.CreateDirectory(folderPath);
             }
 
-            _path = _sessionID + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff") + ".json";
+            _path = sessionID + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff") + ".json";
             _path = Path.Combine(folderPath, _path);
+        }
+
+        public void SendData(BaseData data)
+        {
+            lock (_gameData)
+            {
+                _gameData.datas[sessionID].Add(data);
+                if (_gameData.datas[sessionID].Count >= maxPlayerDataCount)
+                {
+                    SendJSON();
+                    // _ = WriterManager.Instance.WriteToStreamWriter(path, text);
+                    // gameData.datas[Session].Clear();
+                }
+            }
         }
 
         private void SendDataByTime()
         {
+            if (sessionID == null) return;
+
             lock (_gameData)
             {
-                if (_gameData.datas[_sessionID].Count > 0)
+                if (_gameData.datas[sessionID].Count > 0)
                 {
                     SendJSON();
                 }
@@ -72,31 +91,19 @@ namespace Didascalia
 
         private void SendJSON()
         {
-            string text = _gameData.ToJson();
-            _connectionManager.SendWebRequest(text);
-            _gameData.datas[_sessionID].Clear();
+            lock (_gameData)
+            {
+                string text = _gameData.ToJson();
+                _connectionManager.SendWebRequest(text);
+                _gameData.datas[sessionID].Clear();
+            }
         }
-
-        //public void SendData(BaseData data)
-        //{
-        //    lock (gameData)
-        //    {
-        //        gameData.datas[Session].Add(data);
-        //        if (gameData.datas[Session].Count >= maxPlayerDataCount)
-        //        {
-        //            string text = gameData.ToJson();
-        //            client.sendJson(text);
-        //            _ = WriterManager.Instance.WriteToStreamWriter(path, text);
-        //            gameData.datas[Session].Clear();
-        //        }
-        //    }
-        //}
 
         void OnDestroy()
         {
             Debug.Log("Destroying GameDataManager");
 
-            if (_gameData.datas[_sessionID].Count > 0)
+            if (_gameData.datas[sessionID].Count > 0)
             {
                 SendJSON();
                 _gameData.datas.Clear();

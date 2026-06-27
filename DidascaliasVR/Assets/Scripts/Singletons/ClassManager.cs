@@ -1,10 +1,11 @@
-using UnityEngine;
-using System.Collections.Generic;
+using Didascalia;
 using System;
-using UnityEngine.SceneManagement;
-using UnityEngine.AI;
-using Unity.AI.Navigation;
+using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Maneja la configuraci�n de la clase y la aplica seg�n corresponda.
@@ -140,6 +141,24 @@ public class ClassManager : Singleton<ClassManager>
         Tooltip("Distancia desde el centro de la clase hasta cada lateral de la misma. Utilizado para saber c�mmo colocar los escritorios"), 
         Range(2.0f, 40.5f)]
     private float _classWidth = 3.4f;
+
+    /// <summary>
+    /// Método PROVISIONAL de pausa de juego.
+    /// está fatal hecho
+    /// </summary>
+    public static void PauseGame()
+    {
+        Time.timeScale = 0.0f;
+    }
+
+    /// <summary>
+    /// Método PROVISIONAL de 'unpause' de juego.
+    /// está fatal hecho
+    /// </summary>
+    public static void ResumeGame()
+    {
+        Time.timeScale = 1.0f;
+    }
 
     /// <summary>
     /// Devuelve la posici�n de la puerta de la clase
@@ -372,9 +391,22 @@ public class ClassManager : Singleton<ClassManager>
         StudentManager.Instance.ResolveConflicts();
     }
 
+    public void SendData(string action, string type, List<string> alumnxs)
+    {
+        EventData d = new EventData(action, type, alumnxs);
+        GameDataManager.Instance.SendData(d);
+    }
+
     public void OnWebEventCalled(ReceivedWebMessage message)
     {
         Didascalia.Utils.Log.Info("WebMessageType: " + message.id, this);
+        
+        string actionInfo = "Web Event Called";
+        string typeInfo = message.id.ToString();
+        List<string> alumnxsInfo = new List<string>();
+        alumnxsInfo.Add(message.studentName);
+
+        SendData(actionInfo, typeInfo, alumnxsInfo);
 
         StudentManager.ConflictGenerationResult result = default;
         switch (message.id)

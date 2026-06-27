@@ -38,6 +38,7 @@ public class AnimateCharacters : MonoBehaviour
     public void StopAnimation()
     {
         _isPlaying = false;
+        _animateOnEnable = false;
     }
 
     IEnumerator AnimateCharactersCoroutine()

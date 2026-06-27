@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace ClassRoomVR
+namespace Assets.Scripts
 {
     [RequireComponent(typeof(AudioSource))]
     public class JawMove : MonoBehaviour

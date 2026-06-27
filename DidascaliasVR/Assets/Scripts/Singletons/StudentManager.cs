@@ -730,6 +730,7 @@ public class StudentManager : Singleton<StudentManager>
             conflict.name = $"Conflict_{type}_{descriptorName}";
             conflict.SetConflictiveStudent(GetStudentExpect(descriptorName));
             _activeConflicts.Add(descriptorName, conflict);
+            
             HandleConflict(descriptor);
             return new ConflictGenerationResult
             {

@@ -1,4 +1,5 @@
-﻿using Meta.WitAi.Json;
+﻿using Didascalia;
+using Meta.WitAi.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -173,6 +174,8 @@ public class ConnectionManager : Singleton<ConnectionManager>
     [SerializeField]
     string _initialUrl = "wss://cyclops-dev.uab.cat/game/";
 
+    string _currentUrl;
+
     WebSocket _socket = null;
 
     /// <summary>
@@ -231,24 +234,27 @@ public class ConnectionManager : Singleton<ConnectionManager>
         _socket.CloseAsync();
     }
 
-    public void ResetConnection(string url)
+    public static void ResetConnection(string url = "")
     {
-        if (_socket != null)
+        if (Instance._socket != null)
         {
-            _socket.OnOpen -= OnOpen;
-            _socket.OnMessage -= OnMessage;
-            _socket.OnClose -= OnClose;
+            Instance._socket.OnOpen -= Instance.OnOpen;
+            Instance._socket.OnMessage -= Instance.OnMessage;
+            Instance._socket.OnClose -= Instance.OnClose;
 
-            if (_socket.IsAlive)
+            if (Instance._socket.IsAlive)
             {
-                StopConnection();
+                Instance.StopConnection();
             }
         }
 
-        _socket = new WebSocket(url);
-        _socket.OnOpen += OnOpen;
-        _socket.OnMessage += OnMessage;
-        _socket.OnClose += OnClose;
+        Instance._socket = new WebSocket(url != null && url != String.Empty ? url : Instance._initialUrl);
+
+        Instance._socket.OnOpen += Instance.OnOpen;
+        Instance._socket.OnMessage += Instance.OnMessage;
+        Instance._socket.OnClose += Instance.OnClose;
+
+        Instance.StartConnection();
     }
 
     private void OnEnable()
@@ -424,6 +430,7 @@ public class ConnectionManager : Singleton<ConnectionManager>
     private void OnSessionReceived(ReceivedWebMessage message)
     {
         _sessionID = message.data;
+        GameDataManager.Instance.CreateNewEntry();
     }
 
     /// <summary>
@@ -476,7 +483,7 @@ public class ConnectionManager : Singleton<ConnectionManager>
     /// <param name="jsonData"> Datos a enviar en formato JSON </param>
     private IEnumerator SendWebRequestCoroutine(string jsonData)
     {
-        using (UnityWebRequest www = UnityWebRequest.Post(_socket.Url, jsonData, "application/json"))
+        using (UnityWebRequest www = UnityWebRequest.Post("https://cyclops-dev.uab.cat/data/vr", jsonData, "application/json"))
         {
             yield return www.SendWebRequest();
 

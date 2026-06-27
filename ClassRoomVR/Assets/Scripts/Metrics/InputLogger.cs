@@ -20,10 +20,6 @@ namespace ClassRoomVR
         // Datos estadísticos recopilados de ambas manos
         private HandsManager _hands;
 
-        //TO DO: VOICE VARIABLES
-        // Datos estadísticos recopilados de la voz
-        //private VoiceVariables _voice;
-
         // Lista interna para almacenar las diferencias de velocidad
         private float[] _list;
 

@@ -93,8 +93,7 @@ namespace Didascalia.Connection
             string selectedServerUrl = serverUrls[arg0];
             label.text = selectedServerUrl;
 
-            ConnectionManager.Instance.ResetConnection(selectedServerUrl);
-            ConnectionManager.Instance.StartConnection();
+            ConnectionManager.ResetConnection(selectedServerUrl);
         }
     }
 }
