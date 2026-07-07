@@ -14,7 +14,7 @@ public class WebSocketServerRTC : MonoBehaviour
 
     #region Variables
     // Debe ser la IP del dispositivo que corre el servidor de Node
-    [SerializeField] string nodeHost = "192.168.1.45";
+    [SerializeField] string nodeHost = "192.168.1.44";
     [SerializeField] int nodePort = 8080;
 
     ClientWebSocket ws;

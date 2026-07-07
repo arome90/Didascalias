@@ -76,16 +76,25 @@ public class StreamManager : MonoBehaviour
 
     public void CreateSignalingServer()
     {
-        GameObject obj = new GameObject("SignalingServer");
-        signalingServer = obj.AddComponent<SignalingServer>();
-        DontDestroyOnLoad(obj);
+        if (!signalingServer)
+        {
+            GameObject obj = new GameObject("SignalingServer");
+            signalingServer = obj.AddComponent<SignalingServer>();
+            DontDestroyOnLoad(obj);
+        }
+        else Debug.LogError("[StreamManager] Ya existe un SignalingServer en la escena.");
     }
 
     private void CreateWebSocketServer()
     {
-        GameObject obj = new GameObject("WebSocketServer");
-        webSocketServer = obj.AddComponent<WebSocketServerRTC>();
-        DontDestroyOnLoad(obj);
+        if (!webSocketServer)
+        {
+            GameObject obj = new GameObject("WebSocketServer");
+            webSocketServer = obj.AddComponent<WebSocketServerRTC>();
+            DontDestroyOnLoad(obj);
+        }
+        else Debug.LogError("[StreamManager] Ya existe un WebSocketServer en la escena.");
+        
     }
     #endregion
 
@@ -132,6 +141,7 @@ public class StreamManager : MonoBehaviour
         if (!addClient(ip, client)) return;
 
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
+        DontDestroyOnLoad(go);
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
 
         RenderTexture rt;
@@ -146,6 +156,8 @@ public class StreamManager : MonoBehaviour
         StartCoroutine(peer.CreateOffer());
         clients[ip].webRtcPeer = peer;
 
+        connectionUI?.CreateUIRepresentation(ip);
+
         Debug.Log($"[StreamManager] Created browser peer: {ip}");
     }
 
@@ -159,12 +171,19 @@ public class StreamManager : MonoBehaviour
     /// <param name="ip">IP of the client</param>
     public void CreatePeerForClient(ClientData client)
     {
+        if (ClassManager.Instance.Settings.NumStudents <= clients.Count)
+        {
+            Debug.LogWarning("[StreamManager] No puede haber más clientes que alumnos configurados");
+            return;
+        }
+
         // Add client to the dictionary
         string ip = client.ipAddress;
         if (!addClient(ip, client)) return;
 
         // Create GameObject
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
+        DontDestroyOnLoad(go);
         go.GetComponent<Transform>().position = Vector3.zero;
 
         RenderTexture rt;
@@ -248,11 +267,7 @@ public class StreamManager : MonoBehaviour
         }
 
         Instance = this;
-    }
-
-    private void Start()
-    {
-        CreateWebSocketServer();
+        DontDestroyOnLoad(gameObject);
     }
     #endregion
 }
