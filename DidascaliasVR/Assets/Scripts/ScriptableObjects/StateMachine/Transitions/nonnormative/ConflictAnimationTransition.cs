@@ -16,9 +16,9 @@ namespace Didascalia.StateMachine.NonNormative
         // GetMaterialOutRequested =>       HashIsGetMaterialOut
         // HyperstimulationRequested =>     HashIsStimulatedTEA
         [SerializeField]
-        private StudentAnimatorController.BooleanParameter _booleanParameter = StudentAnimatorController.BooleanParameter.None;
+        private StudentAnimatorController.BooleanStudentParameter _booleanParameter = StudentAnimatorController.BooleanStudentParameter.None;
         [SerializeField]
-        private StudentAnimatorController.TriggerParameter _triggerParameter = StudentAnimatorController.TriggerParameter.None;
+        private StudentAnimatorController.TriggerStudentParameter _triggerParameter = StudentAnimatorController.TriggerStudentParameter.None;
         [SerializeField]
         private StudentManager.ConflictType _conflictType = 0;
         [SerializeField]
@@ -54,13 +54,13 @@ namespace Didascalia.StateMachine.NonNormative
         public override void OnCheck()
         {
             // FIXME: PLACEHOLDER
-            if (_booleanParameter != StudentAnimatorController.BooleanParameter.None)
+            if (_booleanParameter != StudentAnimatorController.BooleanStudentParameter.None)
             {
-                _behaviour.Animator.SetBooleanParameter(StudentAnimatorController.HashFromBooleanParameter(_booleanParameter));
+                _behaviour.Animator.SetStudentBooleanParameter(StudentAnimatorController.HashFromBooleanParameter(_booleanParameter));
             }
-            if (_triggerParameter != StudentAnimatorController.TriggerParameter.None)
+            if (_triggerParameter != StudentAnimatorController.TriggerStudentParameter.None)
             {
-                _behaviour.Animator.SetTriggerParameter(StudentAnimatorController.HashFromTriggerParameter(_triggerParameter));
+                _behaviour.Animator.SetStudentTriggerParameter(StudentAnimatorController.HashFromTriggerParameter(_triggerParameter));
             }
 
             if (_unimplementedAnimation)
@@ -100,8 +100,8 @@ namespace Didascalia.StateMachine.NonNormative
     internal struct ConflictAnimationPool
     {
         [SerializeField]
-        public Student.StudentAnimatorController.BooleanParameter[] BooleanAnimations;
+        public Student.StudentAnimatorController.BooleanStudentParameter[] BooleanAnimations;
         [SerializeField]
-        public Student.StudentAnimatorController.TriggerParameter[] TriggerAnimations;
+        public Student.StudentAnimatorController.TriggerStudentParameter[] TriggerAnimations;
     }
 }

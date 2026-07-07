@@ -19,6 +19,8 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     protected bool _destroyOnLoad = false;
 
+    public static bool Exists { get { return _instance != null; } }
+
     protected virtual void Awake()
     {
         if(_instance == null)

@@ -21,6 +21,15 @@ namespace Didascalia.StateMachine
         /// </summary>
         Dictionary<string, MonoBehaviour> _data;
 
+        private void Awake()
+        {
+            #if UNITY_EDITOR
+            _debugText.gameObject.SetActive(true);
+            #else
+            _debugText.gameObject.SetActive(false);
+            #endif
+        }
+
         private void Start()
         {
             _data = new Dictionary<string, MonoBehaviour>();

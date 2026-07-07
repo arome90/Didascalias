@@ -42,12 +42,12 @@ namespace Didascalia.StateMachine.NonNormative
             if (animation < pool.BooleanAnimations.Length)
             {
                 var animationHash = Student.StudentAnimatorController.HashFromBooleanParameter(pool.BooleanAnimations[animation]);
-                _behaviour.Animator.SetBooleanParameter(animationHash);
+                _behaviour.Animator.SetStudentBooleanParameter(animationHash);
             }
             else
             {
                 var animationHash = Student.StudentAnimatorController.HashFromTriggerParameter(pool.TriggerAnimations[animation - pool.BooleanAnimations.Length]);
-                _behaviour.Animator.SetTriggerParameter(animationHash);
+                _behaviour.Animator.SetStudentTriggerParameter(animationHash);
             } 
         }
     }

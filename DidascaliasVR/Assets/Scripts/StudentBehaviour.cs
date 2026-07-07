@@ -125,7 +125,7 @@ public class StudentBehaviour : MonoBehaviour
     IEnumerator MovementAnimation(bool wantsToWalk, float time)
     {
         int hashFloatSpeed = Didascalia.Student.StudentAnimatorController.HashFloatSpeed;
-        float speed = _animator.Animator.GetFloat(hashFloatSpeed);
+        float speed = _animator.StudentAnimator.GetFloat(hashFloatSpeed);
         float initialSpeed = speed;
 
         float goal;
@@ -139,7 +139,7 @@ public class StudentBehaviour : MonoBehaviour
             elapsedTime += Time.deltaTime;
             speed = Mathf.Lerp(initialSpeed, goal, elapsedTime / time);
 
-            _animator.Animator.SetFloat(hashFloatSpeed, speed);
+            _animator.StudentAnimator.SetFloat(hashFloatSpeed, speed);
 
             yield return new WaitForEndOfFrame();
 
@@ -218,7 +218,7 @@ public class StudentBehaviour : MonoBehaviour
     public void StandUp()
     {
         OnStandUpRequested.Invoke();
-        if (_animator.Animator.GetBehaviour<OnStandUp>() == null)
+        if (_animator.StudentAnimator.GetBehaviour<OnStandUp>() == null)
         {
             Didascalia.Utils.Error.DebugbreakFailMessage("OnStandUp behaviour not found in animator", this);
         } 

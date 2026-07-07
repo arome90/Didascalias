@@ -50,12 +50,26 @@ public class StudentManager : Singleton<StudentManager>
 
     private void OnEnable()
     {
-        VoiceActivation.Instance.OnValidatePartialResponse.AddListener(SelectStudents);
+        if (VoiceActivation.Exists)
+        {
+            VoiceActivation.Instance.OnValidatePartialResponse.AddListener(SelectStudents);
+        }
+        else
+        {
+            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
+        }
     }
 
     private void OnDisable()
     {
-        VoiceActivation.Instance.OnValidatePartialResponse.RemoveListener(SelectStudents);
+        if (VoiceActivation.Exists)
+        {
+            VoiceActivation.Instance.OnValidatePartialResponse.RemoveListener(SelectStudents);
+        }
+        else
+        {
+            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
+        }
     }
 
     /// <summary>
@@ -119,10 +133,10 @@ public class StudentManager : Singleton<StudentManager>
 
         // Esto sirve para decirle al componente LookAtConstaint de la Name Tag del estudiante
         // que mira constantemente a la c�mra del jugador. Para encontrar al jugador, buscamos
-        // el XR Origin, que es un componente �nico del jugador.
+        // una Camara, que es un componente �nico del jugador.
         ConstraintSource constraintSource = new ConstraintSource 
-            { sourceTransform = FindAnyObjectByType<XROrigin>().
-            GetComponentInChildren<Camera>().transform, weight = 1.0f };
+            { sourceTransform = FindAnyObjectByType<Camera>().
+            transform, weight = 1.0f };
 
         Student last = null;
         for (int i = 0; i < _settings.NumStudents; ++i)
@@ -769,6 +783,11 @@ public class StudentManager : Singleton<StudentManager>
             _activeConflicts[st].ReceivePositiveResolution();
         }
 
+        _activeConflicts.Clear();
+    }
+
+    public void RemoveAllConflicts()
+    {
         _activeConflicts.Clear();
     }
 

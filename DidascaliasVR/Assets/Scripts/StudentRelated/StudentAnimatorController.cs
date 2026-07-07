@@ -3,18 +3,31 @@ using UnityEngine;
 
 namespace Didascalia.Student
 {
-    [RequireComponent(typeof(Animator))]
     internal class StudentAnimatorController : MonoBehaviour
     {
-        private Animator animator = null;
-        public Animator Animator => animator;
+        [SerializeField]
+        private Animator studentAnimator = null;
+        public Animator StudentAnimator => studentAnimator;
+
+        private Animator deskAnimator = null;
+        public Animator DeskAnimator => deskAnimator;
         
+        public void SetDeskAnimator(Animator desk)
+        {
+            deskAnimator = desk;
+        }
+
         // top-level states
+        /// <summary>
+        /// Hash para el parámetro "OnFoot" del Animator del Desk y del Student
+        /// </summary>
         public static readonly int HashIsOnFoot =   Animator.StringToHash("OnFoot");
 
         // other
         public static readonly int HashFloatSpeed = Animator.StringToHash("Speed");
 
+        // Los parámetros compartidos entre Desk y Student vamos a hacer que tengan el mismo nombre,
+        // así evitamos problemas
 
         // Standing
         public static readonly int HashTriggerEnterDesk =           Animator.StringToHash("TriggerEnterDesk");
@@ -80,9 +93,15 @@ namespace Didascalia.Student
         public static readonly int HashIsTalkingCalmlyTEA =             Animator.StringToHash("IsTalkingCalmlyTEA");
         public static readonly int HashIsTalkingAnxiouslyTEA =          Animator.StringToHash("IsTalkingAnxiouslyTEA");
         public static readonly int HashIsStimulatedTEA =                Animator.StringToHash("IsStimulatedTEA");
+        
+        void Awake()
+        {
+            Utils.Error.DebugbreakFailUnless(studentAnimator != null, "Animator component is missing", this);
+        }
 
+        #region StudentParameters
         [System.Serializable]
-        public enum TriggerParameter
+        public enum TriggerStudentParameter
         {
             None,
             EnterDesk,
@@ -101,7 +120,7 @@ namespace Didascalia.Student
             GetMaterialOut
         }
         [System.Serializable]
-        public enum BooleanParameter
+        public enum BooleanStudentParameter
         {
             None,
             OnFoot,
@@ -153,7 +172,7 @@ namespace Didascalia.Student
             IsStimulatedTEA
         }
 
-        private static readonly HashSet<int> ValidTriggerParameterHashes = new HashSet<int>
+        private static readonly HashSet<int> ValidStudentTriggerParameterHashes = new HashSet<int>
         {
             HashTriggerEnterDesk,
             HashTriggerExitDesk,
@@ -170,7 +189,7 @@ namespace Didascalia.Student
             HashTriggerPlaceForgottenMaterial,
             HashTriggerGetMaterialOut
         };
-        private static readonly HashSet<int> ValidBooleanParameterHashes = new HashSet<int>
+        private static readonly HashSet<int> ValidStudentBooleanParameterHashes = new HashSet<int>
         {
             HashIsOnFoot,
 
@@ -222,68 +241,158 @@ namespace Didascalia.Student
             HashIsTalkingAnxiouslyTEA,
             HashIsStimulatedTEA
         };
-        public uint TriggerParameterCount => (uint)ValidTriggerParameterHashes.Count;
-        public uint BooleanParameterCount => (uint)ValidBooleanParameterHashes.Count;
-        public uint ParameterCount => TriggerParameterCount + BooleanParameterCount;
+        public uint TriggerStudentParameterCount => (uint)ValidStudentTriggerParameterHashes.Count;
+        public uint BooleanStudentParameterCount => (uint)ValidStudentBooleanParameterHashes.Count;
+        public uint StudentParameterCount => TriggerStudentParameterCount + BooleanStudentParameterCount;
+        #endregion
 
-        void Awake()
+        #region DeskParameters
+        [System.Serializable]
+        public enum TriggerDeskParameter
         {
-            animator = GetComponent<Animator>();
-            Utils.Error.DebugbreakFailUnless(animator != null, "Animator component is missing", this);
+            None,
+            Mat,
+            Mat_Fail
+        
+        }
+        [System.Serializable]
+        public enum BooleanDeskParameter
+        {
+            None,
+            OnFoot,
+            Write,
+            Draw
         }
 
-        public static void EnsureBooleanHash(int hash, Object context)
+        private static readonly HashSet<int> ValidDeskTriggerParameterHashes = new HashSet<int>
+        {
+            HashTriggerGetMaterialOut,
+            HashIsGetMaterialOutWrong
+        };
+
+        private static readonly HashSet<int> ValidDeskBooleanParameterHashes = new HashSet<int>
+        {
+            HashIsOnFoot,
+            HashIsWriting,
+            HashIsDrawing
+        };
+
+        public uint TriggerDeskParameterCount => (uint)ValidDeskTriggerParameterHashes.Count;
+        public uint BooleanDeskParameterCount => (uint)ValidDeskBooleanParameterHashes.Count;
+        public uint DeskParameterCount => TriggerDeskParameterCount + BooleanDeskParameterCount;
+        #endregion
+
+
+        #region StudentMethods
+        public static void EnsureStudentBooleanHash(int hash, Object context)
         {
             Utils.Error.DebugbreakFailUnless(
-                ValidBooleanParameterHashes.Contains(hash),
+                ValidStudentBooleanParameterHashes.Contains(hash),
                 $"Hash {hash} is not a valid boolean parameter hash for StudentAnimatorController",
                 context
             );
         }
-        public static void EnsureTriggerHash(int hash, Object context)
+        public static void EnsureStudentTriggerHash(int hash, Object context)
         {
             Utils.Error.DebugbreakFailUnless(
-                ValidTriggerParameterHashes.Contains(hash),
+                ValidStudentTriggerParameterHashes.Contains(hash),
                 $"Hash {hash} is not a valid trigger parameter hash for StudentAnimatorController",
                 context
             );
         }
-        public void EnsureBooleanHash(int hash) => EnsureBooleanHash(hash, this);
-        public void EnsureTriggerHash(int hash) => EnsureTriggerHash(hash, this);
-        public void EnsureHash(int hash)
+        public void EnsureStudentBooleanHash(int hash) => EnsureStudentBooleanHash(hash, this);
+        public void EnsureStudentTriggerHash(int hash) => EnsureStudentTriggerHash(hash, this);
+        public void EnsureStudentHash(int hash)
         {
             Utils.Error.DebugbreakFailUnless(
-                ValidBooleanParameterHashes.Contains(hash) || ValidTriggerParameterHashes.Contains(hash),
+                ValidStudentBooleanParameterHashes.Contains(hash) || ValidStudentTriggerParameterHashes.Contains(hash),
                 $"Hash {hash} is not a valid parameter hash for StudentAnimatorController",
                 this
             );
         }
 
-        public void SetBooleanParameterValue(int hash, bool value)
+        public void SetStudentBoleanParameterValue(int hash, bool value)
         {
-            EnsureBooleanHash(hash);
-            animator.SetBool(hash, value);
+            EnsureStudentBooleanHash(hash);
+            studentAnimator.SetBool(hash, value);
         }
-        public void SetBooleanParameter(int hash) => SetBooleanParameterValue(hash, true);
-        public void ResetBooleanParameter(int hash) => SetBooleanParameterValue(hash, false);
+        public void SetStudentBooleanParameter(int hash) => SetStudentBoleanParameterValue(hash, true);
+        public void ResetStudentBooleanParameter(int hash) => SetStudentBoleanParameterValue(hash, false);
 
-        public void SetTriggerParameter(int hash)
+        public void SetStudentTriggerParameter(int hash)
         {
-            EnsureTriggerHash(hash);
-            animator.SetTrigger(hash);
-        }
-        public void ResetTriggerParameter(int hash)
-        {
-            EnsureTriggerHash(hash);
-            animator.ResetTrigger(hash);
+            EnsureStudentTriggerHash(hash);
+            studentAnimator.SetTrigger(hash);
         }
 
+        public void ResetStudentTriggerParameter(int hash)
+        {
+            EnsureStudentTriggerHash(hash);
+            studentAnimator.ResetTrigger(hash);
+        }
+        #endregion
 
-        public void SetOnFoot() => SetBooleanParameter(HashIsOnFoot);
-        public void UnsetOnFoot() => ResetBooleanParameter(HashIsOnFoot);
+        #region DeskMethods
+        public static void EnsureDeskBooleanHash(int hash, Object context)
+        {
+            Utils.Error.DebugbreakFailUnless(
+                ValidDeskBooleanParameterHashes.Contains(hash),
+                $"Hash {hash} is not a valid boolean parameter hash for StudentAnimatorController",
+                context
+            );
+        }
+        public static void EnsureDeskTriggerHash(int hash, Object context)
+        {
+            Utils.Error.DebugbreakFailUnless(
+                ValidDeskTriggerParameterHashes.Contains(hash),
+                $"Hash {hash} is not a valid trigger parameter hash for StudentAnimatorController",
+                context
+            );
+        }
+        public void EnsureDeskBooleanHash(int hash) => EnsureDeskBooleanHash(hash, this);
+        public void EnsureDeskTriggerHash(int hash) => EnsureDeskTriggerHash(hash, this);
+        public void EnsureDeskHash(int hash)
+        {
+            Utils.Error.DebugbreakFailUnless(
+                ValidDeskBooleanParameterHashes.Contains(hash) || ValidDeskTriggerParameterHashes.Contains(hash),
+                $"Hash {hash} is not a valid parameter hash for StudentAnimatorController",
+                this
+            );
+        }
 
+        public void SetDeskBoleanParameterValue(int hash, bool value)
+        {
+            EnsureDeskBooleanHash(hash);
+            deskAnimator.SetBool(hash, value);
+        }
+        public void SetDeskBooleanParameter(int hash) => SetDeskBoleanParameterValue(hash, true);
+        public void ResetDeskBooleanParameter(int hash) => SetDeskBoleanParameterValue(hash, false);
 
-        public static int HashFromTriggerParameter(TriggerParameter parameter)
+        public void SetDeskTriggerParameter(int hash)
+        {
+            EnsureDeskTriggerHash(hash);
+            deskAnimator.SetTrigger(hash);
+        }
+
+        public void ResetDeskTriggerParameter(int hash)
+        {
+            EnsureDeskTriggerHash(hash);
+            deskAnimator.ResetTrigger(hash);
+        }
+        #endregion
+
+        public void SetOnFoot() 
+        { 
+            SetStudentBooleanParameter(HashIsOnFoot);
+            SetDeskBooleanParameter(HashIsOnFoot);
+        }
+        public void UnsetOnFoot()
+        {
+            ResetStudentBooleanParameter(HashIsOnFoot);
+            ResetDeskBooleanParameter(HashIsOnFoot);
+        }
+
+        public static int HashFromTriggerParameter(TriggerStudentParameter parameter)
         {
             int HashInvalidParameter()
             {
@@ -292,27 +401,27 @@ namespace Didascalia.Student
             }
             var result = parameter switch
             {
-                TriggerParameter.None =>                    HashInvalidParameter(),
-                TriggerParameter.EnterDesk =>               HashTriggerEnterDesk,
-                TriggerParameter.ExitDesk =>                HashTriggerExitDesk,
-                TriggerParameter.TurnLeft =>                HashTriggerTurnLeft,
-                TriggerParameter.TurnRight =>               HashTriggerTurnRight,
-                TriggerParameter.OpenDoorOutside =>         HashTriggerOpenDoorOutside,
-                TriggerParameter.OpenDoorInside =>          HashTriggerOpenDoorInside,
-                TriggerParameter.CloseDoorOutside =>        HashTriggerCloseDoorOutside,
-                TriggerParameter.CloseDoorInside =>         HashTriggerCloseDoorInside,
-                TriggerParameter.TalkCalm =>                HashTriggerTalkCalm,
-                TriggerParameter.TalkAnxious =>             HashTriggerTalkAnxious,
-                TriggerParameter.AnnoyLeft =>               HashTriggerAnnoyLeft,
-                TriggerParameter.AnnoyRight =>              HashTriggerAnnoyRight,
-                TriggerParameter.PlaceForgottenMaterial =>  HashTriggerPlaceForgottenMaterial,
-                TriggerParameter.GetMaterialOut =>          HashTriggerGetMaterialOut,
+                TriggerStudentParameter.None =>                    HashInvalidParameter(),
+                TriggerStudentParameter.EnterDesk =>               HashTriggerEnterDesk,
+                TriggerStudentParameter.ExitDesk =>                HashTriggerExitDesk,
+                TriggerStudentParameter.TurnLeft =>                HashTriggerTurnLeft,
+                TriggerStudentParameter.TurnRight =>               HashTriggerTurnRight,
+                TriggerStudentParameter.OpenDoorOutside =>         HashTriggerOpenDoorOutside,
+                TriggerStudentParameter.OpenDoorInside =>          HashTriggerOpenDoorInside,
+                TriggerStudentParameter.CloseDoorOutside =>        HashTriggerCloseDoorOutside,
+                TriggerStudentParameter.CloseDoorInside =>         HashTriggerCloseDoorInside,
+                TriggerStudentParameter.TalkCalm =>                HashTriggerTalkCalm,
+                TriggerStudentParameter.TalkAnxious =>             HashTriggerTalkAnxious,
+                TriggerStudentParameter.AnnoyLeft =>               HashTriggerAnnoyLeft,
+                TriggerStudentParameter.AnnoyRight =>              HashTriggerAnnoyRight,
+                TriggerStudentParameter.PlaceForgottenMaterial =>  HashTriggerPlaceForgottenMaterial,
+                TriggerStudentParameter.GetMaterialOut =>          HashTriggerGetMaterialOut,
                 _ => HashInvalidParameter(),
             };
-            EnsureTriggerHash(result, null);
+            EnsureStudentTriggerHash(result, null);
             return result;
         }
-        public static int HashFromBooleanParameter(BooleanParameter parameter)
+        public static int HashFromBooleanParameter(BooleanStudentParameter parameter)
         {
             int HashInvalidParameter()
             {
@@ -321,57 +430,57 @@ namespace Didascalia.Student
             }
             var result = parameter switch
             {
-                BooleanParameter.None =>                   HashInvalidParameter(),
-                BooleanParameter.OnFoot =>                 HashIsOnFoot,
-                BooleanParameter.IsFloor =>                HashIsFloor,
-                BooleanParameter.IsFloorAnxiety =>         HashIsFloorAnxiety,
-                BooleanParameter.IsFloorAnxietyTEA =>      HashIsFloorAnxietyTEA,
-                BooleanParameter.IsGrabClassMaterial =>    HashIsGrabClassMaterial,
+                BooleanStudentParameter.None =>                   HashInvalidParameter(),
+                BooleanStudentParameter.OnFoot =>                 HashIsOnFoot,
+                BooleanStudentParameter.IsFloor =>                HashIsFloor,
+                BooleanStudentParameter.IsFloorAnxiety =>         HashIsFloorAnxiety,
+                BooleanStudentParameter.IsFloorAnxietyTEA =>      HashIsFloorAnxietyTEA,
+                BooleanStudentParameter.IsGrabClassMaterial =>    HashIsGrabClassMaterial,
                 // BooleanParameter.IsGrabClassMaterialIdle => HashIsGrabClassMaterialIdle,
-                BooleanParameter.IsBotherStanding =>       HashIsBotherStanding,
-                BooleanParameter.IsBotherStandingTEA =>    HashIsBotherStandingTEA,
-                BooleanParameter.IsPayingAttention1 =>     HashIsPayingAttention1,
-                BooleanParameter.IsPayingAttention2 =>     HashIsPayingAttention2,
-                BooleanParameter.IsHandRaised =>           HashIsHandRaised,
-                BooleanParameter.IsScared =>               HashIsScared,
-                BooleanParameter.IsBored =>                HashIsBored,
-                BooleanParameter.IsPhoning =>              HashIsPhoning,
-                BooleanParameter.IsLookingBack =>          HashIsLookingBack,
+                BooleanStudentParameter.IsBotherStanding =>       HashIsBotherStanding,
+                BooleanStudentParameter.IsBotherStandingTEA =>    HashIsBotherStandingTEA,
+                BooleanStudentParameter.IsPayingAttention1 =>     HashIsPayingAttention1,
+                BooleanStudentParameter.IsPayingAttention2 =>     HashIsPayingAttention2,
+                BooleanStudentParameter.IsHandRaised =>           HashIsHandRaised,
+                BooleanStudentParameter.IsScared =>               HashIsScared,
+                BooleanStudentParameter.IsBored =>                HashIsBored,
+                BooleanStudentParameter.IsPhoning =>              HashIsPhoning,
+                BooleanStudentParameter.IsLookingBack =>          HashIsLookingBack,
                 // BooleanParameter.IsTalkingBack =>          HashIsTalkingBack,
-                BooleanParameter.IsWriting =>              HashIsWriting,
-                BooleanParameter.IsDrawing =>              HashIsDrawing,
-                BooleanParameter.IsGetMaterialOutWrong =>  HashIsGetMaterialOutWrong,
-                BooleanParameter.IsLaughing =>             HashIsLaughing,
-                BooleanParameter.IsLaughingAlternative =>  HashIsLaughingAlternative,
-                BooleanParameter.IsLaughingPointing =>     HashIsLaughingPointing,
-                BooleanParameter.IsIdlingLeft =>           HashIsIdlingLeft,
-                BooleanParameter.IsTalkingLeft =>          HashIsTalkingLeft,
-                BooleanParameter.IsLaughingLeft =>         HashIsLaughingLeft,
-                BooleanParameter.IsLaughingPointingLeft => HashIsLaughingPointingLeft,
-                BooleanParameter.IsIdlingRight =>          HashIsIdlingRight,
-                BooleanParameter.IsTalkingRight =>         HashIsTalkingRight,
-                BooleanParameter.IsLaughingRight =>        HashIsLaughingRight,
-                BooleanParameter.IsLaughingPointingRight=> HashIsLaughingPointingRight,
-                BooleanParameter.IsAnxious =>              HashIsAnxious,
-                BooleanParameter.IsAnxiousAlternative1 =>  HashIsAnxiousAlternative1,
-                BooleanParameter.IsAnxiousAlternative2 =>  HashIsAnxiousAlternative2,
-                BooleanParameter.IsCrying =>               HashIsCrying,
-                BooleanParameter.IsCalmingDown =>          HashIsCalmingDown,
-                BooleanParameter.IsJustifying =>           HashIsJustifying,
-                BooleanParameter.IsAnnoyed =>              HashIsAnnoyed,
-                BooleanParameter.IsAnnoyedLeft =>          HashIsAnnoyedLeft,
-                BooleanParameter.IsAnnoyedRight =>         HashIsAnnoyedRight,
-                BooleanParameter.IsTalkingFront =>         HashIsTalkingFront,
-                BooleanParameter.IsBotheringLeft =>        HashIsBotheringLeft,
-                BooleanParameter.IsBotheringRight =>       HashIsBotheringRight,
-                BooleanParameter.IsIdlingTEA =>            HashIsIdlingTEA,
-                BooleanParameter.IsLostSightTEA =>         HashIsLostSightTEA,
-                BooleanParameter.IsTalkingCalmlyTEA =>     HashIsTalkingCalmlyTEA,
-                BooleanParameter.IsTalkingAnxiouslyTEA =>  HashIsTalkingAnxiouslyTEA,
-                BooleanParameter.IsStimulatedTEA =>        HashIsStimulatedTEA,
+                BooleanStudentParameter.IsWriting =>              HashIsWriting,
+                BooleanStudentParameter.IsDrawing =>              HashIsDrawing,
+                BooleanStudentParameter.IsGetMaterialOutWrong =>  HashIsGetMaterialOutWrong,
+                BooleanStudentParameter.IsLaughing =>             HashIsLaughing,
+                BooleanStudentParameter.IsLaughingAlternative =>  HashIsLaughingAlternative,
+                BooleanStudentParameter.IsLaughingPointing =>     HashIsLaughingPointing,
+                BooleanStudentParameter.IsIdlingLeft =>           HashIsIdlingLeft,
+                BooleanStudentParameter.IsTalkingLeft =>          HashIsTalkingLeft,
+                BooleanStudentParameter.IsLaughingLeft =>         HashIsLaughingLeft,
+                BooleanStudentParameter.IsLaughingPointingLeft => HashIsLaughingPointingLeft,
+                BooleanStudentParameter.IsIdlingRight =>          HashIsIdlingRight,
+                BooleanStudentParameter.IsTalkingRight =>         HashIsTalkingRight,
+                BooleanStudentParameter.IsLaughingRight =>        HashIsLaughingRight,
+                BooleanStudentParameter.IsLaughingPointingRight=> HashIsLaughingPointingRight,
+                BooleanStudentParameter.IsAnxious =>              HashIsAnxious,
+                BooleanStudentParameter.IsAnxiousAlternative1 =>  HashIsAnxiousAlternative1,
+                BooleanStudentParameter.IsAnxiousAlternative2 =>  HashIsAnxiousAlternative2,
+                BooleanStudentParameter.IsCrying =>               HashIsCrying,
+                BooleanStudentParameter.IsCalmingDown =>          HashIsCalmingDown,
+                BooleanStudentParameter.IsJustifying =>           HashIsJustifying,
+                BooleanStudentParameter.IsAnnoyed =>              HashIsAnnoyed,
+                BooleanStudentParameter.IsAnnoyedLeft =>          HashIsAnnoyedLeft,
+                BooleanStudentParameter.IsAnnoyedRight =>         HashIsAnnoyedRight,
+                BooleanStudentParameter.IsTalkingFront =>         HashIsTalkingFront,
+                BooleanStudentParameter.IsBotheringLeft =>        HashIsBotheringLeft,
+                BooleanStudentParameter.IsBotheringRight =>       HashIsBotheringRight,
+                BooleanStudentParameter.IsIdlingTEA =>            HashIsIdlingTEA,
+                BooleanStudentParameter.IsLostSightTEA =>         HashIsLostSightTEA,
+                BooleanStudentParameter.IsTalkingCalmlyTEA =>     HashIsTalkingCalmlyTEA,
+                BooleanStudentParameter.IsTalkingAnxiouslyTEA =>  HashIsTalkingAnxiouslyTEA,
+                BooleanStudentParameter.IsStimulatedTEA =>        HashIsStimulatedTEA,
                 _ => HashInvalidParameter(),
             };
-            EnsureBooleanHash(result, null);
+            EnsureStudentBooleanHash(result, null);
             return result;
         }
     }

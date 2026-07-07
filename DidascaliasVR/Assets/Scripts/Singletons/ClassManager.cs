@@ -1,8 +1,11 @@
 using Didascalia;
+using Didascalia.Student;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.AI.Navigation;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -203,12 +206,26 @@ public class ClassManager : Singleton<ClassManager>
 
     private void Start()
     {
-        SceneChanger.Instance.OnSceneChanged.AddListener(ActivateClassOnSceneChanged);
+        if (SceneChanger.Exists)
+        {
+            SceneChanger.Instance.OnSceneChanged.AddListener(ActivateClassOnSceneChanged);
+        }
+        else
+        {
+            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
+        }
     }
 
     private void OnDestroy()
     {
-        SceneChanger.Instance.OnSceneChanged.RemoveListener(ActivateClassOnSceneChanged);
+        if (SceneChanger.Exists)
+        {   
+            SceneChanger.Instance.OnSceneChanged.RemoveListener(ActivateClassOnSceneChanged);
+        }
+        else
+        {
+            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
+        }
     }
 
     /// <summary>
@@ -222,11 +239,9 @@ public class ClassManager : Singleton<ClassManager>
         if (
             // FIXME: this is a temporary solution, we should find a better way to determine when to generate the class
             (classScene.name == "Class" || classScene.name == "newClass")
-            && menuScene == "Menu"
+            && (menuScene == "Menu" || menuScene == "newMenu")
         ) {
-            GenerateClass();
-            AddStudentsToDesks();
-            ConnectionManager.Instance.ClassStarted();
+            StartClass();
         }
     }
 
@@ -362,7 +377,7 @@ public class ClassManager : Singleton<ClassManager>
     }
 
     /// <summary>
-    /// A�ade a los estudiantes en cada escritorio seg�n las Class Settings
+    /// Agrega a los estudiantes en cada escritorio segun las Class Settings
     /// </summary>
     void AddStudentsToDesks()
     {
@@ -370,17 +385,25 @@ public class ClassManager : Singleton<ClassManager>
         int i = 0;
         foreach (Student st in students)
         {
-            // agent.enabled = false;
-            
+            // setting the proper desk animator
+            // we must search the animator prior to setting the student's position, since the deskAnimator
+            // would the the student animator instead. that's sad
+            Animator deskAnimator = _desks[i].GetComponent<Animator>();
+            if (deskAnimator == null) deskAnimator = _desks[i].GetComponentInChildren<Animator>();
+            st.GetComponent<StudentAnimatorController>().SetDeskAnimator(deskAnimator);
+
+            // setting position
             st.transform.parent = _desks[i]
                 .GetComponentsInChildren<Transform>()
                 .First(t => t.gameObject.layer == LayerMask.NameToLayer("Marker"));
             st.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            i++;
 
+            // setting up navigation/pathfinding
             NavMeshAgent agent = st.GetComponent<NavMeshAgent>();
             agent.Warp(st.transform.position);
             agent.enabled = true;
+
+            i++; // since there are always more desks than students, this is fine :)
         }
 
         FindAnyObjectByType<NavMeshSurface>().BuildNavMesh();
@@ -391,10 +414,34 @@ public class ClassManager : Singleton<ClassManager>
         StudentManager.Instance.ResolveConflicts();
     }
 
+    public void RemoveAllConflicts()
+    {
+        StudentManager.Instance.RemoveAllConflicts();
+    }
+
     public void SendData(string action, string type, List<string> alumnxs)
     {
         EventData d = new EventData(action, type, alumnxs);
         GameDataManager.Instance.SendData(d);
+    }
+
+    public void RestartClass()
+    {
+        ScreenFader.Instance.FadeOut(RestartClassOnFadeOut);
+    }
+    
+    public void StartClass() {
+        GenerateClass();
+        AddStudentsToDesks();
+        if (ConnectionManager.Exists) ConnectionManager.Instance.ClassStarted();
+    }
+
+    private void RestartClassOnFadeOut()
+    {
+        RemoveAllConflicts();
+        StartClass();
+
+        ScreenFader.Instance.FadeIn();
     }
 
     public void OnWebEventCalled(ReceivedWebMessage message)
@@ -417,7 +464,7 @@ public class ClassManager : Singleton<ClassManager>
                 break;
             // TODO: what do we do on restart
             case WebEventType.Restart:
-                Didascalia.Utils.Log.Warning("Requested restart but we do not know how to handle it. Message ID: " + message.id, this);
+                RestartClass();
                 break;
             default:
             {

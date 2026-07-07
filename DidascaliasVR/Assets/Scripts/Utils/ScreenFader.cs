@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// Componente que nos permite mostrar una imagen en pantalla para hacer
 /// fade-in y fade-out
 /// </summary>
-public class ScreenFader : MonoBehaviour
+public class ScreenFader : Singleton<ScreenFader>
 {
     [Header("References")]
     [SerializeField,

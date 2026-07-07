@@ -467,7 +467,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 0.23580787}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -631,8 +631,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 1610612735
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.37254903}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -649,8 +649,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.25
-  m_fontSizeBase: 0.25
+  m_fontSize: 0.14
+  m_fontSizeBase: 0.14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -688,7 +688,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 0.44229835}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1161,6 +1161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d85afc37a0168e4189137231cd039f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Didascalia.Student.StudentAnimatorController
+  studentAnimator: {fileID: 0}
 --- !u!4 &1143328454363524143 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e2567112e0fcce94489198a6a258f3b5, type: 3}
@@ -1273,8 +1274,29 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5594449607132192900, guid: 63e3c5b7acb549b48a24b1df7ea18594, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5981233270773014365}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5128183311388247141, guid: 63e3c5b7acb549b48a24b1df7ea18594, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6999781830041601247}
   m_SourcePrefab: {fileID: 100100000, guid: 63e3c5b7acb549b48a24b1df7ea18594, type: 3}
+--- !u!1 &8624259584575346128 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5128183311388247141, guid: 63e3c5b7acb549b48a24b1df7ea18594, type: 3}
+  m_PrefabInstance: {fileID: 3496325940781060533}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6999781830041601247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8624259584575346128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d85afc37a0168e4189137231cd039f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Didascalia.Student.StudentAnimatorController
+  studentAnimator: {fileID: 6347266689822074569}
 --- !u!4 &9017908145234456881 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5594449607132192900, guid: 63e3c5b7acb549b48a24b1df7ea18594, type: 3}
@@ -1346,10 +1368,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1453346819317239925, guid: 9efd492588a3bd8439c1a1b3243497b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5591479124611265952}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3276349654257285302, guid: 9efd492588a3bd8439c1a1b3243497b1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7126829742012893348}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9efd492588a3bd8439c1a1b3243497b1, type: 3}
 --- !u!4 &2044575075331129673 stripped
 Transform:
@@ -1361,23 +1380,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2425645953885074893, guid: 9efd492588a3bd8439c1a1b3243497b1, type: 3}
   m_PrefabInstance: {fileID: 8261919336768383632}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6908475074093257254 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3276349654257285302, guid: 9efd492588a3bd8439c1a1b3243497b1, type: 3}
+--- !u!95 &6347266689822074569 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3079968121516264537, guid: 9efd492588a3bd8439c1a1b3243497b1, type: 3}
   m_PrefabInstance: {fileID: 8261919336768383632}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7126829742012893348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6908475074093257254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d85afc37a0168e4189137231cd039f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Didascalia.Student.StudentAnimatorController
 --- !u!4 &7075935261277372589 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1196548466681834045, guid: 9efd492588a3bd8439c1a1b3243497b1, type: 3}
