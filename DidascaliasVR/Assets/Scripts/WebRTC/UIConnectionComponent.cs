@@ -15,6 +15,7 @@ public class UIConnectionComponent : MonoBehaviour
         transform.GetChild(3).gameObject.SetActive(true);
         StreamManager.Instance?.SetUIComponent(this);
         StreamManager.Instance?.CreateSignalingServer();
+        StreamManager.Instance?.CreateWebSocketServer();
     }
 
     public void CreateUIRepresentation(string ip)

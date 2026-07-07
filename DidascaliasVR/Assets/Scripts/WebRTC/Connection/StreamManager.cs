@@ -5,8 +5,10 @@ using System.Threading;
 using TMPro;
 using Unity.Android.Gradle;
 using Unity.WebRTC;
+using Unity.XR.CoreUtils;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using WebSocketSharp.Server;
 
 public class StreamManager : MonoBehaviour
@@ -33,6 +35,8 @@ public class StreamManager : MonoBehaviour
     /// </summary>
     [SerializeField]
     private GameObject VRCameraObject;
+
+    private RenderTexture streamingTexture;
 
     /// <summary>
     /// Server that works through a WebSocket. It connects to an external siganling server.
@@ -85,7 +89,7 @@ public class StreamManager : MonoBehaviour
         else Debug.LogError("[StreamManager] Ya existe un SignalingServer en la escena.");
     }
 
-    private void CreateWebSocketServer()
+    public void CreateWebSocketServer()
     {
         if (!webSocketServer)
         {
@@ -93,21 +97,20 @@ public class StreamManager : MonoBehaviour
             webSocketServer = obj.AddComponent<WebSocketServerRTC>();
             DontDestroyOnLoad(obj);
         }
-        else Debug.LogError("[StreamManager] Ya existe un WebSocketServer en la escena.");
-        
+        else Debug.LogError("[StreamManager] Ya existe un WebSocketServer en la escena.");   
     }
     #endregion
 
     #region SharedMethods
 
-    private void CreateAnchoredCamera(string ip, ref RenderTexture rt)
+    private void CreateAnchoredCamera(string ip)
     {
         GameObject streamGo = new GameObject($"StreamCamera-Peer_{ip}");
         streamGo.transform.position = VRCameraObject.transform.position;
         streamGo.transform.rotation = VRCameraObject.transform.rotation;
         streamGo.transform.SetParent(VRCameraObject.transform);
         Camera cam = streamGo.AddComponent<Camera>();
-        cam.targetTexture = rt;
+        cam.targetTexture = streamingTexture;
         //cam.enabled = false -> TO-DO: que se active o desactive segun si es Streamer o Player;
     }
 
@@ -130,6 +133,28 @@ public class StreamManager : MonoBehaviour
         return clients.TryRemove(ip, out var client);
     }
 
+    public void ReassignCameraTextures(string previousSceneName, Scene newScene)
+    {
+        XROrigin xrOrigin = FindFirstObjectByType<XROrigin>();
+
+        if (xrOrigin == null)
+        {
+            Debug.LogWarning("No se encontró XROrigin en la escena.");
+            return;
+        }
+
+        VRCameraObject = xrOrigin.Camera.gameObject;
+
+        foreach (KeyValuePair<string, ClientData> kvp in clients)
+        {
+            string clientId = kvp.Key;
+            ClientData data = kvp.Value;
+
+            if (data.type == ClientType.STREAM)
+                CreateAnchoredCamera(clientId);
+        }
+
+    }
     #endregion
 
     #region WebSocket
@@ -143,16 +168,10 @@ public class StreamManager : MonoBehaviour
         GameObject go = new GameObject($"{client.type.ToString()}-Peer_{ip}");
         DontDestroyOnLoad(go);
         WebRTCPeer peer = go.AddComponent<WebRTCPeer>();
-
-        RenderTexture rt;
-        rt = new RenderTexture((int)frameWidth, (int)frameHeight, (int)frameDepth, RenderTextureFormat.BGRA32);
-        rt.enableRandomWrite = true;
-        rt.useMipMap = false;
-        rt.antiAliasing = 1;
-        rt.Create();
-        CreateAnchoredCamera(ip, ref rt);
         
-        peer.Initialize(ip, rt, msg => webSocketServer.SendToNode(msg, ip));
+        CreateAnchoredCamera(ip);
+        
+        peer.Initialize(ip, streamingTexture, msg => webSocketServer.SendToNode(msg, ip));
         StartCoroutine(peer.CreateOffer());
         clients[ip].webRtcPeer = peer;
 
@@ -161,6 +180,16 @@ public class StreamManager : MonoBehaviour
         Debug.Log($"[StreamManager] Created browser peer: {ip}");
     }
 
+    /// <summary>
+    /// Elimina lo creado para representar al cliente navegador
+    /// </summary>
+    /// <param name="clientID"></param>
+    public void RemovePeerForBrowser(string clientID)
+    {
+        Destroy(clients[clientID].webRtcPeer.gameObject);
+        clients.TryRemove(clientID, out var data);
+        Debug.Log($"[StreamManager] Destroyed browser peer: {clientID}");
+    }
     #endregion
 
     #region TCP
@@ -202,7 +231,8 @@ public class StreamManager : MonoBehaviour
         // Streaming
         else
         {
-            CreateAnchoredCamera(ip, ref rt);
+            CreateAnchoredCamera(ip);
+            rt = streamingTexture;
         }
 
         // Create RTC connection Peer
@@ -268,6 +298,20 @@ public class StreamManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        streamingTexture = new RenderTexture((int)frameWidth, (int)frameHeight, (int)frameDepth, RenderTextureFormat.BGRA32);
+        streamingTexture.enableRandomWrite = true;
+        streamingTexture.useMipMap = false;
+        streamingTexture.antiAliasing = 1;
+        streamingTexture.Create();
+
+        SceneChanger.Instance.OnSceneChanged.AddListener(ReassignCameraTextures);
     }
+
+    private void OnDestroy()
+    {
+        SceneChanger.Instance.OnSceneChanged.RemoveListener(ReassignCameraTextures);
+    }
+
     #endregion
 }

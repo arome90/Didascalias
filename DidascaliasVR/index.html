@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>HIMU test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="video-frame">
+        <video id="video" autoplay playsinline muted></video>
+    </div>
+    <div id="session-form">
+        <label for="session-id">ID de sesión (4 dígitos):</label>
+        <input type="text" id="session-id" maxlength="4" inputmode="numeric" pattern="\d{4}" placeholder="1234">
+    </div>
+    <button id="button">Conectar</button>
+    <div id="status">Desconectado</div>
+
+    <script src="main.js"></script>
+</body>
+</html>

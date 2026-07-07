@@ -1,41 +1,64 @@
-using NUnit.Framework.Interfaces;
 using System;
-using System.IO;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.WebRTC;
 using UnityEngine;
-using UnityEngine.LightTransport;
 
 public class WebSocketServerRTC : MonoBehaviour
 {
 
     #region Variables
     // Debe ser la IP del dispositivo que corre el servidor de Node
-    [SerializeField] string nodeHost = "192.168.1.44";
+    [SerializeField] string nodeHost = "192.168.1.45";
     [SerializeField] int nodePort = 8080;
 
     ClientWebSocket ws;
+
+    [SerializeField] string batRelativePath = "start-server.bat";
     #endregion
 
     #region Methods
+    public void LaunchServer()
+    {
+        string batPath = System.IO.Path.Combine(Application.dataPath, "..", batRelativePath);
+
+        ProcessStartInfo psi = new ProcessStartInfo
+        {
+            FileName = batPath,
+            WorkingDirectory = System.IO.Path.GetDirectoryName(batPath),
+            UseShellExecute = true, // necesario para que abra las ventanas cmd visibles
+            CreateNoWindow = false
+        };
+
+        try
+        {
+            Process.Start(psi);
+            UnityEngine.Debug.Log("[ServerLauncher] Script lanzado correctamente.");
+        }
+        catch (System.Exception ex)
+        {
+            UnityEngine.Debug.LogError($"[ServerLauncher] Error al lanzar el bat: {ex.Message}");
+        }
+    }
+
     // Inicia la conexion al servidor de Node
     public async void ConnectToNode()
     {
         ws = new ClientWebSocket();
-        Uri uri = new Uri($"ws://{nodeHost}:{nodePort}?type=unity");
+        Uri uri = new Uri($"ws://{nodeHost}:{nodePort}?type=unity&id={ConnectionManager.Instance.SessionID}");
 
         try
         {
             await ws.ConnectAsync(uri, CancellationToken.None);
-            Debug.Log($"[StreamManager] Conectado a Node: {uri}");
+            UnityEngine.Debug.Log($"[StreamManager] Conectado a Node: {uri}");
             _ = ReceiveLoop();
         }
         catch (Exception ex)
         {
-            Debug.LogError($"[StreamManager] Error conectando a Node: {ex.Message}");
+            UnityEngine.Debug.LogError($"[StreamManager] Error conectando a Node: {ex.Message}");
         }
     }
 
@@ -66,7 +89,7 @@ public class WebSocketServerRTC : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[StreamManager] ReceiveLoop: {ex.Message}");
+                UnityEngine.Debug.LogError($"[StreamManager] ReceiveLoop: {ex.Message}");
                 break;
             }
         }
@@ -101,7 +124,7 @@ public class WebSocketServerRTC : MonoBehaviour
 
         if (!int.TryParse(clientId, out int idInt))
         {
-            Debug.LogError($"[WebSocketServerRTC] clientId inválido: {clientId}");
+            UnityEngine.Debug.LogError($"[WebSocketServerRTC] clientId inválido: {clientId}");
             return;
         }
 
@@ -115,6 +138,7 @@ public class WebSocketServerRTC : MonoBehaviour
     public void Start()
     {
         StartCoroutine(WebRTC.Update());
+        LaunchServer();
         ConnectToNode();
     }
 
