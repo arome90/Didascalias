@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine.Events;
 
 public class TestingAnimations : MonoBehaviour
 {
+    [SerializeField]
+    private Transform randomPoint = null;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,12 +18,28 @@ public class TestingAnimations : MonoBehaviour
 
     public void StandUp(Student student)
     {
-        student.GetComponent<StudentBehaviour>().SetOnFoot();
+        student.GetComponent<StudentBehaviour>().StandUp();
     }
 
     public void SitDown(Student student)
     {
-        student.GetComponent<StudentBehaviour>().UnsetOnFoot();
+        student.GetComponent<StudentBehaviour>().SitDown();
+    }
+
+    public void LeaveDesk(Student student)
+    {
+        student.GetComponent<StudentBehaviour>().LeaveDesk();
+    }
+
+    public void MoveToRandomPoint(Student student)
+    {
+        randomPoint.SetLocalPositionAndRotation(new Vector3(
+            UnityEngine.Random.Range(-3.0f, 3.0f),
+            0.0f,
+            UnityEngine.Random.Range(-3.0f, 3.0f)), 
+            Quaternion.identity);
+
+        student.GetComponent<StudentBehaviour>().MoveTo(randomPoint);
     }
 
     [HideInInspector]
@@ -68,6 +88,14 @@ public class SpawnStudentsOnStartEditor : Editor
             if (GUILayout.Button("SitDown"))
             {
                 script.SitDown(objetoSeleccionado);
+            }
+            if (GUILayout.Button("LeaveDesk"))
+            {
+                script.LeaveDesk(objetoSeleccionado);
+            }
+            if (GUILayout.Button("MoveToRandomPoint"))
+            {
+                script.MoveToRandomPoint(objetoSeleccionado);
             }
         }
         else

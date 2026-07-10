@@ -14,6 +14,6 @@ public class IsStandingTransition : Transition
     }
     public override bool Check()
     {
-        return _behaviour.State == StudentState.Standing;
+        return _behaviour.State == StudentState.StandingOnDesk || _behaviour.State == StudentState.StandingOutOfDesk;
     }
 }

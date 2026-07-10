@@ -18,7 +18,7 @@ namespace Didascalia.StateMachine
 
         public override bool Check()
         {
-            return _target.State == StudentState.Standing;
+            return _target.State == StudentState.StandingOnDesk;
         }
 
         public override void OnCheck()

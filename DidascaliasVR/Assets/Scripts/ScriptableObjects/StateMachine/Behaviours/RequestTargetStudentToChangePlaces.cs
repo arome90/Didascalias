@@ -19,7 +19,7 @@ namespace Didascalia.StateMachine
             // cogemos el estudiante objetivo
             _targetStudentBehaviour = machine.GetData(_targetStudentID).GetComponent<StudentBehaviour>();
 
-            _targetStudentBehaviour.ChangeState(StudentState.Standing);
+            _targetStudentBehaviour.ChangeState(StudentState.StandingOnDesk);
             _targetStudentBehaviour.OnStandUp.AddListener(RequestSitDown);
         }
 

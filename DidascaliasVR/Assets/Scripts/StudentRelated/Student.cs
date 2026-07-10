@@ -44,6 +44,11 @@ public class Student : MonoBehaviour
         } 
     }
 
+    private Desk _desk = null;
+
+    public Desk Desk { get { return _desk; }
+        set { _desk = value; } }
+
     Gender _gender;
     /// <summary>
     /// G�nero del estudiante.
