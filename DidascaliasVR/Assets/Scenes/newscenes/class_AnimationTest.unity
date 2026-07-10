@@ -3782,6 +3782,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 415961778}
   m_Mesh: {fileID: -2071751950005749399, guid: 9ee7ff7af4941fd4f9b333a6da9e4df4, type: 3}
+--- !u!1 &431100663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 431100664}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &431100664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431100663}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2026641399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &449672417
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17400,10 +17431,11 @@ Transform:
   m_GameObject: {fileID: 2026641398}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 19.43, y: 0.22, z: -23.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 431100664}
   m_Father: {fileID: 582002872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2026641400
@@ -17418,6 +17450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4f31b2f15964894cb9777dd7ddde845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  randomPoint: {fileID: 431100664}
   onClassCreated:
     m_PersistentCalls:
       m_Calls: []
@@ -19185,6 +19218,26 @@ PrefabInstance:
       propertyPath: '_studentPrefab.Array.data[2]'
       value: 
       objectReference: {fileID: 8624259584575346128, guid: f03ecfa7a94dc0940b630709120c273a, type: 3}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _boyStudentPrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _girlStudentPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: '_boyStudentPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8624259584575346128, guid: c8ffa1fa825532d4aab143ce3ae7fec4, type: 3}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: '_boyStudentPrefabs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8624259584575346128, guid: f03ecfa7a94dc0940b630709120c273a, type: 3}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: '_girlStudentPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8624259584575346128, guid: 20bdc1df8e57f01478af61d43bcc409b, type: 3}
     - target: {fileID: 3895992887984448344, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

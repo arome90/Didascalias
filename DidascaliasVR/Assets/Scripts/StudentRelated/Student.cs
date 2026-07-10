@@ -16,6 +16,7 @@ public class Student : MonoBehaviour
         Tooltip("Texto que muestra el nombre del estudiante al jugador")]
     TextMeshProUGUI _nameTag;
 
+    
     /// <summary>
     /// Estudiante que est� justo antes de nuestro estudiante
     /// Puede tomar valor 'null' si es el primero
@@ -49,17 +50,15 @@ public class Student : MonoBehaviour
     public Desk Desk { get { return _desk; }
         set { _desk = value; } }
 
-    Gender _gender;
+    [Header("Parameters")]
+    [SerializeField, Tooltip("Student's gender")]
+    private Gender _gender;
     /// <summary>
     /// G�nero del estudiante.
     /// </summary>
     public Gender Gender
     {
         get { return _gender; }
-        set
-        {
-            _gender = value;
-        }
     }
 
     public void Select()
