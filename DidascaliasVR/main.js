@@ -50,7 +50,7 @@ async function connect() {
 
     let pendingCandidates = [];
 
-    ws = new WebSocket(`ws://192.168.1.45:8080?type=browser&id=${sessionId}`);
+    ws = new WebSocket("wss://cyclops-dev.uab.cat/cast-wss/?type=browser&id=${sessionId}");
 
     ws.onopen = () => {
         ws.binaryType = "arraybuffer"; // forzar arraybuffer en vez de Blob
