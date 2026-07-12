@@ -12,9 +12,7 @@ public class WebSocketServerRTC : MonoBehaviour
 
     #region Variables
     // Debe ser la IP del dispositivo que corre el servidor de Node
-    [SerializeField] string nodeHost = "192.168.1.45";
-    [SerializeField] int nodePort = 8080;
-
+    
     ClientWebSocket ws;
 
     [SerializeField] string batRelativePath = "start-server.bat";
@@ -44,11 +42,16 @@ public class WebSocketServerRTC : MonoBehaviour
         }
     }
 
+    string nodeHost = "cyclops-dev.uab.cat/cast-wss/";
+    [SerializeField] int nodePort = 443;
+
+
     // Inicia la conexion al servidor de Node
     public async void ConnectToNode()
     {
         ws = new ClientWebSocket();
-        Uri uri = new Uri($"ws://{nodeHost}:{nodePort}?type=unity&id={ConnectionManager.Instance.SessionID}");
+        Uri uri = new Uri($"wss://{nodeHost}?type=unity&id={ConnectionManager.Instance.SessionID}");
+        //Uri uri = new Uri($"ws://{nodeHost}:{nodePort}?type=unity&id={ConnectionManager.Instance.SessionID}");
 
         try
         {
