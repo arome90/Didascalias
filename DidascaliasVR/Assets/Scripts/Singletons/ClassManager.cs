@@ -392,10 +392,10 @@ public class ClassManager : Singleton<ClassManager>
             if (deskAnimator == null) deskAnimator = _desks[i].GetComponentInChildren<Animator>();
             st.GetComponent<StudentAnimatorController>().SetDeskAnimator(deskAnimator);
 
+            st.Desk = _desks[i].GetComponent<Desk>();
+
             // setting position
-            st.transform.parent = _desks[i]
-                .GetComponentsInChildren<Transform>()
-                .First(t => t.gameObject.layer == LayerMask.NameToLayer("Marker"));
+            st.transform.parent = st.Desk.StudentPosition;
             st.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
 
             // setting up navigation/pathfinding

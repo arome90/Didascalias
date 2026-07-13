@@ -1,7 +1,6 @@
+using Meta.WitAi.TTS.Integrations;
 using System;
 using System.Collections;
-using Meta.WitAi.TTS.Integrations;
-using Meta.WitAi.TTS.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -9,7 +8,10 @@ using UnityEngine.Events;
 public enum StudentState
 {
     Sitting,
-    Standing,
+    StandingOnDesk,
+    StandingOutOfDesk,
+    LeavingDesk,
+    EnteringDesk,
     Walking,
     Expelling,
     Expelled
@@ -33,7 +35,7 @@ public class StudentBehaviour : MonoBehaviour
     TTSWit _tts;
     Student _st;
 
-    public Transform SitSpot { get { return transform.parent; } }
+    public Transform SitSpot { get { return _st.Desk.StudentPosition; } }
 
     public void ChangeSitSpotWithStudent(StudentBehaviour other)
     {
@@ -42,10 +44,21 @@ public class StudentBehaviour : MonoBehaviour
         other.transform.parent = thisParent;
     }
 
+    private Desk _desk => _st.Desk;
+
     [SerializeField]
     private StudentState _state;
 
+    [Header("Parameters")]
+
+    [SerializeField, Range(0.0001f, 1.0f), Tooltip("Speed with which the student moves out of the desk")]
+    private float _exitDeskSpeed = 0.001f;
+
+    [Header("Events")]
     public UnityEvent OnStandUp = new UnityEvent();
+    public UnityEvent OnExitDesk = new UnityEvent();
+    public UnityEvent OnEnterDesk = new UnityEvent();
+    public UnityEvent OnSitDown = new UnityEvent();
     public UnityEvent OnStandUpRequested = new UnityEvent();
     public UnityEvent OnSitDownRequested = new UnityEvent();
     public UnityEvent OnExpellingRequested = new UnityEvent();
@@ -76,6 +89,9 @@ public class StudentBehaviour : MonoBehaviour
 
 
         OnStandUp.AddListener(ChangeStateOnStandUp);
+        OnExitDesk.AddListener(ChangeStateOnExitDesk);
+        OnEnterDesk.AddListener(ChangeStateOnEnterDesk);
+        OnSitDown.AddListener(ChangeStateOnSitDown);
         ChangeState(StudentState.Sitting);
     }
 
@@ -84,9 +100,25 @@ public class StudentBehaviour : MonoBehaviour
         OnStandUp.RemoveListener(ChangeStateOnStandUp);
     }
 
+    // revisar
     private void ChangeStateOnStandUp()
     {
-        ChangeState(StudentState.Standing);
+        ChangeState(StudentState.StandingOnDesk);
+    }
+
+    private void ChangeStateOnExitDesk()
+    {
+        ChangeState(StudentState.StandingOutOfDesk);
+    }
+
+    private void ChangeStateOnEnterDesk()
+    {
+        ChangeState(StudentState.StandingOnDesk);
+    }
+
+    private void ChangeStateOnSitDown()
+    {
+        ChangeState(StudentState.Sitting);
     }
 
     public void ChangeState(StudentState newState)
@@ -105,6 +137,7 @@ public class StudentBehaviour : MonoBehaviour
     }
 
     #region SitDown
+    
     public void StartSitDownAnimation()
     {
         UnsetOnFoot();
@@ -170,30 +203,42 @@ public class StudentBehaviour : MonoBehaviour
         yield return wait;
         // Didascalia.Utils.Error.DebugbreakFailUnimplemented("AcquireTargetRotation is not fully implemented, it should be able to be interrupted by other calls to this method or to MoveTo", this);
     }
+
     public Coroutine StartAcquireTargetRotation(Quaternion rotation, float time)
     {
         return StartCoroutine(AcquireTargetRotation(rotation, time));
     }
 
-    IEnumerator MovementAnimationAndRotate(Transform transform, float rotateTime)
+    IEnumerator MovementAnimationAndRotate(Transform transform, float rotateTime, UnityAction callback = null)
     {
-        yield return MoveTo(transform);
+        yield return MovingTowardsPoint(transform.position);
         yield return AcquireTargetRotation(transform.rotation, rotateTime);
+
+        if (callback != null)
+            callback.Invoke();
     }
-    public Coroutine MoveToAndRotate(Transform transform, float rotateTime)
+
+    public Coroutine MoveToAndRotate(Transform transform, float rotateTime, UnityAction callback = null)
     {
-        return StartCoroutine(MovementAnimationAndRotate(transform, rotateTime));
+        return StartCoroutine(MovementAnimationAndRotate(transform, rotateTime, callback));
     }
 
     IEnumerator MovingTowardsPoint(Vector3 point)
     {
+        if (_state == StudentState.Sitting || _state == StudentState.StandingOnDesk) LeaveDesk();
+
+        yield return new WaitUntil(() => _state == StudentState.StandingOutOfDesk);
+
         float speed = _agent.speed;
         _agent.speed = 0.0f;
         _agent.SetDestination(point);
 
-        if(_state == StudentState.Sitting) StandUp();
-        yield return new WaitUntil(() => _state != StudentState.Sitting);
+        // if we're not standing out of desk...
+        LeaveDesk();
+        // then we wait for leaving desk animation to finish
+        yield return new WaitUntil(() => _state == StudentState.StandingOutOfDesk);
 
+        ChangeState(StudentState.Walking);
         StartWalking(0.65f);
         _agent.speed = speed;
 
@@ -201,7 +246,7 @@ public class StudentBehaviour : MonoBehaviour
         yield return new WaitUntil(() => _agent.remainingDistance <= _agent.stoppingDistance * 2);
 
         StopWalking(0.95f);
-        ChangeState(StudentState.Standing);
+        ChangeState(StudentState.StandingOutOfDesk);
     }
     #endregion
 
@@ -211,17 +256,23 @@ public class StudentBehaviour : MonoBehaviour
     {
         _animator.SetOnFoot();
     }
+
     internal void UnsetOnFoot()
     {
-        _animator.UnsetOnFoot();
+        _animator.SitDown();
     }
+
     public void StandUp()
     {
-        OnStandUpRequested.Invoke();
-        if (_animator.StudentAnimator.GetBehaviour<OnStandUp>() == null)
+        if(_state == StudentState.Sitting)
         {
-            Didascalia.Utils.Error.DebugbreakFailMessage("OnStandUp behaviour not found in animator", this);
-        } 
+            OnStandUpRequested.Invoke();
+            if (_animator.StudentAnimator.GetBehaviour<OnStandUp>() == null)
+            {
+                Didascalia.Utils.Error.DebugbreakFailMessage("OnStandUp behaviour not found in animator", this);
+            } 
+        }
+
         // XXX: We should be able to run this safety check to ensure the event invocation causes
         // transition to 'Stand Up' state but it seems that the transition is not registered in the same frame, so we can't check it here.
         // else if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Stand Up"))
@@ -233,6 +284,93 @@ public class StudentBehaviour : MonoBehaviour
         //         this
         //     );
         // }
+    }
+
+    public void SitDown()
+    {
+        if (_state == StudentState.Sitting) return;
+
+        EnterDesk();
+
+        StartCoroutine(SitDownCoroutine());
+    }
+
+    IEnumerator SitDownCoroutine()
+    {
+        yield return new WaitUntil(() => _state == StudentState.StandingOnDesk);
+
+        _animator.SitDown();
+    }
+
+    public void EnterDesk()
+    {
+        if (_state == StudentState.StandingOnDesk || _state == StudentState.Sitting) return;
+
+        StartCoroutine(EnterDeskCoroutine());
+    }
+
+    IEnumerator EnterDeskCoroutine()
+    {
+        if (_state == StudentState.StandingOutOfDesk)
+        {
+            yield return MoveToAndRotate(_st.Desk.OutOfDeskTransform, 0.65f);
+        }
+
+        ChangeState(StudentState.EnteringDesk);
+        _animator.EnterDesk();
+
+        Vector3 initialPos = _desk.OutOfDeskTransform.position;
+        float animProgress = _animator.GetCurrentStudentAnimationProgress();
+        yield return new WaitUntil(() => { animProgress = _animator.GetCurrentStudentAnimationProgress(); return animProgress < 1.0f; });
+
+        float speed = _agent.speed;
+        _agent.speed = 0.0f;
+        _agent.SetDestination(SitSpot.position);
+        while (_state == StudentState.EnteringDesk)
+        {
+            animProgress = _animator.GetCurrentStudentAnimationProgress();
+            transform.position = Vector3.Lerp(initialPos, SitSpot.position, animProgress);
+            yield return new WaitForEndOfFrame();
+        }
+        
+        _agent.speed = speed;
+
+        // StandingOnDesk completed
+    }
+
+    public void LeaveDesk()
+    {
+        if (_state == StudentState.StandingOutOfDesk) return;
+
+        StartCoroutine(LeaveDeskCoroutine());
+    }
+
+    IEnumerator LeaveDeskCoroutine()
+    {
+        if (_state == StudentState.Sitting) StandUp();
+        // first we wait for stand up animation to finish
+        yield return new WaitUntil(() => _state == StudentState.StandingOnDesk);
+
+        ChangeState(StudentState.LeavingDesk);
+        _animator.ExitDesk();
+
+
+        Vector3 initialPos = transform.position;
+        float animProgress = 0.0f;
+
+        float speed = _agent.speed;
+        _agent.speed = 0.0f;
+        _agent.SetDestination(_desk.OutOfDeskTransform.position);
+        while (_state == StudentState.LeavingDesk)
+        {
+            animProgress = _animator.GetCurrentStudentAnimationProgress();
+                
+            transform.position = Vector3.Lerp(initialPos, _desk.OutOfDeskTransform.position, animProgress);
+            yield return new WaitForEndOfFrame();
+        }
+
+        _agent.speed = speed;
+        // leaving desk completed
     }
     #endregion
 

@@ -17,6 +17,20 @@ namespace Didascalia.Student
             deskAnimator = desk;
         }
 
+        public float GetCurrentStudentAnimationDuration()
+        {
+            int layerIndex = studentAnimator.GetLayerIndex("Base Layer");
+            AnimatorStateInfo info = studentAnimator.GetCurrentAnimatorStateInfo(layerIndex);
+            return info.length;
+        }
+
+        public float GetCurrentStudentAnimationProgress()
+        {
+            int layerIndex = studentAnimator.GetLayerIndex("Base Layer");
+            AnimatorStateInfo info = studentAnimator.GetCurrentAnimatorStateInfo(layerIndex);
+            return info.normalizedTime;
+        }
+
         // top-level states
         /// <summary>
         /// Hash para el parámetro "OnFoot" del Animator del Desk y del Student
@@ -386,10 +400,21 @@ namespace Didascalia.Student
             SetStudentBooleanParameter(HashIsOnFoot);
             SetDeskBooleanParameter(HashIsOnFoot);
         }
-        public void UnsetOnFoot()
+
+        public void SitDown()
         {
             ResetStudentBooleanParameter(HashIsOnFoot);
             ResetDeskBooleanParameter(HashIsOnFoot);
+        }
+
+        public void ExitDesk()
+        {
+            SetStudentTriggerParameter(HashTriggerExitDesk);
+        }
+
+        public void EnterDesk()
+        {
+            SetStudentTriggerParameter(HashTriggerEnterDesk);
         }
 
         public static int HashFromTriggerParameter(TriggerStudentParameter parameter)

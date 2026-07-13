@@ -13,8 +13,16 @@ using UnityEngine.Animations;
 public class StudentManager : Singleton<StudentManager>
 {
     [SerializeField,
-        Tooltip("Prefab de estudiante")]
-    GameObject[] _studentPrefab;
+       Tooltip("Prefabs de estudiante")]
+    GameObject[] _boyStudentPrefabs;
+
+    [SerializeField,
+       Tooltip("Prefabs de estudiante")]
+    GameObject[] _girlStudentPrefabs;
+
+    //[SerializeField,
+    //    Tooltip("Prefabs de estudiante")]
+    //GameObject[] _studentPrefab;
 
     [SerializeField,
         Tooltip("Prefab que representa un conflicto (con el script Conflict)")]
@@ -141,9 +149,22 @@ public class StudentManager : Singleton<StudentManager>
         Student last = null;
         for (int i = 0; i < _settings.NumStudents; ++i)
         {
+            bool isBoy = (UnityEngine.Random.Range(0, 2) == 0 && numBoys < _settings.NumBoys) || numGirls == _settings.NumGirls;
+
+            GameObject[] chosenPrefabs = null;
+
+            if (isBoy)
+            {
+                chosenPrefabs = _boyStudentPrefabs;
+            }
+            else
+            {
+                chosenPrefabs = _girlStudentPrefabs;
+            }
+
             // TO DO -> cambiar la creacion de personajes por algo definitivo y no aleatorio 
-            int studentMeshID = UnityEngine.Random.Range(0, _studentPrefab.Length);
-            GameObject go = Instantiate(_studentPrefab[studentMeshID]);
+            int studentMeshID = UnityEngine.Random.Range(0, chosenPrefabs.Length);
+            GameObject go = Instantiate(chosenPrefabs[studentMeshID]);
             Student st = go.GetComponent<Student>();
 
             if (last != null) last.NextStudent = st;
@@ -151,10 +172,8 @@ public class StudentManager : Singleton<StudentManager>
             st.PreviousStudent = last;
 
             string name;
-            if ((UnityEngine.Random.Range(0, 2) == 0 && numBoys < _settings.NumBoys) || numGirls == _settings.NumGirls)
+            if (isBoy)
             {
-                st.Gender = Gender.Boy; 
-
                 int index = UnityEngine.Random.Range(0, boyNames.Count);
                 name = boyNames[index];
                 boyNames.RemoveAt(index);
@@ -163,8 +182,6 @@ public class StudentManager : Singleton<StudentManager>
             }
             else
             {
-                st.Gender = Gender.Girl;
-
                 int index = UnityEngine.Random.Range(0, girlNames.Count);
                 name = girlNames[index];
                 girlNames.RemoveAt(index);

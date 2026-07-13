@@ -17,6 +17,6 @@ public class MoveToSitState : Didascalia.StateMachine.State
     {
         base.OnEnter();
 
-        _behaviour.MoveTo(_behaviour.SitSpot);
+        _behaviour.SitDown();
     }
 }
