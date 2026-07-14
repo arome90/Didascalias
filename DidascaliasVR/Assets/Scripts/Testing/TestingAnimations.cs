@@ -39,7 +39,17 @@ public class TestingAnimations : MonoBehaviour
             UnityEngine.Random.Range(-3.0f, 3.0f)), 
             Quaternion.identity);
 
-        student.GetComponent<StudentBehaviour>().MoveTo(randomPoint);
+        student.GetComponent<StudentBehaviour>().MoveTo(randomPoint, true);
+    }
+
+    public void MoveToFrontDoor(Student student)
+    {
+        student.GetComponent<StudentBehaviour>().MoveToFrontDoor(true);
+    }
+
+    public void Expel(Student student)
+    {
+        student.GetComponent<StudentBehaviour>().Expel();
     }
 
     [HideInInspector]
@@ -96,6 +106,14 @@ public class SpawnStudentsOnStartEditor : Editor
             if (GUILayout.Button("MoveToRandomPoint"))
             {
                 script.MoveToRandomPoint(objetoSeleccionado);
+            }
+            if (GUILayout.Button("MoveToFrontDoor"))
+            {
+                script.MoveToFrontDoor(objetoSeleccionado);
+            }
+            if (GUILayout.Button("Expel"))
+            {
+                script.Expel(objetoSeleccionado);
             }
         }
         else
