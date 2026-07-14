@@ -417,6 +417,30 @@ namespace Didascalia.Student
             SetStudentTriggerParameter(HashTriggerEnterDesk);
         }
 
+        public void OpenDoorInside(Door door)
+        {
+            SetStudentTriggerParameter(HashTriggerOpenDoorInside);
+            door.OpenInside();
+        }
+
+        public void CloseDoorOutside(Door door)
+        {
+            SetStudentTriggerParameter(HashTriggerCloseDoorOutside);
+            door.CloseOutside();
+        }
+
+        public void OpenDoorOutside(Door door)
+        {
+            SetStudentTriggerParameter(HashTriggerOpenDoorOutside);
+            door.OpenOutside();
+        }
+
+        public void CloseDoorInside(Door door)
+        {
+            SetStudentTriggerParameter(HashTriggerCloseDoorInside);
+            door.CloseInside();
+        }
+
         public static int HashFromTriggerParameter(TriggerStudentParameter parameter)
         {
             int HashInvalidParameter()

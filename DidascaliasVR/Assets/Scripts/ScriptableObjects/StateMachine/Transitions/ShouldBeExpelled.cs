@@ -26,7 +26,7 @@ public class ShouldBeExpelled : Transition
 
     public override void OnCheck()
     {
-        _behaviour.MoveTo(ClassManager.Instance.GetDoor());
+        _behaviour.MoveTo(ClassManager.Instance.FrontDoor.transform);
 
         _behaviour.OnExpellingRequested.RemoveListener(OnExpellingRequested);
     }

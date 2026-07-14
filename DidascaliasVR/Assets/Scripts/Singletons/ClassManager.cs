@@ -2,10 +2,7 @@ using Didascalia;
 using Didascalia.Student;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Unity.AI.Navigation;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -36,7 +33,11 @@ public class ClassManager : Singleton<ClassManager>
     private Transform _classRoot;
     [SerializeField,
         Tooltip("Donde se encuentra la puerta de la clase")]
-    private Transform _door;
+    private Door _frontDoor;
+
+    [SerializeField,
+        Tooltip("Donde se encuentra la puerta de la clase")]
+    private Door _backDoor;
 
     /// <summary>
     /// Lista de los escritorios generados
@@ -167,7 +168,8 @@ public class ClassManager : Singleton<ClassManager>
     /// Devuelve la posici�n de la puerta de la clase
     /// </summary>
     /// <returns> Posici�n de la puerta de la clase </returns>
-    public Transform GetDoor() { return _door; }
+    public Door FrontDoor => _frontDoor;
+    public Door BackDoor => _backDoor;
 
     /// <summary>
     /// Llamamos a este m�todo para generar una clase con escritorios seg�n
