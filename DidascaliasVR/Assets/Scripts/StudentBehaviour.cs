@@ -2,6 +2,7 @@ using Meta.WitAi.TTS.Integrations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -58,6 +59,10 @@ public class StudentBehaviour : MonoBehaviour
 
     [SerializeField, Range(0.0001f, 1.0f), Tooltip("Speed with which the student moves out of the desk")]
     private float _exitDeskSpeed = 0.001f;
+
+    [Header("Debug")]
+    [SerializeField]
+    private TextMeshProUGUI _debugText = null;
 
     [Header("Events")]
     public UnityEvent OnStandUp = new UnityEvent();
@@ -145,6 +150,7 @@ public class StudentBehaviour : MonoBehaviour
     public void ChangeState(StudentState newState)
     {
         _state = newState;
+        if (_debugText != null) _debugText.SetText(_state.ToString());
     }
 
     public void SitDownStudent()
@@ -381,7 +387,7 @@ public class StudentBehaviour : MonoBehaviour
     {
         if(_state == StudentState.Sitting)
         {
-            OnStandUpRequested.Invoke();
+            _animator.SetOnFoot();
             if (_animator.StudentAnimator.GetBehaviour<OnStandUp>() == null)
             {
                 Didascalia.Utils.Error.DebugbreakFailMessage("OnStandUp behaviour not found in animator", this);
@@ -406,11 +412,11 @@ public class StudentBehaviour : MonoBehaviour
         if (_state == StudentState.Sitting) return;
 
         StopAndClear();
-        EnqueueAction(SitDownCoroutine_());
+        EnqueueAction(SitDown_());
         // return StartCoroutine(SitDownCoroutine_());
     }
 
-    IEnumerator SitDownCoroutine_()
+    IEnumerator SitDown_()
     {
         yield return EnterDesk_();
 
@@ -449,6 +455,21 @@ public class StudentBehaviour : MonoBehaviour
         _agent.speed = speed;
 
         // StandingOnDesk completed
+    }
+
+    public void ChangePlaces(Desk newDesk)
+    {
+        StopAndClear();
+        EnqueueAction(ChangePlaces_(newDesk));
+    }
+
+    IEnumerator ChangePlaces_(Desk newDesk)
+    {
+        yield return LeaveDesk_();
+
+        _st.Desk = newDesk;
+
+        yield return SitDown_();
     }
 
     public void LeaveDesk()

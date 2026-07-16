@@ -249,6 +249,24 @@ public class StudentManager : Singleton<StudentManager>
         }
     }
 
+    public void DeselectStudents()
+    {
+        foreach (string st in _selectedStudents)
+        {
+            _students[st].Deselect();
+        }
+        _selectedStudents.Clear();
+    }
+
+    public void SelectStudent(string name)
+    {
+        if (_students.TryGetValue(name, out Student st))
+        {
+            st.Select();
+            _selectedStudents.Add(st.Name);
+        }
+    }
+
     /// <summary>
     /// Llamado al expulsar a un estudiante.
     /// Mueve a los estudiantes seleccionados a la puerta del aula.

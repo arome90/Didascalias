@@ -1679,6 +1679,7 @@ MonoBehaviour:
   _nameTag: {fileID: 9133579537960342055}
   PreviousStudent: {fileID: 0}
   NextStudent: {fileID: 0}
+  _gender: 0
 --- !u!114 &8941185757762626559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1711,6 +1712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _state: 0
   _exitDeskSpeed: 0.181
+  _debugText: {fileID: 2707924960818563340}
   OnStandUp:
     m_PersistentCalls:
       m_Calls: []
@@ -1718,6 +1720,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnEnterDesk:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSitDown:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOpenDoor:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCloseDoor:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExpel:
     m_PersistentCalls:
       m_Calls: []
   OnStandUpRequested:
@@ -1760,7 +1774,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5128183311388247141}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1532fffe8ccf6544aa17053d7ba73ca1, type: 3}
   m_Name: 

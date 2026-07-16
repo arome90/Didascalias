@@ -52,6 +52,20 @@ public class TestingAnimations : MonoBehaviour
         student.GetComponent<StudentBehaviour>().Expel();
     }
 
+    public void ChangeSits()
+    {
+        List<Student> sts = StudentManager.Instance.GetStudents();
+
+        if (sts.Count < 2) { Debug.LogError("Can't test Change Sits. Minimum of 2 students is required"); }
+
+        StudentManager.Instance.SelectStudent(sts[0].Name);
+        StudentManager.Instance.SelectStudent(sts[1].Name);
+
+        StudentManager.Instance.OnChangePlaces();
+
+        StudentManager.Instance.DeselectStudents();
+    }
+
     [HideInInspector]
     public UnityEvent onClassCreated = new UnityEvent();
 }
@@ -114,6 +128,13 @@ public class SpawnStudentsOnStartEditor : Editor
             if (GUILayout.Button("Expel"))
             {
                 script.Expel(objetoSeleccionado);
+            }
+
+            EditorGUILayout.Space(5);
+
+            if (GUILayout.Button("ChangeSits"))
+            {
+                script.ChangeSits();
             }
         }
         else
