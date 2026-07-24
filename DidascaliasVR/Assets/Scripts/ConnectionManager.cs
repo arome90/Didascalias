@@ -500,6 +500,11 @@ public class ConnectionManager : Singleton<ConnectionManager>
         }
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     /// <summary>
     /// Intenta deserializar el mensaje recibido en un objeto ReceivedWebMessage.
     /// </summary>

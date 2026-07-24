@@ -1544,6 +1544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de50a7848bc384240a54ecc8f899fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
+  _isFrontDoor: 1
   _insideStandingPoint: {fileID: 2104003809}
   _outsideStandingPoint: {fileID: 1434983962}
 --- !u!1 &196274192
@@ -2644,6 +2645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de50a7848bc384240a54ecc8f899fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  _isFrontDoor: 1
   _insideStandingPoint: {fileID: 1610665375}
   _outsideStandingPoint: {fileID: 1573612633}
 --- !u!1 &286289716
@@ -6360,74 +6362,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 761819673}
   m_Mesh: {fileID: -988862343148255651, guid: 034e97ccada55b644ad7930cefbe448e, type: 3}
---- !u!1 &771237464
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 771237465}
-  - component: {fileID: 771237467}
-  - component: {fileID: 771237466}
-  m_Layer: 0
-  m_Name: AzureManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &771237465
+--- !u!4 &771237465 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+  m_PrefabInstance: {fileID: 1630397295526688249}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771237464}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 20.12496, y: 0.95626, z: -32.04476}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 582002872}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &771237466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771237464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9f88ef188c2b6642bef9ed6aa591809, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  claveSpeech: 3o37hhqrQ1gZQA4CoNDS5GU40HLcdlFlkCGbst3zDQqbv94hYLU0JQQJ99CGAC5RqLJXJ3w3AAAAACOGRRnD
-  regionSpeech: westeurope
-  cluController: {fileID: 771237467}
-  volumeLimit: 0.02
-  maxSilenceTime: 1.5
-  displayText: {fileID: 1632311674}
---- !u!114 &771237467
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771237464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03cfbaaefd88acc4ebe6e739c7f349da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AzureManagerCLU
-  endpointAzure: https://didascalia-esp.cognitiveservices.azure.com/
-  claveAzure: CwtX0XYBqNWFkizxJINt4D5EQKe62tE0o6u97PMlSvI9eKz7RfE1JQQJ99CGAC5RqLJXJ3w3AAAaACOGyZzq
-  nombreProyecto: Didascalias-ESP-CLU
-  nombreDespliegue: didascalia-clu-esp
-  apiVersion: 2023-04-01
 --- !u!1 &810778583
 GameObject:
   m_ObjectHideFlags: 0
@@ -19507,6 +19446,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136028329}
   m_Mesh: {fileID: -8306897672402273934, guid: 5491e2b72be63ff45892905a431e9c81, type: 3}
+--- !u!1001 &1630397295526688249
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 582002872}
+    m_Modifications:
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20.12496
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.95626
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -32.04476
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226324136122152288, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_Name
+      value: AzureManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351749268529317214, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: displayText
+      value: 
+      objectReference: {fileID: 1632311674}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
 --- !u!1001 &4191575794576791535
 PrefabInstance:
   m_ObjectHideFlags: 0

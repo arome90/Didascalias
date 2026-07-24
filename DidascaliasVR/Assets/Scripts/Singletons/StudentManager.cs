@@ -275,7 +275,7 @@ public class StudentManager : Singleton<StudentManager>
     {
         foreach(string st in _selectedStudents)
         {
-            _students[st].GetComponent<StudentBehaviour>().ExpelStudent();
+            _students[st].GetComponent<StudentBehaviour>().Expel();
         }
     }
 
@@ -284,7 +284,7 @@ public class StudentManager : Singleton<StudentManager>
         if (_selectedStudents.Count == 0) return;
 
         StudentBehaviour st = _students[_selectedStudents[0]].GetComponent<StudentBehaviour>();
-        st.OnSitDownRequested.Invoke();
+        st.SitDown();
     }
 
     public void OnChangePlaces()
@@ -292,17 +292,18 @@ public class StudentManager : Singleton<StudentManager>
         if(_selectedStudents.Count <= 1) { return; }
         else
         {
-            StudentBehaviour _st1 = _students[_selectedStudents[0]].GetComponent<StudentBehaviour>();
-            StudentBehaviour _st2 = _students[_selectedStudents[1]].GetComponent<StudentBehaviour>();
+            Student s1 = _students[_selectedStudents[0]];
+            Student s2 = _students[_selectedStudents[1]];
 
-            _st1.ChangeSitSpotWithStudent(_st2);
+            StudentBehaviour sb1 = s1.GetComponent<StudentBehaviour>();
+            StudentBehaviour sb2 = s2.GetComponent<StudentBehaviour>();
 
-            _st1.OnChangePlacesRequested.Invoke();
-            _st2.OnChangePlacesRequested.Invoke();
+            sb1.SitOnNewPlace(s2.Desk);
+            sb2.SitOnNewPlace(s1.Desk);
         }
     }
 
-    private Student TryGetStudentByNameOrGetRandom(string studentName)
+    public Student TryGetStudentByNameOrGetRandom(string studentName)
     {
         Student st = null;
         if(studentName != null)
@@ -401,7 +402,9 @@ public class StudentManager : Singleton<StudentManager>
     {
         [FieldOffset(0)]
         public ConflictType Type;
-        
+
+        [FieldOffset(128)]
+        public List<string> AffectedStudents;
 
         // XXX: [FieldOffset(sizeof(ConflictType))] was not correct because it missaligned the pointer type inside the string variable inside the variants
         [FieldOffset(16)]
@@ -424,9 +427,12 @@ public class StudentManager : Singleton<StudentManager>
         public ConflictDescriptorInattention Inattention;
     }
 
+    // TODO: Change
     internal ConflictDescriptor GenerateConflictDescriptor(ConflictType type, string studentName)
     {
         ConflictDescriptor descriptor = new ConflictDescriptor { Type = type };
+
+        descriptor.AffectedStudents = new List<string>();
 
         switch (type)
         {
@@ -475,6 +481,8 @@ public class StudentManager : Singleton<StudentManager>
                             targetSeatStudentNext != null ? targetSeatStudentNext.Name : targetSeatStudentPrevious.Name
                     };
                 }
+
+                descriptor.AffectedStudents.Add(descriptor.SitTogether.TargetSeatStudentName);
                 break;
             }
             case ConflictType.StandUp:
@@ -515,6 +523,9 @@ public class StudentManager : Singleton<StudentManager>
                             targetSeatStudentNext != null ? targetSeatStudentNext.Name : targetSeatStudentPrevious.Name
                     };
                 }
+
+                descriptor.AffectedStudents.Add(descriptor.Impulsivity.TargetBotherStudentName);
+
                 break;
             }
             case ConflictType.Inattention:
@@ -574,7 +585,7 @@ public class StudentManager : Singleton<StudentManager>
 
             case ConflictType.SitTogether:
                 student = GetStudentExpect(descriptor.SitTogether.StudentName);
-                student.GetComponent<StudentBehaviour>().SitTogether();
+                student.GetComponent<StudentBehaviour>().SitNextToGivenStudentConflict(StudentManager.Instance.GetStudent(descriptor.SitTogether.TargetSeatStudentName));
                 break;
 
             case ConflictType.StandUp:
@@ -627,7 +638,8 @@ public class StudentManager : Singleton<StudentManager>
         #nullable restore
     }
 
-    private bool GenerateConflictIsCapacityOk(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+    #region Conflict' Safety Checks
+    private bool IsConflictCapacityOk(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
     {
         if (_activeConflicts.Count == _maxActiveConflicts)
         {
@@ -645,7 +657,7 @@ public class StudentManager : Singleton<StudentManager>
             return true;
         }
     }
-    private bool GenerateConflictIsConflictFeasible(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+    private bool IsConflictFeasible(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
     {
         if ((descriptor.Type & ConflictTypeNonFeasible) != 0)
         {
@@ -663,7 +675,7 @@ public class StudentManager : Singleton<StudentManager>
             return true;
         }
     }
-    private bool GenerateConflictIsStudentConflictFree(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult, out string descriptorName)
+    private bool IsStudentConflictFree(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult, out string descriptorName)
     {
         string OutOfRange()
         {
@@ -701,7 +713,7 @@ public class StudentManager : Singleton<StudentManager>
             return true;
         }
     }
-    private bool GenerateConflictIsTypeImplemented(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+    private bool IsConflictTypeImplemented(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
     {
         erroneousResult = new ConflictGenerationResult
         {
@@ -725,17 +737,22 @@ public class StudentManager : Singleton<StudentManager>
             _ => false
         };
     }
+    #endregion
+
     internal ConflictGenerationResult GenerateConflict(ConflictType type, string studentName)
     {
         string name = studentName;
+        // si no tenemos nombre de estudiantes, buscamos uno válido
         if (string.IsNullOrEmpty(name))
         {
             name = GetStudents()[UnityEngine.Random.Range(0, _students.Count)].Name;
         } 
-        // var descriptor = GenerateConflictDescriptorExpectSame(type, name);
+        // esto nos devuelve un struct con el que definimos cada uno de los campos necesarios para ejecutar el conflicto
         var descriptor = GenerateConflictDescriptor(type, name);
 
-        if (!GenerateConflictIsCapacityOk(descriptor, out ConflictGenerationResult capacityErrorResult))
+        // comprobar si podemos generar el conflicto o si se ha generado un error porque la capacidad de conflictos activa a la vez
+        // se ha excedido
+        if (!IsConflictCapacityOk(descriptor, out ConflictGenerationResult capacityErrorResult))
         {
             // Didascalia.Utils.Error.DebugbreakFailMessage(
             Didascalia.Utils.Log.Warning(
@@ -746,7 +763,8 @@ public class StudentManager : Singleton<StudentManager>
             return capacityErrorResult;
         }
 
-        if (!GenerateConflictIsConflictFeasible(descriptor, out ConflictGenerationResult feasibilityErrorResult))
+        // ni idea
+        if (!IsConflictFeasible(descriptor, out ConflictGenerationResult feasibilityErrorResult))
         {
             Didascalia.Utils.Log.Warning(
                 $"Generated conflict of type {type} for student {name} is not feasible. Conflict will not be generated.",
@@ -754,7 +772,8 @@ public class StudentManager : Singleton<StudentManager>
             );
             return feasibilityErrorResult;
         }
-        else if (!GenerateConflictIsStudentConflictFree(descriptor, out ConflictGenerationResult studentConflictErrorResult, out string descriptorName))
+        // no podemos generar un conflicto si este estudiante ya tiene un conflicto activo
+        else if (!IsStudentConflictFree(descriptor, out ConflictGenerationResult studentConflictErrorResult, out string descriptorName))
         {
             Didascalia.Utils.Log.Warning(
                 $"Generated conflict of type {type} for student {name} cannot be generated "
@@ -765,7 +784,7 @@ public class StudentManager : Singleton<StudentManager>
             return studentConflictErrorResult;
         }
         // TODO: remove this check when all conflict types are implemented, because it should be the responsibility of the caller to not generate unimplemented conflict types
-        else if (!GenerateConflictIsTypeImplemented(descriptor, out ConflictGenerationResult unimplementedErrorResult))
+        else if (!IsConflictTypeImplemented(descriptor, out ConflictGenerationResult unimplementedErrorResult))
         {
             Didascalia.Utils.Log.Warning(
                 $"Generated conflict of type {type} for student {name} is not implemented yet. Conflict will not be generated.",
@@ -775,9 +794,17 @@ public class StudentManager : Singleton<StudentManager>
         }
         else
         {
+            // instanciamos el conflicto
             Conflict conflict = Instantiate(_conflictPrefab, transform).GetComponent<Conflict>();
+            // le damos nombre
             conflict.name = $"Conflict_{type}_{descriptorName}";
             conflict.SetConflictiveStudent(GetStudentExpect(descriptorName));
+
+            foreach (string stName in descriptor.AffectedStudents)
+            {
+                conflict.AddAffectedStudent(GetStudent(stName));
+            }
+
             _activeConflicts.Add(descriptorName, conflict);
             
             HandleConflict(descriptor);
@@ -813,9 +840,9 @@ public class StudentManager : Singleton<StudentManager>
 
     public void ResolveConflicts()
     {
-        foreach(string st in _selectedStudents)
+        foreach(Conflict ct in _activeConflicts.Values)
         {
-            _activeConflicts[st].ReceivePositiveResolution();
+            ct.ReceivePositiveResolution();
         }
 
         _activeConflicts.Clear();
@@ -830,23 +857,5 @@ public class StudentManager : Singleton<StudentManager>
     {
         _activeConflicts.Remove(s.Name);
     }
-    #endregion
-
-    #region DEBUG MUERTE Y DESTRUCCION BORRAR
-    //private void Update()
-    //{
-    //    if(Input.GetKeyUp(KeyCode.V))
-    //    {
-    //        _selectedStudents.Clear();
-    //        int i = 0;
-    //        foreach(string name in _students.Keys)
-    //        {
-    //            _selectedStudents.Add(name);
-    //            ++i;
-    //            if (i == 2) break;
-    //        }
-    //        OnChangePlaces();
-    //    }
-    //}
     #endregion
 }

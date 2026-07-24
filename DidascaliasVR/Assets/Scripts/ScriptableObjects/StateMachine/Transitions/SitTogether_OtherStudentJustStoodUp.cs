@@ -25,7 +25,7 @@ namespace Didascalia.StateMachine
         {
             base.OnCheck();
 
-            _target.ChangeSitSpotWithStudent(_machine.GetComponent<StudentBehaviour>());
+            _target.ChangeDeskWithStudent(_machine.GetComponent<StudentBehaviour>(), true);
         }
     }
 }

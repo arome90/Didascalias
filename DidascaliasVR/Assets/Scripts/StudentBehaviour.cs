@@ -9,16 +9,23 @@ using UnityEngine.Events;
 
 public enum StudentState
 {
-    Sitting,
+    SittingOnChair,
+    SittingOnFloor,
+
     StandingOnDesk,
     StandingRightOutOfDesk,
     StandingOutOfDesk,
+    
     LeavingDesk,
     EnteringDesk,
+    
     Walking,
+    
     Expelling,
     Expelled,
+    
     EnteringClass,
+    
     OpeningDoor,
     ClosingDoor
 }
@@ -43,12 +50,37 @@ public class StudentBehaviour : MonoBehaviour
 
     public Transform SitSpot { get { return _st.Desk.StudentPosition; } }
 
-    public void ChangeSitSpotWithStudent(StudentBehaviour other)
+    public void ChangeDeskWithStudent(StudentBehaviour other, bool changeOriginalDeskToo)
     {
         Transform thisParent = SitSpot;
         transform.parent = other.transform.parent;
         other.transform.parent = thisParent;
+
+        Student otherSt = other.GetComponent<Student>();
+
+        Desk thisDesk = _st.Desk;
+        _st.Desk = otherSt.Desk;
+        otherSt.Desk = thisDesk;
+
+        if (changeOriginalDeskToo)
+        {
+            _st.OriginalDesk = _st.Desk;
+            otherSt.OriginalDesk = otherSt.Desk;
+        }
     }
+
+    public void ChangeDesk(Desk newDesk, bool changeOriginalDeskToo)
+    {
+        transform.parent = newDesk.StudentPosition;
+        _st.Desk = newDesk;
+
+        if (changeOriginalDeskToo)
+        {
+            _st.OriginalDesk = _st.Desk;
+        }
+    }
+
+    private float _initialSpeed = 1.0f;
 
     private Desk _desk => _st.Desk;
 
@@ -65,10 +97,12 @@ public class StudentBehaviour : MonoBehaviour
     private TextMeshProUGUI _debugText = null;
 
     [Header("Events")]
-    public UnityEvent OnStandUp = new UnityEvent();
+    public UnityEvent OnStandUpChair = new UnityEvent();
+    public UnityEvent OnStandUpFloor = new UnityEvent();
     public UnityEvent OnExitDesk = new UnityEvent();
     public UnityEvent OnEnterDesk = new UnityEvent();
-    public UnityEvent OnSitDown = new UnityEvent();
+    public UnityEvent OnSitDownChair = new UnityEvent();
+    public UnityEvent OnSitDownFloor = new UnityEvent();
     public UnityEvent OnOpenDoor = new UnityEvent();
     public UnityEvent OnCloseDoor = new UnityEvent();
     public UnityEvent OnExpel = new UnityEvent();
@@ -88,6 +122,9 @@ public class StudentBehaviour : MonoBehaviour
     public UnityEvent OnGetDistractedRequested = new UnityEvent();
 
     public StudentState State { get { return _state; } }
+
+    private PlayerResolutionToConflict _currentPlayerResolution = PlayerResolutionToConflict.None;
+
     private void Start()
     {
         _animator = GetComponentInChildren<Didascalia.Student.StudentAnimatorController>();
@@ -95,31 +132,52 @@ public class StudentBehaviour : MonoBehaviour
         _st = GetComponent<Student>();
         _tts = GetComponent<TTSWit>();
 
+        _initialSpeed = _agent.speed;
+
         Didascalia.Utils.Error.DebugbreakFailIf(_animator == null, "Animator component not found", this);
         Didascalia.Utils.Error.DebugbreakFailIf(_agent == null, "NavMeshAgent component not found", this);
         Didascalia.Utils.Error.DebugbreakFailIf(_tts == null, "TTS component not found", this);
         Didascalia.Utils.Error.DebugbreakFailIf(_st == null, "Student component not found", this);
 
         // these events happen on the action's end.
-        OnStandUp.AddListener(ChangeStateOnStandUp);
+        OnStandUpChair.AddListener(ChangeStateOnStandUpChair);
+        OnStandUpFloor.AddListener(ChangeStateOnStandUpFloor);
         OnExitDesk.AddListener(ChangeStateOnExitDesk);
         OnEnterDesk.AddListener(ChangeStateOnEnterDesk);
-        OnSitDown.AddListener(ChangeStateOnSitDown);
+        OnSitDownChair.AddListener(ChangeStateOnSitDownChair);
+        OnSitDownFloor.AddListener(ChangeStateOnSitDownFloor);
         OnOpenDoor.AddListener(ChangeStateOnDoorInteraction);
         OnCloseDoor.AddListener(ChangeStateOnDoorInteraction);
         OnExpel.AddListener(ChangeStateOnExpel);
-        ChangeState(StudentState.Sitting);
+        ChangeState(StudentState.SittingOnChair);
+    }
+
+    public void SetTEA(bool isTEA)
+    {
+        _animator.SetIsTEA(isTEA);
     }
 
     private void OnDestroy()
     {
-        OnStandUp.RemoveListener(ChangeStateOnStandUp);
+        OnStandUpChair.RemoveListener(ChangeStateOnStandUpChair);
+        OnStandUpFloor.RemoveListener(ChangeStateOnStandUpFloor);
+        OnExitDesk.RemoveListener(ChangeStateOnExitDesk);
+        OnEnterDesk.RemoveListener(ChangeStateOnEnterDesk);
+        OnSitDownChair.RemoveListener(ChangeStateOnSitDownChair);
+        OnSitDownFloor.RemoveListener(ChangeStateOnSitDownFloor);
+        OnOpenDoor.RemoveListener(ChangeStateOnDoorInteraction);
+        OnCloseDoor.RemoveListener(ChangeStateOnDoorInteraction);
+        OnExpel.RemoveListener(ChangeStateOnExpel);
     }
 
-    // revisar
-    private void ChangeStateOnStandUp()
+    private void ChangeStateOnStandUpChair()
     {
         ChangeState(StudentState.StandingOnDesk);
+    }
+
+    private void ChangeStateOnStandUpFloor()
+    {
+        ChangeState(StudentState.StandingOutOfDesk);
     }
 
     private void ChangeStateOnExitDesk()
@@ -132,9 +190,14 @@ public class StudentBehaviour : MonoBehaviour
         ChangeState(StudentState.StandingOnDesk);
     }
 
-    private void ChangeStateOnSitDown()
+    private void ChangeStateOnSitDownChair()
     {
-        ChangeState(StudentState.Sitting);
+        ChangeState(StudentState.SittingOnChair);
+    }
+
+    private void ChangeStateOnSitDownFloor()
+    {
+        ChangeState(StudentState.SittingOnFloor);
     }
 
     private void ChangeStateOnDoorInteraction()
@@ -211,7 +274,7 @@ public class StudentBehaviour : MonoBehaviour
     {
         if (restrictive) 
         { 
-            StopAndClear();
+            StopAndClearActionQueue();
             EnqueueAction(MovingTowardsPoint_(transform.position));
         }
         else StartCoroutine(MovingTowardsPoint_(transform.position)); 
@@ -219,16 +282,12 @@ public class StudentBehaviour : MonoBehaviour
 
     public void Expel()
     {
-        StopAndClear();
+        StopAndClearActionQueue();
 
-        EnqueueAction(MoveToFrontDoorCoroutine_());
+        EnqueueAction(MoveToFrontDoor_());
         EnqueueAction(OpenDoorInside_());
         EnqueueAction(MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f));
         EnqueueAction(CloseDoorOutside_());
-
-        // EnqueueAction(ExpelCoroutine_());
-
-        //StartCoroutine(ExpelCoroutine_());
     }
 
     IEnumerator OpenDoorInside_()
@@ -247,27 +306,16 @@ public class StudentBehaviour : MonoBehaviour
         yield return new WaitUntil(() => _state == StudentState.Expelled);
     }
 
-    IEnumerator ExpelCoroutine_()
-    {
-        yield return MoveToFrontDoorCoroutine_();
-
-        yield return OpenDoorInside_();
-
-        yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);
-
-        yield return CloseDoorOutside_();
-    }
-
     // external
     public void MoveToFrontDoor(bool restrictive = false)
     {
-        if (restrictive) StopAndClear();
-        EnqueueAction(MoveToFrontDoorCoroutine_());
+        if (restrictive) StopAndClearActionQueue();
+        EnqueueAction(MoveToFrontDoor_());
         //return StartCoroutine(MoveToFrontDoorCoroutine_());
     }
 
     // internal
-    IEnumerator MoveToFrontDoorCoroutine_()
+    IEnumerator MoveToFrontDoor_()
     {
         return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.InsideStandingPoint, 0.65f);
     }
@@ -285,10 +333,48 @@ public class StudentBehaviour : MonoBehaviour
 
             yield return wait;
         }
-
         transform.rotation = rotation;
         yield return wait;
         // Didascalia.Utils.Error.DebugbreakFailUnimplemented("AcquireTargetRotation is not fully implemented, it should be able to be interrupted by other calls to this method or to MoveTo", this);
+    }
+
+    IEnumerator SmoothLookAt_(Transform target, float time)
+    {
+        // Seguridad: si no hay target o el tiempo es cero, salimos para evitar bucles infinitos o errores
+        if (target == null || time <= 0f) yield break;
+
+        Quaternion initialRotation = transform.rotation;
+        float elapsedTime = 0.0f;
+
+        while (elapsedTime < time)
+        {
+            // 1. Calculamos la dirección hacia el objetivo en este frame
+            Vector3 direction = target.position - transform.position;
+
+            // Evitamos un error visual si el target está exactamente en nuestra misma posición
+            if (direction != Vector3.zero)
+            {
+                // 2. Calculamos la rotación objetivo usando LookRotation
+                Quaternion targetRot = Quaternion.LookRotation(direction);
+
+                // 3. Incrementamos el tiempo transcurrido
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / time); // Nos aseguramos de que no pase de 1
+
+                // 4. Interpolamos suavemente
+                transform.rotation = Quaternion.Slerp(initialRotation, targetRot, t);
+            }
+
+            // Esperamos al siguiente frame (ciclo Update)
+            yield return null;
+        }
+
+        // Al finalizar el bucle, nos aseguramos de mirar perfectamente al objetivo por última vez
+        Vector3 finalDirection = target.position - transform.position;
+        if (finalDirection != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(finalDirection);
+        }
     }
 
     // external
@@ -342,7 +428,7 @@ public class StudentBehaviour : MonoBehaviour
 
         yield return OpenDoorOutside_();
 
-        yield return MoveToFrontDoorCoroutine_();
+        yield return MoveToFrontDoor_();
 
         yield return CloseDoorInside_();
     }
@@ -356,6 +442,9 @@ public class StudentBehaviour : MonoBehaviour
         // if we're not standing out of desk...
         // then we wait for leaving desk animation to finish
         yield return LeaveDesk_();
+
+        // if we're standing on floor, we should be standing
+        yield return StandUp_();
 
         _agent.SetDestination(point);
         _agent.speed = speed;
@@ -375,7 +464,7 @@ public class StudentBehaviour : MonoBehaviour
     #region StandUp
     internal void SetOnFoot()
     {
-        _animator.SetOnFoot();
+        _animator.StandUpFromChair();
     }
 
     internal void UnsetOnFoot()
@@ -383,15 +472,25 @@ public class StudentBehaviour : MonoBehaviour
         _animator.SitDown();
     }
 
+    private bool IsSitting() { return IsSittingOnChair() || IsSittingOnFloor(); }
+    private bool IsSittingOnChair() { return State == StudentState.SittingOnChair; }
+    private bool IsSittingOnFloor() { return State == StudentState.SittingOnFloor; }
+
+    private bool IsStanding() { return IsStandingOnDesk() || IsStandingOutOfDesk() || IsStandingRightOutOfDesk(); }
+    private bool IsStandingOnDesk() { return State == StudentState.StandingOnDesk; }
+    private bool IsStandingOutOfDesk() { return State == StudentState.StandingOutOfDesk; }
+    private bool IsStandingRightOutOfDesk() { return State == StudentState.StandingRightOutOfDesk; }
+
+    private bool IsOutOfClass() { return State == StudentState.Expelled; }
+
+    private bool IsLeavingDesk() { return State == StudentState.LeavingDesk; }
+
     public void StandUp()
     {
-        if(_state == StudentState.Sitting)
+        if (IsSitting())
         {
-            _animator.SetOnFoot();
-            if (_animator.StudentAnimator.GetBehaviour<OnStandUp>() == null)
-            {
-                Didascalia.Utils.Error.DebugbreakFailMessage("OnStandUp behaviour not found in animator", this);
-            } 
+            StopAndClearActionQueue();
+            EnqueueAction(StandUp_());
         }
 
         // XXX: We should be able to run this safety check to ensure the event invocation causes
@@ -407,27 +506,79 @@ public class StudentBehaviour : MonoBehaviour
         // }
     }
 
+    IEnumerator StandUp_()
+    {
+        if (IsSittingOnChair())
+        {
+            _animator.StandUpFromChair();
+            yield return new WaitUntil(() => State == StudentState.StandingOnDesk);
+        }
+        else if (IsSittingOnFloor())
+        {
+            _animator.StandUpFromFloor();
+            yield return new WaitUntil(() => State == StudentState.StandingOutOfDesk);
+        }
+    }
+
+    private bool IsSittingOnTheirDesk()
+    {
+        return _state == StudentState.SittingOnChair && _st.Desk == _st.OriginalDesk;
+    }
+
+    private bool IsSittingOnOtherDesk()
+    {
+        return _state == StudentState.SittingOnChair && _st.Desk != _st.OriginalDesk;
+    }
+
+    public void GoToFloor()
+    {
+        if(IsSittingOnFloor()) return;
+
+        StopAndClearActionQueue();
+        EnqueueAction(GoToFloor_());
+    }
+
+    IEnumerator GoToFloor_()
+    {
+        if (IsSittingOnFloor()) { yield break; }
+        if (IsSittingOnChair() || IsStandingOnDesk() || IsLeavingDesk()) { yield return LeaveDesk_(); }
+        if (IsOutOfClass()) { yield return EnterClass_(); }
+
+        yield return SitOnFloor_();
+    }
+
+    IEnumerator SitOnFloor_()
+    {
+        _animator.GoToFloor();
+        yield return new WaitUntil(() => State == StudentState.SittingOnFloor);
+    }
+
     public void SitDown()
     {
-        if (_state == StudentState.Sitting) return;
+        if (IsSittingOnTheirDesk()) return;
 
-        StopAndClear();
+        StopAndClearActionQueue();
         EnqueueAction(SitDown_());
         // return StartCoroutine(SitDownCoroutine_());
     }
 
     IEnumerator SitDown_()
     {
-        yield return EnterDesk_();
+        yield return EnterOriginalDesk_();
 
         _animator.SitDown();
     }
 
-    IEnumerator EnterDesk_()
+    IEnumerator EnterOriginalDesk_()
     {
         yield return EnterClass_();
         
-        if (_state == StudentState.StandingOnDesk || _state == StudentState.Sitting) yield break;
+        if (_state == StudentState.StandingOnDesk || IsSittingOnTheirDesk()) yield break;
+
+        if (IsSittingOnOtherDesk())
+        {
+            yield return LeaveDesk_();
+        }
 
         if (_state != StudentState.StandingRightOutOfDesk)
         {
@@ -457,17 +608,65 @@ public class StudentBehaviour : MonoBehaviour
         // StandingOnDesk completed
     }
 
-    public void ChangePlaces(Desk newDesk)
+    public void SitNextToRandomStudentConflict()
     {
-        StopAndClear();
-        EnqueueAction(ChangePlaces_(newDesk));
+        Student farStudent = StudentManager.Instance.GetStudentFarFromOtherStudent(_st);
+
+        SitNextToGivenStudentConflict(farStudent);
     }
 
-    IEnumerator ChangePlaces_(Desk newDesk)
+    public void SitNextToGivenStudentConflict(Student farStudent)
+    {
+        StopAndClearActionQueue();
+        EnqueueAction(SitNextToRandomStudentConflict_(farStudent));
+    }
+
+    IEnumerator SitNextToRandomStudentConflict_(Student farStudent)
+    {
+        yield return MovingTowardsPoint_(farStudent.Desk.OutOfDeskTransform.position);
+
+        yield return TalkToSomeone_(farStudent, 1.0f);
+
+        StudentBehaviour targetBehaviour = farStudent.GetComponent<StudentBehaviour>();
+
+        yield return targetBehaviour.LeaveDesk_();
+
+        ChangeDeskWithStudent(targetBehaviour, false);
+
+        targetBehaviour.SitDown();
+
+        yield return SitDown_();
+    }
+
+    IEnumerator TalkToSomeone_(Student st, float talkTime)
+    {
+        yield return SmoothLookAt_(st.transform, 0.65f);
+
+        _animator.StartTalking();
+        yield return new WaitForSeconds(talkTime);
+        _animator.StopTalking();
+    }
+
+    /// <summary>
+    /// Cambio de sitio obligado por el profesor.
+    /// </summary>
+    /// <param name="newPlace"></param>
+    public void SitOnNewPlace(Desk newPlace)
+    {
+        // asumimos que ya ha sido cambiado su sitio con otro estudiante
+        StopAndClearActionQueue();
+        EnqueueAction(SitOnNewPlace_(newPlace));
+    }
+
+    IEnumerator SitOnNewPlace_(Desk newPlace)
     {
         yield return LeaveDesk_();
 
-        _st.Desk = newDesk;
+        // vigilar esta línea, porque cuando se hacen cambios simultáneos puede ser 
+        // que las cosas no se pasen por copia, si no por referencia y eso
+        // podría causar que solo uno de los estudiantes que cambia de sitio
+        // reciba realmente su nuevo escritorio
+        ChangeDesk(newPlace, false);
 
         yield return SitDown_();
     }
@@ -475,7 +674,7 @@ public class StudentBehaviour : MonoBehaviour
     public void LeaveDesk()
     {
         // return StartCoroutine(LeaveDesk_());
-        StopAndClear();
+        StopAndClearActionQueue();
         EnqueueAction(LeaveDesk_());
     }
 
@@ -488,11 +687,9 @@ public class StudentBehaviour : MonoBehaviour
 
     IEnumerator LeaveDesk_()
     {
-        if (_state != StudentState.Sitting && _state != StudentState.StandingOnDesk) yield break;
+        if (!IsSittingOnChair() && !IsStandingOnDesk()) yield break;
 
-        if (_state == StudentState.Sitting) StandUp();
-        // first we wait for stand up animation to finish
-        yield return new WaitUntil(() => _state == StudentState.StandingOnDesk);
+        yield return StandUp_();
 
         ChangeState(StudentState.LeavingDesk);
         _animator.ExitDesk();
@@ -536,11 +733,57 @@ public class StudentBehaviour : MonoBehaviour
     }
     #endregion
 
+    IEnumerator WaitForPlayerAction()
+    {
+        _currentPlayerResolution = PlayerResolutionToConflict.None;
+        Player.Instance.OnPlayerResolution.AddListener((res) => _currentPlayerResolution = res);
+        Player.StartListeningForPlayerResolution();
+        yield return new WaitUntil(() => _currentPlayerResolution != PlayerResolutionToConflict.None);
+    }
+
+    #region Hyperstimulate
 
     public void Hyperstimulate()
     {
-        OnHyperstimulateRequested.Invoke();
+        // OnHyperstimulateRequested.Invoke();
+        EnqueueAction(Hyperstimulate_());
     }
+
+    IEnumerator Hyperstimulate_()
+    {
+        _animator.TEA_StartHyperstimulation();
+
+        yield return WaitForPlayerAction();
+
+        switch(_currentPlayerResolution)
+        {
+            case PlayerResolutionToConflict.None:
+                break;
+            case PlayerResolutionToConflict.Positive:
+                break;
+            case PlayerResolutionToConflict.Neutral:
+                break;
+            case PlayerResolutionToConflict.Negative:
+                // High Anxiety
+                int rand = UnityEngine.Random.Range(0, 3);
+                if (rand == 0) _animator.TEA_SetHighAnxiety();
+                else if (rand == 1)
+                {
+                    yield return LeaveDesk_();
+
+                }
+                else
+                {
+
+                }
+                break;
+        }
+
+        Debug.Log("Player has resolved!! oleole");
+    }
+
+
+    #endregion
     public void Frustrate()
     {
         OnFrustrateRequested.Invoke();
@@ -604,7 +847,7 @@ public class StudentBehaviour : MonoBehaviour
     /// <summary>
     /// Detiene la ejecución actual y limpia todo el estado.
     /// </summary>
-    public void StopAndClear()
+    public void StopAndClearActionQueue()
     {
         if (queueProcessor != null)
             StopCoroutine(queueProcessor);
@@ -614,6 +857,11 @@ public class StudentBehaviour : MonoBehaviour
 
         // Reseteamos el estado del procesador
         queueProcessor = null;
+
+        // reanudamos el movimiento por si acaso se quedó colgado al acabar alguna corrutina
+        _agent.SetDestination(_agent.transform.position);
+        _agent.speed = _initialSpeed;
+        _animator.StudentAnimator.SetFloat(Didascalia.Student.StudentAnimatorController.HashFloatSpeed, 0.0f);
     }
     #endregion
 }

@@ -6,7 +6,7 @@ public class OnSitDown : StateMachineBehaviour
     {
         StudentBehaviour behaviour = animator.GetComponentInParent<StudentBehaviour>();
         Didascalia.Utils.Log.Info("OnSitDown: " + behaviour.name, this);
-        behaviour.OnSitDown.Invoke();
+        behaviour.OnSitDownChair.Invoke();
     }
 
 }

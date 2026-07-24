@@ -22,7 +22,7 @@ public class ShouldStandUp : Transition
 
     public override bool Check()
     {
-        return _behaviour.State != StudentState.Sitting;
+        return _behaviour.State != StudentState.SittingOnChair;
     }
 
     public override void OnCheck()

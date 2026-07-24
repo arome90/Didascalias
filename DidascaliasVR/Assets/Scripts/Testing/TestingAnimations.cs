@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -30,7 +29,7 @@ public class TestingAnimations : MonoBehaviour
     {
         student.GetComponent<StudentBehaviour>().LeaveDesk();
     }
-
+        
     public void MoveToRandomPoint(Student student)
     {
         randomPoint.SetLocalPositionAndRotation(new Vector3(
@@ -52,6 +51,11 @@ public class TestingAnimations : MonoBehaviour
         student.GetComponent<StudentBehaviour>().Expel();
     }
 
+    public void Hyperstimulate(Student student)
+    {
+        student.GetComponent<StudentBehaviour>().Hyperstimulate();
+    }
+
     public void ChangeSits()
     {
         List<Student> sts = StudentManager.Instance.GetStudents();
@@ -66,10 +70,31 @@ public class TestingAnimations : MonoBehaviour
         StudentManager.Instance.DeselectStudents();
     }
 
+    public void SitTogether(Student st)
+    {
+        st.GetComponent<StudentBehaviour>().SitNextToRandomStudentConflict();
+    }
+
+    public void SetTEATrue(Student st)
+    {
+        st.Behaviour.SetTEA(true);
+    }
+
+    public void SetTEAFalse(Student st)
+    {
+        st.Behaviour.SetTEA(false);
+    }
+
+    public void GoToFloor(Student st)
+    {
+        st.Behaviour.GoToFloor();
+    }
+
     [HideInInspector]
     public UnityEvent onClassCreated = new UnityEvent();
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(TestingAnimations))]
 public class SpawnStudentsOnStartEditor : Editor
 {
@@ -102,9 +127,8 @@ public class SpawnStudentsOnStartEditor : Editor
 
             Student objetoSeleccionado = _students[_selectedIndex];
 
+            // these are Movement testing
             EditorGUILayout.Space(5);
-
-            // 2. Botones para disparar las funciones pasando el parámetro
             if (GUILayout.Button("StandUp"))
             {
                 script.StandUp(objetoSeleccionado);
@@ -125,16 +149,39 @@ public class SpawnStudentsOnStartEditor : Editor
             {
                 script.MoveToFrontDoor(objetoSeleccionado);
             }
+            if (GUILayout.Button("GoToFloor"))
+            {
+                script.GoToFloor(objetoSeleccionado);
+            }
+
+            // these are conflicts
+            EditorGUILayout.Space(5);
             if (GUILayout.Button("Expel"))
             {
                 script.Expel(objetoSeleccionado);
             }
-
-            EditorGUILayout.Space(5);
-
+            if (GUILayout.Button("Hyperstimulate"))
+            {
+                script.Hyperstimulate(objetoSeleccionado);
+            }
             if (GUILayout.Button("ChangeSits"))
             {
                 script.ChangeSits();
+            }
+            if (GUILayout.Button("SitTogether"))
+            {
+                script.SitTogether(objetoSeleccionado);
+            }
+
+            // these are to toggle TEA
+            EditorGUILayout.Space(5);
+            if (GUILayout.Button("TEA On"))
+            {
+                script.SetTEATrue(objetoSeleccionado);
+            }
+            if (GUILayout.Button("TEA Off"))
+            {
+                script.SetTEAFalse(objetoSeleccionado);
             }
         }
         else
@@ -160,3 +207,5 @@ public class SpawnStudentsOnStartEditor : Editor
         }
     }
 }
+
+#endif

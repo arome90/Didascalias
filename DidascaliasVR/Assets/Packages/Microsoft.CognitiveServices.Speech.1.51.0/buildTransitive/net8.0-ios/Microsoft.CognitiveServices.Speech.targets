@@ -1,0 +1,42 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'ios-arm64'">
+    <NativeReference Include="$(MSBuildThisFileDirectory)..\..\runtimes\ios-arm64\native\libMicrosoft.CognitiveServices.Speech.core.a">
+      <Kind>Static</Kind>
+      <ForceLoad>True</ForceLoad>
+      <IsCxx>True</IsCxx>
+      <Frameworks>AudioToolbox</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">
+    <NativeReference Include="$(MSBuildThisFileDirectory)..\..\runtimes\iossimulator-arm64\native\libMicrosoft.CognitiveServices.Speech.core.a">
+      <Kind>Static</Kind>
+      <ForceLoad>True</ForceLoad>
+      <IsCxx>True</IsCxx>
+      <Frameworks>AudioToolbox</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'iossimulator-x64'">
+    <NativeReference Include="$(MSBuildThisFileDirectory)..\..\runtimes\iossimulator-x64\native\libMicrosoft.CognitiveServices.Speech.core.a">
+      <Kind>Static</Kind>
+      <ForceLoad>True</ForceLoad>
+      <IsCxx>True</IsCxx>
+      <Frameworks>AudioToolbox</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">
+    <NativeReference Include="$(MSBuildThisFileDirectory)..\..\runtimes\maccatalyst-arm64\native\libMicrosoft.CognitiveServices.Speech.core.a">
+      <Kind>Static</Kind>
+      <ForceLoad>True</ForceLoad>
+      <IsCxx>True</IsCxx>
+      <Frameworks>AudioToolbox</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'maccatalyst-x64'">
+    <NativeReference Include="$(MSBuildThisFileDirectory)..\..\runtimes\maccatalyst-x64\native\libMicrosoft.CognitiveServices.Speech.core.a">
+      <Kind>Static</Kind>
+      <ForceLoad>True</ForceLoad>
+      <IsCxx>True</IsCxx>
+      <Frameworks>AudioToolbox</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+</Project>

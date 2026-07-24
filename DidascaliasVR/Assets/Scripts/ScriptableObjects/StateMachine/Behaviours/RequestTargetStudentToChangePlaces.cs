@@ -20,7 +20,7 @@ namespace Didascalia.StateMachine
             _targetStudentBehaviour = machine.GetData(_targetStudentID).GetComponent<StudentBehaviour>();
 
             _targetStudentBehaviour.ChangeState(StudentState.StandingOnDesk);
-            _targetStudentBehaviour.OnStandUp.AddListener(RequestSitDown);
+            _targetStudentBehaviour.OnStandUpChair.AddListener(RequestSitDown);
         }
 
         private void RequestSitDown()
@@ -30,7 +30,7 @@ namespace Didascalia.StateMachine
 
             // target student sit down
             _targetStudentBehaviour.SitDownStudent();
-            _targetStudentBehaviour.OnStandUp.RemoveListener(RequestSitDown);
+            _targetStudentBehaviour.OnStandUpChair.RemoveListener(RequestSitDown);
         }
 
         public override void Update() {}
