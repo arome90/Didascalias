@@ -122,7 +122,8 @@ namespace Didascalia.Student
         public static readonly int HashIsStimulatedTEA =                Animator.StringToHash("IsStimulatedTEA");
         public static readonly int HashIsTEAAnxious =                   Animator.StringToHash("IsTEAAnxious");
         public static readonly int HashIsTEAAnxiousHigh =               Animator.StringToHash("IsTEAAnxiousHigh");
-        
+        public static readonly int HashIsTEAOff =                       Animator.StringToHash("IsTEAOff");
+
         void Awake()
         {
             Utils.Error.DebugbreakFailUnless(studentAnimator != null, "Animator component is missing", this);
@@ -283,6 +284,7 @@ namespace Didascalia.Student
             HashIsStimulatedTEA,
             HashIsTEAAnxious,
             HashIsTEAAnxiousHigh,
+            HashIsTEAOff,
 
         };
         public uint TriggerStudentParameterCount => (uint)ValidStudentTriggerParameterHashes.Count;
@@ -355,13 +357,13 @@ namespace Didascalia.Student
             );
         }
 
-        public void SetStudentBoleanParameterValue(int hash, bool value)
+        public void SetStudentBooleanParameterValue(int hash, bool value)
         {
             EnsureStudentBooleanHash(hash);
             studentAnimator.SetBool(hash, value);
         }
-        public void SetStudentBooleanParameter(int hash) => SetStudentBoleanParameterValue(hash, true);
-        public void ResetStudentBooleanParameter(int hash) => SetStudentBoleanParameterValue(hash, false);
+        public void SetStudentBooleanParameter(int hash) => SetStudentBooleanParameterValue(hash, true);
+        public void ResetStudentBooleanParameter(int hash) => SetStudentBooleanParameterValue(hash, false);
 
         public void SetStudentTriggerParameter(int hash)
         {
@@ -501,7 +503,7 @@ namespace Didascalia.Student
 
         public void SetIsTEA(bool isTEA)
         {
-            SetStudentBoleanParameterValue(HashIsTEA, isTEA);
+            SetStudentBooleanParameterValue(HashIsTEA, isTEA);
         }
 
         public void TEA_StartHyperstimulation()
@@ -510,6 +512,20 @@ namespace Didascalia.Student
             int anim = rand == 0 ? HashIsTEAAnxious : HashIsStimulatedTEA;
             SetStudentBooleanParameter(anim);
         }
+        public void TEA_StopHyperstimulation()
+        {
+            ResetStudentBooleanParameter(HashIsTEAAnxious);
+            ResetStudentBooleanParameter(HashIsStimulatedTEA);
+            ResetStudentBooleanParameter(HashIsTEAAnxiousHigh);
+            ResetStudentBooleanParameter(HashIsTEAOff);
+        }
+
+        public void TEA_SetAnxiety()
+        {
+            // trigger
+            SetStudentBooleanParameter(HashIsTEAAnxious);
+        }
+
 
         public void TEA_SetHighAnxiety()
         {
@@ -519,6 +535,11 @@ namespace Didascalia.Student
 
             // trigger
             SetStudentBooleanParameter(HashIsTEAAnxiousHigh);
+        }
+
+        public void TEA_Off()
+        {
+            SetStudentBooleanParameter(HashIsTEAOff);
         }
 
         public void GoToFloor()

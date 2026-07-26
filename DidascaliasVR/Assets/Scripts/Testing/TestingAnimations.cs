@@ -38,7 +38,7 @@ public class TestingAnimations : MonoBehaviour
             UnityEngine.Random.Range(-3.0f, 3.0f)), 
             Quaternion.identity);
 
-        student.GetComponent<StudentBehaviour>().MoveTo(randomPoint, true);
+        student.GetComponent<StudentBehaviour>().MoveTo(randomPoint, StudentBehaviour.MovementAction.Walk, true);
     }
 
     public void MoveToFrontDoor(Student student)

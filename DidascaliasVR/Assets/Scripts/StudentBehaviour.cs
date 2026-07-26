@@ -1,3 +1,4 @@
+using Didascalia.Student;
 using Meta.WitAi.TTS.Integrations;
 using System;
 using System.Collections;
@@ -27,8 +28,9 @@ public enum StudentState
     EnteringClass,
     
     OpeningDoor,
-    ClosingDoor
+    ClosingDoor,
 }
+
 
 /// <summary>
 /// Contiene todos los m�todos que se encargan del comportamiento del estudiante.
@@ -36,6 +38,16 @@ public enum StudentState
 /// </summary>
 public class StudentBehaviour : MonoBehaviour
 {
+
+    public enum MovementAction
+    {
+        None = 0,
+        Walk = 1,
+        Run = 2,
+        RunAnxiety = 3,
+    }
+
+
     // Animator _animator;
     Didascalia.Student.StudentAnimatorController _animator;
     internal Didascalia.Student.StudentAnimatorController Animator => _animator;
@@ -237,23 +249,28 @@ public class StudentBehaviour : MonoBehaviour
     #region Walk
     IEnumerator StartWalking_(float time)
     {
-        return MovementAnimation_(true, time);
+        return MovementAnimation_(MovementAction.Walk, time);
     }
 
-    IEnumerator StopWalking_(float time)
+    IEnumerator StopMoving_(float time)
     {
-        return MovementAnimation_(false, time);
+        return MovementAnimation_(0, time);
     }
 
-    IEnumerator MovementAnimation_(bool wantsToWalk, float time)
+    IEnumerator MovementAnimation_(MovementAction movementAction, float time)
     {
         int hashFloatSpeed = Didascalia.Student.StudentAnimatorController.HashFloatSpeed;
         float speed = _animator.StudentAnimator.GetFloat(hashFloatSpeed);
         float initialSpeed = speed;
 
-        float goal;
-        if (wantsToWalk) goal = 1.0f;
-        else goal = 0.0f;
+        float goal = 0.0f;
+        switch (movementAction) 
+        { 
+            case MovementAction.None: goal = 0.0f; break;
+            case MovementAction.Walk: goal = 1.0f; break;
+            case MovementAction.Run: goal = 2.0f; break;
+            case MovementAction.RunAnxiety: goal = 3.0f; break; 
+        }
 
         float elapsedTime = 0.0f;
         bool done = false;
@@ -270,14 +287,22 @@ public class StudentBehaviour : MonoBehaviour
         }
     }
 
-    public void MoveTo(Transform transform, bool restrictive = false)
+    public void MoveTo(Transform transform, MovementAction movementAction = MovementAction.Walk, bool restrictive = false)
     {
         if (restrictive) 
         { 
             StopAndClearActionQueue();
-            EnqueueAction(MovingTowardsPoint_(transform.position));
+            EnqueueAction(MovingTowardsPoint_(transform.position, movementAction));
         }
-        else StartCoroutine(MovingTowardsPoint_(transform.position)); 
+        else StartCoroutine(MovingTowardsPoint_(transform.position, movementAction)); 
+    }
+
+    IEnumerator MoveToRandomPoint(MovementAction movementAction)
+    {
+        // we get a random student just to get a "secure" place to go to. Rework this, maybe (?
+        Student st = StudentManager.Instance.TryGetStudentByNameOrGetRandom(null);
+
+        yield return MovingTowardsPoint_(st.Desk.OutOfDeskTransform.position, movementAction);
     }
 
     public void Expel()
@@ -433,7 +458,7 @@ public class StudentBehaviour : MonoBehaviour
         yield return CloseDoorInside_();
     }
 
-    IEnumerator MovingTowardsPoint_(Vector3 point)
+    IEnumerator MovingTowardsPoint_(Vector3 point, MovementAction movementAction = MovementAction.Walk)
     {
         yield return EnterClass_();
 
@@ -450,12 +475,12 @@ public class StudentBehaviour : MonoBehaviour
         _agent.speed = speed;
         ChangeState(StudentState.Walking);
 
-        yield return StartWalking_(0.65f);
+        yield return MovementAnimation_(movementAction, 0.65f);
 
         yield return new WaitUntil(() => !_agent.pathPending);
         yield return new WaitUntil(() => _agent.remainingDistance <= _agent.stoppingDistance * 2);
 
-        yield return StopWalking_(0.95f);
+        yield return StopMoving_(0.95f);
         ChangeState(StudentState.StandingOutOfDesk);
     }
     #endregion
@@ -625,7 +650,7 @@ public class StudentBehaviour : MonoBehaviour
     {
         yield return MovingTowardsPoint_(farStudent.Desk.OutOfDeskTransform.position);
 
-        yield return TalkToSomeone_(farStudent, 1.0f);
+        yield return TalkToSomeoneForTime_(farStudent, 1.0f);
 
         StudentBehaviour targetBehaviour = farStudent.GetComponent<StudentBehaviour>();
 
@@ -638,13 +663,25 @@ public class StudentBehaviour : MonoBehaviour
         yield return SitDown_();
     }
 
-    IEnumerator TalkToSomeone_(Student st, float talkTime)
+    IEnumerator TalkToSomeoneForTime_(Student st, float talkTime)
     {
         yield return SmoothLookAt_(st.transform, 0.65f);
 
         _animator.StartTalking();
         yield return new WaitForSeconds(talkTime);
         _animator.StopTalking();
+    }
+
+    private void StartTalking()
+    {
+        _animator.StartTalking();
+        if (IsSittingOnChair()) _animator.SetStudentBooleanParameter(StudentAnimatorController.HashIsTalkingFront);
+    }
+
+    private void StopTalking()
+    {
+        _animator.StopTalking();
+        if (IsSittingOnChair()) _animator.ResetStudentBooleanParameter(StudentAnimatorController.HashIsTalkingFront);
     }
 
     /// <summary>
@@ -749,6 +786,10 @@ public class StudentBehaviour : MonoBehaviour
         EnqueueAction(Hyperstimulate_());
     }
 
+    // THERE'S WORK TO DO
+    // BECAUSE THE "GOOD" OPTION CAN BE INTERRUPTED IF THE USER DOES SOMETHING WRONG AND THEREFORE CAN LEAD INTO 
+    // THE NEGATIVE RESOLUTION.
+    // WE NEED SOME WAY OF CONTROLLING THIS :)
     IEnumerator Hyperstimulate_()
     {
         _animator.TEA_StartHyperstimulation();
@@ -760,24 +801,47 @@ public class StudentBehaviour : MonoBehaviour
             case PlayerResolutionToConflict.None:
                 break;
             case PlayerResolutionToConflict.Positive:
+                StartTalking();
+                yield return new WaitForSeconds(5.0f);
+                StopTalking();
                 break;
             case PlayerResolutionToConflict.Neutral:
+                _animator.TEA_Off();
+
+                yield return WaitForPlayerAction();
+
                 break;
             case PlayerResolutionToConflict.Negative:
                 // High Anxiety
                 int rand = UnityEngine.Random.Range(0, 3);
+
                 if (rand == 0) _animator.TEA_SetHighAnxiety();
                 else if (rand == 1)
                 {
                     yield return LeaveDesk_();
 
+                    yield return GoToFloor_();
+
+                    _animator.TEA_SetAnxiety();
+
+                    yield return WaitForPlayerAction();
                 }
                 else
                 {
+                    yield return LeaveDesk_();
 
+                    yield return MoveToRandomPoint(MovementAction.RunAnxiety);
+
+                    yield return GoToFloor_();
+
+                    _animator.TEA_SetAnxiety();
+
+                    yield return WaitForPlayerAction();
                 }
                 break;
         }
+
+        _animator.TEA_StopHyperstimulation();
 
         Debug.Log("Player has resolved!! oleole");
     }
