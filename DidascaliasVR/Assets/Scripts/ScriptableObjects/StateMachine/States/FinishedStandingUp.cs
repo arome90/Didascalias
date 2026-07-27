@@ -18,7 +18,7 @@ public class FinishedStandingUp : Transition
 
         _behaviour = machine.GetComponent<StudentBehaviour>();
 
-        _behaviour.OnStandUp.AddListener(OnStandUp);
+        _behaviour.OnStandUpChair.AddListener(OnStandUp);
     }
 
     public override bool Check()
@@ -30,6 +30,6 @@ public class FinishedStandingUp : Transition
     {
         base.OnCheck();
 
-        _behaviour.OnStandUp.RemoveListener(OnStandUp);
+        _behaviour.OnStandUpChair.RemoveListener(OnStandUp);
     }
 }

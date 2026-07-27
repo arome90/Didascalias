@@ -3,6 +3,9 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     [SerializeField]
+    private bool _isFrontDoor = true;
+
+    [SerializeField]
     private Transform _insideStandingPoint;
     public Transform InsideStandingPoint => _insideStandingPoint;
 
@@ -15,6 +18,9 @@ public class Door : MonoBehaviour
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
+
+        if (_isFrontDoor) ClassManager.Instance.SetFrontDoor(this);
+        else ClassManager.Instance.SetBackDoor(this);
     }
 
     public void OpenInside()

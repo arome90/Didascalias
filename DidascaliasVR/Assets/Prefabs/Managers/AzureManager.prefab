@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2226324136122152288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 894428589596689817}
+  - component: {fileID: 179334837310430799}
+  - component: {fileID: 6351749268529317214}
+  m_Layer: 0
+  m_Name: AzureManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &894428589596689817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2226324136122152288}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 20.12496, y: 0.95626, z: -32.04476}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &179334837310430799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2226324136122152288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cfbaaefd88acc4ebe6e739c7f349da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AzureManagerCLU
+  endpointAzure: https://didascalia-esp.cognitiveservices.azure.com/
+  claveAzure: CwtX0XYBqNWFkizxJINt4D5EQKe62tE0o6u97PMlSvI9eKz7RfE1JQQJ99CGAC5RqLJXJ3w3AAAaACOGyZzq
+  nombreProyecto: Didascalias-ESP-CLU
+  nombreDespliegue: didascalia-clu-esp
+  apiVersion: 2023-04-01
+--- !u!114 &6351749268529317214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2226324136122152288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f88ef188c2b6642bef9ed6aa591809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  claveSpeech: 3o37hhqrQ1gZQA4CoNDS5GU40HLcdlFlkCGbst3zDQqbv94hYLU0JQQJ99CGAC5RqLJXJ3w3AAAAACOGRRnD
+  regionSpeech: westeurope
+  cluController: {fileID: 179334837310430799}
+  volumeLimit: 0.02
+  maxSilenceTime: 1.5
+  displayText: {fileID: 0}

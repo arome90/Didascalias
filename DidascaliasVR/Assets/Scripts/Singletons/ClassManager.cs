@@ -39,6 +39,9 @@ public class ClassManager : Singleton<ClassManager>
         Tooltip("Donde se encuentra la puerta de la clase")]
     private Door _backDoor;
 
+    public void SetFrontDoor(Door front) { _frontDoor = front; }
+    public void SetBackDoor(Door back) { _backDoor = back; }
+
     /// <summary>
     /// Lista de los escritorios generados
     /// </summary>
@@ -395,6 +398,7 @@ public class ClassManager : Singleton<ClassManager>
             st.GetComponent<StudentAnimatorController>().SetDeskAnimator(deskAnimator);
 
             st.Desk = _desks[i].GetComponent<Desk>();
+            st.OriginalDesk = st.Desk;
 
             // setting position
             st.transform.parent = st.Desk.StudentPosition;

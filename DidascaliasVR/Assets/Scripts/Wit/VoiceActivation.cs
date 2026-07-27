@@ -26,6 +26,8 @@ public class VoiceActivation : Singleton<VoiceActivation>
     /// <summary>
     /// Diccionario que contiene una intenci�n y el m�todo al que queremos
     /// llamar cuando se registre una entrada con dicha intenci�n
+    /// 
+    /// No se usa para conflictos, sólo para las acciones que se llamen por el habla del usuario
     /// </summary>
     [SerializeField, SerializedDictionary("Intention", "On response to intention")]
     SerializedDictionary<Intention, UnityEvent<WitMessageData>> _onResponseToIntent;
@@ -80,8 +82,6 @@ public class VoiceActivation : Singleton<VoiceActivation>
         {
             _onValidatePartialResponse = new UnityEvent<WitMessageData>();
         }
-
-        _onValidatePartialResponse.AddListener(ChangeSelectedStudents);
 
         // Cuando se complete la petici�n, volvemos a activar la 
         // voz de nuestro jugador para realizar una escucha continua

@@ -11,7 +11,7 @@ public enum Intention
     Expulsion = 1,
     CambiarAlumno = 2,
     Sentarse = 3,
-    Postponer = 4,
+    Postponer = 4
 }
 
 /// <summary>

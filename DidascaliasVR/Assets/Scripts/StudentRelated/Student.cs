@@ -16,7 +16,9 @@ public class Student : MonoBehaviour
         Tooltip("Texto que muestra el nombre del estudiante al jugador")]
     TextMeshProUGUI _nameTag;
 
-    
+    [HideInInspector]
+    public AudioSource _audioSource = null;
+
     /// <summary>
     /// Estudiante que est� justo antes de nuestro estudiante
     /// Puede tomar valor 'null' si es el primero
@@ -45,10 +47,31 @@ public class Student : MonoBehaviour
         } 
     }
 
-    private Desk _desk = null;
+    private StudentBehaviour _behaviour = null;
+    public StudentBehaviour Behaviour { get {
+            if (_behaviour == null) _behaviour = GetComponent<StudentBehaviour>();
+            return _behaviour; } }
 
+    private Desk _desk = null;
+    private Desk _originalDesk = null;
+
+    /// <summary>
+    /// El escritorio al que el alumno está vinculado
+    /// </summary>
     public Desk Desk { get { return _desk; }
         set { _desk = value; } }
+
+    /// <summary>
+    /// El escritorio al que el alumno está vinculado que representa el sitio que el 
+    /// profesor le asignó. Esta variable SÓLO cambiará cuando sea la docente
+    /// la que exija el cambio de escritorio de los alumnos y no sucederá
+    /// el cambio cuando sea el alumno el que decida cambiarse de sitio
+    /// </summary>
+    public Desk OriginalDesk
+    {
+        get { return _originalDesk; }
+        set { _originalDesk = value; }
+    }
 
     [Header("Parameters")]
     [SerializeField, Tooltip("Student's gender")]
@@ -71,9 +94,10 @@ public class Student : MonoBehaviour
         _nameTag.color = Color.white;
     }
 
-    public void Speak(string speak)
+    public async void Speak(string speak)
     {
-        Didascalia.Utils.Error.DebugbreakFailUnimplemented("Speak not implemened yet.", this);
+        await AzureTextToSpeech.Instance.Speak(speak, Gender, _audioSource);
+        // Didascalia.Utils.Error.DebugbreakFailUnimplemented("Speak not implemened yet.", this);
     }
 
     public void SetAsConflictive()
@@ -89,5 +113,7 @@ public class Student : MonoBehaviour
             if (!_nameTag) Debug.LogError("No name tag found in student");
         }
         _agent = GetComponent<NavMeshAgent>();
+
+        _audioSource = GetComponent<AudioSource>();
     }
 }
