@@ -772,10 +772,23 @@ public class StudentBehaviour : MonoBehaviour
 
     IEnumerator WaitForPlayerAction()
     {
-        _currentPlayerResolution = PlayerResolutionToConflict.None;
-        Player.Instance.OnPlayerResolution.AddListener((res) => _currentPlayerResolution = res);
-        Player.StartListeningForPlayerResolution();
+        ListenToPlayerResolution();
+
         yield return new WaitUntil(() => _currentPlayerResolution != PlayerResolutionToConflict.None);
+    }
+
+    private void ListenToPlayerResolution()
+    {
+        Player.Instance.OnPlayerResolution.RemoveListener(OnPlayerResolution);
+        _currentPlayerResolution = PlayerResolutionToConflict.None;
+
+        Player.Instance.OnPlayerResolution.AddListener(OnPlayerResolution);
+        Player.StartListeningForPlayerResolution();
+    }
+
+    private void OnPlayerResolution(PlayerResolutionToConflict res)
+    {
+        _currentPlayerResolution = res;
     }
 
     #region Hyperstimulate
@@ -786,68 +799,96 @@ public class StudentBehaviour : MonoBehaviour
         EnqueueAction(Hyperstimulate_());
     }
 
-    // THERE'S WORK TO DO
-    // BECAUSE THE "GOOD" OPTION CAN BE INTERRUPTED IF THE USER DOES SOMETHING WRONG AND THEREFORE CAN LEAD INTO 
-    // THE NEGATIVE RESOLUTION.
-    // WE NEED SOME WAY OF CONTROLLING THIS :)
     IEnumerator Hyperstimulate_()
     {
         _animator.TEA_StartHyperstimulation();
 
         yield return WaitForPlayerAction();
 
-        switch(_currentPlayerResolution)
+        bool isResolved = false;
+
+        while (!isResolved)
         {
-            case PlayerResolutionToConflict.None:
-                break;
-            case PlayerResolutionToConflict.Positive:
-                StartTalking();
-                yield return new WaitForSeconds(5.0f);
-                StopTalking();
-                break;
-            case PlayerResolutionToConflict.Neutral:
-                _animator.TEA_Off();
+            switch (_currentPlayerResolution)
+            {
+                case PlayerResolutionToConflict.Positive:
+                    StartTalking();
+                    _animator.TEA_ResetAnxiety();
 
-                yield return WaitForPlayerAction();
+                    int progress = 0;
 
-                break;
-            case PlayerResolutionToConflict.Negative:
-                // High Anxiety
-                int rand = UnityEngine.Random.Range(0, 3);
+                    // when progress reaches -2, we change to the Neutral or Negative conflict resolution
+                    // when progress reaches +2, we continue the Positive conflict resolution
+                    while (Mathf.Abs(progress) < 2)
+                    {
+                        yield return WaitForPlayerAction();
 
-                if (rand == 0) _animator.TEA_SetHighAnxiety();
-                else if (rand == 1)
-                {
-                    yield return LeaveDesk_();
+                        // if neutral or negative -> We set anxiety and deduct progress from player.
+                        if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral || 
+                            _currentPlayerResolution == PlayerResolutionToConflict.Negative)
+                        {
+                            progress--;
+                            // we set anxiety
+                            _animator.TEA_SetAnxiety();
+                        }
+                        else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+                        {
+                            progress++;
+                            isResolved = true;
+                            // we remove axniety
+                            _animator.TEA_ResetAnxiety();
+                        }
+                    }
 
-                    yield return GoToFloor_();
+                    if (progress >= 2) 
+                        _animator.TEA_StopHyperstimulation();
 
-                    _animator.TEA_SetAnxiety();
+                    StopTalking();
+                    break;
 
-                    yield return WaitForPlayerAction();
-                }
-                else
-                {
-                    yield return LeaveDesk_();
+                case PlayerResolutionToConflict.Neutral:
+                    _animator.TEA_StopHyperstimulation();
+                    _animator.TEA_Off();
+                    // yield return WaitForPlayerAction();
+                    isResolved = true;
+                    break;
 
-                    yield return MoveToRandomPoint(MovementAction.RunAnxiety);
-
-                    yield return GoToFloor_();
-
-                    _animator.TEA_SetAnxiety();
-
-                    yield return WaitForPlayerAction();
-                }
-                break;
+                case PlayerResolutionToConflict.Negative:
+                    yield return HyperstimulationNegativeResolution();
+                    isResolved = true;
+                    break;
+            }
         }
-
-        _animator.TEA_StopHyperstimulation();
-
-        Debug.Log("Player has resolved!! oleole");
     }
 
+    // Lógica de resolución negativa separada para mantener el corrutina principal limpia
+    private IEnumerator HyperstimulationNegativeResolution()
+    {
+        int rand = UnityEngine.Random.Range(0, 3);
+
+        if (rand == 0)
+        {
+            _animator.TEA_SetHighAnxiety();
+        }
+        else if (rand == 1)
+        {
+            yield return LeaveDesk_();
+            yield return GoToFloor_();
+            _animator.TEA_SetAnxiety();
+            yield return WaitForPlayerAction();
+        }
+        else
+        {
+            yield return LeaveDesk_();
+            yield return MoveToRandomPoint(MovementAction.RunAnxiety);
+            yield return GoToFloor_();
+            _animator.TEA_SetAnxiety();
+            yield return WaitForPlayerAction();
+        }
+    }
 
     #endregion
+
     public void Frustrate()
     {
         OnFrustrateRequested.Invoke();

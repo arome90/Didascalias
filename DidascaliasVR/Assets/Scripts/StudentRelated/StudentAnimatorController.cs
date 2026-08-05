@@ -522,8 +522,12 @@ namespace Didascalia.Student
 
         public void TEA_SetAnxiety()
         {
-            // trigger
             SetStudentBooleanParameter(HashIsTEAAnxious);
+        }
+
+        public void TEA_ResetAnxiety()
+        {
+            ResetStudentBooleanParameter(HashIsTEAAnxious);
         }
 
 
