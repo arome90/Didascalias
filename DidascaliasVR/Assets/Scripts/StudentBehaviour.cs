@@ -42,9 +42,10 @@ public class StudentBehaviour : MonoBehaviour
     public enum MovementAction
     {
         None = 0,
-        Walk = 1,
-        Run = 2,
-        RunAnxiety = 3,
+        WalkMaterial = 1,
+        Walk = 2,
+        Run = 3,
+        RunAnxiety = 4,
     }
 
 
@@ -93,6 +94,7 @@ public class StudentBehaviour : MonoBehaviour
     }
 
     private float _initialSpeed = 1.0f;
+    private bool _carryingClassMaterial = false;
 
     private Desk _desk => _st.Desk;
 
@@ -249,7 +251,10 @@ public class StudentBehaviour : MonoBehaviour
     #region Walk
     IEnumerator StartWalking_(float time)
     {
-        return MovementAnimation_(MovementAction.Walk, time);
+        if(_carryingClassMaterial)
+            return MovementAnimation_(MovementAction.WalkMaterial, time);
+        else
+            return MovementAnimation_(MovementAction.Walk, time);
     }
 
     IEnumerator StopMoving_(float time)
@@ -267,9 +272,10 @@ public class StudentBehaviour : MonoBehaviour
         switch (movementAction) 
         { 
             case MovementAction.None: goal = 0.0f; break;
-            case MovementAction.Walk: goal = 1.0f; break;
-            case MovementAction.Run: goal = 2.0f; break;
-            case MovementAction.RunAnxiety: goal = 3.0f; break; 
+            case MovementAction.WalkMaterial: goal = 1.0f; break;
+            case MovementAction.Walk: goal = 2.0f; break;
+            case MovementAction.Run: goal = 3.0f; break;
+            case MovementAction.RunAnxiety: goal = 4.0f; break; 
         }
 
         float elapsedTime = 0.0f;
@@ -888,6 +894,95 @@ public class StudentBehaviour : MonoBehaviour
     }
 
     #endregion
+    #region Get Distracted TEA
+
+    public void GetDistracted()
+    {
+        // OnGetDistractedRequested.Invoke();
+        EnqueueAction(GetDistracted_());
+    }
+
+    IEnumerator GetDistracted_()
+    {
+        _animator.TEA_GetDistracted();
+
+        yield return WaitForPlayerAction();
+
+        bool isResolved = false;
+
+        while (!isResolved)
+        {
+            switch (_currentPlayerResolution)
+            {
+                case PlayerResolutionToConflict.Positive:
+                    StartTalking();
+                    _animator.TEA_ResetAnxiety();
+
+                    int progress = 0;
+
+                    // when progress reaches -2, we change to the Neutral or Negative conflict resolution
+                    // when progress reaches +2, we continue the Positive conflict resolution
+                    while (Mathf.Abs(progress) < 2)
+                    {
+                        yield return WaitForPlayerAction();
+
+                        // if neutral or negative -> We set anxiety and deduct progress from player.
+                        if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral ||
+                            _currentPlayerResolution == PlayerResolutionToConflict.Negative)
+                        {
+                            progress--;
+                            // we set anxiety
+                            _animator.TEA_SetAnxiety();
+                        }
+                        else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+                        {
+                            progress++;
+                            isResolved = true;
+                            // we remove axniety
+                            _animator.TEA_ResetAnxiety();
+                        }
+                    }
+
+                    if (progress >= 2)
+                        _animator.TEA_UnSetDistracted();
+
+                    StopTalking();
+                    break;
+
+                case PlayerResolutionToConflict.Neutral:
+                    _animator.TEA_ResetAnxiety();
+                    _animator.TEA_UnSetDistracted();
+
+                    _animator.TEA_Off();
+
+                    isResolved = true;
+                    break;
+
+                case PlayerResolutionToConflict.Negative:
+                    GetDistractedNegativeResolution();
+
+                    isResolved = true;
+                    break;
+            }
+        }
+    }
+
+    private void GetDistractedNegativeResolution()
+    {
+        int rand = UnityEngine.Random.Range(0, 2);
+
+        if (rand == 0)
+        {
+            _animator.TEA_SetHighAnxiety();
+        }
+        else if (rand == 1)
+        {
+            _animator.TEA_SetAnxiety();
+        }
+    }
+
+    #endregion
+
 
     public void Frustrate()
     {
@@ -900,10 +995,6 @@ public class StudentBehaviour : MonoBehaviour
     public void FailToPayAttention()
     {
         OnFailToPayAttentionRequested.Invoke();
-    }
-    public void GetDistracted()
-    {
-        OnGetDistractedRequested.Invoke();
     }
 
     #endregion
