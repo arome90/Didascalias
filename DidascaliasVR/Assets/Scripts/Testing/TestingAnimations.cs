@@ -56,6 +56,11 @@ public class TestingAnimations : MonoBehaviour
         student.GetComponent<StudentBehaviour>().Hyperstimulate();
     }
 
+    public void GetDistracted(Student student)
+    {
+        student.GetComponent<StudentBehaviour>().GetDistracted();
+    }
+
     public void ChangeSits()
     {
         List<Student> sts = StudentManager.Instance.GetStudents();
@@ -163,6 +168,10 @@ public class SpawnStudentsOnStartEditor : Editor
             if (GUILayout.Button("Hyperstimulate"))
             {
                 script.Hyperstimulate(objetoSeleccionado);
+            }
+            if (GUILayout.Button("GetDistracted"))
+            {
+                script.GetDistracted(objetoSeleccionado);
             }
             if (GUILayout.Button("ChangeSits"))
             {
