@@ -32,6 +32,7 @@ public enum StudentState
 }
 
 
+
 /// <summary>
 /// Contiene todos los m�todos que se encargan del comportamiento del estudiante.
 /// Todos ellos son llamados en la m�quina de estados del prefab de Student
@@ -47,6 +48,15 @@ public class StudentBehaviour : MonoBehaviour
         RunAnxiety = 3,
     }
 
+    public enum LookDirection
+    {
+        Front,
+        Left,
+        Right,
+        Back
+    }
+
+    LookDirection _lookDirection;
 
     // Animator _animator;
     Didascalia.Student.StudentAnimatorController _animator;
@@ -239,6 +249,13 @@ public class StudentBehaviour : MonoBehaviour
     public void ExpelStudent()
     {
         OnExpellingRequested.Invoke();
+    }
+
+    public void StopLookingToSide()
+    {
+        _animator.StopLookingAtSide();
+
+        _lookDirection = LookDirection.Front;
     }
 
     #region SitDown
@@ -506,18 +523,18 @@ public class StudentBehaviour : MonoBehaviour
         _animator.SitDown();
     }
 
-    private bool IsSitting() { return IsSittingOnChair() || IsSittingOnFloor(); }
-    private bool IsSittingOnChair() { return State == StudentState.SittingOnChair; }
-    private bool IsSittingOnFloor() { return State == StudentState.SittingOnFloor; }
+    public bool IsSitting() { return IsSittingOnChair() || IsSittingOnFloor(); }
+    public bool IsSittingOnChair() { return State == StudentState.SittingOnChair; }
+    public bool IsSittingOnFloor() { return State == StudentState.SittingOnFloor; }
 
-    private bool IsStanding() { return IsStandingOnDesk() || IsStandingOutOfDesk() || IsStandingRightOutOfDesk(); }
-    private bool IsStandingOnDesk() { return State == StudentState.StandingOnDesk; }
-    private bool IsStandingOutOfDesk() { return State == StudentState.StandingOutOfDesk; }
-    private bool IsStandingRightOutOfDesk() { return State == StudentState.StandingRightOutOfDesk; }
+    public bool IsStanding() { return IsStandingOnDesk() || IsStandingOutOfDesk() || IsStandingRightOutOfDesk(); }
+    public bool IsStandingOnDesk() { return State == StudentState.StandingOnDesk; }
+    public bool IsStandingOutOfDesk() { return State == StudentState.StandingOutOfDesk; }
+    public bool IsStandingRightOutOfDesk() { return State == StudentState.StandingRightOutOfDesk; }
 
-    private bool IsOutOfClass() { return State == StudentState.Expelled; }
+    public bool IsOutOfClass() { return State == StudentState.Expelled; }
 
-    private bool IsLeavingDesk() { return State == StudentState.LeavingDesk; }
+    public bool IsLeavingDesk() { return State == StudentState.LeavingDesk; }
 
     public void StandUp()
     {
@@ -804,6 +821,210 @@ public class StudentBehaviour : MonoBehaviour
         _currentPlayerResolution = res;
     }
 
+    #region Draw Conflict
+    public void DrawDistacted()
+    {
+        // OnHyperstimulateRequested.Invoke();
+        EnqueueAction(DrawDistacted_());
+    }
+
+    IEnumerator DrawDistacted_(Student st = null)
+    {
+        _animator.SetIsDrawing(true);
+
+        yield return WaitForPlayerAction();
+
+        bool isResolved = false;
+
+        int progress = 0;
+
+        while (!isResolved)
+        {
+            switch (_currentPlayerResolution)
+            {
+                case PlayerResolutionToConflict.Positive:
+                    progress++;
+
+                    _animator.SetIsDrawing(false);
+
+                    // todo: attend animations
+                    if (progress >= 0) isResolved = true;
+                    else yield return WaitForPlayerAction();
+                    break;
+
+                case PlayerResolutionToConflict.Neutral:
+
+                    // todo: nothing happens? we wait until the conflict evolves
+                    yield return WaitForPlayerAction();
+                    break;
+
+                case PlayerResolutionToConflict.Negative:
+
+                    int random = UnityEngine.Random.Range(0, 2);
+
+                    if (random == 0)
+                    {
+                        _animator.SetAnxiety_1();
+                        _animator.SetIsJustifying();
+                        progress--;
+                    }
+                    else
+                    {
+                        _animator.SetAnxiety_1();
+                        _animator.SetIsCrying(true);
+                        progress--;
+                    }
+
+                    if (progress <= -2) isResolved = true; // bad resolution
+                    else yield return WaitForPlayerAction();
+
+                    break;
+            }
+        }
+    }
+    #endregion
+
+    #region BotherOtherStudents
+    public void BotherOtherStudents()
+    {
+        // OnHyperstimulateRequested.Invoke();
+        EnqueueAction(BotherStudent_());
+    }
+
+    IEnumerator BotherStudent_(Student st = null)
+    {
+        if (IsSittingOnFloor()) yield return StandUp_();
+
+        if (st == null) { st = StudentManager.Instance.GetNearestStudent(_st); }
+
+        Vector3 dir = (st.transform.position - _st.transform.position).normalized;
+
+        // looking right
+        if (dir.x > 0)      { _lookDirection = LookDirection.Right; }
+        // looking left
+        else if (dir.x < 0) { _lookDirection = LookDirection.Left; }
+        // looking front
+        else                { _lookDirection = LookDirection.Front; }
+
+        // if standing, move to them
+        if (IsStanding()) yield return MovementAnimationAndRotate_(st.transform, 0.5f, MovementAction.Walk);
+        
+        _animator.SetBothering(true);
+        _animator.SetLookDirection(_lookDirection);
+
+        ListenToPlayerResolution();
+
+        LookDirection savedLookDirection = _lookDirection;
+
+        float time = 0.0f;
+        WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
+        while (_currentPlayerResolution == PlayerResolutionToConflict.None)
+        {
+            yield return frameEnd;
+            time += Time.deltaTime;
+
+            if (time > 5.0f)
+            {
+                int random = UnityEngine.Random.Range(0, 3);
+                if (random < 2)
+                {
+                    _animator.SetBothering(true);
+                    StopTalking();
+                    _animator.SetLookDirection(savedLookDirection);
+                }
+                else { 
+                    _animator.SetBothering(false);
+                    StartTalking();
+                }
+            }
+        }
+
+        bool isResolved = false;
+
+        while (!isResolved)
+        {
+            switch (_currentPlayerResolution)
+            {
+                case PlayerResolutionToConflict.Positive:
+                    _animator.SetBothering(false);
+                    _animator.SetWriting(true);
+
+                    isResolved = true;
+                    break;
+
+                case PlayerResolutionToConflict.Neutral:
+
+                    yield return LeaveDesk_();
+                    ListenToPlayerResolution();
+
+                    _animator.SetBothering(true);
+                    _lookDirection = LookDirection.Front;
+                    _animator.SetLookDirection(_lookDirection);
+
+                    while (_currentPlayerResolution == PlayerResolutionToConflict.None)
+                    {
+                        yield return frameEnd;
+                        time += Time.deltaTime;
+
+                        if (time > 5.0f)
+                        {
+                            int rand = UnityEngine.Random.Range(0, 3);
+                            if (rand < 1)
+                            {
+                                _animator.SetBothering(true);
+                                _lookDirection = LookDirection.Front;
+                                _animator.SetLookDirection(_lookDirection);
+                            }
+                            else if (rand < 2)
+                            {
+                                _animator.SetBothering(true);
+                                _lookDirection = LookDirection.Left;
+                                _animator.SetLookDirection(_lookDirection);
+                            }
+                            else if (rand < 3)
+                            {
+                                _animator.SetBothering(true);
+                                _lookDirection = LookDirection.Right;
+                                _animator.SetLookDirection(_lookDirection);
+                            }
+                        }
+                    }
+                    break;
+
+                case PlayerResolutionToConflict.Negative:
+
+                    int random = UnityEngine.Random.Range(0, 3);
+
+                    if (random == 0)
+                    {
+                        _animator.SetAnxiety_1();
+                        _animator.SetIsJustifying();
+                    }
+                    else if (random == 1)
+                    {
+                        yield return StandUp_();
+                        _animator.SetIsJustifying();
+                        yield return new WaitForSeconds(5.0f);
+
+                        yield return MoveToFrontDoor_();
+                        yield return OpenDoorInside_();
+                        yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);
+                        yield return CloseDoorOutside_();
+
+                        isResolved = true;
+                    }
+                    else
+                    {
+                        _animator.SetAnxiety_1();
+                        _animator.SetIsCrying(true);
+                    }
+
+                    break;
+            }
+        }
+    }
+
+    #endregion
     #region Material Gone Wrong
     public void GetOutMaterialWrong()
     {
@@ -848,7 +1069,7 @@ public class StudentBehaviour : MonoBehaviour
                     else
                     {
                         _animator.SetAnxiety_1();
-                        _animator.SetIsCrying();
+                        _animator.SetIsCrying(true);
                     }
                     
                     yield return WaitForPlayerAction();
