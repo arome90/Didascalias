@@ -95,6 +95,11 @@ public class TestingAnimations : MonoBehaviour
         st.Behaviour.GoToFloor();
     }
 
+    public void GetOutMaterialWrong(Student st)
+    {
+        st.Behaviour.GetOutMaterialWrong();
+    }
+
     [HideInInspector]
     public UnityEvent onClassCreated = new UnityEvent();
 }
@@ -172,6 +177,10 @@ public class SpawnStudentsOnStartEditor : Editor
             if (GUILayout.Button("GetDistracted"))
             {
                 script.GetDistracted(objetoSeleccionado);
+            }
+            if (GUILayout.Button("GetOutMaterialWrong"))
+            {
+                script.GetOutMaterialWrong(objetoSeleccionado);
             }
             if (GUILayout.Button("ChangeSits"))
             {

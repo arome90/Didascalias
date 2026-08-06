@@ -31,6 +31,12 @@ public class ClassManager : Singleton<ClassManager>
     [SerializeField,
         Tooltip("Punto central de la clase, desde la cu�l se generar�n los escritorios.")]
     private Transform _classRoot;
+
+    [SerializeField,
+        Tooltip("Punto central de la clase, desde la cu�l se generar�n los escritorios.")]
+    private ClassMaterial _classMaterialTransform;
+    public void SetClassMaterial(ClassMaterial mat) { _classMaterialTransform = mat; }
+
     [SerializeField,
         Tooltip("Donde se encuentra la puerta de la clase")]
     private Door _frontDoor;
@@ -41,6 +47,8 @@ public class ClassManager : Singleton<ClassManager>
 
     public void SetFrontDoor(Door front) { _frontDoor = front; }
     public void SetBackDoor(Door back) { _backDoor = back; }
+
+
 
     /// <summary>
     /// Lista de los escritorios generados
@@ -173,6 +181,8 @@ public class ClassManager : Singleton<ClassManager>
     /// <returns> Posici�n de la puerta de la clase </returns>
     public Door FrontDoor => _frontDoor;
     public Door BackDoor => _backDoor;
+
+    public Transform ClassMaterialTransform => _classMaterialTransform.transform;
 
     /// <summary>
     /// Llamamos a este m�todo para generar una clase con escritorios seg�n

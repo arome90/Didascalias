@@ -38,14 +38,13 @@ public enum StudentState
 /// </summary>
 public class StudentBehaviour : MonoBehaviour
 {
-
     public enum MovementAction
     {
         None = 0,
-        WalkMaterial = 1,
-        Walk = 2,
-        Run = 3,
-        RunAnxiety = 4,
+        WalkMaterial = -1,
+        Walk = 1,
+        Run = 2,
+        RunAnxiety = 3,
     }
 
 
@@ -95,6 +94,8 @@ public class StudentBehaviour : MonoBehaviour
 
     private float _initialSpeed = 1.0f;
     private bool _carryingClassMaterial = false;
+
+    public void SetIsCarryingMaterial(bool carrying) { _carryingClassMaterial = carrying; SetIsCarryingMaterial(_carryingClassMaterial); }
 
     private Desk _desk => _st.Desk;
 
@@ -268,14 +269,16 @@ public class StudentBehaviour : MonoBehaviour
         float speed = _animator.StudentAnimator.GetFloat(hashFloatSpeed);
         float initialSpeed = speed;
 
+        if (_carryingClassMaterial) movementAction = MovementAction.WalkMaterial;
+
         float goal = 0.0f;
         switch (movementAction) 
         { 
             case MovementAction.None: goal = 0.0f; break;
-            case MovementAction.WalkMaterial: goal = 1.0f; break;
-            case MovementAction.Walk: goal = 2.0f; break;
-            case MovementAction.Run: goal = 3.0f; break;
-            case MovementAction.RunAnxiety: goal = 4.0f; break; 
+            case MovementAction.WalkMaterial: goal = -1.0f; break;
+            case MovementAction.Walk: goal = 1.0f; break;
+            case MovementAction.Run: goal = 2.0f; break;
+            case MovementAction.RunAnxiety: goal = 3.0f; break; 
         }
 
         float elapsedTime = 0.0f;
@@ -414,7 +417,7 @@ public class StudentBehaviour : MonoBehaviour
         return StartCoroutine(AcquireTargetRotation_(rotation, time));
     }
 
-    IEnumerator MovementAnimationAndRotate_(Transform transform, float rotateTime, UnityAction callback = null)
+    IEnumerator MovementAnimationAndRotate_(Transform transform, float rotateTime, MovementAction action = MovementAction.Walk, UnityAction callback = null)
     {
         yield return MovingTowardsPoint_(transform.position);
         yield return AcquireTargetRotation_(transform.rotation, rotateTime);
@@ -424,9 +427,9 @@ public class StudentBehaviour : MonoBehaviour
     }
 
     // external
-    public Coroutine MoveToAndRotate(Transform transform, float rotateTime, UnityAction callback = null)
+    public Coroutine MoveToAndRotate(Transform transform, float rotateTime, MovementAction action = MovementAction.Walk, UnityAction callback = null)
     {
-        return StartCoroutine(MovementAnimationAndRotate_(transform, rotateTime, callback));
+        return StartCoroutine(MovementAnimationAndRotate_(transform, rotateTime, action, callback));
     }
 
     IEnumerator MoveToFrontDoorOutsidePoint_()
@@ -622,7 +625,9 @@ public class StudentBehaviour : MonoBehaviour
 
         Vector3 initialPos = _desk.OutOfDeskTransform.position;
         float animProgress = _animator.GetCurrentStudentAnimationProgress();
-        yield return new WaitUntil(() => { animProgress = _animator.GetCurrentStudentAnimationProgress(); return animProgress < 1.0f; });
+
+        yield return new WaitUntil(() => { animProgress = _animator.GetCurrentStudentAnimationProgress(); 
+            return animProgress < 1.0f; });
 
         float speed = _agent.speed;
         _agent.speed = 0.0f;
@@ -635,6 +640,8 @@ public class StudentBehaviour : MonoBehaviour
         }
         
         _agent.speed = speed;
+
+        yield return new WaitUntil(() => !_carryingClassMaterial);
 
         // StandingOnDesk completed
     }
@@ -796,6 +803,77 @@ public class StudentBehaviour : MonoBehaviour
     {
         _currentPlayerResolution = res;
     }
+
+    #region Material Gone Wrong
+    public void GetOutMaterialWrong()
+    {
+        EnqueueAction(GetOutMaterialWrong_());
+    }
+
+    IEnumerator GetOutMaterialWrong_()
+    {
+        _animator.TDAH_GetMaterialOutWrong();
+
+        yield return WaitForPlayerAction();
+
+        _animator.TDAH_Unset_GetMaterialOutWrong();
+
+        bool isResolved = false;
+
+        while (!isResolved)
+        {
+            switch (_currentPlayerResolution)
+            {
+                case PlayerResolutionToConflict.Positive:
+                    yield return TakeClassMaterial();
+
+                    isResolved = true;
+                    break;
+
+                case PlayerResolutionToConflict.Neutral:
+                    _animator.SetIsOff();
+
+                    isResolved = true;
+                    break;
+
+                case PlayerResolutionToConflict.Negative:
+
+                    int rand = UnityEngine.Random.Range(0, 2);
+
+                    if (rand == 0)
+                    {
+                        _animator.SetAnxiety_1();
+                        _animator.SetIsJustifying();
+                    }
+                    else
+                    {
+                        _animator.SetAnxiety_1();
+                        _animator.SetIsCrying();
+                    }
+                    
+                    yield return WaitForPlayerAction();
+
+                    if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
+                        isResolved = true;
+
+                    break;
+            }
+        }
+    }
+
+    private IEnumerator TakeClassMaterial()
+    {
+        yield return LeaveDesk_();
+        yield return MovementAnimationAndRotate_(ClassManager.Instance.ClassMaterialTransform, 0.4f, MovementAction.Walk);
+        
+        _animator.TDAH_GetClassMaterial();
+        yield return new WaitUntil(() => _carryingClassMaterial);
+
+        yield return SitDown_();
+
+        _animator.GetDeskMaterialOut();
+    }
+    #endregion
 
     #region Hyperstimulate
 
