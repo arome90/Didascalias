@@ -330,6 +330,35 @@ public class StudentManager : Singleton<StudentManager>
         return st;
     }
 
+    public Student GetNearestStudent(Student other)
+    {
+        if (other.Behaviour.IsSittingOnChair())
+        {
+            Student st1 = other.NextStudent;
+            Student st2 = other.PreviousStudent;
+
+            if (st1 == null && st2 == null) return null;
+            else if (st1 == null) return st2;
+            else if (st2 == null) return st1;
+            else
+            {
+                float distanceTo1 = (other.transform.position - st1.transform.position).magnitude;
+                float distanceTo2 = (other.transform.position - st2.transform.position).magnitude;
+
+                if (distanceTo1 > distanceTo2) return st2;
+                else return st1;
+            }
+        }
+        else
+        {
+            Collider[] hitCollider = new Collider[1];
+            int numColliders = Physics.OverlapSphereNonAlloc(other.transform.position, 100.0f, hitCollider, LayerMask.GetMask("Student"));
+
+            return hitCollider[0].GetComponentInParent<Student>();
+        }
+
+    }
+
     #region WEB EVENTS
     public void MakeStudentTalk(string studentName, string message)
     {
