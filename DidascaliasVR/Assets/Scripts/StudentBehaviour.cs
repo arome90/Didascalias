@@ -105,7 +105,18 @@ public class StudentBehaviour : MonoBehaviour
     private float _initialSpeed = 1.0f;
     private bool _carryingClassMaterial = false;
 
-    public void SetIsCarryingMaterial(bool carrying) { _carryingClassMaterial = carrying; SetIsCarryingMaterial(_carryingClassMaterial); }
+    public bool IsCarryingMaterial => _carryingClassMaterial;
+    public void SetIsCarryingMaterial(bool carrying) 
+    { 
+        _carryingClassMaterial = carrying; 
+        _animator.SetIsCarryingMaterial(_carryingClassMaterial); 
+    }
+
+    public void PlaceMaterial()
+    {
+        if (!IsCarryingMaterial) return;
+        _animator.PlaceMaterial();
+    }
 
     private Desk _desk => _st.Desk;
 
@@ -658,6 +669,8 @@ public class StudentBehaviour : MonoBehaviour
         
         _agent.speed = speed;
 
+        // _animator.GetDeskMaterialOut();
+
         yield return new WaitUntil(() => !_carryingClassMaterial);
 
         // StandingOnDesk completed
@@ -702,10 +715,10 @@ public class StudentBehaviour : MonoBehaviour
         _animator.StopTalking();
     }
 
-    private void StartTalking()
+    private void StartTalking(bool onlyMoveMouth = false)
     {
         _animator.StartTalking();
-        if (IsSittingOnChair()) _animator.SetStudentBooleanParameter(StudentAnimatorController.HashIsTalkingFront);
+        if (!onlyMoveMouth && IsSittingOnChair()) _animator.SetStudentBooleanParameter(StudentAnimatorController.HashIsTalkingFront);
     }
 
     private void StopTalking()
@@ -865,7 +878,7 @@ public class StudentBehaviour : MonoBehaviour
                     if (random == 0)
                     {
                         _animator.SetAnxiety_1();
-                        _animator.SetIsJustifying();
+                        _animator.SetIsJustifying(true);
                         progress--;
                     }
                     else
@@ -911,6 +924,7 @@ public class StudentBehaviour : MonoBehaviour
         
         _animator.SetBothering(true);
         _animator.SetLookDirection(_lookDirection);
+        StartTalking(true);
 
         ListenToPlayerResolution();
 
@@ -928,16 +942,22 @@ public class StudentBehaviour : MonoBehaviour
                 int random = UnityEngine.Random.Range(0, 3);
                 if (random < 2)
                 {
-                    _animator.SetBothering(true);
                     StopTalking();
+                    _animator.SetBothering(true);
                     _animator.SetLookDirection(savedLookDirection);
+                    StartTalking(true);
                 }
                 else { 
                     _animator.SetBothering(false);
-                    StartTalking();
+                    StartTalking(false);
                 }
+
+                time = 0.0f;
             }
         }
+
+        StopTalking();
+        _animator.SetBothering(false);
 
         bool isResolved = false;
 
@@ -947,6 +967,9 @@ public class StudentBehaviour : MonoBehaviour
             {
                 case PlayerResolutionToConflict.Positive:
                     _animator.SetBothering(false);
+
+                    if (IsStanding()) yield return SitDown_();
+                    
                     _animator.SetWriting(true);
 
                     isResolved = true;
@@ -960,6 +983,8 @@ public class StudentBehaviour : MonoBehaviour
                     _animator.SetBothering(true);
                     _lookDirection = LookDirection.Front;
                     _animator.SetLookDirection(_lookDirection);
+
+                    StartTalking(true);
 
                     while (_currentPlayerResolution == PlayerResolutionToConflict.None)
                     {
@@ -998,25 +1023,49 @@ public class StudentBehaviour : MonoBehaviour
                     if (random == 0)
                     {
                         _animator.SetAnxiety_1();
-                        _animator.SetIsJustifying();
+                        _animator.SetIsJustifying(true);
+
+                        yield return WaitForPlayerAction();
+                        if (_currentPlayerResolution != PlayerResolutionToConflict.Positive) isResolved = true;
+                        else
+                        {
+                            _animator.SetIsJustifying(false);
+                            _animator.UnSetAnxiety_1();
+                        }
+
                     }
                     else if (random == 1)
                     {
                         yield return StandUp_();
-                        _animator.SetIsJustifying();
-                        yield return new WaitForSeconds(5.0f);
+                        StartTalking(true);
+                        _animator.SetIsJustifying(true);
+                        yield return WaitForPlayerAction();
+                        StopTalking();
 
-                        yield return MoveToFrontDoor_();
-                        yield return OpenDoorInside_();
-                        yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);
-                        yield return CloseDoorOutside_();
+                        if (_currentPlayerResolution != PlayerResolutionToConflict.Positive)
+                        {
 
-                        isResolved = true;
+                            yield return MoveToFrontDoor_();
+                            yield return OpenDoorInside_();
+                            yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);
+                            yield return CloseDoorOutside_();
+
+                            isResolved = true;
+                        }
                     }
                     else
                     {
                         _animator.SetAnxiety_1();
                         _animator.SetIsCrying(true);
+
+                        yield return WaitForPlayerAction();
+
+                        if (_currentPlayerResolution != PlayerResolutionToConflict.Positive) isResolved = true;
+                        else
+                        {
+                            _animator.SetIsCrying(false);
+                            _animator.UnSetAnxiety_1();
+                        }
                     }
 
                     break;
@@ -1025,6 +1074,7 @@ public class StudentBehaviour : MonoBehaviour
     }
 
     #endregion
+
     #region Material Gone Wrong
     public void GetOutMaterialWrong()
     {
@@ -1037,8 +1087,6 @@ public class StudentBehaviour : MonoBehaviour
 
         yield return WaitForPlayerAction();
 
-        _animator.TDAH_Unset_GetMaterialOutWrong();
-
         bool isResolved = false;
 
         while (!isResolved)
@@ -1046,6 +1094,7 @@ public class StudentBehaviour : MonoBehaviour
             switch (_currentPlayerResolution)
             {
                 case PlayerResolutionToConflict.Positive:
+                    _animator.TDAH_ResetGetMaterialOutWrong();
                     yield return TakeClassMaterial();
 
                     isResolved = true;
@@ -1064,7 +1113,7 @@ public class StudentBehaviour : MonoBehaviour
                     if (rand == 0)
                     {
                         _animator.SetAnxiety_1();
-                        _animator.SetIsJustifying();
+                        _animator.SetIsJustifying(true);
                     }
                     else
                     {
@@ -1092,7 +1141,12 @@ public class StudentBehaviour : MonoBehaviour
 
         yield return SitDown_();
 
-        _animator.GetDeskMaterialOut();
+        SortMaterial();
+    }
+
+    private void SortMaterial()
+    {
+        _animator.SortMaterial();
     }
     #endregion
 

@@ -100,6 +100,16 @@ public class TestingAnimations : MonoBehaviour
         st.Behaviour.GetOutMaterialWrong();
     }
 
+    public void DrawDistracted(Student st)
+    {
+        st.Behaviour.DrawDistacted();
+    }
+
+    public void BotherRandomStudents(Student st)
+    {
+        st.Behaviour.BotherOtherStudents();
+    }
+
     [HideInInspector]
     public UnityEvent onClassCreated = new UnityEvent();
 }
@@ -177,6 +187,14 @@ public class SpawnStudentsOnStartEditor : Editor
             if (GUILayout.Button("GetDistracted"))
             {
                 script.GetDistracted(objetoSeleccionado);
+            }
+            if (GUILayout.Button("DrawDistracted"))
+            {
+                script.DrawDistracted(objetoSeleccionado);
+            }
+            if (GUILayout.Button("BotherRandomStudents"))
+            {
+                script.BotherRandomStudents(objetoSeleccionado);
             }
             if (GUILayout.Button("GetOutMaterialWrong"))
             {

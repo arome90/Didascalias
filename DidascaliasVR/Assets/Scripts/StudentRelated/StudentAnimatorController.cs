@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace Didascalia.Student
 {
@@ -74,6 +75,7 @@ namespace Didascalia.Student
         // Looking
         public static readonly int HashIsLookingLeft =                  Animator.StringToHash("IsLookingLeft");
         public static readonly int HashIsLookingRight =                 Animator.StringToHash("IsLookingRight");
+        public static readonly int HashIsLookingBack =                  Animator.StringToHash("IsLookingBack");
 
         // Bother / Annoyed
         public static readonly int HashIsBothering =                    Animator.StringToHash("IsBothering");
@@ -86,7 +88,6 @@ namespace Didascalia.Student
         public static readonly int HashIsScared =                       Animator.StringToHash("IsScared");
         public static readonly int HashIsBored =                        Animator.StringToHash("IsBored");
         public static readonly int HashIsPhoning =                      Animator.StringToHash("IsPhoning");
-        public static readonly int HashIsLookingBack =                  Animator.StringToHash("IsLookingBack");
         public static readonly int HashTriggerAnnoyLeft =               Animator.StringToHash("TriggerAnnoyLeft");
         public static readonly int HashTriggerAnnoyRight =              Animator.StringToHash("TriggerAnnoyRight");
         public static readonly int HashTriggerPlaceForgottenMaterial =  Animator.StringToHash("TriggerPlaceForgottenMaterial");
@@ -117,8 +118,6 @@ namespace Didascalia.Student
         public static readonly int HashIsCarryingMaterial =             Animator.StringToHash("IsCarryingMaterial");
 
         public static readonly int HashIsTalkingFront =                 Animator.StringToHash("IsTalkingFront");
-        public static readonly int HashIsBotheringLeft =                Animator.StringToHash("IsBotheringLeft");
-        public static readonly int HashIsBotheringRight =               Animator.StringToHash("IsBotheringRight");
          
         // SET ON FOOT -> Stand Up from different places
         public static readonly int HashTriggerStandUpFromChair =        Animator.StringToHash("StandUpFromChair");
@@ -261,10 +260,6 @@ namespace Didascalia.Student
             HashIsScared,
             HashIsBored,
             HashIsPhoning,
-            HashIsLookingBack,
-            // HashIsTalkingBack,
-            HashIsWriting,
-            HashIsDrawing,
             HashIsGetMaterialOutWrong,
             HashIsLaughing,
             HashIsLaughingAlternative,
@@ -280,13 +275,8 @@ namespace Didascalia.Student
             HashIsAnxious,
             HashIsAnxiousAlternative1,
             HashIsAnxiousAlternative2,
-            HashIsCrying,
             HashIsCalmingDown,
-            HashIsJustifying,
             HashIsAnnoyed,
-            HashIsTalkingFront,
-            HashIsBotheringLeft,
-            HashIsBotheringRight,
 
             HashIsTEA,
             HashIsIdlingTEA,
@@ -299,6 +289,19 @@ namespace Didascalia.Student
             HashIsTEAOff,
             HashIsTEADistracted,
             HashIsCarryingMaterial,
+
+            HashIsWriting,
+            HashIsDrawing,
+
+            HashIsTalkingFront,
+
+            HashIsLookingBack,
+            HashIsLookingLeft,
+            HashIsLookingRight,
+            HashIsJustifying,
+
+            HashIsBothering,
+            HashIsCrying,
 
             HashIsOff,
         };
@@ -577,10 +580,9 @@ namespace Didascalia.Student
             SetDeskBooleanParameter(HashIsFailedMaterialOutDesk);
         }
 
-        public void TDAH_Unset_GetMaterialOutWrong()
+        public void TDAH_ResetGetMaterialOutWrong()
         {
             ResetStudentBooleanParameter(HashIsGetMaterialOutWrong);
-            ResetDeskBooleanParameter(HashIsFailedMaterialOutDesk);
         }
 
         public void TDAH_GetClassMaterial()
@@ -592,14 +594,26 @@ namespace Didascalia.Student
         public void SetIsCarryingMaterial(bool isCarrying)
         {
             if (isCarrying) SetStudentBooleanParameter(HashIsCarryingMaterial);
-            else ResetStudentBooleanParameter(HashIsCarryingMaterial);
+            else 
+            {
+                ResetStudentBooleanParameter(HashIsCarryingMaterial);
+            }
+        }
+
+        public void PlaceMaterial()
+        {
+            SetDeskTriggerParameter(HashTriggerPutClassMaterialDesk);
+        }
+        public void SortMaterial()
+        {
+            SetStudentTriggerParameter(HashTriggerDeskMaterialOut);
+            SetDeskTriggerParameter(HashTriggerSortMaterialDesk);
         }
 
         public void GetDeskMaterialOut()
         {
             SetStudentTriggerParameter(HashTriggerDeskMaterialOut);
             SetDeskTriggerParameter(HashTriggerPutClassMaterialDesk);
-            SetDeskBooleanParameter(HashIsAllMaterialOutUnsortedDesk);
         }
 
         public void SetAnxiety_1()
@@ -616,19 +630,15 @@ namespace Didascalia.Student
         {
             SetStudentBooleanParameterValue(HashIsCrying, cry);
         }
+
         public void SetIsDrawing(bool draw)
         {
             SetStudentBooleanParameterValue(HashIsDrawing, draw);
         }
 
-        public void SetIsJustifying()
+        public void SetIsJustifying(bool justify)
         {
-            SetStudentBooleanParameter(HashIsCrying);
-        }
-
-        public void UnSetIsJustifying()
-        {
-            ResetStudentBooleanParameter(HashIsCrying);
+            SetStudentBooleanParameterValue(HashIsJustifying, justify);
         }
 
         public void SetIsOff()
@@ -781,8 +791,6 @@ namespace Didascalia.Student
                 BooleanStudentParameter.IsJustifying =>           HashIsJustifying,
                 BooleanStudentParameter.IsAnnoyed =>              HashIsAnnoyed,
                 BooleanStudentParameter.IsTalkingFront =>         HashIsTalkingFront,
-                BooleanStudentParameter.IsBotheringLeft =>        HashIsBotheringLeft,
-                BooleanStudentParameter.IsBotheringRight =>       HashIsBotheringRight,
                 BooleanStudentParameter.IsIdlingTEA =>            HashIsIdlingTEA,
                 BooleanStudentParameter.IsLostSightTEA =>         HashIsLostSightTEA,
                 BooleanStudentParameter.IsTalkingCalmlyTEA =>     HashIsTalkingCalmlyTEA,
