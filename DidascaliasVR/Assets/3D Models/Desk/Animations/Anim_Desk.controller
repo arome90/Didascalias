@@ -31,7 +31,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Write
+    m_ConditionEvent: IsWriting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2969239441982303037}
@@ -233,7 +233,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Draw
+    m_ConditionEvent: IsDrawing
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: -4800807105897379676}
   m_DstState: {fileID: 0}
@@ -1032,13 +1032,13 @@ AnimatorController:
   m_Name: Anim_Desk
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Write
+  - m_Name: IsWriting
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Draw
+  - m_Name: IsDrawing
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1290,7 +1290,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Write
+    m_ConditionEvent: IsWriting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: -5010921044257723982}
   m_DstState: {fileID: 0}
@@ -1799,7 +1799,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Draw
+    m_ConditionEvent: IsDrawing
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6803937261297780973}

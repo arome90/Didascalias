@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static StudentBehaviour;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace Didascalia.Student
@@ -92,8 +93,8 @@ namespace Didascalia.Student
         public static readonly int HashTriggerAnnoyRight =              Animator.StringToHash("TriggerAnnoyRight");
         public static readonly int HashTriggerPlaceForgottenMaterial =  Animator.StringToHash("TriggerPlaceForgottenMaterial");
         public static readonly int HashTriggerGetMaterialOut =          Animator.StringToHash("TriggerGetMaterialOut");
-        public static readonly int HashIsWriting =                      Animator.StringToHash("Write");
-        public static readonly int HashIsDrawing =                      Animator.StringToHash("Draw");
+        public static readonly int HashIsWriting =                      Animator.StringToHash("IsWriting");
+        public static readonly int HashIsDrawing =                      Animator.StringToHash("IsDrawing");
         public static readonly int HashIsGetMaterialOutWrong =          Animator.StringToHash("IsGetMaterialOutWrong");
         public static readonly int HashIsLaughing =                     Animator.StringToHash("IsLaughing");
         public static readonly int HashIsLaughingAlternative =          Animator.StringToHash("IsLaughingAlternative");
@@ -117,7 +118,7 @@ namespace Didascalia.Student
 
         public static readonly int HashIsCarryingMaterial =             Animator.StringToHash("IsCarryingMaterial");
 
-        public static readonly int HashIsTalkingFront =                 Animator.StringToHash("IsTalkingFront");
+        public static readonly int HashIsTalking =                      Animator.StringToHash("IsTalking");
          
         // SET ON FOOT -> Stand Up from different places
         public static readonly int HashTriggerStandUpFromChair =        Animator.StringToHash("StandUpFromChair");
@@ -293,7 +294,7 @@ namespace Didascalia.Student
             HashIsWriting,
             HashIsDrawing,
 
-            HashIsTalkingFront,
+            HashIsTalking,
 
             HashIsLookingBack,
             HashIsLookingLeft,
@@ -528,6 +529,16 @@ namespace Didascalia.Student
             SetStudentBooleanParameterValue(HashIsBothering, isBothering);
         }
 
+        public void SetAnnoyed(bool isAnnoyed, Transform target)
+        {
+            SetStudentBooleanParameterValue(HashIsAnnoyed, isAnnoyed);
+
+            if (isAnnoyed)
+            {
+                SetLookDirection(StudentBehaviour.CalculateLookDirectionGivenTarget(target, transform));
+            }
+        }
+
         public void SetWriting(bool writing)
         {
             SetStudentBooleanParameterValue(HashIsWriting, writing);
@@ -616,14 +627,9 @@ namespace Didascalia.Student
             SetDeskTriggerParameter(HashTriggerPutClassMaterialDesk);
         }
 
-        public void SetAnxiety_1()
+        public void SetAnxiety_1(bool anxious)
         {
-            SetStudentBooleanParameter(HashIsAnxiousAlternative1);
-        }
-
-        public void UnSetAnxiety_1()
-        {
-            ResetStudentBooleanParameter(HashIsAnxiousAlternative1);
+            SetStudentBooleanParameterValue(HashIsAnxiousAlternative1, anxious);
         }
 
         public void SetIsCrying(bool cry)
@@ -790,7 +796,7 @@ namespace Didascalia.Student
                 BooleanStudentParameter.IsCalmingDown =>          HashIsCalmingDown,
                 BooleanStudentParameter.IsJustifying =>           HashIsJustifying,
                 BooleanStudentParameter.IsAnnoyed =>              HashIsAnnoyed,
-                BooleanStudentParameter.IsTalkingFront =>         HashIsTalkingFront,
+                BooleanStudentParameter.IsTalkingFront =>         HashIsTalking,
                 BooleanStudentParameter.IsIdlingTEA =>            HashIsIdlingTEA,
                 BooleanStudentParameter.IsLostSightTEA =>         HashIsLostSightTEA,
                 BooleanStudentParameter.IsTalkingCalmlyTEA =>     HashIsTalkingCalmlyTEA,
