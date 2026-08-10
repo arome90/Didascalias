@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Xml;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -119,6 +120,23 @@ public class StudentManager : Singleton<StudentManager>
     public List<string> GetSelectedStudents()
     {
         return _selectedStudents;
+    }
+
+    public List<Student> GetStudentsNearOrigin(Student origin)
+    {
+        Collider[] hitColliders = new Collider[9];
+        int numColliders = Physics.OverlapSphereNonAlloc(origin.transform.position, 4.5f, hitColliders, LayerMask.GetMask("Student"));
+
+        List<Student> students = new List<Student>();
+        foreach (Collider collider in hitColliders)
+        {
+            Student st = collider.GetComponentInParent<Student>();
+            students.Add(st);
+        }
+
+        students.Remove(origin);
+
+        return students;
     }
 
     /// <summary>

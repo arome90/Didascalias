@@ -8,5 +8,8 @@ public class OnEnterDesk : StateMachineBehaviour
         StudentBehaviour behaviour = animator.GetComponentInParent<StudentBehaviour>();
         Didascalia.Utils.Log.Info("OnEnterDesk: " + behaviour.name, this);
         behaviour.OnEnterDesk.Invoke();
+
+        behaviour.PlaceMaterial();
+
     }
 }
