@@ -1,11 +1,20 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 /// <summary>
 /// Chico (0) o Chica (1) (de momento)
 /// </summary>
 public enum Gender { Boy, Girl };
+
+public enum StudentType
+{
+    Participative_NonProblematic,
+    NonParticipative_NonProblematic,
+    Talkative,
+    Problematic
+}
 
 /// <summary>
 /// Componente que representa a una estudiante
@@ -30,9 +39,27 @@ public class Student : MonoBehaviour
     /// </summary>
     [HideInInspector] public Student NextStudent = null;
 
+    private string _context = null;
+    private string _ctxStateName = null;
+    private string _ctxStateDescription = null;
+
+    private List<string> _interactionHistory = null;
+
     NavMeshAgent _agent;
 
+    StudentType _type = StudentType.NonParticipative_NonProblematic;
+
+    public StudentType StType
+    {
+        get { return _type; }
+        set
+        {
+            _type = value;
+        }
+    }
+
     string _name;
+
     /// <summary>
     /// Nombre del estudiante.
     /// Deber�a ser �nico entre los dem�s estudiantes.
@@ -45,6 +72,23 @@ public class Student : MonoBehaviour
             _name = value;
             _nameTag.text = _name.ToUpper();
         } 
+    }
+
+    private int _age;
+
+    /// <summary>
+    /// Nombre del estudiante.
+    /// Deber�a ser �nico entre los dem�s estudiantes.
+    /// Ser� el identificador de cada estudiante, lo usaremos
+    /// tambi�n para refererinos a ellos mediante voz.
+    /// </summary>
+    public int Age
+    {
+        get { return _age; }
+        set
+        {
+            _age = value;
+        }
     }
 
     private StudentBehaviour _behaviour = null;
@@ -96,13 +140,41 @@ public class Student : MonoBehaviour
 
     public async void Speak(string speak)
     {
-        await AzureTextToSpeech.Instance.Speak(speak, Gender, _audioSource);
-        // Didascalia.Utils.Error.DebugbreakFailUnimplemented("Speak not implemened yet.", this);
+        Didascalia.Utils.Log.Message(Name + " speaks: "+ speak, this);
+        // if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Gender, _audioSource);
     }
 
     public void SetAsConflictive()
     {
         _nameTag.color = Color.red;
+    }
+
+    public void SetContext(string newContext)
+    {
+        _context = newContext;
+    }
+
+    public void SetStateContext(string stateName, string stateDescription)
+    {
+        _ctxStateName = stateName;
+        _ctxStateDescription = stateDescription;
+    }
+
+    public string GetContext()
+    {
+        return LLMManager.Instance.AddHistoryToContext(_context, _interactionHistory);
+    }
+
+    public void AddStudentInteractionContext(string interactionContext)
+    {
+        if (_interactionHistory == null) _interactionHistory = new List<string>();
+        _interactionHistory.Add(Name + ": " + interactionContext);
+    }
+
+    public void AddTeacherInteractionContext(string interactionContext)
+    {
+        if (_interactionHistory == null) _interactionHistory = new List<string>();
+        _interactionHistory.Add("Profesor: " + interactionContext);
     }
 
     private void Start()

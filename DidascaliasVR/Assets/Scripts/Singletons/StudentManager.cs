@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Xml;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -110,7 +108,7 @@ public class StudentManager : Singleton<StudentManager>
         if (_students.TryGetValue(name, out Student st)) return st;
         else return null;
     }
-    public Student GetStudentExpect(string name)
+    public Student GetStudentByName(string name)
     {
         Student st = GetStudent(name);
         Didascalia.Utils.Error.DebugbreakFailIf(st == null, $"No student found with name: {name}", this);
@@ -137,6 +135,72 @@ public class StudentManager : Singleton<StudentManager>
         students.Remove(origin);
 
         return students;
+    }
+
+    public void AsignStudentType(List<Student> students)
+    {
+        if (students == null || students.Count == 0)
+        {
+            Debug.LogWarning("La lista de estudiantes está vacía.");
+            return;
+        }
+
+        // We copy the list to avoid removing students fromt he general list
+        List<Student> studentsCopy = new List<Student>(students);
+
+        // if there are less than five students, we do not bother in making them problematic.
+        // it's easier to handle fewer students
+        if (students.Count > 5)
+        {
+            // at least one problematic
+            // we can't use TryGetStudentOrGetRandom() because this method is called before all students are generated and therefore
+            // assigned to the Students list variable
+            int rand = UnityEngine.Random.Range(0, studentsCopy.Count);
+            Student st = studentsCopy[rand];
+            st.StType = StudentType.Problematic;
+            LLMManager.Instance.GenerateStudentContext(st);
+
+            studentsCopy.Remove(st);
+
+            // at least one talkative
+            rand = UnityEngine.Random.Range(0, studentsCopy.Count);
+            st = studentsCopy[rand];
+            st.StType = StudentType.Talkative;
+            LLMManager.Instance.GenerateStudentContext(st);
+
+            studentsCopy.Remove(st);
+
+            // at least one participative
+            rand = UnityEngine.Random.Range(0, studentsCopy.Count);
+            st = studentsCopy[rand];
+            st.StType = StudentType.Participative_NonProblematic;
+            LLMManager.Instance.GenerateStudentContext(st);
+
+            studentsCopy.Remove(st);
+        }
+
+        foreach (Student student in studentsCopy) { student.StType = SelectStudentType(); LLMManager.Instance.GenerateStudentContext(student); }
+    }
+
+    private static StudentType SelectStudentType()
+    {
+        int weightNonParticipative = 90;    // NonParticipative_NonProblematic: 70% (Gran mayoría)
+        int weightParticipative = 10;       // Participative_NonProblematic: 10%
+        int weightTalkative = 10;           // Talkative: 10%
+        int weightProblematic = 10;         // Problematic: 10%
+
+        int totalWeights = weightNonParticipative + weightParticipative + weightTalkative + weightProblematic;
+        int rand = UnityEngine.Random.Range(0, totalWeights);
+
+        if (rand < weightNonParticipative)  return StudentType.NonParticipative_NonProblematic;
+
+        rand -= weightNonParticipative;
+        if (rand < weightParticipative)     return StudentType.Participative_NonProblematic;
+
+        rand -= weightParticipative;
+        if (rand < weightTalkative)         return StudentType.Talkative;
+
+        else                                return StudentType.Problematic;
     }
 
     /// <summary>
@@ -213,6 +277,9 @@ public class StudentManager : Singleton<StudentManager>
 
             st.Name = name;
             go.name = name;
+
+            st.Age = UnityEngine.Random.Range(13, 16);
+
             students.Add(st);
             _students.Add(st.Name, st);
 
@@ -224,6 +291,9 @@ public class StudentManager : Singleton<StudentManager>
             students[0].PreviousStudent = students[students.Count - 1];
             students[students.Count - 1] = students[0];
         }
+
+        // This also adds the LLM Context
+        AsignStudentType(students);
 
         Didascalia.Utils.Log.Info("Generated students: " + string.Join(", ", students.Select(s => s.Name)), this);
         return students;
@@ -326,7 +396,7 @@ public class StudentManager : Singleton<StudentManager>
         Student st = null;
         if(studentName != null)
         {
-            st = GetStudentExpect(studentName);
+            st = GetStudentByName(studentName);
         } 
         else if (st == null)
         {
@@ -495,7 +565,7 @@ public class StudentManager : Singleton<StudentManager>
                 }
                 else if (_students.Count == 3)
                 {
-                    var selected = GetStudentExpect(studentName);
+                    var selected = GetStudentByName(studentName);
                     string finalStudentName;
                     if (selected == GetStudents()[1])
                     {
@@ -516,8 +586,8 @@ public class StudentManager : Singleton<StudentManager>
                 }
                 else
                 {
-                    var targetSeatStudentNext = GetStudentExpect(studentName).NextStudent;
-                    var targetSeatStudentPrevious = GetStudentExpect(studentName).PreviousStudent;
+                    var targetSeatStudentNext = GetStudentByName(studentName).NextStudent;
+                    var targetSeatStudentPrevious = GetStudentByName(studentName).PreviousStudent;
                     Didascalia.Utils.Error.DebugbreakFailIf(
                         targetSeatStudentNext == null && targetSeatStudentPrevious == null,
                         "Selected student has no next or previous student to sit together with", this
@@ -558,8 +628,8 @@ public class StudentManager : Singleton<StudentManager>
                     descriptor.Impulsivity = new ConflictDescriptorImpulsivity { StudentName = studentName, TargetBotherStudentName = null };
                 }
                 else                {
-                    var targetSeatStudentNext = GetStudentExpect(studentName).NextStudent;
-                    var targetSeatStudentPrevious = GetStudentExpect(studentName).PreviousStudent;
+                    var targetSeatStudentNext = GetStudentByName(studentName).NextStudent;
+                    var targetSeatStudentPrevious = GetStudentByName(studentName).PreviousStudent;
                     Didascalia.Utils.Error.DebugbreakFailIf(
                         targetSeatStudentNext == null && targetSeatStudentPrevious == null,
                         "Selected student has no next or previous student to sit together with", this
@@ -624,41 +694,41 @@ public class StudentManager : Singleton<StudentManager>
         switch (descriptor.Type)
         {
             case ConflictType.Disrespect:
-                student = GetStudentExpect(descriptor.Disrespect.StudentName);
+                student = GetStudentByName(descriptor.Disrespect.StudentName);
                 // XXX: @ChichoRD Commented out this log
                 // student.Speak("Prueba de Insulto!");
                 student.GetComponent<StudentBehaviour>().Yell();
                 break;
 
             case ConflictType.SitTogether:
-                student = GetStudentExpect(descriptor.SitTogether.StudentName);
+                student = GetStudentByName(descriptor.SitTogether.StudentName);
                 student.GetComponent<StudentBehaviour>().SitNextToGivenStudentConflict(StudentManager.Instance.GetStudent(descriptor.SitTogether.TargetSeatStudentName));
                 break;
 
             case ConflictType.StandUp:
-                student = GetStudentExpect(descriptor.StandUp.StudentName);
+                student = GetStudentByName(descriptor.StandUp.StudentName);
                 student.GetComponent<StudentBehaviour>().StandUp();
                 break;
             
             case ConflictType.Hyperstimulation:
-                student = GetStudentExpect(descriptor.Hyperstimulation.StudentName);
+                student = GetStudentByName(descriptor.Hyperstimulation.StudentName);
                 student.GetComponent<StudentBehaviour>().Hyperstimulate();
                 break;
             case ConflictType.Frustration:
-                student = GetStudentExpect(descriptor.Frustration.StudentName);
+                student = GetStudentByName(descriptor.Frustration.StudentName);
                 student.GetComponent<StudentBehaviour>().Frustrate();
                 break;
             
             case ConflictType.Disorganization:
-                student = GetStudentExpect(descriptor.Disorganization.StudentName);
+                student = GetStudentByName(descriptor.Disorganization.StudentName);
                 student.GetComponent<StudentBehaviour>().GetDistracted();
                 break;
             case ConflictType.Impulsivity:
-                student = GetStudentExpect(descriptor.Impulsivity.StudentName);
+                student = GetStudentByName(descriptor.Impulsivity.StudentName);
                 student.GetComponent<StudentBehaviour>().GetMaterialOut();
                 break;
             case ConflictType.Inattention:
-                student = GetStudentExpect(descriptor.Inattention.StudentName);
+                student = GetStudentByName(descriptor.Inattention.StudentName);
                 student.GetComponent<StudentBehaviour>().FailToPayAttention();
                 break;
 
@@ -845,7 +915,7 @@ public class StudentManager : Singleton<StudentManager>
             Conflict conflict = Instantiate(_conflictPrefab, transform).GetComponent<Conflict>();
             // le damos nombre
             conflict.name = $"Conflict_{type}_{descriptorName}";
-            conflict.SetConflictiveStudent(GetStudentExpect(descriptorName));
+            conflict.SetConflictiveStudent(GetStudentByName(descriptorName));
 
             foreach (string stName in descriptor.AffectedStudents)
             {

@@ -449,7 +449,7 @@ public class ClassManager : Singleton<ClassManager>
     public void StartClass() {
         GenerateClass();
         AddStudentsToDesks();
-        if (ConnectionManager.Exists) ConnectionManager.Instance.ClassStarted();
+        if (WebDashboardManager.Exists) WebDashboardManager.Instance.ClassStarted();
     }
 
     private void RestartClassOnFadeOut()
