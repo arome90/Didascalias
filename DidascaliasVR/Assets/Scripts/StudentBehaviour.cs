@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Assertions.Must;
 using UnityEngine.Events;
 
 public enum StudentState
@@ -344,7 +345,7 @@ public class StudentBehaviour : MonoBehaviour
 
             _animator.StudentAnimator.SetFloat(hashFloatSpeed, speed);
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             done = speed == goal;
         }
@@ -413,16 +414,15 @@ public class StudentBehaviour : MonoBehaviour
         Quaternion initialRotation = transform.rotation;
 
         float elapsedTime = 0.0f;
-        var wait = new WaitForEndOfFrame();
         while(elapsedTime < time)
         {
             elapsedTime += Time.deltaTime;
             transform.rotation = Quaternion.Slerp(initialRotation, rotation, elapsedTime / time);
 
-            yield return wait;
+            yield return null;
         }
         transform.rotation = rotation;
-        yield return wait;
+        yield return null;
         // Didascalia.Utils.Error.DebugbreakFailUnimplemented("AcquireTargetRotation is not fully implemented, it should be able to be interrupted by other calls to this method or to MoveTo", this);
     }
 
@@ -697,7 +697,7 @@ public class StudentBehaviour : MonoBehaviour
         {
             animProgress = _animator.GetCurrentStudentAnimationProgress();
             transform.position = Vector3.Lerp(initialPos, SitSpot.position, animProgress);
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
         
         _agent.speed = speed;
@@ -743,22 +743,17 @@ public class StudentBehaviour : MonoBehaviour
     {
         yield return SmoothLookAt_(st.transform, 0.65f);
 
-        _animator.StartTalking();
+        StartTalking(false);
         yield return new WaitForSeconds(talkTime);
-        _animator.StopTalking();
+        StopTalking();
     }
 
-    private void StartTalking(bool onlyMoveMouth = false)
+    public void StartTalking(bool onlyMoveMouth = false)
     {
-        _animator.StartTalking();
-        if (!onlyMoveMouth && IsSittingOnChair()) _animator.SetStudentBooleanParameter(StudentAnimatorController.HashIsTalking);
+        _animator.StartTalking(onlyMoveMouth, IsSittingOnChair());
     }
 
-    private void StopTalking()
-    {
-        _animator.StopTalking();
-        if (IsSittingOnChair()) _animator.ResetStudentBooleanParameter(StudentAnimatorController.HashIsTalking);
-    }
+    public void StopTalking() =>_animator.StopTalking();
 
     /// <summary>
     /// Cambio de sitio obligado por el profesor.
@@ -819,7 +814,7 @@ public class StudentBehaviour : MonoBehaviour
             animProgress = _animator.GetCurrentStudentAnimationProgress();
                 
             transform.position = Vector3.Lerp(initialPos, _desk.OutOfDeskTransform.position, animProgress);
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
 
         _agent.speed = speed;
@@ -938,8 +933,11 @@ public class StudentBehaviour : MonoBehaviour
     #region Target
     Transform _target = null;
 
-    public void LookAtTarget()
+    public void SetTarget(Transform target) => _target = target;
+
+    public void LookAtTarget(Transform newTarget = null)
     {
+        if (newTarget != null) SetTarget(newTarget);
         if (_target != null)
         {
             _lookDirection = CalculateLookDirectionGivenTarget(_target, transform);
@@ -953,7 +951,7 @@ public class StudentBehaviour : MonoBehaviour
 
     public void SetAnnoyed(bool annoyed, Transform target)
     {
-        _target = target;
+        SetTarget(target);
         _animator.SetAnnoyed(annoyed, _target);
     }
 
@@ -985,10 +983,9 @@ public class StudentBehaviour : MonoBehaviour
         LookDirection savedLookDirection = _lookDirection;
 
         float time = 0.0f;
-        WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
         while (_currentPlayerResolution == PlayerResolutionToConflict.None)
         {
-            yield return frameEnd;
+            yield return null;
             time += Time.deltaTime;
 
             if (time > 5.0f)
@@ -1045,7 +1042,7 @@ public class StudentBehaviour : MonoBehaviour
 
                     while (_currentPlayerResolution == PlayerResolutionToConflict.None)
                     {
-                        yield return frameEnd;
+                        yield return null;
                         time += Time.deltaTime;
 
                         if (time > 5.0f)
@@ -1194,8 +1191,8 @@ public class StudentBehaviour : MonoBehaviour
         _animator.SetIsJustifying(isJustifying);
         _animator.SetAnxiety_1(isJustifying);
 
-        if (isJustifying)   _animator.StartTalking();
-        else                _animator.StopTalking();
+        if (isJustifying)   StartTalking(false);
+        else                StopTalking();
     }
 
     public void SetIsCrying(bool isCrying)
@@ -1282,12 +1279,14 @@ public class StudentBehaviour : MonoBehaviour
         if (rand == 0)
         {
             _animator.TEA_SetHighAnxiety();
+            StudentManager.Instance.MakeNearbyStudentsLaugh(_st);
         }
         else if (rand == 1)
         {
             yield return LeaveDesk_();
             yield return GoToFloor_();
             _animator.TEA_SetAnxiety();
+            StudentManager.Instance.MakeNearbyStudentsLaugh(_st);
             yield return WaitForPlayerAction();
         }
         else
@@ -1296,11 +1295,23 @@ public class StudentBehaviour : MonoBehaviour
             yield return MoveToRandomPoint(MovementAction.RunAnxiety);
             yield return GoToFloor_();
             _animator.TEA_SetAnxiety();
+            StudentManager.Instance.MakeNearbyStudentsLaugh(_st);
             yield return WaitForPlayerAction();
         }
     }
 
     #endregion
+
+
+
+    #region Laugh
+    public void Laugh()
+    {
+        _animator.SetIsLaughing(true);
+        if (UnityEngine.Random.Range(0, 2) == 0) _animator.SetIsPointing(true);
+    }
+    #endregion
+
     #region Get Distracted TEA
 
     public void GetDistracted()

@@ -1,3 +1,4 @@
+using MathNet.Numerics.Distributions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,6 +129,7 @@ public class StudentManager : Singleton<StudentManager>
         List<Student> students = new List<Student>();
         foreach (Collider collider in hitColliders)
         {
+            if (collider == null) continue;
             Student st = collider.GetComponentInParent<Student>();
             students.Add(st);
         }
@@ -135,6 +137,38 @@ public class StudentManager : Singleton<StudentManager>
         students.Remove(origin);
 
         return students;
+    }
+
+    public void MakeNearbyStudentsLaugh(Student origin)
+    {
+        List<Student> students = GetStudentsNearOrigin(origin);
+
+        foreach (Student student in students)
+        {
+            MakeStudentLaugh(student, origin);
+        }
+    }
+
+    public void MakeNearbyStudentsTalk(Student origin)
+    {
+        List<Student> students = GetStudentsNearOrigin(origin);
+
+        foreach (Student student in students)
+        {
+            MakeStudentTalk(student, origin);
+        }
+    }
+
+    public void MakeStudentLaugh(Student st, Student origin)
+    {
+        st.Behaviour.LookAtTarget(origin.transform);
+        st.Behaviour.Laugh();
+    }
+
+    public void MakeStudentTalk(Student st, Student origin = null)
+    {
+        st.Behaviour.LookAtTarget(origin.transform);
+        st.Behaviour.StartTalking();
     }
 
     public void AsignStudentType(List<Student> students)
