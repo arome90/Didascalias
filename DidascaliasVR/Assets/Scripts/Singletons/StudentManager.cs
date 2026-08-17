@@ -161,23 +161,57 @@ public class StudentManager : Singleton<StudentManager>
         return _selectedStudents;
     }
 
+    //public List<Student> GetStudentsNearOrigin(Student origin)
+    //{
+    //    Collider[] hitColliders = new Collider[9];
+    //    int numColliders = Physics.OverlapSphereNonAlloc(origin.transform.position, 4.5f, hitColliders, LayerMask.GetMask("Student"));
+
+    //    List<Student> students = new List<Student>();
+    //    foreach (Collider collider in hitColliders)
+    //    {
+    //        if (collider == null) continue;
+    //        Student st = collider.GetComponentInParent<Student>();
+    //        students.Add(st);
+    //    }
+
+    //    students.Remove(origin);
+
+    //    return students;
+    //}
+
     public List<Student> GetStudentsNearOrigin(Student origin)
     {
         Collider[] hitColliders = new Collider[9];
         int numColliders = Physics.OverlapSphereNonAlloc(origin.transform.position, 4.5f, hitColliders, LayerMask.GetMask("Student"));
 
         List<Student> students = new List<Student>();
+
         foreach (Collider collider in hitColliders)
         {
             if (collider == null) continue;
-            Student st = collider.GetComponentInParent<Student>();
-            students.Add(st);
-        }
 
-        students.Remove(origin);
+            Student st = collider.GetComponentInParent<Student>();
+
+            // Evitamos añadir al alumno origen
+            if (st == null || st == origin) continue;
+
+            // Vector de dirección desde el origen hacia el otro estudiante (en espacio local del origen)
+            Vector3 localDir = origin.transform.InverseTransformDirection(st.transform.position - origin.transform.position).normalized;
+
+            // Descartamos si está DELANTE (z > 0.1) y además es DIAGONAL/LATERAL (abs(x) > 0.1)
+            // Esto elimina exactamente la esquina delantera-izquierda y delantera-derecha
+            bool isFrontLeftCorner = localDir.z > 0.1f && localDir.x < -0.1f;
+            bool isFrontRightCorner = localDir.z > 0.1f && localDir.x > 0.1f;
+
+            if (!isFrontLeftCorner && !isFrontRightCorner)
+            {
+                students.Add(st);
+            }
+        }
 
         return students;
     }
+
     public void MakeNearbyStudentsReactToPositivelyResolvedConflict(Student origin)
     {
         List<Student> students = GetStudentsNearOrigin(origin);
