@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -46,7 +47,7 @@ public class ExportAnimatorToCSV
         // 3. Crear el contenido CSV con encabezado
         StringBuilder csv = new StringBuilder();
         // Usamos ';' como separador por defecto para Excel en español
-        csv.AppendLine("Estado Animator;Nombre;Descripción");
+        csv.AppendLine("Estado Animator;Nombre;Descripción;Behaviours");
 
         // Recorrer todas las capas del Animator
         foreach (var layer in controller.layers)
@@ -71,22 +72,31 @@ public class ExportAnimatorToCSV
             var state = childState.state;
             string animatorStateName = state.name;
 
+            // 1. Obtener la lista con todos los nombres de los Behaviours adjuntos a este estado
+            string allBehaviours = string.Join(", ", state.behaviours.Select(b => b.GetType().Name));
+
+            // Opcional: Limpiar caracteres que puedan romper la estructura del CSV (como comas o punto y coma)
+            string cleanBehaviours = allBehaviours.Replace(";", " ");
+            string cleanDescription = "";
+            string cleanName = "";
+
             // Buscar si el estado tiene adjunto nuestro script 'StudentStateContext'
             foreach (var behaviour in state.behaviours)
             {
                 if (behaviour is StudentStateContext context)
                 {
-                    string cleanDescription = context.stateDescription
+                    cleanDescription = context.stateDescription
                         .Replace("\r", "")
                         .Replace("\n", " ")
                         .Replace(";", ",");
 
-                    string cleanName = context.stateName.Replace(";", ",");
+                    cleanName = context.stateName.Replace(";", ",");
 
-                    // Fila del CSV para el Estado
-                    csv.AppendLine($"{animatorStateName};{cleanName};{cleanDescription}");
                 }
             }
+            // Fila del CSV para el Estado
+            csv.AppendLine($"{animatorStateName};{cleanName};{cleanDescription};{cleanBehaviours}");
+
         }
 
         // 2. Recorrer las Sub-State Machines
@@ -95,22 +105,29 @@ public class ExportAnimatorToCSV
             var subMachine = childSubMachine.stateMachine;
             string subMachineName = subMachine.name;
 
-            // Extraer y procesar los behaviours adjuntos a la propia Sub-State Machine
+            // 1. Obtener la lista con todos los nombres de los Behaviours adjuntos a este estado
+            string allBehaviours = string.Join(", ", subMachine.behaviours.Select(b => b.GetType().Name));
+
+            // Opcional: Limpiar caracteres que puedan romper la estructura del CSV (como comas o punto y coma)
+            string cleanBehaviours = allBehaviours.Replace(";", " ");
+            string cleanDescription = "";
+            string cleanName = "";
+
+            // Buscar si el estado tiene adjunto nuestro script 'StudentStateContext'
             foreach (var behaviour in subMachine.behaviours)
             {
                 if (behaviour is StudentStateContext context)
                 {
-                    string cleanDescription = context.stateDescription
+                    cleanDescription = context.stateDescription
                         .Replace("\r", "")
                         .Replace("\n", " ")
                         .Replace(";", ",");
 
-                    string cleanName = context.stateName.Replace(";", ",");
+                    cleanName = context.stateName.Replace(";", ",");
 
-                    // Fila del CSV para la Sub-State Machine
-                    csv.AppendLine($"[SubMachine] {subMachineName};{cleanName};{cleanDescription}");
                 }
             }
+            csv.AppendLine($"{subMachineName};{cleanName};{cleanDescription};{cleanBehaviours}");
 
             // Llamada recursiva para procesar los estados y sub-máquinas que estén DENTRO de esta SubMachine
             ProcessStateMachine(subMachine, csv);

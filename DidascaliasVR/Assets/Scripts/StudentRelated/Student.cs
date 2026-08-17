@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections.Generic;
 
 /// <summary>
 /// Chico (0) o Chica (1) (de momento)
@@ -54,8 +54,14 @@ public class Student : MonoBehaviour
         get { return _type; }
         set
         {
-            _type = value;
+            SetStudentType(value);
         }
+    }
+
+    public void SetStudentType(StudentType type)
+    {
+        _type = type;
+        this.Behaviour.SetBehaviourPattern(StudentManager.Instance.GetBehaviourModifier(_type));
     }
 
     string _name;

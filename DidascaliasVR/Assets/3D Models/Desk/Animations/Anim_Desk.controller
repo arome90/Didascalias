@@ -1080,6 +1080,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: TriggerStopMatFailStandUp
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1492,12 +1498,12 @@ AnimatorStateMachine:
   - first: {fileID: -4456562101221858278}
     second:
     - {fileID: 2062345227465001283}
-  - first: {fileID: 4236330162073949244}
-    second:
-    - {fileID: -2443923264374483278}
   - first: {fileID: -7929574753476029754}
     second:
     - {fileID: 1222796007032622253}
+  - first: {fileID: 4236330162073949244}
+    second:
+    - {fileID: -2443923264374483278}
   - first: {fileID: 4336981785179988803}
     second:
     - {fileID: 1407491052724143141}
@@ -1843,6 +1849,31 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1101 &5406979709472975021
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: TriggerStopMatFailStandUp
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 6999621626207623539}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0
+  m_TransitionOffset: 0
+  m_ExitTime: 0.75
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1101 &5542614081507485970
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2112,14 +2143,15 @@ AnimatorStateMachine:
     m_Position: {x: 460, y: 70, z: 0}
   m_AnyStateTransitions:
   - {fileID: -1784850018488414363}
+  - {fileID: 5406979709472975021}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: -5010921044257723982}
-    second:
-    - {fileID: 9105632350420620127}
   - first: {fileID: -4800807105897379676}
     second:
     - {fileID: 7333979630529605495}
+  - first: {fileID: -5010921044257723982}
+    second:
+    - {fileID: 9105632350420620127}
   - first: {fileID: 8964109075448492838}
     second:
     - {fileID: -7225914791969105418}

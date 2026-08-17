@@ -43,6 +43,28 @@ public class TestingStudentBehaviour : MonoBehaviour
         student.GetComponent<StudentBehaviour>().MoveTo(randomPoint, StudentBehaviour.MovementAction.Walk, true);
     }
 
+    public void RunToRandomPoint(Student student)
+    {
+        randomPoint.SetLocalPositionAndRotation(new Vector3(
+            UnityEngine.Random.Range(-3.0f, 3.0f),
+            0.0f,
+            UnityEngine.Random.Range(-3.0f, 3.0f)),
+            Quaternion.identity);
+
+        student.GetComponent<StudentBehaviour>().MoveTo(randomPoint, StudentBehaviour.MovementAction.Run, true);
+    }
+
+    public void AnxiousRunToRandomPoint(Student student)
+    {
+        randomPoint.SetLocalPositionAndRotation(new Vector3(
+            UnityEngine.Random.Range(-3.0f, 3.0f),
+            0.0f,
+            UnityEngine.Random.Range(-3.0f, 3.0f)),
+            Quaternion.identity);
+
+        student.GetComponent<StudentBehaviour>().MoveTo(randomPoint, StudentBehaviour.MovementAction.RunAnxiety, true);
+    }
+
     public void MoveToFrontDoor(Student student)
     {
         student.GetComponent<StudentBehaviour>().MoveToFrontDoor(true);
@@ -60,7 +82,7 @@ public class TestingStudentBehaviour : MonoBehaviour
 
     public void GetDistracted(Student student)
     {
-        student.GetComponent<StudentBehaviour>().GetDistracted();
+        student.GetComponent<StudentBehaviour>().GetDistractedTEA();
     }
 
     public void ChangeSits()
@@ -110,6 +132,16 @@ public class TestingStudentBehaviour : MonoBehaviour
     public void BotherRandomStudents(Student st)
     {
         st.Behaviour.BotherOtherStudents();
+    }
+
+    public void MakeNearbyStudentsLaugh(Student st)
+    {
+        StudentManager.Instance.MakeNearbyStudentsLaugh(st);
+    }
+
+    public void MakeNearbyStudentsTalk(Student st)
+    {
+        StudentManager.Instance.MakeNearbyStudentsTalk(st);
     }
 
     [HideInInspector]
@@ -167,6 +199,14 @@ public class TestingStudentBehaviourEditor : Editor
             {
                 script.MoveToRandomPoint(selectedSt);
             }
+            if (GUILayout.Button("RunToRandomPoint"))
+            {
+                script.RunToRandomPoint(selectedSt);
+            }
+            if (GUILayout.Button("AnxiousRunToRandomPoint"))
+            {
+                script.AnxiousRunToRandomPoint(selectedSt);
+            }
             if (GUILayout.Button("MoveToFrontDoor"))
             {
                 script.MoveToFrontDoor(selectedSt);
@@ -220,6 +260,16 @@ public class TestingStudentBehaviourEditor : Editor
             if (GUILayout.Button("TEA Off"))
             {
                 script.SetTEAFalse(selectedSt);
+            }
+
+            EditorGUILayout.Space(5);
+            if (GUILayout.Button("Make Students Laugh"))
+            {
+                script.MakeNearbyStudentsLaugh(selectedSt);
+            }
+            if (GUILayout.Button("Make Students Talk"))
+            {
+                script.MakeNearbyStudentsTalk(selectedSt);
             }
 
             EditorGUILayout.Space(15);

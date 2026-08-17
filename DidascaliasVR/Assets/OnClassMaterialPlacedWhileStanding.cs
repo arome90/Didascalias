@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class OnMaterialPlaced_StudentAnim : StateMachineBehaviour
+public class OnClassMaterialPlacedWhileStanding : StateMachineBehaviour
 {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

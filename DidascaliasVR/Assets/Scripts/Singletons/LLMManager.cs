@@ -13,8 +13,10 @@ public class LLMManager : Singleton<LLMManager>
 
     Dictionary<StudentType, string> _contextByType = null;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
+
         // setting system prompt
         _systemPromptStart = GetTextFromFile(_path + "SystemPromptStart.txt");
         _systemPromptEnd = GetTextFromFile(_path + "SystemPromptEnd.txt");

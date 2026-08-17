@@ -13019,13 +13019,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434983961}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -0, y: -10.66, z: 1.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 173430447}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: -90, z: 0}
 --- !u!1 &1440095898
 GameObject:
   m_ObjectHideFlags: 0
@@ -14138,13 +14138,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573612632}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -0, y: -10.66, z: 1.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 275697122}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: -90, z: 0}
 --- !u!1 &1573960536
 GameObject:
   m_ObjectHideFlags: 0
@@ -14682,13 +14682,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1610665374}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -0, y: 15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 275697122}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
 --- !u!1 &1611606048
 GameObject:
   m_ObjectHideFlags: 0
@@ -19784,13 +19784,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2104003808}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -0, y: 15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 173430447}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
 --- !u!1 &2104702346
 GameObject:
   m_ObjectHideFlags: 0
@@ -21252,6 +21252,38 @@ PrefabInstance:
       propertyPath: '_girlStudentPrefabs.Array.data[0]'
       value: 
       objectReference: {fileID: 8624259584575346128, guid: 20bdc1df8e57f01478af61d43bcc409b, type: 3}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.data[1].Key
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.data[2].Key
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.data[3].Key
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.data[0].Value
+      value: 
+      objectReference: {fileID: 11400000, guid: ad27089b5b3038c42b85f35732fb30f2, type: 2}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 11400000, guid: bbd34ebdb833eff4a9466c3d96205161, type: 2}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.data[2].Value
+      value: 
+      objectReference: {fileID: 11400000, guid: 7a122b7ce41c4254ebfd204b094266d4, type: 2}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _behaviourModifiers._serializedList.Array.data[3].Value
+      value: 
+      objectReference: {fileID: 11400000, guid: b2268e1e8d11a004988a22c987d13ec4, type: 2}
     - target: {fileID: 3895992887984448344, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

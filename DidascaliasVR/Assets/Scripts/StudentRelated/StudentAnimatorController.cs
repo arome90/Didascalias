@@ -135,6 +135,9 @@ namespace Didascalia.Student
         public static readonly int HashIsTEAOff =                       Animator.StringToHash("IsTEAOff");
         public static readonly int HashIsTEADistracted =                Animator.StringToHash("IsTEADistracted");
 
+        public static readonly int HashTriggerStopMatFailStandUp =      Animator.StringToHash("TriggerStopMatFailStandUp");
+
+
         void Awake()
         {
             Utils.Error.DebugbreakFailUnless(studentAnimator != null, "Animator component is missing", this);
@@ -158,7 +161,9 @@ namespace Didascalia.Student
             AnnoyLeft,
             AnnoyRight,
             PlaceForgottenMaterial,
-            GetMaterialOut
+            GetMaterialOut,
+
+            StopMatFailStandUp
         }
         [System.Serializable]
         public enum BooleanStudentParameter
@@ -178,7 +183,6 @@ namespace Didascalia.Student
             IsScared,
             IsBored,
             IsPhoning,
-            IsLookingBack,
             // IsTalkingBack,
             IsWriting,
             IsDrawing,
@@ -213,6 +217,11 @@ namespace Didascalia.Student
             IsStimulatedTEA,
             IsTEAAnxious,
             IsTEAAnxiousHigh,
+
+            IsLookingBack,
+            IsLookingLeft,
+            IsLookingRight,
+            IsTurned,
         }
 
         private static readonly HashSet<int> ValidStudentTriggerParameterHashes = new HashSet<int>
@@ -237,6 +246,8 @@ namespace Didascalia.Student
             HashTriggerDeskMaterialOut,
 
             HashTriggerLookBack,
+
+            HashTriggerStopMatFailStandUp,
 
         };
         private static readonly HashSet<int> ValidStudentBooleanParameterHashes = new HashSet<int>
@@ -335,7 +346,9 @@ namespace Didascalia.Student
             // material
             HashIsAllMaterialOutDesk,
             HashIsAllMaterialOutUnsortedDesk,
-            HashIsFailedMaterialOutDesk
+            HashIsFailedMaterialOutDesk,
+
+            HashTriggerStopMatFailStandUp,
         };
 
         public uint TriggerDeskParameterCount => (uint)ValidDeskTriggerParameterHashes.Count;
@@ -486,12 +499,16 @@ namespace Didascalia.Student
             switch (dir) 
             { 
                 case StudentBehaviour.LookDirection.Left:
+                    if (CanTurnLeftOrRight()) SetIsTurned(true);
+
                     ResetStudentBooleanParameter(HashIsLookingBack);
                     ResetStudentBooleanParameter(HashIsLookingRight);
 
                     SetStudentBooleanParameter(HashIsLookingLeft);
                     break;
                 case StudentBehaviour.LookDirection.Right:
+                    if (CanTurnLeftOrRight()) SetIsTurned(true);
+
                     ResetStudentBooleanParameter(HashIsLookingBack);
                     ResetStudentBooleanParameter(HashIsLookingLeft);
 
@@ -504,9 +521,7 @@ namespace Didascalia.Student
                     break;
                 case StudentBehaviour.LookDirection.Back:
                     // Looking back overrides all other actions because other actions can not be donde from this position
-                    if (   !studentAnimator.GetBool(HashIsLookingLeft) 
-                        && !studentAnimator.GetBool(HashIsLookingRight) 
-                        && !studentAnimator.GetBool(HashIsTurned))
+                    if (CanTurnBack())
                     {
                         SetStudentTriggerParameter(HashTriggerLookBack);
                         SetIsTurned(true);
@@ -521,12 +536,25 @@ namespace Didascalia.Student
             }
         }
 
+        private bool CanTurnLeftOrRight()
+        {
+            return  !studentAnimator.GetBool(HashIsAnnoyed)
+                 && !studentAnimator.GetBool(HashIsBothering);
+        }
+
+        private bool CanTurnBack()
+        {
+            return  !studentAnimator.GetBool(HashIsLookingLeft)
+                 && !studentAnimator.GetBool(HashIsLookingRight)
+                 && !studentAnimator.GetBool(HashIsTurned);
+        }
+
         public void SetIsTurned(bool isTurned)
         {
             SetStudentBooleanParameterValue(HashIsTurned, isTurned);
         }
 
-        public void SetBothering(bool isBothering)
+        public void SetIsBothering(bool isBothering)
         {
             SetStudentBooleanParameterValue(HashIsBothering, isBothering);
         }
@@ -760,7 +788,9 @@ namespace Didascalia.Student
                 TriggerStudentParameter.CloseDoorInside =>         HashTriggerCloseDoorInside,
                 TriggerStudentParameter.PlaceForgottenMaterial =>  HashTriggerPlaceForgottenMaterial,
                 TriggerStudentParameter.GetMaterialOut =>          HashTriggerGetMaterialOut,
-                _ => HashInvalidParameter(),
+
+                TriggerStudentParameter.StopMatFailStandUp =>      HashTriggerStopMatFailStandUp,
+                               _ => HashInvalidParameter(),
             };
             EnsureStudentTriggerHash(result, null);
             return result;
@@ -787,7 +817,6 @@ namespace Didascalia.Student
                 BooleanStudentParameter.IsScared =>                 HashIsScared,
                 BooleanStudentParameter.IsBored =>                  HashIsBored,
                 BooleanStudentParameter.IsPhoning =>                HashIsPhoning,
-                BooleanStudentParameter.IsLookingBack =>            HashIsLookingBack,
                 // BooleanParameter.IsTalkingBack =>                HashIsTalkingBack,
                 BooleanStudentParameter.IsWriting =>                HashIsWriting,
                 BooleanStudentParameter.IsDrawing =>                HashIsDrawing,
@@ -805,6 +834,11 @@ namespace Didascalia.Student
                 BooleanStudentParameter.IsStimulatedTEA =>          HashIsStimulatedTEA,
                 BooleanStudentParameter.IsTEAAnxious =>             HashIsTEAAnxious,
                 BooleanStudentParameter.IsTEAAnxiousHigh =>         HashIsTEAAnxiousHigh,
+
+                BooleanStudentParameter.IsLookingBack =>            HashIsLookingBack,
+                BooleanStudentParameter.IsLookingLeft =>            HashIsLookingLeft,
+                BooleanStudentParameter.IsLookingRight =>           HashIsLookingRight,
+                BooleanStudentParameter.IsTurned =>                 HashIsTurned,
 
                 _ => HashInvalidParameter(),
             };
