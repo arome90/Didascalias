@@ -1,5 +1,8 @@
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 
 public class PCDebugTesting : MonoBehaviour
 {
@@ -18,3 +21,5 @@ public class PCDebugTesting : MonoBehaviour
         StudentManager.Instance.GenerateConflict(StudentManager.ConflictType.SitTogether, null);
     }
 }
+
+#endif

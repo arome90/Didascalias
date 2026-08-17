@@ -22,11 +22,11 @@ public class SessionUIDisplay : MonoBehaviour
     IEnumerator LookForSession()
     {
         _button.interactable = false;
-        while (!ConnectionManager.Instance.IsSessionAvaliable()) yield return null;
+        while (!WebDashboardManager.Instance.IsSessionAvaliable()) yield return null;
 
         AnimateCharacters anim = _text.GetComponent<AnimateCharacters>();
         if (anim != null) anim.StopAnimation();
-        _text.text = string.Format(format, ConnectionManager.Instance.SessionID);
+        _text.text = string.Format(format, WebDashboardManager.Instance.SessionID);
         _button.interactable = true;
     }
 }

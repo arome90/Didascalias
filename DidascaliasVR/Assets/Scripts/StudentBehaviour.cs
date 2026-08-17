@@ -4,10 +4,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using static UnityEngine.GraphicsBuffer;
+using static Didascalia.Student.StudentAnimatorController;
 
 public enum StudentState
 {
@@ -32,14 +33,21 @@ public enum StudentState
     ClosingDoor,
 }
 
-
-
 /// <summary>
 /// Contiene todos los m�todos que se encargan del comportamiento del estudiante.
 /// Todos ellos son llamados en la m�quina de estados del prefab de Student
 /// </summary>
 public class StudentBehaviour : MonoBehaviour
 {
+    public struct BehaviourPattern
+    {
+        // these are all 0-100 probabilities        // chance that student wilk ...
+        public int willLaughtAtOthers;             //  laugh about conflicted students
+        public int willTalkWithOthers;             //  trash talk about conflicted students
+        public int willTalkWithConflictedOthers;   //  try to talk directly to conflicted students
+        public int willLookAtConflictedOthers;     //  look at conflicted students
+    }
+
     public enum MovementAction
     {
         None = 0,
@@ -58,7 +66,6 @@ public class StudentBehaviour : MonoBehaviour
     }
 
     LookDirection _lookDirection;
-
 
     public static LookDirection CalculateLookDirectionGivenTarget(Transform target, Transform origin)
     {
@@ -111,6 +118,9 @@ public class StudentBehaviour : MonoBehaviour
         _st.Desk = otherSt.Desk;
         otherSt.Desk = thisDesk;
 
+        _animator.SetDeskAnimator(_st.Desk.GetComponentInChildren<Animator>());
+        otherSt.GetComponent<StudentAnimatorController>().SetDeskAnimator(otherSt.Desk.GetComponentInChildren<Animator>());
+
         if (changeOriginalDeskToo)
         {
             _st.OriginalDesk = _st.Desk;
@@ -155,6 +165,9 @@ public class StudentBehaviour : MonoBehaviour
     [SerializeField, Range(0.0001f, 1.0f), Tooltip("Speed with which the student moves out of the desk")]
     private float _exitDeskSpeed = 0.001f;
 
+    [SerializeField, Range(1.0f, 5.0f), Tooltip("Base Walking Speed")]
+    private float _baseWalkingSpeed = 1.5f;
+
     [Header("Debug")]
     [SerializeField]
     private TextMeshProUGUI _debugText = null;
@@ -169,24 +182,39 @@ public class StudentBehaviour : MonoBehaviour
     public UnityEvent OnOpenDoor = new UnityEvent();
     public UnityEvent OnCloseDoor = new UnityEvent();
     public UnityEvent OnExpel = new UnityEvent();
+
+    // TODO: check
+    #region Depracated
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnStandUpRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnSitDownRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnExpellingRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnChangePlacesRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnSitTogetherRequested = new UnityEvent();
-
-    [System.Obsolete("Yell is not implemented yet. Remove this attribute when it is implemented")]
-    public UnityEvent OnYellRequested = new UnityEvent();
-
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnHyperstimulateRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnFrustrateRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnGetMaterialOutRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnFailToPayAttentionRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
     public UnityEvent OnGetDistractedRequested = new UnityEvent();
+    [Obsolete("StateMachines work via StudentBehaviour and Animator now")]
+    public UnityEvent OnYellRequested = new UnityEvent();
+    #endregion
 
     public StudentState State { get { return _state; } }
 
     private PlayerResolutionToConflict _currentPlayerResolution = PlayerResolutionToConflict.None;
+
+    // this will affect the student's reaction when a conflict is resolved (positively, neutrally or badly)
+    BehaviourPattern _behaviourPattern;
 
     private void Start()
     {
@@ -196,6 +224,8 @@ public class StudentBehaviour : MonoBehaviour
         _tts = GetComponent<TTSWit>();
 
         _initialSpeed = _agent.speed;
+
+        _agent.enabled = !IsSitting();
 
         Didascalia.Utils.Error.DebugbreakFailIf(_animator == null, "Animator component not found", this);
         Didascalia.Utils.Error.DebugbreakFailIf(_agent == null, "NavMeshAgent component not found", this);
@@ -213,6 +243,15 @@ public class StudentBehaviour : MonoBehaviour
         OnCloseDoor.AddListener(ChangeStateOnDoorInteraction);
         OnExpel.AddListener(ChangeStateOnExpel);
         ChangeState(StudentState.SittingOnChair);
+    }
+
+    public void SetBehaviourPattern(BehaviourPatternModifier modifier)
+    {
+        _behaviourPattern = new BehaviourPattern();
+        _behaviourPattern.willLaughtAtOthers =             modifier._laughAtOthers + UnityEngine.Random.Range(-modifier._laughModifier, modifier._laughModifier + 1);
+        _behaviourPattern.willTalkWithOthers =             modifier._talkAboutOthers + UnityEngine.Random.Range(-modifier._talkAboutModifier, modifier._talkAboutModifier + 1);
+        _behaviourPattern.willTalkWithConflictedOthers =   modifier._talkWithOthers + UnityEngine.Random.Range(-modifier._talkToModifier, modifier._talkToModifier + 1);
+        _behaviourPattern.willLookAtConflictedOthers =     modifier._lookAtOthers + UnityEngine.Random.Range(-modifier._lookAtModifier, modifier._lookAtModifier + 1);
     }
 
     public void SetTEA(bool isTEA)
@@ -327,14 +366,19 @@ public class StudentBehaviour : MonoBehaviour
         if (_carryingClassMaterial) movementAction = MovementAction.WalkMaterial;
 
         float goal = 0.0f;
+        float agentSpeedGoal = 0.0f;
         switch (movementAction) 
         { 
-            case MovementAction.None: goal = 0.0f; break;
-            case MovementAction.WalkMaterial: goal = -1.0f; break;
-            case MovementAction.Walk: goal = 1.0f; break;
-            case MovementAction.Run: goal = 2.0f; break;
-            case MovementAction.RunAnxiety: goal = 3.0f; break; 
+            case MovementAction.None: { goal = 0.0f; agentSpeedGoal = 0.0f; break; }
+            case MovementAction.WalkMaterial: { goal = -1.0f; agentSpeedGoal = 1.0f; break; }
+            case MovementAction.Walk: { goal = 1.0f; agentSpeedGoal = 1.0f; break; }
+            case MovementAction.Run: { goal = 2.0f; agentSpeedGoal = 2.0f; break; }
+            case MovementAction.RunAnxiety: { goal = 3.0f; agentSpeedGoal = 2.0f; break; }
         }
+
+        agentSpeedGoal *= _baseWalkingSpeed;
+        float agentSpeed = 0.0f;
+        float initialAgentSpeed = _agent.speed;
 
         float elapsedTime = 0.0f;
         bool done = false;
@@ -343,9 +387,12 @@ public class StudentBehaviour : MonoBehaviour
             elapsedTime += Time.deltaTime;
             speed = Mathf.Lerp(initialSpeed, goal, elapsedTime / time);
 
+            agentSpeed = Mathf.Lerp(initialAgentSpeed, agentSpeedGoal, elapsedTime / time);
+            _agent.speed = agentSpeed;
+
             _animator.StudentAnimator.SetFloat(hashFloatSpeed, speed);
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             done = speed == goal;
         }
@@ -372,11 +419,15 @@ public class StudentBehaviour : MonoBehaviour
     public void Expel()
     {
         StopAndClearActionQueue();
+        EnqueueAction(Expel_());
+    }
 
-        EnqueueAction(MoveToFrontDoor_());
-        EnqueueAction(OpenDoorInside_());
-        EnqueueAction(MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f));
-        EnqueueAction(CloseDoorOutside_());
+    IEnumerator Expel_()
+    {
+        yield return MoveToFrontDoor_();
+        yield return OpenDoorInside_();
+        yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);
+        yield return CloseDoorOutside_();
     }
 
     IEnumerator OpenDoorInside_()
@@ -414,16 +465,15 @@ public class StudentBehaviour : MonoBehaviour
         Quaternion initialRotation = transform.rotation;
 
         float elapsedTime = 0.0f;
-        var wait = new WaitForEndOfFrame();
         while(elapsedTime < time)
         {
             elapsedTime += Time.deltaTime;
             transform.rotation = Quaternion.Slerp(initialRotation, rotation, elapsedTime / time);
 
-            yield return wait;
+            yield return null;
         }
         transform.rotation = rotation;
-        yield return wait;
+        yield return null;
         // Didascalia.Utils.Error.DebugbreakFailUnimplemented("AcquireTargetRotation is not fully implemented, it should be able to be interrupted by other calls to this method or to MoveTo", this);
     }
 
@@ -588,18 +638,6 @@ public class StudentBehaviour : MonoBehaviour
             StopAndClearActionQueue();
             EnqueueAction(StandUp_());
         }
-
-        // XXX: We should be able to run this safety check to ensure the event invocation causes
-        // transition to 'Stand Up' state but it seems that the transition is not registered in the same frame, so we can't check it here.
-        // else if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Stand Up"))
-        // {
-        //     Didascalia.Utils.Error.DebugbreakFailMessage(
-        //         "Current animator state is not 'Stand Up'\n"
-        //         + "This is a safety check to ensure the dependency that hooks to the OnStandUpRequested event"
-        //         + "properly sets up the transition to the 'Stand Up' state",
-        //         this
-        //     );
-        // }
     }
 
     IEnumerator StandUp_()
@@ -614,6 +652,10 @@ public class StudentBehaviour : MonoBehaviour
             _animator.StandUpFromFloor();
             yield return new WaitUntil(() => State == StudentState.StandingOutOfDesk);
         }
+
+        // to avoid any trouble, we reset the student's look direction after standing up
+        _lookDirection = LookDirection.Front;
+        _animator.SetLookDirection(_lookDirection);
     }
 
     private bool IsSittingOnTheirDesk()
@@ -663,6 +705,7 @@ public class StudentBehaviour : MonoBehaviour
         yield return EnterOriginalDesk_();
 
         _animator.SitDown();
+        yield return new WaitUntil(() => IsSittingOnChair());
     }
 
     IEnumerator EnterOriginalDesk_()
@@ -682,6 +725,8 @@ public class StudentBehaviour : MonoBehaviour
             ChangeState(StudentState.StandingRightOutOfDesk);
         }
 
+        _agent.enabled = false;
+
         ChangeState(StudentState.EnteringDesk);
         _animator.EnterDesk();
 
@@ -691,18 +736,13 @@ public class StudentBehaviour : MonoBehaviour
         yield return new WaitUntil(() => { animProgress = _animator.GetCurrentStudentAnimationProgress(); 
             return animProgress < 1.0f; });
 
-        float speed = _agent.speed;
-        _agent.speed = 0.0f;
-        _agent.SetDestination(SitSpot.position);
         while (_state == StudentState.EnteringDesk)
         {
             animProgress = _animator.GetCurrentStudentAnimationProgress();
             transform.position = Vector3.Lerp(initialPos, SitSpot.position, animProgress);
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
         
-        _agent.speed = speed;
-
         // _animator.GetDeskMaterialOut();
 
         yield return new WaitUntil(() => !_carryingClassMaterial);
@@ -725,41 +765,85 @@ public class StudentBehaviour : MonoBehaviour
 
     IEnumerator SitNextToRandomStudentConflict_(Student farStudent)
     {
-        yield return MovingTowardsPoint_(farStudent.Desk.OutOfDeskTransform.position);
+        ListenToPlayerResolution();
 
-        yield return TalkToSomeoneForTime_(farStudent, 1.0f);
+        StartCoroutine(MovingTowardsPoint_(farStudent.Desk.OutOfDeskTransform.position));
 
-        StudentBehaviour targetBehaviour = farStudent.GetComponent<StudentBehaviour>();
+        if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+        {
+            yield return SitDown_();
+        }
+        else
+        {
+            ListenToPlayerResolution();
 
-        yield return targetBehaviour.LeaveDesk_();
+            yield return new WaitUntil(() => IsStandingOutOfDesk());
+            yield return TalkToSomeoneForTime_(farStudent, 1.0f);
 
-        ChangeDeskWithStudent(targetBehaviour, false);
+            StudentBehaviour targetBehaviour = farStudent.GetComponent<StudentBehaviour>();
 
-        targetBehaviour.SitDown();
+            // we wait until the student has talked with someone else and is changing their position for the player's actions
+            // to take place
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+            {
+                yield return SitDown_();
+            }
+            else
+            {
+                ListenToPlayerResolution();
 
-        yield return SitDown_();
+                // we wait until the other student has left their desk and sat down
+                yield return targetBehaviour.LeaveDesk_();
+
+                ChangeDeskWithStudent(targetBehaviour, false);
+
+                targetBehaviour.SitDown();
+
+                yield return SitDown_();
+
+                if (_currentPlayerResolution == PlayerResolutionToConflict.None)
+                    yield return WaitForPlayerAction();
+
+                if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+                {
+                    yield return new WaitUntil(() => targetBehaviour.IsSittingOnChair());
+
+                    targetBehaviour.LeaveDesk();
+                    yield return LeaveDesk_();
+
+                    // CHECK WHEN WE SHOULD BE CHANGING DESKS
+
+                    ChangeDeskWithStudent(targetBehaviour, false);
+
+                    targetBehaviour.SitDown();
+                    yield return SitDown_();
+                }
+                // the neutral resolution would be to ignore it, so we do nothing in that case
+
+                else if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
+                {
+                    SetIsJustifying(true);
+                    StudentManager.Instance.MakeNearbyStudentsReactToBadlyResolvedConflict(_st);
+                }
+            }
+        }
     }
 
     IEnumerator TalkToSomeoneForTime_(Student st, float talkTime)
     {
         yield return SmoothLookAt_(st.transform, 0.65f);
 
-        _animator.StartTalking();
+        StartTalking(false);
         yield return new WaitForSeconds(talkTime);
-        _animator.StopTalking();
+        StopTalking();
     }
 
-    private void StartTalking(bool onlyMoveMouth = false)
+    public void StartTalking(bool onlyMoveMouth = false)
     {
-        _animator.StartTalking();
-        if (!onlyMoveMouth && IsSittingOnChair()) _animator.SetStudentBooleanParameter(StudentAnimatorController.HashIsTalking);
+        _animator.StartTalking(onlyMoveMouth, IsSittingOnChair());
     }
 
-    private void StopTalking()
-    {
-        _animator.StopTalking();
-        if (IsSittingOnChair()) _animator.ResetStudentBooleanParameter(StudentAnimatorController.HashIsTalking);
-    }
+    public void StopTalking() =>_animator.StopTalking();
 
     /// <summary>
     /// Cambio de sitio obligado por el profesor.
@@ -820,11 +904,125 @@ public class StudentBehaviour : MonoBehaviour
             animProgress = _animator.GetCurrentStudentAnimationProgress();
                 
             transform.position = Vector3.Lerp(initialPos, _desk.OutOfDeskTransform.position, animProgress);
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
 
         _agent.speed = speed;
+        _agent.enabled = true;
         // leaving desk completed
+    }
+    #endregion
+    public void SetIsJustifying(bool isJustifying)
+    {
+        _animator.SetIsJustifying(isJustifying);
+        _animator.SetAnxiety_1(isJustifying);
+
+        if (isJustifying) StartTalking(false);
+        else StopTalking();
+    }
+
+    public void SetIsCrying(bool isCrying)
+    {
+        _animator.SetIsCrying(isCrying);
+        _animator.SetAnxiety_1(isCrying);
+    }
+
+    #region Player Actions
+    IEnumerator WaitForPlayerAction()
+    {
+        ListenToPlayerResolution();
+
+        yield return new WaitUntil(() => _currentPlayerResolution != PlayerResolutionToConflict.None);
+    }
+
+    private void ListenToPlayerResolution()
+    {
+        Player.Instance.OnPlayerResolution.RemoveListener(OnPlayerResolution);
+        _currentPlayerResolution = PlayerResolutionToConflict.None;
+
+        Player.Instance.OnPlayerResolution.AddListener(OnPlayerResolution);
+        Player.StartListeningForPlayerResolution();
+    }
+
+    private void OnPlayerResolution(PlayerResolutionToConflict res)
+    {
+        _currentPlayerResolution = res;
+    }
+    #endregion
+
+    #region Target
+    Transform _target = null;
+
+    public void SetTarget(Transform target) => _target = target;
+
+    public void LookAtTarget(Transform newTarget = null)
+    {
+        if (newTarget != null) SetTarget(newTarget);
+        if (_target != null)
+        {
+            _lookDirection = CalculateLookDirectionGivenTarget(_target, transform);
+            _animator.SetLookDirection(_lookDirection);
+        }
+    }
+
+    #endregion
+
+    // CONFLICTS
+    #region StandUp
+    public void StandUpConflict()
+    {
+        if (!IsSittingOnChair()) return;
+
+        StopAndClearActionQueue();
+        EnqueueAction(StandUpConflict_());
+    }
+
+    IEnumerator StandUpConflict_()
+    {
+        ListenToPlayerResolution();
+        yield return StandUp_();
+
+        while (_currentPlayerResolution == PlayerResolutionToConflict.None)
+            yield return WaitForPlayerAction();
+
+        if (_currentPlayerResolution == PlayerResolutionToConflict.Positive) yield return SitDown_();
+        else if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral)
+        {
+            ListenToPlayerResolution();
+            yield return BotherSomeone_(null);
+
+            while ( _currentPlayerResolution == PlayerResolutionToConflict.None 
+                ||  _currentPlayerResolution == PlayerResolutionToConflict.Neutral)
+                yield return WaitForPlayerAction();
+
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
+            {
+                StopBotheringTarget();
+                yield return Expel_();
+            }
+            else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+            {
+                StopBotheringTarget();
+                yield return SitDown_();
+            }
+        }
+        else if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
+        {
+            SetIsJustifying(true);
+            StartTalking();
+
+            yield return WaitForPlayerAction();
+
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Positive) yield return SitDown_();
+
+            // conflict failed 
+            else
+            {
+                SetIsJustifying(false);
+                StopTalking();
+                yield return Expel_();
+            }
+        }
     }
     #endregion
 
@@ -846,27 +1044,6 @@ public class StudentBehaviour : MonoBehaviour
         OnSitTogetherRequested.Invoke();
     }
     #endregion
-
-    IEnumerator WaitForPlayerAction()
-    {
-        ListenToPlayerResolution();
-
-        yield return new WaitUntil(() => _currentPlayerResolution != PlayerResolutionToConflict.None);
-    }
-
-    private void ListenToPlayerResolution()
-    {
-        Player.Instance.OnPlayerResolution.RemoveListener(OnPlayerResolution);
-        _currentPlayerResolution = PlayerResolutionToConflict.None;
-
-        Player.Instance.OnPlayerResolution.AddListener(OnPlayerResolution);
-        Player.StartListeningForPlayerResolution();
-    }
-
-    private void OnPlayerResolution(PlayerResolutionToConflict res)
-    {
-        _currentPlayerResolution = res;
-    }
 
     #region Draw Conflict
     public void DrawDistacted()
@@ -895,101 +1072,122 @@ public class StudentBehaviour : MonoBehaviour
             {
                 case PlayerResolutionToConflict.Positive:
                     progress++;
-
-                    SetIsCrying(false);
-                    SetIsJustifying(false);
-
-                    // todo: attend animations
-                    if (progress >= 0) isResolved = true;
-                    else yield return WaitForPlayerAction();
+                    yield return DrawDistractedPositiveResolution(progress);
+                    isResolved = progress >= 0;
                     break;
 
                 case PlayerResolutionToConflict.Neutral:
-
-                    // todo: nothing happens? we wait until the conflict evolves
-                    yield return WaitForPlayerAction();
+                    // nothing happens. we wait until the conflict evolves.
+                    // it doesn't make sense for the conflict to stop here
+                    yield return DrawDistractedNeutralResolution();
                     break;
 
                 case PlayerResolutionToConflict.Negative:
 
-                    int random = UnityEngine.Random.Range(0, 2);
-
-                    _animator.SetIsDrawing(false);
-
-                    if (random == 0)
-                    {
-                        SetIsJustifying(true);
-                        progress--;
-                    }
-                    else
-                    {
-                        SetIsCrying(true);
-                        progress--;
-                    }
-
-                    if (progress <= -2) isResolved = true; // bad resolution
-                    else yield return WaitForPlayerAction();
-
+                    progress--;
+                    yield return DrawDistractedNegativeResolution(progress);
+                    isResolved = progress <= -2;
                     break;
             }
         }
     }
-    #endregion
 
-    #region Target
-    Transform _target = null;
-
-    public void LookAtTarget()
+    private IEnumerator DrawDistractedPositiveResolution(int progress)
     {
-        if (_target != null)
-        {
-            _lookDirection = CalculateLookDirectionGivenTarget(_target, transform);
-            _animator.SetLookDirection(_lookDirection);
-        }
+        SetIsCrying(false);
+        SetIsJustifying(false);
+
+        if (progress < 0) yield return WaitForPlayerAction();
+
+        // no reaction from other students
+        else _animator.SetIsDrawing(false); // todo: attend animations
     }
 
+    private IEnumerator DrawDistractedNeutralResolution()
+    {
+        // nothing happens. we wait until the conflict evolves.
+        // it doesn't make sense for the conflict to stop here
+        yield return WaitForPlayerAction();
+    }
+
+    private IEnumerator DrawDistractedNegativeResolution(int progress)
+    {
+        int random = UnityEngine.Random.Range(0, 2);
+
+        _animator.SetIsDrawing(false);
+
+        if (random == 0)    SetIsJustifying(true);
+        else                SetIsCrying(true);
+
+        if (progress > -2) yield return WaitForPlayerAction();
+        else StudentManager.Instance.MakeNearbyStudentsReactToBadlyResolvedConflict(_st);
+
+    }
     #endregion
 
     #region BotherOtherStudents
 
     public void SetAnnoyed(bool annoyed, Transform target)
     {
-        _target = target;
+        SetTarget(target);
         _animator.SetAnnoyed(annoyed, _target);
     }
 
     public void BotherOtherStudents()
     {
         // OnHyperstimulateRequested.Invoke();
-        EnqueueAction(BotherStudent_());
+        EnqueueAction(BotherStudentConflict_());
     }
 
-    IEnumerator BotherStudent_(Student st = null)
+    private void StopBotheringTarget()
     {
-        if (IsSittingOnFloor()) yield return StandUp_();
+        Student st = _target.GetComponent<Student>();
+        if (st != null) st.Behaviour.SetAnnoyed(false, transform);
 
+        _animator.SetIsBothering(false);
+        StopTalking();
+    }
+
+    IEnumerator BotherSomeone_(Student st = null)
+    {
         if (st == null) { st = StudentManager.Instance.GetNearestStudent(_st); }
 
-        _lookDirection = CalculateLookDirectionGivenTarget(st.transform, transform);
+        SetTarget(st.transform);
+
+        if (IsSittingOnChair())
+        {
+            // this only takes effect while sitting, so no need to do it otherwise
+            _lookDirection = CalculateLookDirectionGivenTarget(st.transform, transform);
+            _animator.SetLookDirection(_lookDirection);
+        }
 
         // if standing, move to them
-        if (IsStanding()) yield return MovementAnimationAndRotate_(st.transform, 0.5f, MovementAction.Walk);
-        
-        _animator.SetBothering(true);
-        _animator.SetLookDirection(_lookDirection);
+        if (IsStanding())
+        {
+            yield return MovingTowardsPoint_(st.Desk.OutOfDeskTransform.position, MovementAction.Walk);
+            yield return SmoothLookAt_(st.transform, 1.0f);
+        }
+
+        _animator.SetIsBothering(true);
         StartTalking(true);
 
         st.Behaviour.SetAnnoyed(true, transform);
+    }
+
+    IEnumerator BotherStudentConflict_(Student st = null)
+    {
+        if (IsSittingOnFloor()) yield return StandUp_();
+
+        yield return BotherSomeone_();
 
         ListenToPlayerResolution();
 
         LookDirection savedLookDirection = _lookDirection;
 
         float time = 0.0f;
-        WaitForEndOfFrame frameEnd = new WaitForEndOfFrame();
         while (_currentPlayerResolution == PlayerResolutionToConflict.None)
         {
-            yield return frameEnd;
+            yield return null;
             time += Time.deltaTime;
 
             if (time > 5.0f)
@@ -998,12 +1196,12 @@ public class StudentBehaviour : MonoBehaviour
                 if (random < 2)
                 {
                     StopTalking();
-                    _animator.SetBothering(true);
+                    _animator.SetIsBothering(true);
                     _animator.SetLookDirection(savedLookDirection);
                     StartTalking(true);
                 }
                 else { 
-                    _animator.SetBothering(false);
+                    _animator.SetIsBothering(false);
                     StartTalking(false);
                 }
 
@@ -1012,7 +1210,7 @@ public class StudentBehaviour : MonoBehaviour
         }
 
         StopTalking();
-        _animator.SetBothering(false);
+        _animator.SetIsBothering(false);
 
         bool isResolved = false;
 
@@ -1021,106 +1219,122 @@ public class StudentBehaviour : MonoBehaviour
             switch (_currentPlayerResolution)
             {
                 case PlayerResolutionToConflict.Positive:
-                    _animator.SetBothering(false);
-                    st.Behaviour.SetAnnoyed(false, transform);
-
-                    if (IsStanding()) yield return SitDown_();
-                    
-                    _animator.SetWriting(true);
-
+                    yield return BotherStudentPositiveResolution(st);
                     isResolved = true;
                     break;
 
                 case PlayerResolutionToConflict.Neutral:
-
-                    yield return LeaveDesk_();
-                    ListenToPlayerResolution();
-
-                    yield return MoveAndLookToStudent_(st);
-
-                    _animator.SetBothering(true);
-                    _lookDirection = LookDirection.Front;
-                    _animator.SetLookDirection(_lookDirection);
-
-                    StartTalking(true);
-
-                    while (_currentPlayerResolution == PlayerResolutionToConflict.None)
-                    {
-                        yield return frameEnd;
-                        time += Time.deltaTime;
-
-                        if (time > 5.0f)
-                        {
-                            int rand = UnityEngine.Random.Range(0, 3);
-                            if (rand >= 2)
-                            {
-                                _animator.SetBothering(false);
-
-                                st.Behaviour.SetAnnoyed(false, null);
-                                st = StudentManager.Instance.GetStudentFarFromOtherStudent(_st);
-
-                                yield return MoveAndLookToStudent_(st);
-
-                                st.Behaviour.SetAnnoyed(true, transform);
-                                _animator.SetBothering(true);
-                            }
-                            time = 0.0f;
-                        }
-                    }
+                    // this never has a neutral resolution, because the student keeps bothering people, so we never resolve the conflict.
+                    // instead we wait until the user does something, either positive or negative
+                    yield return BotherStudentNeutralResolution(st);
                     break;
 
                 case PlayerResolutionToConflict.Negative:
-
-                    int random = UnityEngine.Random.Range(0, 3);
-                    st.Behaviour.SetAnnoyed(false, null);
-
-                    if (random == 0)
-                    {
-                        SetIsJustifying(true);
-
-                        yield return WaitForPlayerAction();
-                        if (_currentPlayerResolution != PlayerResolutionToConflict.Positive) isResolved = true;
-                        else
-                        {
-                            SetIsJustifying(false);
-                        }
-
-                    }
-                    else if (random == 1)
-                    {
-                        yield return StandUp_();
-                        
-                        StartTalking(true);
-                        _animator.SetIsJustifying(true);
-
-                        yield return WaitForPlayerAction();
-                        StopTalking();
-
-                        if (_currentPlayerResolution != PlayerResolutionToConflict.Positive)
-                        {
-                            yield return MoveToFrontDoor_();
-                            yield return OpenDoorInside_();
-                            yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);
-                            yield return CloseDoorOutside_();
-
-                            isResolved = true;
-                        }
-                    }
-                    else
-                    {
-                        SetIsCrying(true);
-
-                        yield return WaitForPlayerAction();
-
-                        if (_currentPlayerResolution != PlayerResolutionToConflict.Positive) isResolved = true;
-                        else SetIsCrying(false);
-                    }
-
+                    yield return BotherStudentNegativeResolution(st);
+                    isResolved = _currentPlayerResolution != PlayerResolutionToConflict.Positive;
                     break;
+                    
             }
         }
     }
 
+    private IEnumerator BotherStudentPositiveResolution(Student st)
+    {
+        //_animator.SetIsBothering(false);
+        //_animator.SetIsJustifying(false);
+        //st.Behaviour.SetAnnoyed(false, transform);
+
+        StopBotheringTarget();
+
+        if (IsStanding()) yield return SitDown_();
+
+        _animator.SetWriting(true);
+    }
+
+    private IEnumerator BotherStudentNeutralResolution(Student st)
+    {
+        yield return LeaveDesk_();
+        ListenToPlayerResolution();
+
+        yield return MoveAndLookToStudent_(st);
+
+        _animator.SetIsBothering(true);
+        _lookDirection = LookDirection.Front;
+        _animator.SetLookDirection(_lookDirection);
+
+        StartTalking(true);
+
+        float time = 0.0f;
+        while (_currentPlayerResolution == PlayerResolutionToConflict.None)
+        {
+            yield return null;
+            time += Time.deltaTime;
+
+            if (time > 5.0f)
+            {
+                int rand = UnityEngine.Random.Range(0, 3);
+                if (rand >= 2)
+                {
+                    _animator.SetIsBothering(false);
+
+                    st.Behaviour.SetAnnoyed(false, null);
+                    st = StudentManager.Instance.GetStudentFarFromOtherStudent(_st);
+
+                    yield return MoveAndLookToStudent_(st);
+
+                    st.Behaviour.SetAnnoyed(true, transform);
+                    _animator.SetIsBothering(true);
+                }
+                time = 0.0f;
+            }
+        }
+
+        st.Behaviour.SetAnnoyed(false, null);
+    }
+    
+    private IEnumerator BotherStudentNegativeResolution(Student st)
+    {
+        int random = UnityEngine.Random.Range(0, 3);
+        st.Behaviour.SetAnnoyed(false, null);
+
+        if (random == 0)
+        {
+            SetIsJustifying(true);
+
+            yield return WaitForPlayerAction();
+
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Positive) SetIsJustifying(false);
+
+        }
+        else if (random == 1)
+        {
+            yield return StandUp_();
+
+            yield return SmoothLookAt_(FindFirstObjectByType<XROrigin>().transform, 1.0f);
+            StartTalking(true);
+            _animator.SetIsJustifying(true);
+
+            yield return WaitForPlayerAction();
+
+            StopTalking();
+
+            if (_currentPlayerResolution != PlayerResolutionToConflict.Positive)
+            {
+                yield return MoveToFrontDoor_();
+                yield return OpenDoorInside_();
+                yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);
+                yield return CloseDoorOutside_();
+            }
+        }
+        else
+        {
+            SetIsCrying(true);
+
+            yield return WaitForPlayerAction();
+
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Positive) SetIsCrying(false);
+        }
+    }
     #endregion
 
     #region Material Gone Wrong
@@ -1142,33 +1356,56 @@ public class StudentBehaviour : MonoBehaviour
             switch (_currentPlayerResolution)
             {
                 case PlayerResolutionToConflict.Positive:
-                    _animator.TDAH_ResetGetMaterialOutWrong();
-                    yield return TakeClassMaterial();
-
+                    yield return WrongMaterialPositiveResolution();
                     isResolved = true;
                     break;
 
                 case PlayerResolutionToConflict.Neutral:
-                    _animator.SetIsOff();
-
+                    WrongMaterialNeutralResolution();
                     isResolved = true;
                     break;
 
                 case PlayerResolutionToConflict.Negative:
-
-                    int rand = UnityEngine.Random.Range(0, 2);
-
-                    if (rand == 0)  SetIsJustifying(true);
-                    else            SetIsCrying(true);
-                    
-                    yield return WaitForPlayerAction();
-
-                    if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
-                        isResolved = true;
-
+                    yield return WrongMaterialNegativeResolution();
+                    isResolved = _currentPlayerResolution == PlayerResolutionToConflict.Negative;
                     break;
             }
         }
+    }
+
+    private IEnumerator WrongMaterialPositiveResolution()
+    {
+        _animator.SetDeskTriggerParameter(StudentAnimatorController.HashFromTriggerParameter(TriggerStudentParameter.StopMatFailStandUp));
+        _animator.TDAH_ResetGetMaterialOutWrong();
+        yield return TakeClassMaterial();
+
+        // I don't think that students should react, since they will just turn their body and do nothing afterwards
+        //StudentManager.Instance.MakeNearbyStudentsReactToPositivelyResolvedConflict(_st);
+    }
+
+    private void WrongMaterialNeutralResolution()
+    {
+        _animator.TDAH_ResetGetMaterialOutWrong();
+        _animator.SetIsOff();
+        StudentManager.Instance.MakeNearbyStudentsReactToNeutrallyResolvedConflict(_st);
+    }
+
+    private IEnumerator WrongMaterialNegativeResolution()
+    {
+        _animator.TDAH_ResetGetMaterialOutWrong();
+
+        int rand = UnityEngine.Random.Range(0, 2);
+
+        if (rand == 0) SetIsJustifying(true);
+        else SetIsCrying(true);
+
+        yield return WaitForPlayerAction();
+
+        if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
+            // we only react when the conflict is totally resolved. 
+            // maybe we would want reactions when crying or justifying (?)
+            // and then stopping the reactions once the conflict is well handled (?)
+            StudentManager.Instance.MakeNearbyStudentsReactToNeutrallyResolvedConflict(_st);
     }
 
     private IEnumerator TakeClassMaterial()
@@ -1188,22 +1425,8 @@ public class StudentBehaviour : MonoBehaviour
     {
         _animator.SortMaterial();
     }
+
     #endregion
-
-    public void SetIsJustifying(bool isJustifying)
-    {
-        _animator.SetIsJustifying(isJustifying);
-        _animator.SetAnxiety_1(isJustifying);
-
-        if (isJustifying)   _animator.StartTalking();
-        else                _animator.StopTalking();
-    }
-
-    public void SetIsCrying(bool isCrying)
-    {
-        _animator.SetIsCrying(isCrying);
-        _animator.SetAnxiety_1(isCrying);
-    }
 
     #region Hyperstimulate
 
@@ -1226,44 +1449,12 @@ public class StudentBehaviour : MonoBehaviour
             switch (_currentPlayerResolution)
             {
                 case PlayerResolutionToConflict.Positive:
-                    StartTalking();
-                    _animator.TEA_ResetAnxiety();
-
-                    int progress = 0;
-
-                    // when progress reaches -2, we change to the Neutral or Negative conflict resolution
-                    // when progress reaches +2, we continue the Positive conflict resolution
-                    while (Mathf.Abs(progress) < 2)
-                    {
-                        yield return WaitForPlayerAction();
-
-                        // if neutral or negative -> We set anxiety and deduct progress from player.
-                        if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral || 
-                            _currentPlayerResolution == PlayerResolutionToConflict.Negative)
-                        {
-                            progress--;
-                            // we set anxiety
-                            _animator.TEA_SetAnxiety();
-                        }
-                        else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
-                        {
-                            progress++;
-                            isResolved = true;
-                            // we remove axniety
-                            _animator.TEA_ResetAnxiety();
-                        }
-                    }
-
-                    if (progress >= 2) 
-                        _animator.TEA_StopHyperstimulation();
-
-                    StopTalking();
+                    yield return HyperstimulationPositiveResolution();
+                    isResolved = (_currentPlayerResolution == PlayerResolutionToConflict.Positive);
                     break;
 
                 case PlayerResolutionToConflict.Neutral:
-                    _animator.TEA_StopHyperstimulation();
-                    _animator.TEA_Off();
-                    // yield return WaitForPlayerAction();
+                    HyperstimulationNeutralResolution();
                     isResolved = true;
                     break;
 
@@ -1273,6 +1464,51 @@ public class StudentBehaviour : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private IEnumerator HyperstimulationPositiveResolution()
+    {
+        StartTalking();
+        _animator.TEA_ResetAnxiety();
+
+        int progress = 0;
+
+        // when progress reaches -2, we change to the Neutral or Negative conflict resolution
+        // when progress reaches +2, we continue the Positive conflict resolution
+        while (Mathf.Abs(progress) < 2)
+        {
+            yield return WaitForPlayerAction();
+
+            // if neutral or negative -> We set anxiety and deduct progress from player.
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral ||
+                _currentPlayerResolution == PlayerResolutionToConflict.Negative)
+            {
+                progress--;
+                // we set anxiety
+                _animator.TEA_SetAnxiety();
+            }
+            else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+            {
+                progress++;
+                // we remove axniety
+                _animator.TEA_ResetAnxiety();
+            }
+        }
+
+        if (progress >= 2)
+        {
+            StudentManager.Instance.MakeNearbyStudentsReactToPositivelyResolvedConflict(_st);
+            _animator.TEA_StopHyperstimulation();
+        }
+
+        StopTalking();
+    }
+
+    private void HyperstimulationNeutralResolution()
+    {
+        _animator.TEA_StopHyperstimulation();
+        _animator.TEA_Off();
+        StudentManager.Instance.MakeNearbyStudentsReactToNeutrallyResolvedConflict(_st);
     }
 
     // Lógica de resolución negativa separada para mantener el corrutina principal limpia
@@ -1289,7 +1525,6 @@ public class StudentBehaviour : MonoBehaviour
             yield return LeaveDesk_();
             yield return GoToFloor_();
             _animator.TEA_SetAnxiety();
-            yield return WaitForPlayerAction();
         }
         else
         {
@@ -1297,14 +1532,16 @@ public class StudentBehaviour : MonoBehaviour
             yield return MoveToRandomPoint(MovementAction.RunAnxiety);
             yield return GoToFloor_();
             _animator.TEA_SetAnxiety();
-            yield return WaitForPlayerAction();
         }
-    }
 
+        // make all students react to the badly resolved conflict that just ended
+        StudentManager.Instance.MakeNearbyStudentsReactToBadlyResolvedConflict(_st);
+    }
     #endregion
+
     #region Get Distracted TEA
 
-    public void GetDistracted()
+    public void GetDistractedTEA()
     {
         // OnGetDistractedRequested.Invoke();
         EnqueueAction(GetDistracted_());
@@ -1323,56 +1560,68 @@ public class StudentBehaviour : MonoBehaviour
             switch (_currentPlayerResolution)
             {
                 case PlayerResolutionToConflict.Positive:
-                    StartTalking();
-                    _animator.TEA_ResetAnxiety();
-
-                    int progress = 0;
-
-                    // when progress reaches -2, we change to the Neutral or Negative conflict resolution
-                    // when progress reaches +2, we continue the Positive conflict resolution
-                    while (Mathf.Abs(progress) < 2)
-                    {
-                        yield return WaitForPlayerAction();
-
-                        // if neutral or negative -> We set anxiety and deduct progress from player.
-                        if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral ||
-                            _currentPlayerResolution == PlayerResolutionToConflict.Negative)
-                        {
-                            progress--;
-                            // we set anxiety
-                            _animator.TEA_SetAnxiety();
-                        }
-                        else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
-                        {
-                            progress++;
-                            isResolved = true;
-                            // we remove axniety
-                            _animator.TEA_ResetAnxiety();
-                        }
-                    }
-
-                    if (progress >= 2)
-                        _animator.TEA_UnSetDistracted();
-
-                    StopTalking();
+                    yield return GetDistractedPositiveResolution();
+                    isResolved = (_currentPlayerResolution == PlayerResolutionToConflict.Positive);
                     break;
 
                 case PlayerResolutionToConflict.Neutral:
-                    _animator.TEA_ResetAnxiety();
-                    _animator.TEA_UnSetDistracted();
-
-                    _animator.TEA_Off();
-
+                    GetDistractedNeutralResolution();
                     isResolved = true;
                     break;
 
                 case PlayerResolutionToConflict.Negative:
                     GetDistractedNegativeResolution();
-
                     isResolved = true;
                     break;
             }
         }
+    }
+
+    private IEnumerator GetDistractedPositiveResolution()
+    {
+        StartTalking();
+        _animator.TEA_ResetAnxiety();
+
+        int progress = 0;
+
+        // when progress reaches -2, we change to the Neutral or Negative conflict resolution
+        // when progress reaches +2, we continue the Positive conflict resolution
+        while (Mathf.Abs(progress) < 2)
+        {
+            yield return WaitForPlayerAction();
+
+            // if neutral or negative -> We set anxiety and deduct progress from player.
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral ||
+                _currentPlayerResolution == PlayerResolutionToConflict.Negative)
+            {
+                progress--;
+                // we set anxiety
+                _animator.TEA_SetAnxiety();
+            }
+            else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+            {
+                progress++;
+                // we remove anxiety
+                _animator.TEA_ResetAnxiety();
+            }
+        }
+
+        if (progress >= 2)
+        {
+            _animator.TEA_UnSetDistracted();
+            StudentManager.Instance.MakeNearbyStudentsReactToPositivelyResolvedConflict(_st);
+        }
+
+        StopTalking();
+    }
+
+    private void GetDistractedNeutralResolution()
+    {
+        _animator.TEA_ResetAnxiety();
+        _animator.TEA_UnSetDistracted();
+
+        _animator.TEA_Off();
+        StudentManager.Instance.MakeNearbyStudentsReactToNeutrallyResolvedConflict(_st);
     }
 
     private void GetDistractedNegativeResolution()
@@ -1387,23 +1636,110 @@ public class StudentBehaviour : MonoBehaviour
         {
             _animator.TEA_SetAnxiety();
         }
+
+        StudentManager.Instance.MakeNearbyStudentsReactToBadlyResolvedConflict(_st);
     }
 
     #endregion
 
+    // CONFLICT REACTIONS FROM OTHER STUDENTS
+    #region Reactions
 
-    public void Frustrate()
+    public void ReactToPositivelyResolvedConflict(Student conflictedStudent)
     {
-        OnFrustrateRequested.Invoke();
+        // only looking at conflicted student
+        int max = _behaviourPattern.willLookAtConflictedOthers;
+
+        int chance = UnityEngine.Random.Range(0, max + 1);
+
+        // looking at conflicted student
+        if (chance < _behaviourPattern.willLookAtConflictedOthers)
+        {
+            LookAtTarget(conflictedStudent.transform);
+        }
     }
-    public void GetMaterialOut()
+
+    public void ReactToNeutrallyResolvedConflict(Student conflictedStudent)
     {
-        OnGetMaterialOutRequested.Invoke();
+        // look or talk with conflicted student
+        int max =   _behaviourPattern.willLookAtConflictedOthers +
+                    _behaviourPattern.willTalkWithConflictedOthers;
+
+        int chance = UnityEngine.Random.Range(0, max + 1);
+
+        // talk with conflicted student
+        if (chance < _behaviourPattern.willTalkWithConflictedOthers)
+        {
+            LookAtTarget(conflictedStudent.transform);
+            StartTalking();
+            return;
+        }
+
+        chance -= _behaviourPattern.willTalkWithOthers;
+
+        // looking at conflicted student
+        if (chance < _behaviourPattern.willLookAtConflictedOthers)
+        {
+            LookAtTarget(conflictedStudent.transform);
+        }
     }
-    public void FailToPayAttention()
+
+    public void ReactToBadlyResolvedConflict(Student conflictedStudent)
     {
-        OnFailToPayAttentionRequested.Invoke();
+        int max =   _behaviourPattern.willTalkWithOthers + 
+                    _behaviourPattern.willLaughtAtOthers + 
+                    _behaviourPattern.willLookAtConflictedOthers + 
+                    _behaviourPattern.willTalkWithConflictedOthers;
+
+        int chance = UnityEngine.Random.Range(0, max + 1);
+
+        // laugh   
+        if (chance < _behaviourPattern.willLaughtAtOthers)
+        {
+            LookAtTarget(conflictedStudent.transform);
+            Laugh();
+            return;
+        }
+
+        chance -=_behaviourPattern.willLaughtAtOthers;
+
+        // talk with another student about the situation
+        if (chance < _behaviourPattern.willTalkWithOthers)
+        {
+            // get another student different from us and from conflicted one to talk with
+            List<Student> others = new List<Student>(); others.Add(conflictedStudent); others.Add(_st);
+            LookAtTarget(StudentManager.Instance.GetStudentDifferentFromGiven(others).transform);
+            StartTalking();
+            return;
+        }
+
+        chance -= _behaviourPattern.willTalkWithOthers;
+
+        // talk with conflicted student
+        if (chance < _behaviourPattern.willTalkWithConflictedOthers)
+        {
+            LookAtTarget(conflictedStudent.transform);
+            StartTalking();
+            return;
+        }
+
+        chance -= _behaviourPattern.willTalkWithOthers;
+
+        // looking at conflicted student
+        if (chance < _behaviourPattern.willLookAtConflictedOthers)
+        {
+            LookAtTarget(conflictedStudent.transform);
+        }
     }
+
+    #region Laugh
+    public void Laugh()
+    {
+        _animator.SetIsLaughing(true);
+        if (UnityEngine.Random.Range(0, 2) == 0) _animator.SetIsPointing(true);
+    }
+    #endregion
+    #endregion
 
     #endregion
 

@@ -15,7 +15,7 @@ namespace Didascalia
         /// Referencia al ConnectionManager, para gestionar las conexiones
         /// con el servidor y envío de los JSONs
         /// </summary>
-        private ConnectionManager _connectionManager;
+        private WebDashboardManager _connectionManager;
         /// <summary>
         /// Objeto que reúne datos sobre la sesión en un diccionario
         /// </summary>
@@ -38,7 +38,7 @@ namespace Didascalia
 
         void Start()
         {
-            _connectionManager = ConnectionManager.Instance;
+            _connectionManager = WebDashboardManager.Instance;
             // CreateNewEntry();
 
             if (sessionID != null && !_gameData.datas.ContainsKey(sessionID)) { CreateNewEntry(); }

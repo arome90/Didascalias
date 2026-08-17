@@ -108,7 +108,7 @@ public class ScreenFader : Singleton<ScreenFader>
             currentColor = new Color(currentColor.r, currentColor.g, currentColor.b, 
                 Mathf.Lerp(start, end, currentTime / fadeTime));
             _fadeImage.color = currentColor;
-            yield return new WaitForEndOfFrame();
+            yield return null;
             currentTime += Time.deltaTime;
         }
 

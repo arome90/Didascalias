@@ -1,9 +1,9 @@
+using AYellowpaper.SerializedCollections;
+using MathNet.Numerics.Distributions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Xml;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -50,11 +50,29 @@ public class StudentManager : Singleton<StudentManager>
     /// </summary>
     List<string> _selectedStudents = new List<string>();
 
+    [SerializeField, SerializedDictionary]
+    SerializedDictionary<StudentType, BehaviourPatternModifier> _behaviourModifiers = null;
+
+    public BehaviourPatternModifier GetBehaviourModifier(StudentType type) => _behaviourModifiers[type];
+
     protected override void Awake()
     {
         base.Awake();
         _settings = ClassManager.Instance.Settings;
         _activeConflicts = new Dictionary<string, Conflict>();
+    }
+
+    protected void Start()
+    {
+        if (_behaviourModifiers == null)
+        {
+            _behaviourModifiers = new SerializedDictionary<StudentType, BehaviourPatternModifier>();
+
+            _behaviourModifiers.Add(StudentType.Problematic, Resources.Load("BehaviourPatterns/" + StudentType.Problematic.ToString()) as BehaviourPatternModifier);
+            _behaviourModifiers.Add(StudentType.Talkative, Resources.Load("BehaviourPatterns/" + StudentType.Talkative.ToString()) as BehaviourPatternModifier);
+            _behaviourModifiers.Add(StudentType.NonParticipative_NonProblematic, Resources.Load("BehaviourPatterns/" + StudentType.NonParticipative_NonProblematic.ToString()) as BehaviourPatternModifier);
+            _behaviourModifiers.Add(StudentType.Participative_NonProblematic, Resources.Load("BehaviourPatterns/" + StudentType.Participative_NonProblematic.ToString()) as BehaviourPatternModifier);
+        }
     }
 
     private void OnEnable()
@@ -110,7 +128,7 @@ public class StudentManager : Singleton<StudentManager>
         if (_students.TryGetValue(name, out Student st)) return st;
         else return null;
     }
-    public Student GetStudentExpect(string name)
+    public Student GetStudentByName(string name)
     {
         Student st = GetStudent(name);
         Didascalia.Utils.Error.DebugbreakFailIf(st == null, $"No student found with name: {name}", this);
@@ -130,6 +148,7 @@ public class StudentManager : Singleton<StudentManager>
         List<Student> students = new List<Student>();
         foreach (Collider collider in hitColliders)
         {
+            if (collider == null) continue;
             Student st = collider.GetComponentInParent<Student>();
             students.Add(st);
         }
@@ -137,6 +156,134 @@ public class StudentManager : Singleton<StudentManager>
         students.Remove(origin);
 
         return students;
+    }
+    public void MakeNearbyStudentsReactToPositivelyResolvedConflict(Student origin)
+    {
+        List<Student> students = GetStudentsNearOrigin(origin);
+
+        foreach (Student student in students)
+        {
+            student.Behaviour.ReactToPositivelyResolvedConflict(origin);
+        }
+    }
+
+    public void MakeNearbyStudentsReactToNeutrallyResolvedConflict(Student origin)
+    {
+        List<Student> students = GetStudentsNearOrigin(origin);
+
+        foreach (Student student in students)
+        {
+            student.Behaviour.ReactToNeutrallyResolvedConflict(origin);
+        }
+    }
+
+    public void MakeNearbyStudentsReactToBadlyResolvedConflict(Student origin)
+    {
+        List<Student> students = GetStudentsNearOrigin(origin);
+
+        foreach (Student student in students)
+        {
+            student.Behaviour.ReactToBadlyResolvedConflict(origin);
+        }
+    }
+
+
+    public void MakeNearbyStudentsLaugh(Student origin)
+    {
+        List<Student> students = GetStudentsNearOrigin(origin);
+
+        foreach (Student student in students)
+        {
+            MakeStudentLaugh(student, origin);
+        }
+    }
+
+    public void MakeNearbyStudentsTalk(Student origin)
+    {
+        List<Student> students = GetStudentsNearOrigin(origin);
+
+        foreach (Student student in students)
+        {
+            MakeStudentTalk(student, origin);
+        }
+    }
+
+    public void MakeStudentLaugh(Student st, Student origin)
+    {
+        st.Behaviour.LookAtTarget(origin.transform);
+        st.Behaviour.Laugh();
+    }
+
+    public void MakeStudentTalk(Student st, Student origin = null)
+    {
+        st.Behaviour.LookAtTarget(origin.transform);
+        st.Behaviour.StartTalking();
+    }
+
+    public void AsignStudentType(List<Student> students)
+    {
+        if (students == null || students.Count == 0)
+        {
+            Debug.LogWarning("La lista de estudiantes está vacía.");
+            return;
+        }
+
+        // We copy the list to avoid removing students fromt he general list
+        List<Student> studentsCopy = new List<Student>(students);
+
+        // if there are less than five students, we do not bother in making them problematic.
+        // it's easier to handle fewer students
+        if (students.Count > 5)
+        {
+            // at least one problematic
+            // we can't use TryGetStudentOrGetRandom() because this method is called before all students are generated and therefore
+            // assigned to the Students list variable
+            int rand = UnityEngine.Random.Range(0, studentsCopy.Count);
+            Student st = studentsCopy[rand];
+            st.StType = StudentType.Problematic;
+            LLMManager.Instance.GenerateStudentContext(st);
+
+            studentsCopy.Remove(st);
+
+            // at least one talkative
+            rand = UnityEngine.Random.Range(0, studentsCopy.Count);
+            st = studentsCopy[rand];
+            st.StType = StudentType.Talkative;
+            LLMManager.Instance.GenerateStudentContext(st);
+
+            studentsCopy.Remove(st);
+
+            // at least one participative
+            rand = UnityEngine.Random.Range(0, studentsCopy.Count);
+            st = studentsCopy[rand];
+            st.StType = StudentType.Participative_NonProblematic;
+            LLMManager.Instance.GenerateStudentContext(st);
+
+            studentsCopy.Remove(st);
+        }
+
+        foreach (Student student in studentsCopy) { student.StType = SelectStudentType(); LLMManager.Instance.GenerateStudentContext(student); }
+    }
+
+    private static StudentType SelectStudentType()
+    {
+        int weightNonParticipative = 90;    // NonParticipative_NonProblematic: 70% (Gran mayoría)
+        int weightParticipative = 10;       // Participative_NonProblematic: 10%
+        int weightTalkative = 10;           // Talkative: 10%
+        int weightProblematic = 10;         // Problematic: 10%
+
+        int totalWeights = weightNonParticipative + weightParticipative + weightTalkative + weightProblematic;
+        int rand = UnityEngine.Random.Range(0, totalWeights);
+
+        if (rand < weightNonParticipative)  return StudentType.NonParticipative_NonProblematic;
+
+        rand -= weightNonParticipative;
+        if (rand < weightParticipative)     return StudentType.Participative_NonProblematic;
+
+        rand -= weightParticipative;
+        if (rand < weightTalkative)         return StudentType.Talkative;
+
+        else                                return StudentType.Problematic;
     }
 
     /// <summary>
@@ -213,6 +360,9 @@ public class StudentManager : Singleton<StudentManager>
 
             st.Name = name;
             go.name = name;
+
+            st.Age = UnityEngine.Random.Range(13, 16);
+
             students.Add(st);
             _students.Add(st.Name, st);
 
@@ -224,6 +374,9 @@ public class StudentManager : Singleton<StudentManager>
             students[0].PreviousStudent = students[students.Count - 1];
             students[students.Count - 1] = students[0];
         }
+
+        // This also adds the LLM Context
+        AsignStudentType(students);
 
         Didascalia.Utils.Log.Info("Generated students: " + string.Join(", ", students.Select(s => s.Name)), this);
         return students;
@@ -326,7 +479,7 @@ public class StudentManager : Singleton<StudentManager>
         Student st = null;
         if(studentName != null)
         {
-            st = GetStudentExpect(studentName);
+            st = GetStudentByName(studentName);
         } 
         else if (st == null)
         {
@@ -342,6 +495,20 @@ public class StudentManager : Singleton<StudentManager>
         students.Remove(other);
         students.Remove(other.NextStudent);
         students.Remove(other.PreviousStudent);
+
+        Student st = students[UnityEngine.Random.Range(0, students.Count)];
+
+        return st;
+    }
+
+    public Student GetStudentDifferentFromGiven(List<Student> others)
+    {
+        // Hacemos una lista por copia de los valores de los estudiantes y quitamos los que NO queremos coger
+        List<Student> students = _students.Values.ToList();
+        foreach (Student other in others)
+        {
+            students.Remove(other);
+        }
 
         Student st = students[UnityEngine.Random.Range(0, students.Count)];
 
@@ -495,7 +662,7 @@ public class StudentManager : Singleton<StudentManager>
                 }
                 else if (_students.Count == 3)
                 {
-                    var selected = GetStudentExpect(studentName);
+                    var selected = GetStudentByName(studentName);
                     string finalStudentName;
                     if (selected == GetStudents()[1])
                     {
@@ -516,8 +683,8 @@ public class StudentManager : Singleton<StudentManager>
                 }
                 else
                 {
-                    var targetSeatStudentNext = GetStudentExpect(studentName).NextStudent;
-                    var targetSeatStudentPrevious = GetStudentExpect(studentName).PreviousStudent;
+                    var targetSeatStudentNext = GetStudentByName(studentName).NextStudent;
+                    var targetSeatStudentPrevious = GetStudentByName(studentName).PreviousStudent;
                     Didascalia.Utils.Error.DebugbreakFailIf(
                         targetSeatStudentNext == null && targetSeatStudentPrevious == null,
                         "Selected student has no next or previous student to sit together with", this
@@ -558,8 +725,8 @@ public class StudentManager : Singleton<StudentManager>
                     descriptor.Impulsivity = new ConflictDescriptorImpulsivity { StudentName = studentName, TargetBotherStudentName = null };
                 }
                 else                {
-                    var targetSeatStudentNext = GetStudentExpect(studentName).NextStudent;
-                    var targetSeatStudentPrevious = GetStudentExpect(studentName).PreviousStudent;
+                    var targetSeatStudentNext = GetStudentByName(studentName).NextStudent;
+                    var targetSeatStudentPrevious = GetStudentByName(studentName).PreviousStudent;
                     Didascalia.Utils.Error.DebugbreakFailIf(
                         targetSeatStudentNext == null && targetSeatStudentPrevious == null,
                         "Selected student has no next or previous student to sit together with", this
@@ -624,42 +791,42 @@ public class StudentManager : Singleton<StudentManager>
         switch (descriptor.Type)
         {
             case ConflictType.Disrespect:
-                student = GetStudentExpect(descriptor.Disrespect.StudentName);
+                student = GetStudentByName(descriptor.Disrespect.StudentName);
                 // XXX: @ChichoRD Commented out this log
                 // student.Speak("Prueba de Insulto!");
                 student.GetComponent<StudentBehaviour>().Yell();
                 break;
 
             case ConflictType.SitTogether:
-                student = GetStudentExpect(descriptor.SitTogether.StudentName);
+                student = GetStudentByName(descriptor.SitTogether.StudentName);
                 student.GetComponent<StudentBehaviour>().SitNextToGivenStudentConflict(StudentManager.Instance.GetStudent(descriptor.SitTogether.TargetSeatStudentName));
                 break;
 
             case ConflictType.StandUp:
-                student = GetStudentExpect(descriptor.StandUp.StudentName);
-                student.GetComponent<StudentBehaviour>().StandUp();
+                student = GetStudentByName(descriptor.StandUp.StudentName);
+                student.GetComponent<StudentBehaviour>().StandUpConflict();
                 break;
             
             case ConflictType.Hyperstimulation:
-                student = GetStudentExpect(descriptor.Hyperstimulation.StudentName);
+                student = GetStudentByName(descriptor.Hyperstimulation.StudentName);
                 student.GetComponent<StudentBehaviour>().Hyperstimulate();
                 break;
             case ConflictType.Frustration:
-                student = GetStudentExpect(descriptor.Frustration.StudentName);
-                student.GetComponent<StudentBehaviour>().Frustrate();
+                student = GetStudentByName(descriptor.Frustration.StudentName);
+                student.GetComponent<StudentBehaviour>().GetDistractedTEA();
                 break;
             
             case ConflictType.Disorganization:
-                student = GetStudentExpect(descriptor.Disorganization.StudentName);
-                student.GetComponent<StudentBehaviour>().GetDistracted();
+                student = GetStudentByName(descriptor.Disorganization.StudentName);
+                student.GetComponent<StudentBehaviour>().GetOutMaterialWrong();
                 break;
             case ConflictType.Impulsivity:
-                student = GetStudentExpect(descriptor.Impulsivity.StudentName);
-                student.GetComponent<StudentBehaviour>().GetMaterialOut();
+                student = GetStudentByName(descriptor.Impulsivity.StudentName);
+                student.GetComponent<StudentBehaviour>().BotherOtherStudents();
                 break;
             case ConflictType.Inattention:
-                student = GetStudentExpect(descriptor.Inattention.StudentName);
-                student.GetComponent<StudentBehaviour>().FailToPayAttention();
+                student = GetStudentByName(descriptor.Inattention.StudentName);
+                student.GetComponent<StudentBehaviour>().DrawDistacted();
                 break;
 
             default:
@@ -845,7 +1012,7 @@ public class StudentManager : Singleton<StudentManager>
             Conflict conflict = Instantiate(_conflictPrefab, transform).GetComponent<Conflict>();
             // le damos nombre
             conflict.name = $"Conflict_{type}_{descriptorName}";
-            conflict.SetConflictiveStudent(GetStudentExpect(descriptorName));
+            conflict.SetConflictiveStudent(GetStudentByName(descriptorName));
 
             foreach (string stName in descriptor.AffectedStudents)
             {
@@ -870,20 +1037,20 @@ public class StudentManager : Singleton<StudentManager>
         public Conflict ConflictInstance;
     }
 
-    internal ConflictGeneration GenerateConflictExpect(ConflictType type, string studentName)
-    {
-        var result = GenerateConflict(type, studentName);
-        Didascalia.Utils.Error.DebugbreakFailIf(
-            result.Error != ConflictGenerationError.None,
-            $"Failed to generate conflict of type {type} for student {studentName} with error: {result.Error}",
-            this
-        );
-        return new ConflictGeneration
-        {
-            Descriptor = result.Descriptor,
-            ConflictInstance = result.ConflictInstance!
-        };
-    }
+    //internal ConflictGeneration GenerateConflictExpect(ConflictType type, string studentName)
+    //{
+    //    var result = GenerateConflict(type, studentName);
+    //    Didascalia.Utils.Error.DebugbreakFailIf(
+    //        result.Error != ConflictGenerationError.None,
+    //        $"Failed to generate conflict of type {type} for student {studentName} with error: {result.Error}",
+    //        this
+    //    );
+    //    return new ConflictGeneration
+    //    {
+    //        Descriptor = result.Descriptor,
+    //        ConflictInstance = result.ConflictInstance!
+    //    };
+    //}
 
     public void ResolveConflicts()
     {
