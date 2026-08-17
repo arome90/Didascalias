@@ -13,7 +13,10 @@ public enum StudentType
     Participative_NonProblematic,
     NonParticipative_NonProblematic,
     Talkative,
-    Problematic
+    Problematic,
+
+    ADHD,
+    Autistic
 }
 
 /// <summary>
@@ -24,6 +27,12 @@ public class Student : MonoBehaviour
     [SerializeField,
         Tooltip("Texto que muestra el nombre del estudiante al jugador")]
     TextMeshProUGUI _nameTag;
+
+#if UNITY_EDITOR
+    [Header("Debug")]
+    [SerializeField]
+    private TextMeshProUGUI _debugTypeText = null;
+#endif
 
     [HideInInspector]
     public AudioSource _audioSource = null;
@@ -47,6 +56,7 @@ public class Student : MonoBehaviour
 
     NavMeshAgent _agent;
 
+    [SerializeField]
     StudentType _type = StudentType.NonParticipative_NonProblematic;
 
     public StudentType StType
@@ -62,6 +72,20 @@ public class Student : MonoBehaviour
     {
         _type = type;
         this.Behaviour.SetBehaviourPattern(StudentManager.Instance.GetBehaviourModifier(_type));
+#if UNITY_EDITOR
+        UpdateNameTag();
+#endif
+    }
+
+    private void UpdateNameTag()
+    {
+#if UNITY_EDITOR
+        _nameTag.text = _name.ToUpper();
+        _debugTypeText.text = StType.ToString();
+#else
+        _nameTag.text = _name.ToUpper();
+#endif
+
     }
 
     string _name;
@@ -76,7 +100,7 @@ public class Student : MonoBehaviour
         set 
         { 
             _name = value;
-            _nameTag.text = _name.ToUpper();
+            UpdateNameTag();
         } 
     }
 

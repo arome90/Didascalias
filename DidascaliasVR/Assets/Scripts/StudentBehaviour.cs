@@ -146,8 +146,14 @@ public class StudentBehaviour : MonoBehaviour
     public void SetIsCarryingMaterial(bool carrying) 
     { 
         _carryingClassMaterial = carrying; 
-        _animator.SetIsCarryingMaterial(_carryingClassMaterial); 
+        _animator.SetIsCarryingMaterial(_carryingClassMaterial);
     }
+
+    private bool _hasAllMaterialOut = false;
+
+    public bool HasMaterialPlaced => _hasAllMaterialOut;
+
+    public void SetHasMaterialOut(bool hasMaterialPlaced) => _hasAllMaterialOut = hasMaterialPlaced;
 
     public void PlaceMaterial()
     {
@@ -168,9 +174,11 @@ public class StudentBehaviour : MonoBehaviour
     [SerializeField, Range(1.0f, 5.0f), Tooltip("Base Walking Speed")]
     private float _baseWalkingSpeed = 1.5f;
 
+#if UNITY_EDITOR
     [Header("Debug")]
     [SerializeField]
-    private TextMeshProUGUI _debugText = null;
+    private TextMeshProUGUI _debugStateText = null;
+#endif
 
     [Header("Events")]
     public UnityEvent OnStandUpChair = new UnityEvent();
@@ -216,9 +224,13 @@ public class StudentBehaviour : MonoBehaviour
     // this will affect the student's reaction when a conflict is resolved (positively, neutrally or badly)
     BehaviourPattern _behaviourPattern;
 
-    private void Start()
+    private void Awake()
     {
         _animator = GetComponentInChildren<Didascalia.Student.StudentAnimatorController>();
+    }
+
+    private void Start()
+    {
         _agent = GetComponent<NavMeshAgent>();
         _st = GetComponent<Student>();
         _tts = GetComponent<TTSWit>();
@@ -226,6 +238,8 @@ public class StudentBehaviour : MonoBehaviour
         _initialSpeed = _agent.speed;
 
         _agent.enabled = !IsSitting();
+
+        _hasAllMaterialOut = false;
 
         Didascalia.Utils.Error.DebugbreakFailIf(_animator == null, "Animator component not found", this);
         Didascalia.Utils.Error.DebugbreakFailIf(_agent == null, "NavMeshAgent component not found", this);
@@ -254,9 +268,18 @@ public class StudentBehaviour : MonoBehaviour
         _behaviourPattern.willLookAtConflictedOthers =     modifier._lookAtOthers + UnityEngine.Random.Range(-modifier._lookAtModifier, modifier._lookAtModifier + 1);
     }
 
-    public void SetTEA(bool isTEA)
+    bool _isADHD =  false;
+    public void SetADHD(bool isADHD)
     {
-        _animator.SetIsTEA(isTEA);
+        _isADHD = isADHD;
+    }
+
+    bool _isTEA =   false;
+
+    public void SetAutism(bool isTEA)
+    {
+        _isTEA = isTEA;
+        _animator.SetIsTEA(_isTEA);
     }
 
     private void OnDestroy()
@@ -315,7 +338,9 @@ public class StudentBehaviour : MonoBehaviour
     public void ChangeState(StudentState newState)
     {
         _state = newState;
-        if (_debugText != null) _debugText.SetText(_state.ToString());
+#if UNITY_EDITOR
+        if (_debugStateText != null) _debugStateText.SetText(_state.ToString());
+#endif
     }
 
     public void SitDownStudent()
@@ -750,85 +775,6 @@ public class StudentBehaviour : MonoBehaviour
         // StandingOnDesk completed
     }
 
-    public void SitNextToRandomStudentConflict()
-    {
-        Student farStudent = StudentManager.Instance.GetStudentFarFromOtherStudent(_st);
-
-        SitNextToGivenStudentConflict(farStudent);
-    }
-
-    public void SitNextToGivenStudentConflict(Student farStudent)
-    {
-        StopAndClearActionQueue();
-        EnqueueAction(SitNextToRandomStudentConflict_(farStudent));
-    }
-
-    IEnumerator SitNextToRandomStudentConflict_(Student farStudent)
-    {
-        ListenToPlayerResolution();
-
-        StartCoroutine(MovingTowardsPoint_(farStudent.Desk.OutOfDeskTransform.position));
-
-        if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
-        {
-            yield return SitDown_();
-        }
-        else
-        {
-            ListenToPlayerResolution();
-
-            yield return new WaitUntil(() => IsStandingOutOfDesk());
-            yield return TalkToSomeoneForTime_(farStudent, 1.0f);
-
-            StudentBehaviour targetBehaviour = farStudent.GetComponent<StudentBehaviour>();
-
-            // we wait until the student has talked with someone else and is changing their position for the player's actions
-            // to take place
-            if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
-            {
-                yield return SitDown_();
-            }
-            else
-            {
-                ListenToPlayerResolution();
-
-                // we wait until the other student has left their desk and sat down
-                yield return targetBehaviour.LeaveDesk_();
-
-                ChangeDeskWithStudent(targetBehaviour, false);
-
-                targetBehaviour.SitDown();
-
-                yield return SitDown_();
-
-                if (_currentPlayerResolution == PlayerResolutionToConflict.None)
-                    yield return WaitForPlayerAction();
-
-                if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
-                {
-                    yield return new WaitUntil(() => targetBehaviour.IsSittingOnChair());
-
-                    targetBehaviour.LeaveDesk();
-                    yield return LeaveDesk_();
-
-                    // CHECK WHEN WE SHOULD BE CHANGING DESKS
-
-                    ChangeDeskWithStudent(targetBehaviour, false);
-
-                    targetBehaviour.SitDown();
-                    yield return SitDown_();
-                }
-                // the neutral resolution would be to ignore it, so we do nothing in that case
-
-                else if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
-                {
-                    SetIsJustifying(true);
-                    StudentManager.Instance.MakeNearbyStudentsReactToBadlyResolvedConflict(_st);
-                }
-            }
-        }
-    }
-
     IEnumerator TalkToSomeoneForTime_(Student st, float talkTime)
     {
         yield return SmoothLookAt_(st.transform, 0.65f);
@@ -968,6 +914,7 @@ public class StudentBehaviour : MonoBehaviour
     #endregion
 
     // CONFLICTS
+
     #region StandUp
     public void StandUpConflict()
     {
@@ -1039,16 +986,106 @@ public class StudentBehaviour : MonoBehaviour
     #endregion
 
     #region SitTogether
-    public void SitTogether()
+    public void SitNextToRandomStudentConflict()
     {
-        OnSitTogetherRequested.Invoke();
+        Student farStudent = StudentManager.Instance.GetStudentFarFromOtherStudent(_st);
+
+        SitNextToGivenStudentConflict(farStudent);
+    }
+
+    public void SitNextToGivenStudentConflict(Student farStudent)
+    {
+        StopAndClearActionQueue();
+        EnqueueAction(SitNextToRandomStudentConflict_(farStudent));
+    }
+
+    IEnumerator SitNextToRandomStudentConflict_(Student farStudent)
+    {
+        StartCoroutine(MovingTowardsPoint_(farStudent.Desk.OutOfDeskTransform.position));
+        yield return WaitForPlayerAction();
+
+        if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+        {
+            yield return SitDown_();
+        }
+        else
+        {
+            ListenToPlayerResolution();
+
+            yield return new WaitUntil(() => IsStandingOutOfDesk());
+            yield return TalkToSomeoneForTime_(farStudent, 1.0f);
+
+            StudentBehaviour targetBehaviour = farStudent.GetComponent<StudentBehaviour>();
+
+            while (_currentPlayerResolution == PlayerResolutionToConflict.None)
+                yield return WaitForPlayerAction();
+
+            // we wait until the student has talked with someone else and is changing their position for the player's actions
+            // to take place
+            if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+            {
+                yield return SitDown_();
+            }
+            else
+            {
+                ListenToPlayerResolution();
+
+                // we wait until the other student has left their desk and sat down
+                yield return targetBehaviour.LeaveDesk_();
+
+                if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+                {
+                    targetBehaviour.SitDown();
+                    yield return SitDown_();
+                    yield break;
+                }
+                else
+                {
+                    ChangeDeskWithStudent(targetBehaviour, false);
+
+                    targetBehaviour.SitDown();
+
+                    yield return SitDown_();
+
+                    if (_currentPlayerResolution == PlayerResolutionToConflict.None)
+                        yield return WaitForPlayerAction();
+
+                    if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
+                    {
+                        yield return new WaitUntil(() => targetBehaviour.IsSittingOnChair());
+
+                        targetBehaviour.LeaveDesk();
+                        yield return LeaveDesk_();
+
+                        // CHECK WHEN WE SHOULD BE CHANGING DESKS
+
+                        ChangeDeskWithStudent(targetBehaviour, false);
+
+                        targetBehaviour.SitDown();
+                        yield return SitDown_();
+                    }
+                    // the neutral resolution would be to ignore it, so we do nothing in that case
+
+                    else if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
+                    {
+                        SetIsJustifying(true);
+                        StudentManager.Instance.MakeNearbyStudentsReactToBadlyResolvedConflict(_st);
+                    }
+                }
+            }
+        }
     }
     #endregion
 
     #region Draw Conflict
     public void DrawDistacted()
     {
-        // OnHyperstimulateRequested.Invoke();
+        // only for adhd sitting kids
+        if (!_isADHD
+            || !IsSittingOnChair()
+            || !_hasAllMaterialOut)
+            return;
+
         StopAndClearActionQueue();
         EnqueueAction(DrawDistacted_());
     }
@@ -1135,7 +1172,12 @@ public class StudentBehaviour : MonoBehaviour
 
     public void BotherOtherStudents()
     {
-        // OnHyperstimulateRequested.Invoke();
+        // only for adhd sitting kids
+        if (!_isADHD
+            || !IsSittingOnChair())
+            return;
+
+        StopAndClearActionQueue();
         EnqueueAction(BotherStudentConflict_());
     }
 
@@ -1340,6 +1382,14 @@ public class StudentBehaviour : MonoBehaviour
     #region Material Gone Wrong
     public void GetOutMaterialWrong()
     {
+        // Can't get material out if they:
+        //      - are not in their desk (they won't access another student's material)
+        //      - already have material out
+        if (    !IsSittingOnTheirDesk()
+            ||  HasMaterialPlaced)
+            return;
+
+        StopAndClearActionQueue();
         EnqueueAction(GetOutMaterialWrong_());
     }
 
@@ -1432,6 +1482,11 @@ public class StudentBehaviour : MonoBehaviour
 
     public void Hyperstimulate()
     {
+        if (    !_isTEA
+            ||  !IsSittingOnChair())
+            return;
+
+        StopAndClearActionQueue();
         // OnHyperstimulateRequested.Invoke();
         EnqueueAction(Hyperstimulate_());
     }
@@ -1543,7 +1598,12 @@ public class StudentBehaviour : MonoBehaviour
 
     public void GetDistractedTEA()
     {
+        if (    !_isTEA
+            ||  !IsSittingOnChair())
+            return;
+
         // OnGetDistractedRequested.Invoke();
+        StopAndClearActionQueue();
         EnqueueAction(GetDistracted_());
     }
 

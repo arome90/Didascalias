@@ -106,12 +106,12 @@ public class TestingStudentBehaviour : MonoBehaviour
 
     public void SetTEATrue(Student st)
     {
-        st.Behaviour.SetTEA(true);
+        st.Behaviour.SetAutism(true);
     }
 
     public void SetTEAFalse(Student st)
     {
-        st.Behaviour.SetTEA(false);
+        st.Behaviour.SetAutism(false);
     }
 
     public void GoToFloor(Student st)

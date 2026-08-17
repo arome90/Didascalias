@@ -1,5 +1,4 @@
 using AYellowpaper.SerializedCollections;
-using MathNet.Numerics.Distributions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +38,29 @@ public class StudentManager : Singleton<StudentManager>
     StudentNames _studentNames;
 
     /// <summary>
-    /// Diccionaria de estudiantes relacionados por su nombre
+    /// Diccionario de estudiantes relacionados por su nombre
     /// </summary>
     Dictionary<string, Student> _students = null;
+
+    [SerializeField, Range(0, 1), Tooltip("Proportion of autistic students in class")]
+    private float _autisticStudentsProportion = 0.1f;
+    [SerializeField, Tooltip("Always makes sure that there is at least one autistic student")]
+    private bool _atLeastOneAutistic = true;
+
+    [SerializeField, Range(0, 1), Tooltip("Proportion of students with ADHD in class")]
+    private float _adhdStudentsProportion = 0.1f;
+    [SerializeField, Tooltip("Always makes sure that there is at least one ADHD student; only failing when there is only 1 and 'At Least One Autitic' is checked, making that student Autistic instead of ADHD")]
+    private bool _atLeastOneADHD = true;
+
+    /// <summary>
+    /// Non-normative students (ADHD and Autism)
+    /// </summary>
+    List<Student> _nonNormativeStudents = null;
+
+    List<Student> _adhdStudents = null;
+
+    List<Student> _autisticStudents = null;
+
 
     ClassSettings _settings;
 
@@ -72,6 +91,8 @@ public class StudentManager : Singleton<StudentManager>
             _behaviourModifiers.Add(StudentType.Talkative, Resources.Load("BehaviourPatterns/" + StudentType.Talkative.ToString()) as BehaviourPatternModifier);
             _behaviourModifiers.Add(StudentType.NonParticipative_NonProblematic, Resources.Load("BehaviourPatterns/" + StudentType.NonParticipative_NonProblematic.ToString()) as BehaviourPatternModifier);
             _behaviourModifiers.Add(StudentType.Participative_NonProblematic, Resources.Load("BehaviourPatterns/" + StudentType.Participative_NonProblematic.ToString()) as BehaviourPatternModifier);
+            _behaviourModifiers.Add(StudentType.Autistic, Resources.Load("BehaviourPatterns/" + StudentType.Autistic.ToString()) as BehaviourPatternModifier);
+            _behaviourModifiers.Add(StudentType.ADHD, Resources.Load("BehaviourPatterns/" + StudentType.ADHD.ToString()) as BehaviourPatternModifier);
         }
     }
 
@@ -220,20 +241,18 @@ public class StudentManager : Singleton<StudentManager>
         st.Behaviour.StartTalking();
     }
 
-    public void AsignStudentType(List<Student> students)
+    // we specifically ask for a copy of the students to avoid any mistakes :)
+    public void AsignStudentType(List<Student> studentsCopy)
     {
-        if (students == null || students.Count == 0)
+        if (studentsCopy == null || studentsCopy.Count == 0)
         {
             Debug.LogWarning("La lista de estudiantes está vacía.");
             return;
         }
 
-        // We copy the list to avoid removing students fromt he general list
-        List<Student> studentsCopy = new List<Student>(students);
-
         // if there are less than five students, we do not bother in making them problematic.
         // it's easier to handle fewer students
-        if (students.Count > 5)
+        if (studentsCopy.Count > 5)
         {
             // at least one problematic
             // we can't use TryGetStudentOrGetRandom() because this method is called before all students are generated and therefore
@@ -375,8 +394,56 @@ public class StudentManager : Singleton<StudentManager>
             students[students.Count - 1] = students[0];
         }
 
+        // Non-Normative students
+        List<Student> stCopy = new List<Student>(students);
+
+        _nonNormativeStudents = new List<Student>();
+
+        // Autistic Students
+        {
+            _autisticStudents = new List<Student>();
+            int numAutism = (int)(_autisticStudentsProportion * students.Count);
+
+            // if there is at least one autistic student, we set it to the actual number or to 1 if numAutism is 0
+            numAutism = _atLeastOneAutistic ? Mathf.Max(numAutism, 1) : numAutism;
+
+            for (int i = 0; i < numAutism; ++i)
+            {
+                int index = UnityEngine.Random.Range(0, stCopy.Count);
+                Student st = stCopy[index];
+                st.Behaviour.SetAutism(true);
+                st.StType = StudentType.Autistic;
+                stCopy.Remove(st);
+
+                _nonNormativeStudents.Add(st);
+                _autisticStudents.Add(st);
+            }
+        }
+
+        // ADHD students
+        {
+            _adhdStudents = new List<Student>();
+            int numAdhd = (int)(_adhdStudentsProportion * students.Count);
+
+            // if there is at least one adhd student, we set it to the actual number or to 1 if numAutism is 0
+            numAdhd = _atLeastOneADHD ? Mathf.Max(numAdhd, 1) : numAdhd;
+
+            for (int i = 0; i < numAdhd; ++i)
+            {
+                int index = UnityEngine.Random.Range(0, stCopy.Count);
+                Student st = stCopy[index];
+                st.Behaviour.SetADHD(true);
+                st.StType = StudentType.ADHD;
+                stCopy.Remove(st);
+
+                _nonNormativeStudents.Add(st);
+                _adhdStudents.Add(st);
+            }
+        }
+
         // This also adds the LLM Context
-        AsignStudentType(students);
+        // We use the stCopy to avoid giving Autistic and ADHD students another type
+        AsignStudentType(stCopy);
 
         Didascalia.Utils.Log.Info("Generated students: " + string.Join(", ", students.Select(s => s.Name)), this);
         return students;
