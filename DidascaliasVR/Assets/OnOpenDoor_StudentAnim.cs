@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class OnOpenDoor : StateMachineBehaviour
+public class OnOpenDoor_StudentAnim : StateMachineBehaviour
 {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

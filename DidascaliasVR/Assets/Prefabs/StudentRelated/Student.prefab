@@ -1633,14 +1633,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5594449607132192900}
   - component: {fileID: 8824298556699264719}
-  - component: {fileID: 8941185757762626559}
   - component: {fileID: 5673780261162334734}
   - component: {fileID: 2883361797567125502}
   - component: {fileID: 1633229700873950099}
   - component: {fileID: 7616675770340697794}
-  - component: {fileID: 5224175862012970138}
   - component: {fileID: 2126601844868423669}
-  - component: {fileID: 2196077253948964203}
   m_Layer: 0
   m_Name: Student
   m_TagString: Untagged
@@ -1681,25 +1678,8 @@ MonoBehaviour:
   _audioSource: {fileID: 0}
   PreviousStudent: {fileID: 0}
   NextStudent: {fileID: 0}
+  _type: 1
   _gender: 0
---- !u!114 &8941185757762626559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5128183311388247141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6fa59d4413fd3648af064ee777296db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _extraBonesBody: []
-  _characterAssets: {fileID: 11400000, guid: 6788b9fdf366f7f4d8d52ab4c5c31778, type: 2}
-  _rootBone: {fileID: 733086639555339052}
-  _boundCenter: {x: 0, y: 0.85, z: 0}
-  _boundExtents: {x: 1.7, y: 1.7, z: 1}
-  _animatorAvatar: {fileID: 9000000, guid: dc6a5cc4f03d64344999fb24351a5fb4, type: 3}
 --- !u!114 &5673780261162334734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1834,24 +1814,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5224175862012970138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5128183311388247141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5541e9e665aaae41ba6e1c1819db195, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _jaw: {fileID: 7847248457881659696}
-  _sizeReduction: 500
-  _smoothSpeed: 5
-  _fastSmoothSpeed: 20
-  _sensitivity: 1
-  _timeUpdate: 0.4
 --- !u!82 &2126601844868423669
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1949,89 +1911,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2196077253948964203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5128183311388247141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6b3124b830442d45b9f357ff99b152f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  verboseLogging: 0
-  _audioSystem: {fileID: 0}
-  _runtimeCacheHandler: {fileID: 0}
-  _diskCacheHandler: {fileID: 0}
-  _events:
-    OnClipCreated:
-      m_PersistentCalls:
-        m_Calls: []
-    OnClipUnloaded:
-      m_PersistentCalls:
-        m_Calls: []
-    WebRequest:
-      OnRequestBegin:
-        m_PersistentCalls:
-          m_Calls: []
-      OnRequestCancel:
-        m_PersistentCalls:
-          m_Calls: []
-      OnRequestError:
-        m_PersistentCalls:
-          m_Calls: []
-      OnRequestFirstResponse:
-        m_PersistentCalls:
-          m_Calls: []
-      OnRequestReady:
-        m_PersistentCalls:
-          m_Calls: []
-      OnRequestComplete:
-        m_PersistentCalls:
-          m_Calls: []
-    Stream:
-      OnStreamBegin:
-        m_PersistentCalls:
-          m_Calls: []
-      OnStreamReady:
-        m_PersistentCalls:
-          m_Calls: []
-      OnStreamClipUpdate:
-        m_PersistentCalls:
-          m_Calls: []
-      OnStreamComplete:
-        m_PersistentCalls:
-          m_Calls: []
-      OnStreamCancel:
-        m_PersistentCalls:
-          m_Calls: []
-      OnStreamError:
-        m_PersistentCalls:
-          m_Calls: []
-    Download:
-      OnDownloadBegin:
-        m_PersistentCalls:
-          m_Calls: []
-      OnDownloadSuccess:
-        m_PersistentCalls:
-          m_Calls: []
-      OnDownloadCancel:
-        m_PersistentCalls:
-          m_Calls: []
-      OnDownloadError:
-        m_PersistentCalls:
-          m_Calls: []
-  RequestSettings:
-    _configuration: {fileID: 11400000, guid: d45f3144da7567f41ae83997bfeb8335, type: 2}
-    audioType: 0
-    audioStream: 1
-    useEvents: 1
-    audioStreamPreloadCount: 5
-    audioReadyDuration: 1.5
-    audioMaxDuration: 15
-  _presetVoiceSettings: []
 --- !u!1 &5263814627619131610
 GameObject:
   m_ObjectHideFlags: 0

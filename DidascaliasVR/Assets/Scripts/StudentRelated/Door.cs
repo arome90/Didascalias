@@ -15,6 +15,11 @@ public class Door : MonoBehaviour
 
     Animator _animator;
 
+    bool _isOpen = false;
+    public bool IsOpen => _isOpen;
+
+    public void SetOpen(bool open) => _isOpen = open;
+
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
@@ -25,21 +30,21 @@ public class Door : MonoBehaviour
 
     public void OpenInside()
     {
-        _animator.SetTrigger("OpenInside");
+        if (!_isOpen) _animator.SetTrigger("OpenInside");
     }
 
     public void CloseInside()
     {
-        _animator.SetTrigger("CloseInside");
+        if (_isOpen) _animator.SetTrigger("CloseInside");
     }
 
     public void OpenOutside()
     {
-        _animator.SetTrigger("OpenOutside");
+        if (!_isOpen) _animator.SetTrigger("OpenOutside");
     }
 
     public void CloseOutside()
     {
-        _animator.SetTrigger("CloseOutside");
+        if (_isOpen) _animator.SetTrigger("CloseOutside");
     }
 }

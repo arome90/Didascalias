@@ -101,7 +101,6 @@ public class StudentBehaviour : MonoBehaviour
         + "only one shall be contained per scene in a 'configuration global wit tts object'.\n"
         + "Each Student should have attached instead: WitSpeaker. From which we can issue calls to the scene's TTSWit to `.Speak()`"
     )]
-    TTSWit _tts;
     Student _st;
 
     public Transform SitSpot { get { return _st.Desk.StudentPosition; } }
@@ -233,7 +232,6 @@ public class StudentBehaviour : MonoBehaviour
     {
         _agent = GetComponent<NavMeshAgent>();
         _st = GetComponent<Student>();
-        _tts = GetComponent<TTSWit>();
 
         _initialSpeed = _agent.speed;
 
@@ -243,7 +241,6 @@ public class StudentBehaviour : MonoBehaviour
 
         Didascalia.Utils.Error.DebugbreakFailIf(_animator == null, "Animator component not found", this);
         Didascalia.Utils.Error.DebugbreakFailIf(_agent == null, "NavMeshAgent component not found", this);
-        Didascalia.Utils.Error.DebugbreakFailIf(_tts == null, "TTS component not found", this);
         Didascalia.Utils.Error.DebugbreakFailIf(_st == null, "Student component not found", this);
 
         // these events happen on the action's end.
@@ -457,6 +454,8 @@ public class StudentBehaviour : MonoBehaviour
 
     IEnumerator OpenDoorInside_()
     {
+        if (ClassManager.Instance.FrontDoor.IsOpen) yield break;
+
         ChangeState(StudentState.OpeningDoor);
         _animator.OpenDoorInside(ClassManager.Instance.FrontDoor);
 
@@ -465,10 +464,32 @@ public class StudentBehaviour : MonoBehaviour
 
     IEnumerator CloseDoorOutside_()
     {
+        if (!ClassManager.Instance.FrontDoor.IsOpen) yield break;
+
         ChangeState(StudentState.ClosingDoor);
         _animator.CloseDoorOutside(ClassManager.Instance.FrontDoor);
 
         yield return new WaitUntil(() => _state == StudentState.Expelled);
+    }
+
+    IEnumerator OpenDoorOutside_()
+    {
+        if (ClassManager.Instance.FrontDoor.IsOpen) yield break;
+
+        ChangeState(StudentState.OpeningDoor);
+        _animator.OpenDoorOutside(ClassManager.Instance.FrontDoor);
+
+        yield return new WaitUntil(() => _state == StudentState.StandingOutOfDesk);
+    }
+
+    IEnumerator CloseDoorInside_()
+    {
+        if (!ClassManager.Instance.FrontDoor.IsOpen) yield break;
+
+        ChangeState(StudentState.ClosingDoor);
+        _animator.CloseDoorInside(ClassManager.Instance.FrontDoor);
+
+        yield return new WaitUntil(() => _state == StudentState.StandingOutOfDesk);
     }
 
     // external
@@ -568,21 +589,7 @@ public class StudentBehaviour : MonoBehaviour
         yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.0f);
     }
 
-    IEnumerator OpenDoorOutside_()
-    {
-        ChangeState(StudentState.OpeningDoor);
-        _animator.OpenDoorOutside(ClassManager.Instance.FrontDoor);
 
-        yield return new WaitUntil(() => _state == StudentState.StandingOutOfDesk);
-    }
-
-    IEnumerator CloseDoorInside_()
-    {
-        ChangeState(StudentState.ClosingDoor);
-        _animator.CloseDoorInside(ClassManager.Instance.FrontDoor);
-
-        yield return new WaitUntil(() => _state == StudentState.StandingOutOfDesk);
-    }
 
     IEnumerator EnterClass_()
     {
@@ -1859,7 +1866,7 @@ public class StudentBehaviour : MonoBehaviour
         queueProcessor = null;
 
         // reanudamos el movimiento por si acaso se quedó colgado al acabar alguna corrutina
-        _agent.SetDestination(_agent.transform.position);
+        if (_agent.enabled) _agent.SetDestination(_agent.transform.position);
         _agent.speed = _initialSpeed;
         _animator.StudentAnimator.SetFloat(Didascalia.Student.StudentAnimatorController.HashFloatSpeed, 0.0f);
     }
