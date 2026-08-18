@@ -40,10 +40,12 @@ namespace Didascalia
         {
             _connectionManager = WebDashboardManager.Instance;
             // CreateNewEntry();
-
-            if (sessionID != null && !_gameData.datas.ContainsKey(sessionID)) { CreateNewEntry(); }
+            if (_connectionManager != null)
+            {
+                if (sessionID != null && !_gameData.datas.ContainsKey(sessionID)) { CreateNewEntry(); }
+                InvokeRepeating("SendDataByTime", timer, timer);
+            }
             
-            InvokeRepeating("SendDataByTime", timer, timer);
         }
 
         public void CreateNewEntry()
@@ -64,6 +66,8 @@ namespace Didascalia
 
         public void SendData(BaseData data)
         {
+            if (_connectionManager == null) return;
+
             lock (_gameData)
             {
                 _gameData.datas[sessionID].Add(data);

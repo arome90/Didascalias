@@ -11,6 +11,7 @@ using UnityEngine.Events;
 /// adem�s de activar permanentemente el micr�fono cuando el jugador 
 /// est� hablando 
 /// </summary>
+[Obsolete("Changed to Azure system")]
 public class VoiceActivation : Singleton<VoiceActivation>
 {
     [Header("References")]

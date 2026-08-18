@@ -10,7 +10,7 @@ public class PositionSetter : MonoBehaviour
     /// Settea la posición y rotación del objeto recibido a la de este objeto
     /// </summary>
     /// <param name="target"> Objeto a posicionar y rotar </param>
-    public void SetPlayerPositionAndRotation(Transform target) {
+    public void SetGivenTransformPositionAndRotation(Transform target) {
         target.SetPositionAndRotation(transform.position, transform.rotation);
     }
 }

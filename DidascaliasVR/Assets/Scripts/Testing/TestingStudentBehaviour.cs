@@ -22,6 +22,8 @@ public class TestingStudentBehaviour : MonoBehaviour
         student.GetComponent<StudentBehaviour>().StandUp();
     }
 
+
+
     public void SitDown(Student student)
     {
         student.GetComponent<StudentBehaviour>().SitDown();
@@ -75,14 +77,57 @@ public class TestingStudentBehaviour : MonoBehaviour
         student.GetComponent<StudentBehaviour>().Expel();
     }
 
+    private void HandleConflict(ConflictType type)
+    {
+        ConflictGenerationResult result = StudentManager.Instance.GenerateConflict(type);
+        if (result.Error != ConflictGenerationError.None)
+        {
+            Debug.LogError(result.errorWhy);
+            return;
+        }
+        ConflictSetupResult setup = result.ConflictInstance.IsConflictFeasible();
+        if (setup.Error == ConflictGenerationError.None)
+        {
+            StudentManager.Instance.HandleConflict(result.ConflictInstance);
+        }
+        else
+        {
+            Debug.LogError(setup.errorWhy);
+        }
+    }
+
+    public void StandUpConflict(Student student)
+    {
+        HandleConflict(ConflictType.StandUp);
+    }
+
     public void Hyperstimulate(Student student)
     {
-        student.GetComponent<StudentBehaviour>().Hyperstimulate();
+        HandleConflict(ConflictType.Hyperstimulation);
     }
 
     public void GetDistracted(Student student)
     {
-        student.GetComponent<StudentBehaviour>().GetDistractedTEA();
+        HandleConflict(ConflictType.DistractionTEA);
+    }
+
+    public void SitTogether(Student st)
+    {
+        HandleConflict(ConflictType.SitTogether);
+    }
+    public void GetOutMaterialWrong(Student st)
+    {
+        HandleConflict(ConflictType.MaterialOutWrong);
+    }
+
+    public void DrawDistracted(Student st)
+    {
+        HandleConflict(ConflictType.DrawDistracted);
+    }
+
+    public void BotherRandomStudents(Student st)
+    {
+        HandleConflict(ConflictType.BotherStudents);
     }
 
     public void ChangeSits()
@@ -99,11 +144,6 @@ public class TestingStudentBehaviour : MonoBehaviour
         StudentManager.Instance.DeselectStudents();
     }
 
-    public void SitTogether(Student st)
-    {
-        st.GetComponent<StudentBehaviour>().SitNextToRandomStudentConflict();
-    }
-
     public void SetTEATrue(Student st)
     {
         st.Behaviour.SetAutism(true);
@@ -117,21 +157,6 @@ public class TestingStudentBehaviour : MonoBehaviour
     public void GoToFloor(Student st)
     {
         st.Behaviour.GoToFloor();
-    }
-
-    public void GetOutMaterialWrong(Student st)
-    {
-        st.Behaviour.GetOutMaterialWrong();
-    }
-
-    public void DrawDistracted(Student st)
-    {
-        st.Behaviour.DrawDistacted();
-    }
-
-    public void BotherRandomStudents(Student st)
-    {
-        st.Behaviour.BotherOtherStudents();
     }
 
     public void MakeNearbyStudentsLaugh(Student st)
@@ -215,12 +240,20 @@ public class TestingStudentBehaviourEditor : Editor
             {
                 script.GoToFloor(selectedSt);
             }
-
-            // these are conflicts
-            EditorGUILayout.Space(5);
+            if (GUILayout.Button("ChangeSits"))
+            {
+                script.ChangeSits();
+            }
             if (GUILayout.Button("Expel"))
             {
                 script.Expel(selectedSt);
+            }
+
+            // these are conflicts
+            EditorGUILayout.Space(5);
+            if (GUILayout.Button("StandUpConflict"))
+            {
+                script.StandUpConflict(selectedSt);
             }
             if (GUILayout.Button("Hyperstimulate"))
             {
@@ -241,10 +274,6 @@ public class TestingStudentBehaviourEditor : Editor
             if (GUILayout.Button("GetOutMaterialWrong"))
             {
                 script.GetOutMaterialWrong(selectedSt);
-            }
-            if (GUILayout.Button("ChangeSits"))
-            {
-                script.ChangeSits();
             }
             if (GUILayout.Button("SitTogether"))
             {

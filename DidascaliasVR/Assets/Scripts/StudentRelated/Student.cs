@@ -121,6 +121,38 @@ public class Student : MonoBehaviour
         }
     }
 
+    private Conflict _activeConflict = null;
+    public Conflict ActiveConflict => _activeConflict;
+
+    private Coroutine _currentConflictRun = null;
+
+    public void SetConflict(Conflict conflict) => _activeConflict = conflict;
+    public void RunConflict()
+    {
+        if (_activeConflict == null)
+            Debug.LogError($"Can't run a conflict because '{Name}' doesn't have an active conflict assigned.");
+        else if (_currentConflictRun != null) 
+            Debug.LogError($"Can't run a conflict because '{Name}' has already an instance running.");
+        else
+        {
+            _nameTag.color = Color.red;
+            _currentConflictRun = StartCoroutine(_activeConflict.Run());
+        }
+    }
+
+    public void StopConflict()
+    {
+        if (_activeConflict == null) 
+            Debug.LogError($"Can't stop a conflict because '{Name}' doesn't have an active conflict assigned.");
+        
+        if (_currentConflictRun != null)
+        {
+            StopCoroutine(_currentConflictRun);
+            _currentConflictRun = null;
+            _nameTag.color = Color.white;
+        }
+    }
+
     private StudentBehaviour _behaviour = null;
     public StudentBehaviour Behaviour { get {
             if (_behaviour == null) _behaviour = GetComponent<StudentBehaviour>();
@@ -172,11 +204,6 @@ public class Student : MonoBehaviour
     {
         Didascalia.Utils.Log.Message(Name + " speaks: "+ speak, this);
         // if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Gender, _audioSource);
-    }
-
-    public void SetAsConflictive()
-    {
-        _nameTag.color = Color.red;
     }
 
     public void SetContext(string newContext)

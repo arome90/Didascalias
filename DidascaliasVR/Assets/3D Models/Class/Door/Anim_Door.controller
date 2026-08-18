@@ -27,6 +27,18 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &-7601778577427726742
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a34e78ead67f4974e9010c50c85bd865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnOpenDoor_DoorAnim
 --- !u!1101 &-5094419177744568752
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -219,6 +231,18 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+--- !u!114 &440169605295097938
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacb7fe55af173b4d99a6cd7a65144c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1101 &695181725973957431
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -308,7 +332,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: -2136391973218043278}
   - {fileID: -1091871022168959464}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -7601778577427726742}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -336,7 +361,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: 7586694156796539856}
   - {fileID: -1571106046411806896}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 440169605295097938}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

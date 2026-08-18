@@ -425,16 +425,6 @@ public class ClassManager : Singleton<ClassManager>
         FindAnyObjectByType<NavMeshSurface>().BuildNavMesh();
     }
 
-    public void ResolveConflicts()
-    {
-        StudentManager.Instance.ResolveConflicts();
-    }
-
-    public void RemoveAllConflicts()
-    {
-        StudentManager.Instance.RemoveAllConflicts();
-    }
-
     public void SendData(string action, string type, List<string> alumnxs)
     {
         EventData d = new EventData(action, type, alumnxs);
@@ -454,7 +444,6 @@ public class ClassManager : Singleton<ClassManager>
 
     private void RestartClassOnFadeOut()
     {
-        RemoveAllConflicts();
         StartClass();
 
         ScreenFader.Instance.FadeIn();
@@ -467,11 +456,8 @@ public class ClassManager : Singleton<ClassManager>
         string actionInfo = "Web Event Called";
         string typeInfo = message.id.ToString();
         List<string> alumnxsInfo = new List<string>();
-        alumnxsInfo.Add(message.studentName);
 
-        SendData(actionInfo, typeInfo, alumnxsInfo);
-
-        StudentManager.ConflictGenerationResult result = default;
+        Conflict conflict = null;
         switch (message.id)
         {
             case WebEventType.Message:
@@ -484,59 +470,45 @@ public class ClassManager : Singleton<ClassManager>
                 break;
             default:
             {
-                StudentManager.ConflictType Unrecognized()
+                ConflictType Unrecognized()
                 {    
                     Didascalia.Utils.Error.DebugbreakFailMessage("WebMessageType not recognized: " + message.id, this);
-                    return StudentManager.ConflictTypeNonFeasible;
+                    return ConflictType.UNKNOWN;
                 }
-                StudentManager.ConflictType type = message.id switch
+                ConflictType type = message.id switch
                 {
-                    WebEventType.Disrespect => StudentManager.ConflictType.Disrespect,
-                    WebEventType.SitTogether => StudentManager.ConflictType.SitTogether,
-                    WebEventType.StandUp => StudentManager.ConflictType.StandUp,
+                    WebEventType.Disrespect =>          ConflictType.Disrespect,
+                    WebEventType.SitTogether =>         ConflictType.SitTogether,
+                    WebEventType.StandUp =>             ConflictType.StandUp,
 
-                    WebEventType.Hyperstimulation => StudentManager.ConflictType.Hyperstimulation,
-                    WebEventType.Frustration => StudentManager.ConflictType.Frustration,
+                    WebEventType.Hyperstimulation =>    ConflictType.Hyperstimulation,
+                    WebEventType.Frustration =>         ConflictType.DistractionTEA,
 
-                    WebEventType.Disorganization => StudentManager.ConflictType.Disorganization,
-                    WebEventType.Impulsivity => StudentManager.ConflictType.Impulsivity,
-                    WebEventType.Inattention => StudentManager.ConflictType.Inattention,
+                    WebEventType.Disorganization =>     ConflictType.MaterialOutWrong,
+                    WebEventType.Impulsivity =>         ConflictType.BotherStudents,
+                    WebEventType.Inattention =>         ConflictType.DrawDistracted,
 
                     _ => Unrecognized()
                 };
 
-                result = StudentManager.Instance.GenerateConflict(type, message.studentName);
+                ConflictGenerationResult result = StudentManager.Instance.GenerateConflict(type);
+                if (result.Error != ConflictGenerationError.None) conflict = result.ConflictInstance;
+                
                 break;
             }
         }
 
-        if (result.Error != StudentManager.ConflictGenerationError.None)
+        if (conflict == null)
         {
-            string OutOfRange()
-            {
-                Didascalia.Utils.Error.DebugbreakFailMessage($"ConflictGenerationError not recognized: {result.Error}", this);
-                return "Unknown Student(s)";
-            }
-            StudentManager.ConflictType type = result.Descriptor.Type & ~StudentManager.ConflictTypeNonFeasible;
-            string studentName = type switch
-            {
-                StudentManager.ConflictType.Disrespect => result.Descriptor.Disrespect.StudentName,
-                StudentManager.ConflictType.StandUp => result.Descriptor.StandUp.StudentName,
-                StudentManager.ConflictType.SitTogether => result.Descriptor.SitTogether.StudentName,
-
-                StudentManager.ConflictType.Hyperstimulation => result.Descriptor.Hyperstimulation.StudentName,
-                StudentManager.ConflictType.Frustration => result.Descriptor.Frustration.StudentName,
-                
-                StudentManager.ConflictType.Disorganization => result.Descriptor.Disorganization.StudentName,
-                StudentManager.ConflictType.Impulsivity => result.Descriptor.Impulsivity.StudentName,
-                StudentManager.ConflictType.Inattention => result.Descriptor.Inattention.StudentName,
-                _ => OutOfRange()
-            };
             Didascalia.Utils.Log.Warning(
-                $"Conflict of type {type} is not feasible for student {studentName} "
-                + $"due to error of type: {result.Error}. Conflict will not be generated.",
+                $"Conflict of type {message.id} was not recognized. "
+                + $"Conflict will not be generated.",
                 this
             );
+        }
+        else
+        {
+            StudentManager.Instance.HandleConflict(conflict);
         }
     }
 

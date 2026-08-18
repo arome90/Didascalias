@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System;
 
 namespace Didascalia.StateMachine
 {
+[Obsolete("We do not use these anymore. We use StudentBehaviour States and Animator States")]
     public class StateMachine : MonoBehaviour
     {
         [SerializeField]

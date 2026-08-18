@@ -2,7 +2,6 @@ using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -20,10 +19,6 @@ public class StudentManager : Singleton<StudentManager>
        Tooltip("Prefabs de estudiante")]
     GameObject[] _girlStudentPrefabs;
 
-    //[SerializeField,
-    //    Tooltip("Prefabs de estudiante")]
-    //GameObject[] _studentPrefab;
-
     [SerializeField,
         Tooltip("Prefab que representa un conflicto (con el script Conflict)")]
     GameObject _conflictPrefab;
@@ -31,7 +26,7 @@ public class StudentManager : Singleton<StudentManager>
     [SerializeField, Range(1, 5)]
     private int _maxActiveConflicts = 1;
 
-    private Dictionary<string, Conflict> _activeConflicts = null;
+    private List<Conflict> _activeConflicts = null;
 
     [SerializeField,
         Tooltip("Nombres de estudiantes")]
@@ -61,7 +56,6 @@ public class StudentManager : Singleton<StudentManager>
 
     List<Student> _autisticStudents = null;
 
-
     ClassSettings _settings;
 
     /// <summary>
@@ -78,7 +72,7 @@ public class StudentManager : Singleton<StudentManager>
     {
         base.Awake();
         _settings = ClassManager.Instance.Settings;
-        _activeConflicts = new Dictionary<string, Conflict>();
+        _activeConflicts = new List<Conflict>();
     }
 
     protected void Start()
@@ -161,24 +155,6 @@ public class StudentManager : Singleton<StudentManager>
         return _selectedStudents;
     }
 
-    //public List<Student> GetStudentsNearOrigin(Student origin)
-    //{
-    //    Collider[] hitColliders = new Collider[9];
-    //    int numColliders = Physics.OverlapSphereNonAlloc(origin.transform.position, 4.5f, hitColliders, LayerMask.GetMask("Student"));
-
-    //    List<Student> students = new List<Student>();
-    //    foreach (Collider collider in hitColliders)
-    //    {
-    //        if (collider == null) continue;
-    //        Student st = collider.GetComponentInParent<Student>();
-    //        students.Add(st);
-    //    }
-
-    //    students.Remove(origin);
-
-    //    return students;
-    //}
-
     public List<Student> GetStudentsNearOrigin(Student origin)
     {
         Collider[] hitColliders = new Collider[9];
@@ -212,6 +188,8 @@ public class StudentManager : Singleton<StudentManager>
         return students;
     }
 
+
+    // TODO: Change all these to a single function that accepts a callback or unityaction as an argument
     public void MakeNearbyStudentsReactToPositivelyResolvedConflict(Student origin)
     {
         List<Student> students = GetStudentsNearOrigin(origin);
@@ -241,7 +219,6 @@ public class StudentManager : Singleton<StudentManager>
             student.Behaviour.ReactToBadlyResolvedConflict(origin);
         }
     }
-
 
     public void MakeNearbyStudentsLaugh(Student origin)
     {
@@ -492,6 +469,16 @@ public class StudentManager : Singleton<StudentManager>
         return _students.Values.ToList();
     }
 
+    public List<Student> GetAutisticStudents()
+    {
+        return _autisticStudents;
+    }
+
+    public List<Student> GetADHDStudents()
+    {
+        return _adhdStudents;
+    }
+
     /// <summary>
     /// Selecciona a los estudiantes que la transcripci�n de Wit haya entendido
     /// Primero, deselecciona a los anteriores que estaban seleccionados antes
@@ -539,26 +526,6 @@ public class StudentManager : Singleton<StudentManager>
         }
     }
 
-    /// <summary>
-    /// Llamado al expulsar a un estudiante.
-    /// Mueve a los estudiantes seleccionados a la puerta del aula.
-    /// </summary>
-    public void OnStudentExpelled()
-    {
-        foreach(string st in _selectedStudents)
-        {
-            _students[st].GetComponent<StudentBehaviour>().Expel();
-        }
-    }
-
-    public void OnStudentSit()
-    {
-        if (_selectedStudents.Count == 0) return;
-
-        StudentBehaviour st = _students[_selectedStudents[0]].GetComponent<StudentBehaviour>();
-        st.SitDown();
-    }
-
     public void OnChangePlaces()
     {
         if(_selectedStudents.Count <= 1) { return; }
@@ -597,7 +564,24 @@ public class StudentManager : Singleton<StudentManager>
         students.Remove(other.NextStudent);
         students.Remove(other.PreviousStudent);
 
-        Student st = students[UnityEngine.Random.Range(0, students.Count)];
+        Student st = students.Next();
+
+        return st;
+    }
+
+    public Student GetSittingStudentFarFromOtherStudent(Student other)
+    {
+        // Hacemos una lista por copia de los valores de los estudiantes y quitamos los que NO queremos coger
+        List<Student> students = _students.Values.ToList();
+        students.Remove(other);
+        students.Remove(other.NextStudent);
+        students.Remove(other.PreviousStudent);
+
+        Student st = students.Next();
+        while (!st.Behaviour.IsSittingOnTheirDesk() && students.Count > 0) { students.Remove(st); st = students.Next(); }
+
+        // no student was found
+        if (students.Count == 0 && !st.Behaviour.IsSittingOnTheirDesk()) { return null; }
 
         return st;
     }
@@ -637,12 +621,34 @@ public class StudentManager : Singleton<StudentManager>
         }
         else
         {
-            Collider[] hitCollider = new Collider[1];
-            int numColliders = Physics.OverlapSphereNonAlloc(other.transform.position, 100.0f, hitCollider, LayerMask.GetMask("Student"));
+            Collider[] hitColliders = new Collider[9];
+            Vector3 originPos = other.transform.position;
+            int numColliders = Physics.OverlapSphereNonAlloc(originPos, 10.0f, hitColliders, LayerMask.GetMask("Student"));
 
-            return hitCollider[0].GetComponentInParent<Student>();
+            Student closestStudent = null;
+            float closestDistanceSqr = Mathf.Infinity;
+
+            for (int i = 0; i < numColliders; i++)
+            {
+                if (hitColliders[i] == null) continue;
+
+                Student st = hitColliders[i].GetComponentInParent<Student>();
+
+                // Omitimos si es el propio objeto origen o no tiene componente Student
+                if (st == null || st == other) continue;
+
+                // Calculamos la distancia al cuadrado (más eficiente que Vector3.Distance al evitar la raíz cuadrada)
+                float dSqrToTarget = (st.transform.position - originPos).sqrMagnitude;
+
+                if (dSqrToTarget < closestDistanceSqr)
+                {
+                    closestDistanceSqr = dSqrToTarget;
+                    closestStudent = st;
+                }
+            }
+
+            return closestStudent;
         }
-
     }
 
     #region WEB EVENTS
@@ -653,315 +659,15 @@ public class StudentManager : Singleton<StudentManager>
         st.Speak(message);        
     }
 
-    public enum ConflictType
-    {
-        Disrespect = 0,
-        SitTogether,
-        StandUp,
-
-        // tea
-        Hyperstimulation,
-        Frustration,
-
-        // tdah
-        Disorganization,
-        Impulsivity,
-        Inattention,
-
-        // NonFeasible = 1 << 31
-    }
-    public const ConflictType ConflictTypeNonFeasible = (ConflictType)(1 << 31);
-    internal struct ConflictDescriptorDisrespect
-    {
-        public string StudentName;
-    }
-    internal struct ConflictDescriptorSitTogether
-    {
-        public string StudentName;
-        public string TargetSeatStudentName;
-    }
-    internal struct ConflictDescriptorStandUp
-    {
-        public string StudentName;
-    }
-
-    internal struct ConflictDescriptorHyperstimulation
-    {
-        public string StudentName;
-    }
-    internal struct ConflictDescriptorFrustration
-    {
-        public string StudentName;
-        public Vector3 LookAtPoint;
-    }
-
-    internal struct ConflictDescriptorDisorganization
-    {
-        public string StudentName;
-        [System.Obsolete("This field is not currently used but it is reserved for future implementation")]
-        public byte unusedBackpackData;
-    }
-    internal struct ConflictDescriptorImpulsivity
-    {
-        public string StudentName;
-        public string TargetBotherStudentName;
-    }
-    internal struct ConflictDescriptorInattention
-    {
-        public string StudentName;
-    }
-
-    // XXX: Treat this type like an union
-    [StructLayout(LayoutKind.Explicit)]
-    internal struct ConflictDescriptor
-    {
-        [FieldOffset(0)]
-        public ConflictType Type;
-
-        [FieldOffset(128)]
-        public List<string> AffectedStudents;
-
-        // XXX: [FieldOffset(sizeof(ConflictType))] was not correct because it missaligned the pointer type inside the string variable inside the variants
-        [FieldOffset(16)]
-        public ConflictDescriptorDisrespect Disrespect;
-        [FieldOffset(16)]
-        public ConflictDescriptorSitTogether SitTogether;
-        [FieldOffset(16)]
-        public ConflictDescriptorStandUp StandUp;
-
-        [FieldOffset(16)]
-        public ConflictDescriptorHyperstimulation Hyperstimulation;
-        [FieldOffset(16)]
-        public ConflictDescriptorFrustration Frustration;
-
-        [FieldOffset(16)]
-        public ConflictDescriptorDisorganization Disorganization;
-        [FieldOffset(16)]
-        public ConflictDescriptorImpulsivity Impulsivity;
-        [FieldOffset(16)]
-        public ConflictDescriptorInattention Inattention;
-    }
-
-    // TODO: Change
-    internal ConflictDescriptor GenerateConflictDescriptor(ConflictType type, string studentName)
-    {
-        ConflictDescriptor descriptor = new ConflictDescriptor { Type = type };
-
-        descriptor.AffectedStudents = new List<string>();
-
-        switch (type)
-        {
-            case ConflictType.Disrespect:
-                descriptor.Disrespect = new ConflictDescriptorDisrespect { StudentName = studentName };
-                break;
-            case ConflictType.SitTogether:
-            {
-                if (_students.Count < 3)
-                {
-                    descriptor.Type |= ConflictTypeNonFeasible;
-                    descriptor.SitTogether = new ConflictDescriptorSitTogether { StudentName = studentName, TargetSeatStudentName = null };
-                }
-                else if (_students.Count == 3)
-                {
-                    var selected = GetStudentByName(studentName);
-                    string finalStudentName;
-                    if (selected == GetStudents()[1])
-                    {
-                        Didascalia.Utils.Log.Warning(
-                            "Selected student is the middle one, which is already sitting with the other two. Selecting another student for the conflict.",
-                            this
-                        );
-                        var otherStudent = GetStudents()[UnityEngine.Random.Range(0, 2) == 0 ? 0 : 2];
-                        finalStudentName = otherStudent.Name;
-                    } else
-                    {
-                        finalStudentName = studentName;
-                    }
-                    descriptor.SitTogether = new ConflictDescriptorSitTogether {
-                        StudentName = finalStudentName,
-                        TargetSeatStudentName = GetStudents()[1].Name
-                    };
-                }
-                else
-                {
-                    var targetSeatStudentNext = GetStudentByName(studentName).NextStudent;
-                    var targetSeatStudentPrevious = GetStudentByName(studentName).PreviousStudent;
-                    Didascalia.Utils.Error.DebugbreakFailIf(
-                        targetSeatStudentNext == null && targetSeatStudentPrevious == null,
-                        "Selected student has no next or previous student to sit together with", this
-                    );
-                    descriptor.SitTogether = new ConflictDescriptorSitTogether {
-                        StudentName = studentName,
-                        TargetSeatStudentName =
-                            targetSeatStudentNext != null ? targetSeatStudentNext.Name : targetSeatStudentPrevious.Name
-                    };
-                }
-
-                descriptor.AffectedStudents.Add(descriptor.SitTogether.TargetSeatStudentName);
-                break;
-            }
-            case ConflictType.StandUp:
-                descriptor.StandUp = new ConflictDescriptorStandUp { StudentName = studentName };
-                break;
-            case ConflictType.Hyperstimulation:
-                descriptor.Hyperstimulation = new ConflictDescriptorHyperstimulation { StudentName = studentName };
-                break;
-            case ConflictType.Frustration:
-            {
-                Didascalia.Utils.Log.Warning(
-                    "Conflict type " + type + " is not fully implemented because it requires a look at point that has not been implemented yet.",
-                    this
-                );
-                descriptor.Frustration = new ConflictDescriptorFrustration { StudentName = studentName, LookAtPoint = Vector3.zero };
-                break;
-            }
-            case ConflictType.Disorganization:
-                descriptor.Disorganization = new ConflictDescriptorDisorganization { StudentName = studentName, unusedBackpackData = 0xFF };
-                break;
-            case ConflictType.Impulsivity:
-            {
-                if (_students.Count < 2)
-                {
-                    descriptor.Type |= ConflictTypeNonFeasible;
-                    descriptor.Impulsivity = new ConflictDescriptorImpulsivity { StudentName = studentName, TargetBotherStudentName = null };
-                }
-                else                {
-                    var targetSeatStudentNext = GetStudentByName(studentName).NextStudent;
-                    var targetSeatStudentPrevious = GetStudentByName(studentName).PreviousStudent;
-                    Didascalia.Utils.Error.DebugbreakFailIf(
-                        targetSeatStudentNext == null && targetSeatStudentPrevious == null,
-                        "Selected student has no next or previous student to sit together with", this
-                    );
-                    descriptor.Impulsivity = new ConflictDescriptorImpulsivity {
-                        StudentName = studentName,
-                        TargetBotherStudentName =
-                            targetSeatStudentNext != null ? targetSeatStudentNext.Name : targetSeatStudentPrevious.Name
-                    };
-                }
-
-                descriptor.AffectedStudents.Add(descriptor.Impulsivity.TargetBotherStudentName);
-
-                break;
-            }
-            case ConflictType.Inattention:
-                descriptor.Inattention = new ConflictDescriptorInattention { StudentName = studentName };
-                break;
-            default:
-                Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
-                break;
-        }
-
-        return descriptor;
-    }
-    internal ConflictDescriptor GenerateConflictDescriptorExpect(ConflictType type, string studentName)
-    {
-        var descriptor = GenerateConflictDescriptor(type, studentName);
-        Didascalia.Utils.Error.DebugbreakFailIf(
-            (descriptor.Type & ConflictTypeNonFeasible) != 0,
-            "Generated conflict descriptor is not feasible", this
-        );
-        return descriptor;
-    }
-    internal ConflictDescriptor GenerateConflictDescriptorExpectSame(ConflictType type, string studentName)
-    {
-        var descriptor = GenerateConflictDescriptorExpect(type, studentName);
-        const string errorMessageBase = "Generated conflict descriptor does not meet same student expectation for conflict type: ";
-
-        bool OutOfRange()
-        {
-            Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
-            return false;
-        }
-        bool condition = type switch
-        {
-            ConflictType.Disrespect => descriptor.Disrespect.StudentName == studentName,
-            ConflictType.SitTogether => descriptor.SitTogether.StudentName == studentName,
-            ConflictType.StandUp => descriptor.StandUp.StudentName == studentName,
-            _ => OutOfRange()
-        };
-        Didascalia.Utils.Error.DebugbreakFailIf(
-            !condition,
-            errorMessageBase + type, this
-        );
-        return descriptor;
-    }
-
-    private void HandleConflict(ConflictDescriptor descriptor)
-    {
-        Student student = null;
-        switch (descriptor.Type)
-        {
-            case ConflictType.Disrespect:
-                student = GetStudentByName(descriptor.Disrespect.StudentName);
-                // XXX: @ChichoRD Commented out this log
-                // student.Speak("Prueba de Insulto!");
-                student.GetComponent<StudentBehaviour>().Yell();
-                break;
-
-            case ConflictType.SitTogether:
-                student = GetStudentByName(descriptor.SitTogether.StudentName);
-                student.GetComponent<StudentBehaviour>().SitNextToGivenStudentConflict(StudentManager.Instance.GetStudent(descriptor.SitTogether.TargetSeatStudentName));
-                break;
-
-            case ConflictType.StandUp:
-                student = GetStudentByName(descriptor.StandUp.StudentName);
-                student.GetComponent<StudentBehaviour>().StandUpConflict();
-                break;
-            
-            case ConflictType.Hyperstimulation:
-                student = GetStudentByName(descriptor.Hyperstimulation.StudentName);
-                student.GetComponent<StudentBehaviour>().Hyperstimulate();
-                break;
-            case ConflictType.Frustration:
-                student = GetStudentByName(descriptor.Frustration.StudentName);
-                student.GetComponent<StudentBehaviour>().GetDistractedTEA();
-                break;
-            
-            case ConflictType.Disorganization:
-                student = GetStudentByName(descriptor.Disorganization.StudentName);
-                student.GetComponent<StudentBehaviour>().GetOutMaterialWrong();
-                break;
-            case ConflictType.Impulsivity:
-                student = GetStudentByName(descriptor.Impulsivity.StudentName);
-                student.GetComponent<StudentBehaviour>().BotherOtherStudents();
-                break;
-            case ConflictType.Inattention:
-                student = GetStudentByName(descriptor.Inattention.StudentName);
-                student.GetComponent<StudentBehaviour>().DrawDistacted();
-                break;
-
-            default:
-                Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
-                break;
-        }
-    }
-
-    internal enum ConflictGenerationError
-    {
-        None,
-        MaxActiveConflictsReached,
-        NotFeasible,
-        AlreadyActiveConflictForStudent,
-        Unimplemented
-    }
-    internal struct ConflictGenerationResult
-    {
-        public ConflictGenerationError Error;
-        public ConflictDescriptor Descriptor;
-        #nullable enable
-        public Conflict? ConflictInstance;
-        #nullable restore
-    }
-
     #region Conflict' Safety Checks
-    private bool IsConflictCapacityOk(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+    private bool IsConflictCapacityOk(ConflictType type, out ConflictGenerationResult erroneousResult)
     {
         if (_activeConflicts.Count == _maxActiveConflicts)
         {
             erroneousResult = new ConflictGenerationResult
             {
                 Error = ConflictGenerationError.MaxActiveConflictsReached,
-                Descriptor = descriptor,
+                errorWhy = "Can't generate conflict because there are too many active conflicts at the same time",
                 ConflictInstance = null
             };
             return false;
@@ -969,208 +675,70 @@ public class StudentManager : Singleton<StudentManager>
         else
         {
             erroneousResult = default;
+            erroneousResult.Error = ConflictGenerationError.None;
             return true;
         }
     }
-    private bool IsConflictFeasible(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
+
+    // WE ARE NOT USING THIS BECAUSE WE CAN'T SELECT THE TARGET STUDENT FOR A CONFLICT (FOR NOW...)
+    private bool IsStudentConflictFree(ConflictType type, out ConflictGenerationResult result, Student st = null)
     {
-        if ((descriptor.Type & ConflictTypeNonFeasible) != 0)
-        {
-            erroneousResult = new ConflictGenerationResult
-            {
-                Error = ConflictGenerationError.NotFeasible,
-                Descriptor = descriptor,
-                ConflictInstance = null
-            };
-            return false;
-        }
-        else
-        {
-            erroneousResult = default;
-            return true;
-        }
-    }
-    private bool IsStudentConflictFree(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult, out string descriptorName)
-    {
-        string OutOfRange()
-        {
-            Didascalia.Utils.Error.DebugbreakFailMessage("Unknown conflict type", this);
-            return string.Empty;
-        }
-        descriptorName = descriptor.Type switch
-        {
-            ConflictType.Disrespect => descriptor.Disrespect.StudentName,
-            ConflictType.SitTogether => descriptor.SitTogether.StudentName,
-            ConflictType.StandUp => descriptor.StandUp.StudentName,
+        result = default;
+        bool isOK = false;
 
-            ConflictType.Hyperstimulation => descriptor.Hyperstimulation.StudentName,
-            ConflictType.Frustration => descriptor.Frustration.StudentName,
-
-            ConflictType.Disorganization => descriptor.Disorganization.StudentName,
-            ConflictType.Impulsivity => descriptor.Impulsivity.StudentName,
-            ConflictType.Inattention => descriptor.Inattention.StudentName,
-            _ => OutOfRange()
-        };
-
-        if (_activeConflicts.ContainsKey(descriptorName))
+        // if it's null (we decide which student can be :))
+        if (st == null || st.ActiveConflict == null) 
         {
-            erroneousResult = new ConflictGenerationResult
-            {
-                Error = ConflictGenerationError.AlreadyActiveConflictForStudent,
-                Descriptor = descriptor,
-                ConflictInstance = null
-            };
-            return false;
+            result.Error = ConflictGenerationError.None;
+            isOK = true;
         }
-        else
+        // TODO: Assing a conflict to the student directly!!
+        else if (st.ActiveConflict != null)
         {
-            erroneousResult = default;
-            return true;
+            result.Error = ConflictGenerationError.AlreadyActiveConflictForStudent;
+            result.errorWhy = $"Selected student ({st.Name}) already has an active conflict";
+            isOK = false;
         }
-    }
-    private bool IsConflictTypeImplemented(in ConflictDescriptor descriptor, out ConflictGenerationResult erroneousResult)
-    {
-        erroneousResult = new ConflictGenerationResult
-        {
-            Error = ConflictGenerationError.Unimplemented,
-            Descriptor = descriptor,
-            ConflictInstance = null
-        };
-        return descriptor.Type switch
-        {
-            ConflictType.Disrespect => false,
-            ConflictType.SitTogether => true,
-            ConflictType.StandUp => true,
 
-            ConflictType.Hyperstimulation => true,
-            ConflictType.Frustration => true,
-            
-            ConflictType.Disorganization => true,
-            ConflictType.Impulsivity => true,
-            ConflictType.Inattention => true,
-
-            _ => false
-        };
+        return isOK;
     }
     #endregion
 
-    internal ConflictGenerationResult GenerateConflict(ConflictType type, string studentName)
+    public ConflictGenerationResult GenerateConflict(ConflictType type)
     {
-        string name = studentName;
-        // si no tenemos nombre de estudiantes, buscamos uno válido
-        if (string.IsNullOrEmpty(name))
-        {
-            name = GetStudents()[UnityEngine.Random.Range(0, _students.Count)].Name;
-        } 
-        // esto nos devuelve un struct con el que definimos cada uno de los campos necesarios para ejecutar el conflicto
-        var descriptor = GenerateConflictDescriptor(type, name);
+        ConflictGenerationResult result;
 
-        // comprobar si podemos generar el conflicto o si se ha generado un error porque la capacidad de conflictos activa a la vez
-        // se ha excedido
-        if (!IsConflictCapacityOk(descriptor, out ConflictGenerationResult capacityErrorResult))
+        if (!IsConflictCapacityOk(type, out result)) return result;
+
+        // if (!IsStudentConflictFree(type, out result, st)) return result;
+
+        result = ConflictFactory.CreateConflict(type);
+        if (result.Error != ConflictGenerationError.None) return result;
+
+        ConflictSetupResult setupResult = result.ConflictInstance.IsConflictFeasible();
+        if (setupResult.Error != ConflictGenerationError.None)
         {
-            // Didascalia.Utils.Error.DebugbreakFailMessage(
-            Didascalia.Utils.Log.Warning(
-                $"Cannot generate conflict of type {type} for student {name} because the maximum number of active conflicts has been reached.\n"
-                + "Conflict will not be generated.",
-                this
-            );
-            return capacityErrorResult;
+            Debug.LogError($"[StuentManager] Error while setting up conflict '{type.ToString()}'.\nError: {setupResult.errorWhy}.");
+            result.ConflictInstance = null;
         }
 
-        // ni idea
-        if (!IsConflictFeasible(descriptor, out ConflictGenerationResult feasibilityErrorResult))
-        {
-            Didascalia.Utils.Log.Warning(
-                $"Generated conflict of type {type} for student {name} is not feasible. Conflict will not be generated.",
-                this
-            );
-            return feasibilityErrorResult;
-        }
-        // no podemos generar un conflicto si este estudiante ya tiene un conflicto activo
-        else if (!IsStudentConflictFree(descriptor, out ConflictGenerationResult studentConflictErrorResult, out string descriptorName))
-        {
-            Didascalia.Utils.Log.Warning(
-                $"Generated conflict of type {type} for student {name} cannot be generated "
-                + "because there is already an active conflict for this student.\n"
-                + "Conflict will not be generated.",
-                this
-            );
-            return studentConflictErrorResult;
-        }
-        // TODO: remove this check when all conflict types are implemented, because it should be the responsibility of the caller to not generate unimplemented conflict types
-        else if (!IsConflictTypeImplemented(descriptor, out ConflictGenerationResult unimplementedErrorResult))
-        {
-            Didascalia.Utils.Log.Warning(
-                $"Generated conflict of type {type} for student {name} is not implemented yet. Conflict will not be generated.",
-                this
-            );
-            return unimplementedErrorResult;
-        }
-        else
-        {
-            // instanciamos el conflicto
-            Conflict conflict = Instantiate(_conflictPrefab, transform).GetComponent<Conflict>();
-            // le damos nombre
-            conflict.name = $"Conflict_{type}_{descriptorName}";
-            conflict.SetConflictiveStudent(GetStudentByName(descriptorName));
-
-            foreach (string stName in descriptor.AffectedStudents)
-            {
-                conflict.AddAffectedStudent(GetStudent(stName));
-            }
-
-            _activeConflicts.Add(descriptorName, conflict);
-            
-            HandleConflict(descriptor);
-            return new ConflictGenerationResult
-            {
-                Error = ConflictGenerationError.None,
-                Descriptor = descriptor,
-                ConflictInstance = conflict
-            };
-        }
+        return result;
     }
 
-    internal struct ConflictGeneration
+    /// <summary>
+    /// Executes the given conflict.
+    /// You MUST have called IsConflictFeasible and checked it is feasible before calling this method
+    /// </summary>
+    /// <param name="conflict"></param>
+    public void HandleConflict(Conflict conflict)
     {
-        public ConflictDescriptor Descriptor;
-        public Conflict ConflictInstance;
+        conflict.StartConflict();
+        _activeConflicts.Add(conflict);
     }
 
-    //internal ConflictGeneration GenerateConflictExpect(ConflictType type, string studentName)
-    //{
-    //    var result = GenerateConflict(type, studentName);
-    //    Didascalia.Utils.Error.DebugbreakFailIf(
-    //        result.Error != ConflictGenerationError.None,
-    //        $"Failed to generate conflict of type {type} for student {studentName} with error: {result.Error}",
-    //        this
-    //    );
-    //    return new ConflictGeneration
-    //    {
-    //        Descriptor = result.Descriptor,
-    //        ConflictInstance = result.ConflictInstance!
-    //    };
-    //}
-
-    public void ResolveConflicts()
+    public void RemoveActiveConflict(Conflict conflict)
     {
-        foreach(Conflict ct in _activeConflicts.Values)
-        {
-            ct.ReceivePositiveResolution();
-        }
-
-        _activeConflicts.Clear();
-    }
-
-    public void RemoveAllConflicts()
-    {
-        _activeConflicts.Clear();
-    }
-
-    public void RemoveConflict(Student s)
-    {
-        _activeConflicts.Remove(s.Name);
+        _activeConflicts.Remove(conflict);
     }
     #endregion
 }

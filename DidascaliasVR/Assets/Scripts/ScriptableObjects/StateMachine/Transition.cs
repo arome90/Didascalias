@@ -1,8 +1,10 @@
 using Didascalia.StateMachine;
 using UnityEngine;
+using System;
 
 namespace Didascalia.StateMachine
 {
+[Obsolete("We do not use these anymore. We use StudentBehaviour States and Animator States")]
 public abstract class Transition : ScriptableObject
 {
     public const string MenuDirectory = "StateMachine/Transitions/";

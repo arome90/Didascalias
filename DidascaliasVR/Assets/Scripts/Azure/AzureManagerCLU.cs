@@ -4,6 +4,11 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
+public enum PlayerActions
+{
+    // FILL WITH INTENTS HERE
+}
+
 public class AzureManagerCLU : MonoBehaviour
 {
     [Header("Credenciales de Azure CLU")]

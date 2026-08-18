@@ -1,9 +1,5 @@
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using static StudentBehaviour;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace Didascalia.Student
 {
@@ -136,7 +132,6 @@ namespace Didascalia.Student
         public static readonly int HashIsTEADistracted =                Animator.StringToHash("IsTEADistracted");
 
         public static readonly int HashTriggerStopMatFailStandUp =      Animator.StringToHash("TriggerStopMatFailStandUp");
-
 
         void Awake()
         {
@@ -654,10 +649,7 @@ namespace Didascalia.Student
             }
         }
 
-        public void PlaceMaterial()
-        {
-            SetDeskTriggerParameter(HashTriggerPutClassMaterialDesk);
-        }
+
         public void SortMaterial()
         {
             SetStudentTriggerParameter(HashTriggerDeskMaterialOut);
@@ -670,50 +662,32 @@ namespace Didascalia.Student
             SetDeskTriggerParameter(HashTriggerPutClassMaterialDesk);
         }
 
-        public void SetAnxiety_1(bool anxious)
-        {
-            SetStudentBooleanParameterValue(HashIsAnxiousAlternative1, anxious);
-        }
+        public void PlaceMaterial()                         => SetDeskTriggerParameter(HashTriggerPutClassMaterialDesk);
 
-        public void SetIsCrying(bool cry)
-        {
-            SetStudentBooleanParameterValue(HashIsCrying, cry);
-        }
+        public void SetAnxiety(bool anxious)                => SetStudentBooleanParameterValue(HashIsAnxious, anxious);
 
-        public void SetIsLaughing(bool isLaughing)
-        {
-            SetStudentBooleanParameterValue(HashIsLaughing, isLaughing);
-        }
+        public void SetHighAnxiety(bool anxious)            => SetStudentBooleanParameterValue(HashIsAnxiousAlternative1, anxious);
 
-        public void SetIsPointing(bool isPointing)
-        {
-            SetStudentBooleanParameterValue(HashIsPointing, isPointing);
-        }
+        public void SetIsCrying(bool cry)                   => SetStudentBooleanParameterValue(HashIsCrying, cry);
 
-        public void SetIsDrawing(bool draw)
-        {
-            SetStudentBooleanParameterValue(HashIsDrawing, draw);
-        }
+        public void SetIsLaughing(bool isLaughing)          => SetStudentBooleanParameterValue(HashIsLaughing, isLaughing);
 
-        public void SetIsJustifying(bool justify)
-        {
-            SetStudentBooleanParameterValue(HashIsJustifying, justify);
-        }
+        public void SetIsPointing(bool isPointing)          => SetStudentBooleanParameterValue(HashIsPointing, isPointing);
 
-        public void SetIsOff()
-        {
-            SetStudentBooleanParameter(HashIsOff);
-        }
+        public void SetIsDrawing(bool draw)                 => SetStudentBooleanParameterValue(HashIsDrawing, draw);
 
-        public void UnSetIsOff()
-        {
-            ResetStudentBooleanParameter(HashIsOff);
-        }
+        public void SetIsJustifying(bool justify)           => SetStudentBooleanParameterValue(HashIsJustifying, justify);
 
-        public void SetIsTEA(bool isTEA)
-        {
-            SetStudentBooleanParameterValue(HashIsTEA, isTEA);
-        }
+        public void SetIsOff(bool isOff)                    => SetStudentBooleanParameterValue(HashIsOff, isOff);
+
+        public void SetIsTEA(bool isTEA)                    => SetStudentBooleanParameterValue(HashIsTEA, isTEA);
+
+        public void TEA_SetAnxiety(bool isAnxious)          => SetStudentBooleanParameterValue(HashIsTEAAnxious, isAnxious);
+
+        public void TEA_IsOff(bool isOff)                   => SetStudentBooleanParameterValue(HashIsTEAOff, isOff);
+
+        public void TEA_SetIsDistracted(bool distracted)    => SetStudentBooleanParameterValue(HashIsTEADistracted, distracted);
+
 
         public void TEA_StartHyperstimulation()
         {
@@ -721,49 +695,34 @@ namespace Didascalia.Student
             int anim = rand == 0 ? HashIsTEAAnxious : HashIsStimulatedTEA;
             SetStudentBooleanParameter(anim);
         }
+        
         public void TEA_StopHyperstimulation()
         {
-            ResetStudentBooleanParameter(HashIsTEAAnxious);
+            TEA_SetAnxiety(false);
+            TEA_IsOff(false);
+            TEA_SetHighAnxiety(false);
             ResetStudentBooleanParameter(HashIsStimulatedTEA);
-            ResetStudentBooleanParameter(HashIsTEAAnxiousHigh);
-            ResetStudentBooleanParameter(HashIsTEAOff);
         }
 
-        public void TEA_SetAnxiety()
+
+        public void TEA_SetHighAnxiety(bool hasHighAnxiety)
         {
-            SetStudentBooleanParameter(HashIsTEAAnxious);
+            if (hasHighAnxiety)
+            {
+                // false
+                ResetStudentBooleanParameter(HashIsStimulatedTEA);
+                ResetStudentBooleanParameter(HashIsTEAAnxious);
+
+                // trigger
+                SetStudentBooleanParameter(HashIsTEAAnxiousHigh);
+            }
+            else
+            {
+                ResetStudentBooleanParameter(HashIsTEAAnxiousHigh);
+            }
         }
 
-        public void TEA_ResetAnxiety()
-        {
-            ResetStudentBooleanParameter(HashIsTEAAnxious);
-        }
 
-
-        public void TEA_SetHighAnxiety()
-        {
-            // false
-            ResetStudentBooleanParameter(HashIsStimulatedTEA);
-            ResetStudentBooleanParameter(HashIsTEAAnxious);
-
-            // trigger
-            SetStudentBooleanParameter(HashIsTEAAnxiousHigh);
-        }
-
-        public void TEA_Off()
-        {
-            SetStudentBooleanParameter(HashIsTEAOff);
-        }
-        
-        public void TEA_GetDistracted()
-        {
-            SetStudentBooleanParameter(HashIsTEADistracted);
-        }
-
-        public void TEA_UnSetDistracted()
-        {
-            ResetStudentBooleanParameter(HashIsTEADistracted);
-        }
 
 
         public void GoToFloor()

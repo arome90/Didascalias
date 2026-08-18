@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace Didascalia.StateMachine
 {
+    [Obsolete("We do not use these anymore. We use StudentBehaviour States and Animator States")]
     public class State : ScriptableObject
     {
         public const string MenuDirectory = "StateMachine/States/";
