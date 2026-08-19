@@ -85,47 +85,39 @@ public class TestingStudentBehaviour : MonoBehaviour
             Debug.LogError(result.errorWhy);
             return;
         }
-        ConflictSetupResult setup = result.ConflictInstance.IsConflictFeasible();
-        if (setup.Error == ConflictGenerationError.None)
-        {
-            StudentManager.Instance.HandleConflict(result.ConflictInstance);
-        }
-        else
-        {
-            Debug.LogError(setup.errorWhy);
-        }
+        StudentManager.Instance.HandleConflict(result.ConflictInstance);
     }
 
-    public void StandUpConflict(Student student)
+    public void StandUpConflict()
     {
         HandleConflict(ConflictType.StandUp);
     }
 
-    public void Hyperstimulate(Student student)
+    public void Hyperstimulate()
     {
         HandleConflict(ConflictType.Hyperstimulation);
     }
 
-    public void GetDistracted(Student student)
+    public void GetDistracted()
     {
         HandleConflict(ConflictType.DistractionTEA);
     }
 
-    public void SitTogether(Student st)
+    public void SitTogether()
     {
         HandleConflict(ConflictType.SitTogether);
     }
-    public void GetOutMaterialWrong(Student st)
+    public void GetOutMaterialWrong()
     {
         HandleConflict(ConflictType.MaterialOutWrong);
     }
 
-    public void DrawDistracted(Student st)
+    public void DrawDistracted()
     {
         HandleConflict(ConflictType.DrawDistracted);
     }
 
-    public void BotherRandomStudents(Student st)
+    public void BotherRandomStudents()
     {
         HandleConflict(ConflictType.BotherStudents);
     }
@@ -167,6 +159,16 @@ public class TestingStudentBehaviour : MonoBehaviour
     public void MakeNearbyStudentsTalk(Student st)
     {
         StudentManager.Instance.MakeNearbyStudentsTalk(st);
+    }
+
+    public void TakeMaterialOut(Student st)
+    {
+        st.Behaviour.TriggerGetMaterialOut();
+    }
+
+    public void TakeMaterialOutAll()
+    {
+        StudentManager.Instance.GetMaterialOutAllStudents();
     }
 
     [HideInInspector]
@@ -248,36 +250,9 @@ public class TestingStudentBehaviourEditor : Editor
             {
                 script.Expel(selectedSt);
             }
-
-            // these are conflicts
-            EditorGUILayout.Space(5);
-            if (GUILayout.Button("StandUpConflict"))
+            if (GUILayout.Button("TakeMaterialOut"))
             {
-                script.StandUpConflict(selectedSt);
-            }
-            if (GUILayout.Button("Hyperstimulate"))
-            {
-                script.Hyperstimulate(selectedSt);
-            }
-            if (GUILayout.Button("GetDistracted"))
-            {
-                script.GetDistracted(selectedSt);
-            }
-            if (GUILayout.Button("DrawDistracted"))
-            {
-                script.DrawDistracted(selectedSt);
-            }
-            if (GUILayout.Button("BotherRandomStudents"))
-            {
-                script.BotherRandomStudents(selectedSt);
-            }
-            if (GUILayout.Button("GetOutMaterialWrong"))
-            {
-                script.GetOutMaterialWrong(selectedSt);
-            }
-            if (GUILayout.Button("SitTogether"))
-            {
-                script.SitTogether(selectedSt);
+                script.TakeMaterialOut(selectedSt);
             }
 
             // these are to toggle TEA
@@ -308,11 +283,45 @@ public class TestingStudentBehaviourEditor : Editor
                 LLMManager.Instance.LLMInteraction_TeacherSpeaksToStudent(script._queryLLMWithThis, selectedSt);
             }
         }
-        else
+
+        EditorGUILayout.Space(5);
+        if (GUILayout.Button("TakeMaterialAll"))
         {
-            // Mensaje informativo si la lista está vacía
-            EditorGUILayout.HelpBox("No se han cargado GameObjects. Haz clic en 'Refrescar Lista'.", MessageType.Info);
+            script.TakeMaterialOutAll();
         }
+
+        // these are conflicts
+        EditorGUILayout.Space(5);
+        if (GUILayout.Button("StandUpConflict"))
+        {
+            script.StandUpConflict();
+        }
+        if (GUILayout.Button("Hyperstimulate"))
+        {
+            script.Hyperstimulate();
+        }
+        if (GUILayout.Button("GetDistracted"))
+        {
+            script.GetDistracted();
+        }
+        if (GUILayout.Button("DrawDistracted"))
+        {
+            script.DrawDistracted();
+        }
+        if (GUILayout.Button("BotherRandomStudents"))
+        {
+            script.BotherRandomStudents();
+        }
+        if (GUILayout.Button("GetOutMaterialWrong"))
+        {
+            script.GetOutMaterialWrong();
+        }
+        if (GUILayout.Button("SitTogether"))
+        {
+            script.SitTogether();
+        }
+        //// Mensaje informativo si la lista está vacía
+        //EditorGUILayout.HelpBox("No se han cargado GameObjects. Haz clic en 'Refrescar Lista'.", MessageType.Info);
 
         // Dibuja el resto de variables públicas por defecto si las hubiera
         DrawDefaultInspector();

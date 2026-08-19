@@ -252,6 +252,14 @@ public class StudentManager : Singleton<StudentManager>
         st.Behaviour.StartTalking();
     }
 
+    public void GetMaterialOutAllStudents()
+    {
+        foreach (Student st in _students.Values)
+        {
+            st.Behaviour.TriggerGetMaterialOut();
+        }
+    }
+
     // we specifically ask for a copy of the students to avoid any mistakes :)
     public void AsignStudentType(List<Student> studentsCopy)
     {

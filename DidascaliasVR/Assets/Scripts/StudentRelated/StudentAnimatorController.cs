@@ -327,7 +327,10 @@ namespace Didascalia.Student
             HashTriggerGetMaterialOut,
             HashIsGetMaterialOutWrong,
             HashTriggerSortMaterialDesk,
-            HashTriggerPutClassMaterialDesk
+            HashTriggerPutClassMaterialDesk,
+
+            HashTriggerStopMatFailStandUp,
+
         };
 
         private static readonly HashSet<int> ValidDeskBooleanParameterHashes = new HashSet<int>
@@ -343,7 +346,6 @@ namespace Didascalia.Student
             HashIsAllMaterialOutUnsortedDesk,
             HashIsFailedMaterialOutDesk,
 
-            HashTriggerStopMatFailStandUp,
         };
 
         public uint TriggerDeskParameterCount => (uint)ValidDeskTriggerParameterHashes.Count;
@@ -429,13 +431,13 @@ namespace Didascalia.Student
             );
         }
 
-        public void SetDeskBoleanParameterValue(int hash, bool value)
+        public void SetDeskBooleanParameterValue(int hash, bool value)
         {
             EnsureDeskBooleanHash(hash);
             deskAnimator.SetBool(hash, value);
         }
-        public void SetDeskBooleanParameter(int hash) => SetDeskBoleanParameterValue(hash, true);
-        public void ResetDeskBooleanParameter(int hash) => SetDeskBoleanParameterValue(hash, false);
+        public void SetDeskBooleanParameter(int hash) => SetDeskBooleanParameterValue(hash, true);
+        public void ResetDeskBooleanParameter(int hash) => SetDeskBooleanParameterValue(hash, false);
 
         public void SetDeskTriggerParameter(int hash)
         {
@@ -567,6 +569,13 @@ namespace Didascalia.Student
         public void SetWriting(bool writing)
         {
             SetStudentBooleanParameterValue(HashIsWriting, writing);
+            SetDeskBooleanParameterValue(HashIsWriting, writing);
+        }
+
+        public void TriggerGetMaterialOut()
+        {
+            SetStudentTriggerParameter(HashTriggerGetMaterialOut);
+            SetDeskTriggerParameter(HashTriggerGetMaterialOut);
         }
 
         public void EnterDesk()
@@ -674,7 +683,11 @@ namespace Didascalia.Student
 
         public void SetIsPointing(bool isPointing)          => SetStudentBooleanParameterValue(HashIsPointing, isPointing);
 
-        public void SetIsDrawing(bool draw)                 => SetStudentBooleanParameterValue(HashIsDrawing, draw);
+        public void SetIsDrawing(bool draw)
+        {
+            SetStudentBooleanParameterValue(HashIsDrawing, draw);
+            SetDeskBooleanParameterValue(HashIsDrawing, draw);
+        }
 
         public void SetIsJustifying(bool justify)           => SetStudentBooleanParameterValue(HashIsJustifying, justify);
 

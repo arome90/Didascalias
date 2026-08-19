@@ -9,7 +9,7 @@ public class OnEnterDesk : StateMachineBehaviour
         Didascalia.Utils.Log.Info("OnEnterDesk: " + behaviour.name, this);
         behaviour.OnEnterDesk.Invoke();
 
-        behaviour.PlaceMaterial();
+        behaviour.PlaceMaterialOnDeskFromStanding();
 
     }
 }
