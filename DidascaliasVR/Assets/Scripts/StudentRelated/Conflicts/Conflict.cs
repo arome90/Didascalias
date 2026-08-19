@@ -65,9 +65,9 @@ public abstract class Conflict : ScriptableObject
 
     public void ResolveAction(PlayerAction action)
     {
-        if (_positiveActions.Contains(action)) _currentPlayerResolution =       PlayerResolutionToConflict.Positive;
-        else if (_neutralActions.Contains(action)) _currentPlayerResolution =   PlayerResolutionToConflict.Neutral;
-        else if (_negativeActions.Contains(action)) _currentPlayerResolution =  PlayerResolutionToConflict.Negative;
+        if (_positiveActions != null && _positiveActions.Contains(action)) _currentPlayerResolution =       PlayerResolutionToConflict.Positive;
+        else if (_neutralActions != null && _neutralActions.Contains(action)) _currentPlayerResolution =   PlayerResolutionToConflict.Neutral;
+        else if (_negativeActions != null && _negativeActions.Contains(action)) _currentPlayerResolution =  PlayerResolutionToConflict.Negative;
         else _currentPlayerResolution =                                         PlayerResolutionToConflict.None;
     }
 
@@ -123,12 +123,12 @@ public abstract class Conflict : ScriptableObject
         StudentManager.Instance.RemoveActiveConflict(this);
     }
 
+    #region Player Actions
     protected bool HasNotActed() => _currentPlayerResolution == PlayerResolutionToConflict.None;
     protected bool IsPositive() =>  _currentPlayerResolution == PlayerResolutionToConflict.Positive;
     protected bool IsNeutral() =>   _currentPlayerResolution == PlayerResolutionToConflict.Neutral;
     protected bool IsNegative() =>  _currentPlayerResolution == PlayerResolutionToConflict.Negative;
 
-    #region Player Actions
     protected IEnumerator WaitForPlayerAction()
     {
         ResetPlayerResolution();
@@ -136,12 +136,7 @@ public abstract class Conflict : ScriptableObject
         yield return new WaitUntil(() => _currentPlayerResolution != PlayerResolutionToConflict.None);
     }
 
-    protected void ResetPlayerResolution()
-    {
-        _currentPlayerResolution = PlayerResolutionToConflict.None;
-
-        // Player.StartListeningForPlayerResolution();
-    }
+    protected void ResetPlayerResolution() => _currentPlayerResolution = PlayerResolutionToConflict.None;
     #endregion
 }
 

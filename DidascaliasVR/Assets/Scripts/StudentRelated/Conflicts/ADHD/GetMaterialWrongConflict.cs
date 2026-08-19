@@ -21,7 +21,7 @@ public class GetMaterialWrongConflict : ADHDConflict
 
         ConflictSetupResult result = base.IsConflictFeasible();
 
-        if (result.Error == ConflictGenerationError.None) return result;
+        if (result.Error != ConflictGenerationError.None) return result;
 
         // to avoid always getting the closes one to the front of the class :)
         _adhdSeatedStudents.Shuffle();

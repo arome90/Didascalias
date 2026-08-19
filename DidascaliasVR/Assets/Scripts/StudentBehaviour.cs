@@ -150,7 +150,7 @@ public class StudentBehaviour : MonoBehaviour
 
     public void SetHasMaterialOut(bool hasMaterialPlaced) => _hasAllMaterialOut = hasMaterialPlaced;
 
-    public void PlaceMaterial()
+    public void PlaceMaterialOnDeskFromStanding()
     {
         if (!IsCarryingMaterial) return;
         _animator.PlaceMaterial();
@@ -1082,6 +1082,10 @@ public class StudentBehaviour : MonoBehaviour
     }
     #region Material Gone Wrong
 
+    public void TriggerGetMaterialOut()
+    {
+        if (IsSittingOnTheirDesk()) _animator.TriggerGetMaterialOut();
+    }
     public void TriggerStandUpWhileWrongMaterial() => _animator.SetDeskTriggerParameter(StudentAnimatorController.HashFromTriggerParameter(TriggerStudentParameter.StopMatFailStandUp));
     public void SetIsWrongMaterial(bool isWrong)
     {
