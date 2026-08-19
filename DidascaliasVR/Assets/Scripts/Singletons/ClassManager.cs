@@ -48,8 +48,6 @@ public class ClassManager : Singleton<ClassManager>
     public void SetFrontDoor(Door front) { _frontDoor = front; }
     public void SetBackDoor(Door back) { _backDoor = back; }
 
-
-
     /// <summary>
     /// Lista de los escritorios generados
     /// </summary>
@@ -59,7 +57,7 @@ public class ClassManager : Singleton<ClassManager>
 
     public float DeskDistance { get { return _deskDistance; } }
 
-    // M�todos p�blicos con los que cambiar las settings
+    // Metodos publicos con los que cambiar las settings
     #region Settings Change
 
     public void SetBoysNumber(int numBoys)
@@ -113,7 +111,7 @@ public class ClassManager : Singleton<ClassManager>
     }
     #endregion
 
-    // M�todos p�blicos para UI con los que cambiar las settings
+    // Metodos publicos para UI con los que cambiar las settings
     #region UI_Layout_Generation 
 
     public void SetRowsAndGenerate(Single rows, Single _)
@@ -153,13 +151,14 @@ public class ClassManager : Singleton<ClassManager>
 
     [Header("Generation Settings")]
     [SerializeField,
-        Tooltip("Distancia desde el centro de la clase hasta cada lateral de la misma. Utilizado para saber c�mmo colocar los escritorios"), 
+        Tooltip("Distancia desde el centro de la clase hasta cada lateral de la misma. Utilizado para saber como colocar los escritorios"), 
         Range(2.0f, 40.5f)]
     private float _classWidth = 3.4f;
 
     /// <summary>
     /// Método PROVISIONAL de pausa de juego.
     /// está fatal hecho
+    /// TODO: FIX
     /// </summary>
     public static void PauseGame()
     {
@@ -169,6 +168,7 @@ public class ClassManager : Singleton<ClassManager>
     /// <summary>
     /// Método PROVISIONAL de 'unpause' de juego.
     /// está fatal hecho
+    /// TODO: FIX
     /// </summary>
     public static void ResumeGame()
     {

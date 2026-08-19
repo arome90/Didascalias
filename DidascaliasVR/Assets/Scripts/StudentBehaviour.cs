@@ -734,6 +734,7 @@ public class StudentBehaviour : MonoBehaviour
 
         _animator.SitDown();
         yield return new WaitUntil(() => IsSittingOnChair());
+        SetLookDirection(LookDirection.Front);
     }
 
     public IEnumerator EnterOriginalDesk_()

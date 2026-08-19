@@ -4,23 +4,60 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public enum PlayerActions
+public enum PlayerAction
 {
-    // FILL WITH INTENTS HERE
+    // Portuguese
+    Acalmar,
+    Acolher,
+    Adiar,
+    Advertencia,
+    AjustarRitmo,
+    Castigo,
+    ChamarAluno,
+    Compreensao,
+    DarApoio,
+    Despedida,
+    EloqioPositivo,
+    EstablecerLimites,
+    ExplicarNovamente,
+    Expulsão,
+    FalarBaixo,
+    IncentivarAutonomia,
+    MoverAluno,
+    NegociarAcordo,
+    Parabenizar,
+    PararConflito,
+    PausarAula,
+    PedirApoio,
+    PegarMaterial,
+    Perguntar,
+    PromoverRespeito,
+    ProporAlternativa,
+    ReforçarRegra,
+    RegularEmocao,
+    Saudações,
+    Sentarse,
+    Silencio,
+    Trabalhar,
+    TrocarAluno,
+    TrocarAtividade,
+
+    // Spanish
+
 }
 
 public class AzureManagerCLU : MonoBehaviour
 {
     [Header("Credenciales de Azure CLU")]
-    [Tooltip("La URL del Endpoint de tu recurso de Lenguaje. DEBE terminar con '/'")]
-    public string endpointAzure = "https://<TU_RECURSO>.cognitiveservices.azure.com/";
-    [Tooltip("Clave de suscripción (Key 1 o Key 2) del recurso de Lenguaje")]
+    [Tooltip("Language resource Azure endpoint. Must end with '/'")]
+    public string endpointAzure = "https://<RESOURCE>.cognitiveservices.azure.com/";
+    [Tooltip("Subscription key for the resource")]
     public string claveAzure = "<TU_CLAVE_AQUI>";
 
-    [Header("Configuración del Modelo")]
-    public string nombreProyecto = "<NOMBRE_DEL_PROYECTO>";
-    public string nombreDespliegue = "<NOMBRE_DEL_DESPLIEGUE>";
-    public string apiVersion = "2024-11-01";
+    [Header("Model Settings")]
+    public string projectName   = "<NOMBRE_DEL_PROYECTO>";
+    public string displayName   = "<NOMBRE_DEL_DESPLIEGUE>";
+    public string apiVersion    = "2024-11-01";
 
     /// <summary>
     /// Llama a esta función pasando el texto reconocido para obtener la intención.
@@ -32,7 +69,7 @@ public class AzureManagerCLU : MonoBehaviour
 
     private IEnumerator RequestCLU(string texto)
     {
-        // Montaje de la URL para la API REST de Azure
+        // URL for api calls
         string url = $"{endpointAzure}language/:analyze-conversations?api-version={apiVersion}";
 
         string jsonBody = $@"
@@ -46,12 +83,13 @@ public class AzureManagerCLU : MonoBehaviour
                     }}
                 }},
                 ""parameters"": {{
-                    ""projectName"": ""{nombreProyecto}"",
-                    ""deploymentName"": ""{nombreDespliegue}"",
+                    ""projectName"": ""{projectName}"",
+                    ""deploymentName"": ""{displayName}"",
                     ""stringIndexType"": ""TextElement_V8""
                 }}
             }}";
 
+        // sending the request
         using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
         {
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
@@ -69,7 +107,7 @@ public class AzureManagerCLU : MonoBehaviour
             }
             else
             {
-                Debug.LogError($"[Azure CLU] Error en la petición: {request.error}");
+                Debug.LogError($"[Azure CLU] Error on request: {request.error}");
             }
         }
     }
@@ -81,10 +119,14 @@ public class AzureManagerCLU : MonoBehaviour
             CluResponse answer = JsonUtility.FromJson<CluResponse>(rawJson);
             string topIntent = answer.result.prediction.topIntent;
 
-            Debug.Log($"[IA] Intención identificada: {topIntent}");
+            if (!Enum.TryParse<PlayerAction>(topIntent, out PlayerAction action))
+            {
+                Debug.Log($"[AzureManagerCLU] Intent of type '{topIntent}' does not have a correspoding" +
+                    $" PlayerActions value. It was no correctly parsed. Intent will not be executed.");
+                return;
+            }
 
-            // TODO: Reemplazar este switch con la lógica de animaciones o eventos de vuestro proyecto
-            ExecuteAction(topIntent);
+            ExecuteAction(action);
         }
         catch (Exception e)
         {
@@ -92,21 +134,7 @@ public class AzureManagerCLU : MonoBehaviour
         }
     }
 
-    private void ExecuteAction(string intencion)
-    {
-        switch (intencion)
-        {
-            case "<NOMBRE_INTENCION_1>":
-                Debug.Log("Acción 1 ejecutada.");
-                break;
-            case "<NOMBRE_INTENCION_2>":
-                Debug.Log("Acción 2 ejecutada.");
-                break;
-            default:
-                Debug.LogWarning($"Intención '{intencion}' reconocida, pero sin acción mapeada.");
-                break;
-        }
-    }
+    private void ExecuteAction(PlayerAction action) => Player.Instance.ProcessAction(action);
 }
 
 // Estructuras de datos para leer el JSON devuelto por Azure

@@ -1,7 +1,6 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 public enum PlayerResolutionToConflict
 {
@@ -13,43 +12,73 @@ public enum PlayerResolutionToConflict
 
 public class Player : Singleton<Player>
 {
-    public UnityEvent<PlayerResolutionToConflict> OnPlayerResolution = new UnityEvent<PlayerResolutionToConflict>();
+    private List<Conflict> _conflicts = null;
 
-    // placeholder
-    bool _hasResolved = false;
-
-    PlayerResolutionToConflict _currentResolution;
-
-    public static void StartListeningForPlayerResolution()
+    public void AddActiveConflict(Conflict conflict)
     {
-        Instance._hasResolved = false;
-        Instance.StartCoroutine(Instance.ListeningForPlayerResolution());
+        if (_conflicts == null) _conflicts = new List<Conflict>();
+
+        _conflicts.Add(conflict);
     }
 
-    IEnumerator ListeningForPlayerResolution()
+    public void RemoveActiveConflict(Conflict conflict)
     {
-        yield return new WaitUntil(() => _hasResolved);
-        OnPlayerResolution.Invoke(_currentResolution);
+        if(_conflicts != null) _conflicts.Remove(conflict);
     }
 
-    public void PositiveResolution()
+    public void ProcessAction(PlayerAction action)
     {
-        _currentResolution = PlayerResolutionToConflict.Positive;
-        _hasResolved = true;
+        List<string> selectedSt = StudentManager.Instance.GetSelectedStudents();
+        if (selectedSt != null && selectedSt.Count > 0)
+        {
+            foreach (string student in selectedSt) ResolveConflicts(action);
+        }
+        else ResolveConflicts(action);
     }
 
-    public void NeutralResolution()
+    private void ResolveConflicts(PlayerAction action)
     {
-        _currentResolution = PlayerResolutionToConflict.Neutral;
-        _hasResolved = true;
+        foreach (Conflict conflict in _conflicts)
+            conflict.ResolveAction(action);
     }
 
-    public void NegativeResolution()
-    {
-        _currentResolution = PlayerResolutionToConflict.Negative;
-        _hasResolved = true;
-    }
+    //public static void StartListeningForPlayerResolution()
+    //{
+    //    Instance._hasResolved = false;
+    //    Instance.StartCoroutine(Instance.ListeningForPlayerResolution());
+    //}
+
+    //IEnumerator ListeningForPlayerResolution()
+    //{
+    //    yield return new WaitUntil(() => _hasResolved);
+    //    OnPlayerResolution.Invoke(_currentResolution);
+    //}
+
+    //public void PositiveResolution()
+    //{
+    //    _currentResolution = PlayerResolutionToConflict.Positive;
+    //    _hasResolved = true;
+    //}
+
+    //public void NeutralResolution()
+    //{
+    //    _currentResolution = PlayerResolutionToConflict.Neutral;
+    //    _hasResolved = true;
+    //}
+
+    //public void NegativeResolution()
+    //{
+    //    _currentResolution = PlayerResolutionToConflict.Negative;
+    //    _hasResolved = true;
+    //}
+
+    //private void ReceiveResolution(PlayerResolutionToConflict resolution)
+    //{
+    //    _currentResolution = resolution;
+    //    _hasResolved = _currentResolution != PlayerResolutionToConflict.None;
+    //}
 }
+
 #if UNITY_EDITOR
 [CustomEditor(typeof(Player))]
 public class PlayerEditor : Editor
@@ -58,21 +87,14 @@ public class PlayerEditor : Editor
     {
         Player script = (Player)target;
 
-        // 2. Botones para disparar las funciones pasando el parámetro
-        if (GUILayout.Button("Positive Resolution"))
+        foreach (PlayerAction actionValue in System.Enum.GetValues(typeof(PlayerAction)))
         {
-            script.PositiveResolution();
-        }
-        if (GUILayout.Button("Neutral Resolution"))
-        {
-            script.NeutralResolution();
-        }
-        if (GUILayout.Button("Negative Resolution"))
-        {
-            script.NegativeResolution();
+            if (GUILayout.Button(actionValue.ToString()))
+            {
+                script.ProcessAction(actionValue);
+            }
         }
 
-        // Dibuja el resto de variables públicas por defecto si las hubiera
         DrawDefaultInspector();
     }
 }

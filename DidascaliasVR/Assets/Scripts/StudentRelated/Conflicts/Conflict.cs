@@ -13,9 +13,11 @@ public struct ConflictSetupResult
 /// </summary>
 public abstract class Conflict : ScriptableObject
 {
-    protected List<PlayerActions> _positiveActions = null;
-    protected List<PlayerActions> _neutralActions = null;
-    protected List<PlayerActions> _negativeActions = null;
+    protected List<PlayerAction> _positiveActions = null;
+
+    protected List<PlayerAction> _neutralActions = null;
+    
+    protected List<PlayerAction> _negativeActions = null;
 
     protected StudentManager _manager = null;
     protected List<Student> _nonConflictiveStudents = null;
@@ -33,6 +35,8 @@ public abstract class Conflict : ScriptableObject
     /// </summary>
     protected Student         _conflictiveStudent = null;
 
+    public Student ConflictiveStudent => _conflictiveStudent;
+
     /// <summary>
     /// The students affected by the conflictive students actions
     /// May be none
@@ -48,12 +52,34 @@ public abstract class Conflict : ScriptableObject
         // doing this we make sure that every conflict has a list with all students that have NO active conflict
         while (i < _nonConflictiveStudents.Count)
         {
-            if (_nonConflictiveStudents[i].ActiveConflict != null)    _nonConflictiveStudents.RemoveAt(i);
-            else                                        ++i;
+            if (_nonConflictiveStudents[i].ActiveConflict != null)      _nonConflictiveStudents.RemoveAt(i);
+            else                                                        ++i;
         }
 
         _conflictiveStudent = null;
+
+        RegisterActions();
     }
+
+    public abstract void RegisterActions();
+
+    public void ResolveAction(PlayerAction action)
+    {
+        if (_positiveActions.Contains(action)) _currentPlayerResolution =       PlayerResolutionToConflict.Positive;
+        else if (_neutralActions.Contains(action)) _currentPlayerResolution =   PlayerResolutionToConflict.Neutral;
+        else if (_negativeActions.Contains(action)) _currentPlayerResolution =  PlayerResolutionToConflict.Negative;
+        else _currentPlayerResolution =                                         PlayerResolutionToConflict.None;
+    }
+
+    public void RegisterNewActions(ref List<PlayerAction> list, List<PlayerAction> actions)
+    {
+        if (list == null)   list = actions;
+        else                list.AddRange(actions);
+    }
+
+    public void RegisterPositiveActions(List<PlayerAction> actions) => RegisterNewActions(ref _positiveActions, actions);
+    public void RegisterNeutralActions(List<PlayerAction> actions) => RegisterNewActions(ref _neutralActions, actions);
+    public void RegisterNegativeActions(List<PlayerAction> actions) => RegisterNewActions(ref _negativeActions, actions);
 
     // TODO: Make it possible so that from the web the user can select a student and check what conflicts are possible for that student
     // we have to change things a little bit to do that
@@ -105,23 +131,16 @@ public abstract class Conflict : ScriptableObject
     #region Player Actions
     protected IEnumerator WaitForPlayerAction()
     {
-        ListenToPlayerResolution();
+        ResetPlayerResolution();
 
         yield return new WaitUntil(() => _currentPlayerResolution != PlayerResolutionToConflict.None);
     }
 
-    protected void ListenToPlayerResolution()
+    protected void ResetPlayerResolution()
     {
-        Player.Instance.OnPlayerResolution.RemoveListener(OnPlayerResolution);
         _currentPlayerResolution = PlayerResolutionToConflict.None;
 
-        Player.Instance.OnPlayerResolution.AddListener(OnPlayerResolution);
-        Player.StartListeningForPlayerResolution();
-    }
-
-    protected void OnPlayerResolution(PlayerResolutionToConflict res)
-    {
-        _currentPlayerResolution = res;
+        // Player.StartListeningForPlayerResolution();
     }
     #endregion
 }

@@ -1,8 +1,21 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 class GetDistractedTEAConflict : TEAConflict
 {
+    public override void RegisterActions()
+    {
+        RegisterPositiveActions(new List<PlayerAction> {
+            PlayerAction.Acalmar
+        });
+        RegisterNeutralActions(new List<PlayerAction> {
+            PlayerAction.FalarBaixo
+        });
+        RegisterNegativeActions(new List<PlayerAction> {
+            PlayerAction.Advertencia
+        });
+    }
     public override ConflictSetupResult IsConflictFeasible()
     {
         _type = ConflictType.DistractionTEA;

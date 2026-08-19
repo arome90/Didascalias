@@ -1,7 +1,20 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 internal class DrawDistractedConflict : ADHDConflict
 {
+    public override void RegisterActions()
+    {
+        RegisterPositiveActions(new List<PlayerAction> {
+            PlayerAction.Acalmar
+        });
+        RegisterNeutralActions(new List<PlayerAction> {
+            PlayerAction.FalarBaixo
+        });
+        RegisterNegativeActions(new List<PlayerAction> {
+            PlayerAction.Advertencia
+        });
+    }
     public override ConflictSetupResult IsConflictFeasible()
     {
         _type = ConflictType.DrawDistracted;

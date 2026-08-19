@@ -734,11 +734,13 @@ public class StudentManager : Singleton<StudentManager>
     {
         conflict.StartConflict();
         _activeConflicts.Add(conflict);
+        Player.Instance.AddActiveConflict(conflict);
     }
 
     public void RemoveActiveConflict(Conflict conflict)
     {
         _activeConflicts.Remove(conflict);
+        Player.Instance.RemoveActiveConflict(conflict);
     }
     #endregion
 }

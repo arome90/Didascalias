@@ -1,13 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using TMPro;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using static StudentBehaviour;
 
 public class BotherSomeoneConflict : ADHDConflict
 {
+    public override void RegisterActions()
+    {
+        RegisterPositiveActions(new List<PlayerAction> {
+            PlayerAction.Acalmar
+        });
+        RegisterNeutralActions(new List<PlayerAction> {
+            PlayerAction.FalarBaixo
+        });
+        RegisterNegativeActions(new List<PlayerAction> {
+            PlayerAction.Advertencia
+        });
+    }
+
     private Student PopAdhdStudent()
     {
         Student st = _adhdSeatedStudents.Next();
@@ -71,7 +82,7 @@ public class BotherSomeoneConflict : ADHDConflict
         Student st = _affectedStudents[0];
         yield return _behaviour.BotherSomeone_(st);
 
-        ListenToPlayerResolution();
+        ResetPlayerResolution();
 
         LookDirection savedLookDirection = _behaviour.CurrentLookDirection;
 
@@ -157,7 +168,7 @@ public class BotherSomeoneConflict : ADHDConflict
     private IEnumerator BotherStudentNeutralResolution(Student st)
     {
         yield return _behaviour.LeaveDesk_();
-        ListenToPlayerResolution();
+        ResetPlayerResolution();
 
         yield return _behaviour.MoveAndLookToStudent_(st);
 
@@ -204,7 +215,7 @@ public class BotherSomeoneConflict : ADHDConflict
         if (_behaviour.IsStanding())    random = UnityEngine.Random.Range(0, 2);
         else                            random = UnityEngine.Random.Range(0, 3);
 
-        ListenToPlayerResolution();
+        ResetPlayerResolution();
         if (random == 0)
         {
             _behaviour.SetIsJustifying(true);

@@ -1,10 +1,21 @@
-﻿using System.Buffers;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SitTogetherConflict : Conflict
 {
+    public override void RegisterActions()
+    {
+        RegisterPositiveActions(new List<PlayerAction> {
+            PlayerAction.Acalmar
+        });
+        RegisterNeutralActions(new List<PlayerAction> {
+            PlayerAction.FalarBaixo
+        });
+        RegisterNegativeActions(new List<PlayerAction> {
+            PlayerAction.Advertencia
+        });
+    }
     public override ConflictSetupResult IsConflictFeasible()
     {
         _type = ConflictType.SitTogether;
@@ -83,7 +94,7 @@ public class SitTogetherConflict : Conflict
         if (IsPositive()) yield return _behaviour.SitDown_();
         else
         {
-            ListenToPlayerResolution();
+            ResetPlayerResolution();
 
             yield return new WaitUntil(() => _behaviour.IsStandingOutOfDesk());
             yield return _behaviour.TalkToSomeoneForTime_(farStudent, 1.0f);
@@ -98,7 +109,7 @@ public class SitTogetherConflict : Conflict
             if (IsPositive()) PositiveResolution();
             else
             {
-                ListenToPlayerResolution();
+                ResetPlayerResolution();
 
                 // we wait until the other student has left their desk and sat down
                 yield return targetBehaviour.LeaveDesk_();

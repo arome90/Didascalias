@@ -1,7 +1,21 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 public class StandUpConflict : Conflict
 {
+    public override void RegisterActions()
+    {
+        RegisterPositiveActions(new List<PlayerAction> {
+            PlayerAction.Acalmar
+        });
+        RegisterNeutralActions(new List<PlayerAction> {
+            PlayerAction.FalarBaixo
+        });
+        RegisterNegativeActions(new List<PlayerAction> {
+            PlayerAction.Advertencia
+        });
+    }
+
     public override ConflictSetupResult IsConflictFeasible()
     {
         _type = ConflictType.StandUp;
@@ -43,7 +57,7 @@ public class StandUpConflict : Conflict
 
     public override IEnumerator Run()
     {
-        ListenToPlayerResolution();
+        ResetPlayerResolution();
         yield return _behaviour.StandUp_();
 
         while (HasNotActed())
@@ -52,7 +66,7 @@ public class StandUpConflict : Conflict
         if (IsPositive()) yield return PositiveResolution();
         else if (IsNeutral())
         {
-            ListenToPlayerResolution();
+            ResetPlayerResolution();
             yield return _behaviour.BotherSomeone_(null);
 
             while (HasNotActed() || IsNeutral())
