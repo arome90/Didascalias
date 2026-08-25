@@ -25,7 +25,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2087385916140180995}
   m_AnyStatePosition: {x: 290, y: -10, z: 0}
   m_EntryPosition: {x: 290, y: 20, z: 0}
   m_ExitPosition: {x: 290, y: 240, z: 0}
@@ -81,6 +82,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-9119093220990870295
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Set\xE1ndose Suelo"
+  stateDescription: "El estudiante se est\xE1 sentando en el suelo."
+  availableMethods: []
 --- !u!1102 &-9115581211348974840
 AnimatorState:
   serializedVersion: 6
@@ -149,9 +166,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -538,9 +555,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -726,8 +743,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: "Sent\xE1ndose"
   stateDescription: "El estudiante se est\xE1 sentando en el suelo."
+  availableMethods: []
 --- !u!1101 &-8194398308372333539
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -880,7 +899,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -280058185602221440}
   m_AnyStatePosition: {x: 410, y: -130, z: 0}
   m_EntryPosition: {x: 410, y: -90, z: 0}
   m_ExitPosition: {x: 410, y: 210, z: 0}
@@ -1046,7 +1066,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -2634209184734159255}
   m_AnyStatePosition: {x: 390, y: -20, z: 0}
   m_EntryPosition: {x: 390, y: 10, z: 0}
   m_ExitPosition: {x: 790, y: 70, z: 0}
@@ -1090,7 +1111,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: -7680493031943357091}
   - {fileID: 8366981609843817403}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 4713829011542157934}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1117,8 +1139,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: "Sent\xE1ndose "
   stateDescription: "El estudiante se est\xE1 sentando en una silla."
+  availableMethods: []
 --- !u!1101 &-7680493031943357091
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1210,6 +1234,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-7608881623703534878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Girado Derecha
+  stateDescription: "El estudiante est\xE1 girado mirando a su derecha."
+  availableMethods: []
 --- !u!114 &-7535027079856537284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1263,7 +1303,8 @@ AnimatorState:
   - {fileID: -7764672302790662147}
   - {fileID: -8979367032611342532}
   - {fileID: -8769247455945379985}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 503258182549490366}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1403,7 +1444,7 @@ AnimatorStateMachine:
   - first: {fileID: -555603240457251521}
     second: []
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 90, y: 150, z: 0}
+  m_AnyStatePosition: {x: 150, y: -60, z: 0}
   m_EntryPosition: {x: 90, y: 120, z: 0}
   m_ExitPosition: {x: 760, y: 150, z: 0}
   m_ParentStateMachinePosition: {x: 70, y: 180, z: 0}
@@ -1535,7 +1576,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2761346172771515544}
   m_AnyStatePosition: {x: 190, y: -50, z: 0}
   m_EntryPosition: {x: 190, y: -20, z: 0}
   m_ExitPosition: {x: 570, y: 90, z: 0}
@@ -1556,7 +1598,8 @@ AnimatorState:
   - {fileID: 623729491746650454}
   - {fileID: 7628388033370758533}
   - {fileID: 860107040627855938}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2473218814749865666}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1584,7 +1627,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: -7403413376865208237}
   - {fileID: 3113132586568737443}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 7495301893168762238}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1987,7 +2031,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -2844815502201591140}
   m_AnyStatePosition: {x: 50, y: -160, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 580, y: 190, z: 0}
@@ -2053,7 +2098,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: 1315607474645309993}
   - {fileID: -7051758132012730922}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 7654207957565637961}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -2068,6 +2114,26 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &-6671815806450440291
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Llorando
+  stateDescription: "El estudiante est\xE1 llorando en su escritorio, escondiendo
+    su cabeza entre sus brazos contra el mesado."
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - StopCrashOut - Dejar de llorar ruidosamente.
 --- !u!114 &-6643655559873591245
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2080,9 +2146,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: "Ri\xE9ndose"
   stateDescription: "El estudiante est\xE1 apuntando a alguien y se est\xE1 riendo
     de esa persona."
+  availableMethods: []
 --- !u!1101 &-6614755212177359632
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2108,6 +2176,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-6606837609522900858
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Abriendo Puerta
+  stateDescription: "El estudiante est\xE1 abriendo una puerta."
+  availableMethods: []
 --- !u!1107 &-6596920839106705037
 AnimatorStateMachine:
   serializedVersion: 6
@@ -2146,6 +2230,7 @@ AnimatorStateMachine:
   - {fileID: 52006928862509682}
   - {fileID: -2085230502010202721}
   - {fileID: -2318968203199349241}
+  - {fileID: 329419545969076620}
   m_EntryTransitions:
   - {fileID: -720344232772624161}
   m_StateMachineTransitions:
@@ -2239,8 +2324,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Sacando Material
   stateDescription: "El estudiante est\xE1 sacando material de su mochila."
+  availableMethods: []
 --- !u!1101 &-6488772428025857103
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2322,6 +2409,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56fc07e5511af1e48a000829d77ef990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-6460687769324318510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Molestando
+  stateDescription: "El estudiante est\xE1 molestando a otro estudiante a su alrededor."
+  availableMethods: []
 --- !u!1101 &-6458564935164341997
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2386,6 +2489,31 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1101 &-6403613104069404363
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: IsJustifying
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -1233178862580172945}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1107 &-6356919361777740624
 AnimatorStateMachine:
   serializedVersion: 6
@@ -2408,7 +2536,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -1050583617645794766}
   m_AnyStatePosition: {x: 150, y: -40, z: 0}
   m_EntryPosition: {x: 160, y: 60, z: 0}
   m_ExitPosition: {x: 590, y: 180, z: 0}
@@ -2524,7 +2653,8 @@ AnimatorState:
   - {fileID: -4230593571547516276}
   - {fileID: 4838469770606579720}
   - {fileID: -1932871464587932751}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 1981160939056542279}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -2551,8 +2681,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Sacando Material
   stateDescription: "El estudiante est\xE1 sacando el material de su mochila."
+  availableMethods: []
 --- !u!114 &-6101121073304165777
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2580,6 +2712,7 @@ AnimatorState:
   - {fileID: 3619703141748562037}
   m_StateMachineBehaviours:
   - {fileID: -1770712670060218755}
+  - {fileID: -4139364545746806623}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -2608,9 +2741,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -2715,6 +2848,35 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-5852600360812989838
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Sentado
+  stateDescription: "El estudiante autista est\xE1 sentado HASTA LOS HUEVOS DE TODO
+    DIOS."
+  availableMethods:
+  - SetIsHyperstimulated
+  - SetIsOff
+  - SetHighAnxiety
+  - SetAnxiety
+  - TriggerGetMaterialOut
+  - SetIsWriting
+  - SetIsCrying
+  - SetIsJustifying
+  - LeaveDesk
+  - GoToFloor
+  - StandUp
+  - Expel
 --- !u!1101 &-5844202216001174054
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2780,9 +2942,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.9528302
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -2915,9 +3077,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Muy Ansioso - TEA
   stateDescription: "El estudiante autista est\xE1 muy ansioso en su silla, todo
     el rato movi\xE9ndose."
+  availableMethods: []
 --- !u!114 &-5650439532673842488
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2930,9 +3094,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Cogiendo Material
   stateDescription: "El estudiante est\xE1 al fondo de la clase recogiendo el material
     de repuesta porque se olvid\xF3 del suyo."
+  availableMethods: []
 --- !u!1101 &-5647786639884941302
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -3003,9 +3169,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.82558143
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -3023,8 +3189,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: "Levant\xE1ndose"
   stateDescription: "El estudiante se est\xE1 levantando de una silla."
+  availableMethods: []
+--- !u!114 &-5597601588960475191
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Desorganizaci\xF3n Material"
+  stateDescription: "El estudiante es incapaz de encontrar el material para la lecci\xF3n
+    actual, y se encuentra nervioso e intranquilo."
+  availableMethods: []
 --- !u!114 &-5569440679239879853
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3283,7 +3468,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -326685177798971794}
   m_AnyStatePosition: {x: 190, y: -30, z: 0}
   m_EntryPosition: {x: 180, y: 70, z: 0}
   m_ExitPosition: {x: 660, y: 150, z: 0}
@@ -3435,8 +3621,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Abriendo Puerta
   stateDescription: "El estudiante est\xE1 abriendo la puerta desde fuera de la clase."
+  availableMethods: []
+--- !u!114 &-4801363518689310223
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Apagado
+  stateDescription: "El estudiante est\xE1 apagado, no responde a est\xEDmulos a
+    su alrededor."
+  availableMethods: []
 --- !u!1102 &-4741066625162551389
 AnimatorState:
   serializedVersion: 6
@@ -3478,8 +3683,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Hablando - TEA
   stateDescription: "El estudiante autista est\xE1 hablando."
+  availableMethods: []
+--- !u!1101 &-4678966859699964355
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: IsOff
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -1233178862580172945}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
+--- !u!1101 &-4662628751049820186
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: IsJustifying
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 4601806974710420599}
+  m_DstState: {fileID: 0}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1101 &-4581528126100273115
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -3543,7 +3800,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: 5745280528491979136}
   - {fileID: -5712291406142031950}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 4470920593827695139}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -3753,6 +4011,33 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-4371126877214921461
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Muy Ansioso
+  stateDescription: "El estudiante manifiesta un alt\xEDsimo nivel de ansiedad, parece
+    estar cerca de un ataque."
+  availableMethods:
+  - StopHighAnxiety - Dejar de estar en un estado de fuerte ansiedad.
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StopAnxiety - Dejar de tener ansiedad. HACER SI LA SITUACI\xD3N LO REQUIERE"
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
 --- !u!1102 &-4367114032204321919
 AnimatorState:
   serializedVersion: 6
@@ -3859,6 +4144,23 @@ AnimatorTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 1
+--- !u!114 &-4139364545746806623
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Levant\xE1ndose Suelo"
+  stateDescription: "El estudiante est\xE1 levant\xE1ndose del suelo para caminar
+    por el aula."
+  availableMethods: []
 --- !u!1102 &-4121750435605048213
 AnimatorState:
   serializedVersion: 6
@@ -4015,8 +4317,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: "Ri\xE9ndose"
   stateDescription: "El estudiante se est\xE1 riendo de algo o de alguien."
+  availableMethods: []
 --- !u!1101 &-3902762845993532800
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -4262,9 +4566,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -4347,8 +4651,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Discutiendo
   stateDescription: "El estudiante est\xE1 discutiendo con el profesor."
+  availableMethods: []
+--- !u!114 &-3640624958639459932
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Molesto
+  stateDescription: "El estudiante est\xE1 siendo molestado por un estudiante que
+    se encuenrtra frente a \xE9l."
+  availableMethods: []
 --- !u!1109 &-3613754004750994261
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -4573,7 +4896,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: 4687145456812887564}
   - {fileID: 5293591869087950579}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -2876479270287305978}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -4661,9 +4985,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Hablando Calmado - TEA
   stateDescription: "El estudiante autista est\xE1 hablando calmado en la silla,
     movi\xE9ndose un poco."
+  availableMethods: []
 --- !u!1102 &-3230682217532565138
 AnimatorState:
   serializedVersion: 6
@@ -4712,6 +5038,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-3176601582664011990
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Hablar Ansioso
+  stateDescription: El estudiante autista habla con ansiedad hacia el frente.
+  availableMethods: []
 --- !u!1102 &-3167817592951073549
 AnimatorState:
   serializedVersion: 6
@@ -4778,6 +5120,7 @@ AnimatorState:
   - {fileID: 3336190456798406846}
   m_StateMachineBehaviours:
   - {fileID: -5528089225225409534}
+  - {fileID: -6606837609522900858}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -4853,9 +5196,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.8913044
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -4935,7 +5278,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3187970588483185341}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -5597601588960475191}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -5016,7 +5360,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -5417980509345990742}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -4371126877214921461}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -5110,6 +5455,49 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-2876479270287305978
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Molesto Izquierda
+  stateDescription: "El estudiante est\xE1 siendo molestado por un estudiante que
+    se encuenrtra a su derecha."
+  availableMethods: []
+--- !u!114 &-2844815502201591140
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA MUy Ansioso
+  stateDescription: "El estudiante autista est\xE1 muy ansioso e inquieto en su silla."
+  availableMethods:
+  - SetIsHyperstimulated
+  - SetHighAnxiety
+  - SetIsOff
+  - SetAnxiety
+  - SetIsCrying
+  - SetIsJustifying
+  - LeaveDesk
+  - GoToFloor
+  - StandUp
+  - Expel
 --- !u!1107 &-2829927154334661786
 AnimatorStateMachine:
   serializedVersion: 6
@@ -5132,7 +5520,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 5768577289354384985}
   m_AnyStatePosition: {x: 350, y: -80, z: 0}
   m_EntryPosition: {x: 350, y: -50, z: 0}
   m_ExitPosition: {x: 350, y: 150, z: 0}
@@ -5184,6 +5573,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bcfb8d86578ec84084a409fe9a773cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &-2634209184734159255
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Entrando Pupitre
+  stateDescription: "El estudiante est\xE1 entrando en su pupitre para sentarse."
+  availableMethods: []
 --- !u!1101 &-2624326638691506399
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -5221,9 +5626,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Sobreestimulado - TEA
   stateDescription: "El estudiante autista est\xE1 sobreestimulado en su silla y
     se est\xE1 balanceando nervioso en la silla."
+  availableMethods: []
 --- !u!1107 &-2550022547798980115
 AnimatorStateMachine:
   serializedVersion: 6
@@ -5277,8 +5684,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Hablando
   stateDescription: "El estudiante est\xE1 hablando con alguien."
+  availableMethods: []
 --- !u!1101 &-2455081048305645335
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -5326,8 +5735,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Escribiendo
   stateDescription: "El estudiante est\xE1 tomando apuntes de la clase."
+  availableMethods: []
 --- !u!1101 &-2407430362421086852
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -5397,7 +5808,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 4956435499864023783}
   m_AnyStatePosition: {x: 210, y: 60, z: 0}
   m_EntryPosition: {x: 210, y: 90, z: 0}
   m_ExitPosition: {x: 600, y: 200, z: 0}
@@ -5546,8 +5958,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Ansioso en Suelo
   stateDescription: El estudiante tiene un ataque de ansiedad sentado en el suelo.
+  availableMethods: []
+--- !u!114 &-2095813205511927510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Sent\xE1ndose"
+  stateDescription: "El estudiante est\xE1 sent\xE1ndose en su sitio."
+  availableMethods: []
 --- !u!1101 &-2085230502010202721
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -5876,7 +6306,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: -4495109893239857404}
   - {fileID: 5975429590536237109}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 3882428684391155008}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -5903,9 +6334,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Apagado - TEA
   stateDescription: "El estudiante autista est\xE1 apagado en su silla, no responde
     a las interacciones."
+  availableMethods: []
 --- !u!1101 &-1717461856595520029
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -5968,6 +6401,7 @@ AnimatorState:
   - {fileID: 196397350326566431}
   m_StateMachineBehaviours:
   - {fileID: -3690792787142702664}
+  - {fileID: 7304658546163097480}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -5994,8 +6428,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Llorando
   stateDescription: "El estudiante est\xE1 llorando en su mesa."
+  availableMethods: []
 --- !u!1102 &-1587630002716079033
 AnimatorState:
   serializedVersion: 6
@@ -6035,9 +6471,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Sacando Material Mal
   stateDescription: "El estudiante se ha olvidado su material y ahora est\xE1 intentando
     encontrarlo desesperado en la mochila."
+  availableMethods: []
 --- !u!1107 &-1453190820734267410
 AnimatorStateMachine:
   serializedVersion: 6
@@ -6105,8 +6543,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  _isReachable: 1
   stateName: Sentado
   stateDescription: Sentado, mirando al frente atentamente
+  availableMethods: []
 --- !u!1102 &-1305839140251368245
 AnimatorState:
   serializedVersion: 6
@@ -6278,6 +6718,7 @@ AnimatorState:
   - {fileID: -156205405643524016}
   m_StateMachineBehaviours:
   - {fileID: 7055185123126092014}
+  - {fileID: 5390579725657231682}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -6340,6 +6781,23 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &-1050583617645794766
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Ansioso Suelo
+  stateDescription: "El estudiante est\xE1 sentado en el suelo en medio de un ataque
+    de ansiedad."
+  availableMethods: []
 --- !u!114 &-1037514243090425232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6365,8 +6823,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Ordenar Material Escritorio
   stateDescription: El estudiante ordena su material por el escritorio.
+  availableMethods: []
 --- !u!1101 &-1013876943044707376
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -6497,6 +6957,7 @@ AnimatorState:
   - {fileID: -647472217148997760}
   m_StateMachineBehaviours:
   - {fileID: -7204206650282112245}
+  - {fileID: 1981358959499984714}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -6559,7 +7020,8 @@ AnimatorState:
   - {fileID: -4577969993719276908}
   - {fileID: -2407430362421086852}
   - {fileID: 2606095541211698081}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 8730568567151605593}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -6586,8 +7048,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Cerrando Puerta
   stateDescription: "El estudiante est\xE1 cerrando la puerta desde fuera de la clase."
+  availableMethods: []
 --- !u!114 &-729671755603154309
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6600,8 +7064,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Levantado
   stateDescription: "El estudiante est\xE1 de pie."
+  availableMethods: []
 --- !u!1109 &-720344232772624161
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -6654,8 +7120,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Bastante Ansioso
   stateDescription: "El estudiante est\xE1 inquieto y con bastante ansiedad."
+  availableMethods: []
 --- !u!1101 &-647472217148997760
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -6678,6 +7146,23 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-630079585622662511
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Saliendo Pupitre
+  stateDescription: "El estudiante est\xE1 saliendo de un pupitre para caminar por
+    el aula."
+  availableMethods: []
 --- !u!1102 &-626063372595203363
 AnimatorState:
   serializedVersion: 6
@@ -6727,7 +7212,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2410827499423548466}
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 610, y: 140, z: 0}
@@ -6895,6 +7381,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &-326685177798971794
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Ansioso
+  stateDescription: "El estudiante TEA est\xE1 ansioso en su sitio."
+  availableMethods:
+  - Expel
+  - StandUp
+  - GoToFloor
+  - LeaveDesk
+  - SetIsJustifying
+  - SetIsCrying
+  - SetAnxiety
+  - SetIsOff
+  - SetHighAnxiety
+  - SetIsHyperstimulated
 --- !u!1101 &-305660210090277080
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -6947,6 +7459,38 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &-280058185602221440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Ri\xE9ndose"
+  stateDescription: "El estudiante mira al frente mientras se r\xEDe de la situaci\xF3n."
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StartBothering - Ponerse a molestar a alguien
+  - StartWriting - Hace que el estudiante se ponga a escribir
+  - "TriggerGetMaterialOut - Prepara el material de la lecci\xF3n. SOLO HACER SI
+    EL PROFESOR LO PIDE"
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartHighAnxiety - Entrar en un estado de ansiedad muy fuerte. HACER SI LA SITUACI\xD3N
+    HA ESCALADO MUCHO"
 --- !u!1109 &-258379519712767968
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -7091,7 +7635,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 6590626980927740487}
   m_AnyStatePosition: {x: 290, y: -100, z: 0}
   m_EntryPosition: {x: 290, y: -30, z: 0}
   m_ExitPosition: {x: 820, y: 60, z: 0}
@@ -7162,7 +7707,8 @@ AnimatorState:
   - {fileID: -6588504254297170978}
   - {fileID: 8691720804595380037}
   - {fileID: 7382553728778286778}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -7608881623703534878}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -7289,9 +7835,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.9
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -7650,6 +8196,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: TriggerTEAWriting
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -7728,9 +8280,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.9528302
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -7752,7 +8304,8 @@ AnimatorState:
   - {fileID: 2396976944517239693}
   - {fileID: 6709133597543804663}
   - {fileID: 1015494475624799398}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2745924891982123481}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -7817,7 +8370,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2194307954354524623}
   m_AnyStatePosition: {x: 240, y: 10, z: 0}
   m_EntryPosition: {x: 240, y: 70, z: 0}
   m_ExitPosition: {x: 680, y: 150, z: 0}
@@ -7857,8 +8411,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: "Distra\xEDdo - TEA"
   stateDescription: "El estudiante autista se encuentra distra\xEDdo."
+  availableMethods: []
 --- !u!1101 &196397350326566431
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -7917,6 +8473,7 @@ AnimatorState:
   - {fileID: 5243785590719659767}
   m_StateMachineBehaviours:
   - {fileID: -6531324763291035813}
+  - {fileID: 5525837734958660955}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -7976,6 +8533,31 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
+--- !u!1101 &329419545969076620
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: TriggerTEAWriting
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: -7198774849645877359}
+  m_DstState: {fileID: 0}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.75
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -8065,6 +8647,22 @@ AnimatorTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 1
+--- !u!114 &503258182549490366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Hablando Izquierda
+  stateDescription: "El estudiante est\xE1 hablando con alguien a su izquierda."
+  availableMethods: []
 --- !u!1101 &534383916345522440
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -8205,6 +8803,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &739223048191003444
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Entrando Pupitre
+  stateDescription: "El estudiante est\xE1 entrando en su pupitre para sentarse."
+  availableMethods: []
 --- !u!1102 &742086248753379553
 AnimatorState:
   serializedVersion: 6
@@ -8233,7 +8847,9 @@ AnimatorState:
   - {fileID: -1717461856595520029}
   - {fileID: 8405177720156790925}
   - {fileID: 6855025393019534185}
-  m_StateMachineBehaviours: []
+  - {fileID: -4662628751049820186}
+  m_StateMachineBehaviours:
+  - {fileID: 3530065570707980280}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -8248,6 +8864,23 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &747441408744957331
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Ri\xE9ndose Apuntando Izquierda"
+  stateDescription: "El estudiante est\xE1 apuntando a alguien a su izquierda mientras
+    se r\xEDe de \xE9l."
+  availableMethods: []
 --- !u!1101 &782085752355884247
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -8421,7 +9054,8 @@ AnimatorStateMachine:
   m_EntryTransitions:
   - {fileID: -3579248861072315504}
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 7038171078563009714}
   m_AnyStatePosition: {x: 60, y: 60, z: 0}
   m_EntryPosition: {x: 420, y: 100, z: 0}
   m_ExitPosition: {x: 420, y: 370, z: 0}
@@ -8533,9 +9167,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -8609,7 +9243,8 @@ AnimatorState:
   - {fileID: -4381580605577291710}
   - {fileID: 4551841308044415200}
   - {fileID: 7777379767184195284}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 1427875847533566423}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -8735,9 +9370,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Ansioso - TEA
   stateDescription: "El estudiante autista est\xE1 ansioso en su silla, movi\xE9ndose
     mucho."
+  availableMethods: []
 --- !u!1101 &1315607474645309993
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -8879,6 +9516,7 @@ AnimatorState:
   - {fileID: 8532423703212069413}
   m_StateMachineBehaviours:
   - {fileID: 1847046720981880239}
+  - {fileID: -2095813205511927510}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -8907,14 +9545,58 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &1427875847533566423
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Bastante Ansioso
+  stateDescription: "El estudiante manifiesta un nivel medio de ansiedad, movi\xE9ndose
+    constantemente."
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - "StopAnxiety - Dejar de tener ansiedad. HACER SI LA SITUACI\xD3N LO REQUIERE"
+  - StopHighAnxiety - Dejar de estar en un estado de fuerte ansiedad.
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+--- !u!114 &1643486200488454083
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Sacando Material
+  stateDescription: "El estudiante est\xE1 organizando el material en el escritorio
+    para la lecci\xF3n actual."
+  availableMethods: []
 --- !u!1102 &1661926348729569207
 AnimatorState:
   serializedVersion: 6
@@ -8929,6 +9611,7 @@ AnimatorState:
   - {fileID: 6386264068468244501}
   m_StateMachineBehaviours:
   - {fileID: -1779819416344604224}
+  - {fileID: 1643486200488454083}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -9095,7 +9778,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6339905191668375713}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -6671815806450440291}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -9251,6 +9935,54 @@ AnimatorTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 1
+--- !u!114 &1981160939056542279
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Ri\xE9ndose Izquierda"
+  stateDescription: "El compa\xF1ero est\xE1 ri\xE9ndose de alguien a su izquierda."
+  availableMethods: []
+--- !u!114 &1981358959499984714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Cerrando Puerta
+  stateDescription: "El estudiante est\xE1 cerrando una puerta."
+  availableMethods: []
+--- !u!114 &1983610380021952932
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Sentado Suelo
+  stateDescription: El estudiante se encuentra sentado en el suelo.
+  availableMethods: []
 --- !u!1101 &1990133771189513786
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -9323,7 +10055,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 5681390339178542251}
   m_AnyStatePosition: {x: 460, y: -90, z: 0}
   m_EntryPosition: {x: 460, y: -60, z: 0}
   m_ExitPosition: {x: 460, y: 140, z: 0}
@@ -9367,6 +10100,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Label: Drawing
+--- !u!114 &2087385916140180995
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Hablando
+  stateDescription: El estudiante habla hacia el frente.
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - StandUp - Hace que el estudiante se levante
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StartBothering - Ponerse a molestar a alguien
+  - StartWriting - Hace que el estudiante se ponga a escribir
+  - "TriggerGetMaterialOut - Prepara el material de la lecci\xF3n. SOLO HACER SI
+    EL PROFESOR LO PIDE"
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartHighAnxiety - Entrar en un estado de ansiedad muy fuerte. HACER SI LA SITUACI\xD3N
+    HA ESCALADO MUCHO"
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - StopHighAnxiety - Dejar de estar en un estado de fuerte ansiedad.
 --- !u!1101 &2117157059469310435
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -9417,6 +10184,23 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &2161236490930763874
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Desorganizaci\xF3n Material"
+  stateDescription: "El estudiante es incapaz de encontrar el material para la lecci\xF3n
+    actual, y se encuentra nervioso e intranquilo."
+  availableMethods: []
 --- !u!1102 &2173984813543060813
 AnimatorState:
   serializedVersion: 6
@@ -9430,7 +10214,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: 8750344151820928774}
   - {fileID: 3349423146288964620}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -3176601582664011990}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -9539,6 +10324,33 @@ AnimatorTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 1
+--- !u!114 &2194307954354524623
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Apagado
+  stateDescription: "El estudiante autista est\xE1 apagado, incapaz de responder
+    a su alrededor."
+  availableMethods:
+  - Expel
+  - GoToFloor
+  - SetAnxiety
+  - SetHighAnxiety
+  - SetIsOff
+  - SetIsCrying
+  - StandUp
+  - LeaveDesk
+  - SetIsJustifying
+  - SetIsHyperstimulated
 --- !u!1101 &2208321027585200880
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -9604,6 +10416,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: -7612867731040822174}
   - {fileID: 7369436612419878233}
+  - {fileID: -6403613104069404363}
+  - {fileID: -4678966859699964355}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -9735,7 +10549,8 @@ AnimatorState:
   - {fileID: -2179734533582260383}
   - {fileID: -8480901316900914985}
   - {fileID: 1361796427533619906}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 5357994131226047405}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -9750,6 +10565,51 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &2410827499423548466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "TEA Distra\xEDdo"
+  stateDescription: "El estudiante autista est\xE1 distra\xEDdo en su silla."
+  availableMethods:
+  - Expel
+  - StandUp
+  - GoToFloor
+  - LeaveDesk
+  - SetIsJustifying
+  - SetIsCrying
+  - SetIsWriting
+  - TriggerGetMaterialOut
+  - SetAnxiety
+  - SetIsOff
+  - SetHighAnxiety
+  - SetIsHyperstimulated
+--- !u!114 &2438604099567842696
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Molestando
+  stateDescription: "El estudiante est\xE1 molestando a un estudiante que se encuentra
+    frente a \xE9l."
+  availableMethods: []
 --- !u!1101 &2444166222852783199
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -9775,6 +10635,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &2473218814749865666
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Ansioso
+  stateDescription: "El estudiante TEA est\xE1 ansioso en su sitio."
+  availableMethods: []
 --- !u!1102 &2535262382287284095
 AnimatorState:
   serializedVersion: 6
@@ -9789,6 +10665,7 @@ AnimatorState:
   - {fileID: 6377690047209867108}
   m_StateMachineBehaviours:
   - {fileID: 2639848071142403275}
+  - {fileID: -9119093220990870295}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -9888,6 +10765,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97147e3c1a648074eaa53a26daf32461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &2745924891982123481
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Hiperestimulado
+  stateDescription: "El estudiante autista est\xE1 sobreestimulado en su sitio. Le
+    cuesta prestar atenci\xF3n a su alrededor."
+  availableMethods: []
+--- !u!114 &2761346172771515544
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Escribiendo
+  stateDescription: "El estudiante escribe acerca de la lecci\xF3n atentamente."
+  availableMethods:
+  - StopWriting - Hace que el estudiante deje de escribir
 --- !u!1101 &2775528381156056708
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -10029,8 +10940,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Molestando
   stateDescription: "El estudiante est\xE1 molestando a una o varias personas."
+  availableMethods: []
 --- !u!1107 &3092844245406751789
 AnimatorStateMachine:
   serializedVersion: 6
@@ -10214,7 +11127,7 @@ AnimatorStateMachine:
     m_Position: {x: 470, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3357689591952257764}
-    m_Position: {x: 470, y: 70, z: 0}
+    m_Position: {x: 470, y: 60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6690028236268429040}
     m_Position: {x: 470, y: 170, z: 0}
@@ -10482,8 +11395,8 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.6938776
-  m_HasExitTime: 1
+  m_ExitTime: 0
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -10500,8 +11413,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Molestando
   stateDescription: "El estudiante est\xE1 de pie molestando a la gente."
+  availableMethods: []
 --- !u!1101 &3465319850554895353
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -10587,7 +11502,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3839766625023476779}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -4801363518689310223}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -10602,6 +11518,46 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &3530065570707980280
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Sentado
+  stateDescription: "El estudiante est\xE1 tranquilo sentado en su sitio."
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - StandUp - Hace que el estudiante se levante
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - StopJustifying - Dejar de justificarse frente al profesor.
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StopCrashOut - Dejar de llorar ruidosamente.
+  - StartBothering - Ponerse a molestar a alguien
+  - StopBothering - Deja de molestar
+  - StopWriting - Hace que el estudiante deje de escribir
+  - StartWriting - Hace que el estudiante se ponga a escribir
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StopAnxiety - Dejar de tener ansiedad. HACER SI LA SITUACI\xD3N LO REQUIERE"
+  - StopSad - El estudiante deja de estar triste.
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartHighAnxiety - Entrar en un estado de ansiedad muy fuerte. HACER SI LA SITUACI\xD3N
+    HA ESCALADO MUCHO"
+  - StopHighAnxiety - Dejar de estar en un estado de fuerte ansiedad.
+  - "TriggerGetMaterialOut - Prepara el material de la lecci\xF3n. SOLO HACER SI
+    EL PROFESOR LO PIDE"
 --- !u!1102 &3537654443165297813
 AnimatorState:
   serializedVersion: 6
@@ -10705,7 +11661,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2161236490930763874}
   m_AnyStatePosition: {x: 160, y: 20, z: 0}
   m_EntryPosition: {x: 160, y: 50, z: 0}
   m_ExitPosition: {x: 570, y: 160, z: 0}
@@ -10777,7 +11734,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -6460687769324318510}
   m_AnyStatePosition: {x: 180, y: 90, z: 0}
   m_EntryPosition: {x: 180, y: 120, z: 0}
   m_ExitPosition: {x: 600, y: 120, z: 0}
@@ -10806,8 +11764,8 @@ AnimatorStateMachine:
     second:
     - {fileID: 3296302391462082566}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 110, y: -40, z: 0}
-  m_EntryPosition: {x: 160, y: 80, z: 0}
+  m_AnyStatePosition: {x: 210, y: 40, z: 0}
+  m_EntryPosition: {x: 210, y: 70, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 5408933119357567792}
@@ -10838,6 +11796,22 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &3882428684391155008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "MIrando Atr\xE1s"
+  stateDescription: "El estudiante se encuentra mirando hacia atr\xE1s."
+  availableMethods: []
 --- !u!1102 &3897069475056337142
 AnimatorState:
   serializedVersion: 6
@@ -10890,9 +11864,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.85
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -10910,8 +11884,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Cerrando puerta
   stateDescription: "El estudiante est\xE1 cerrando la puerta desde dentro del aula."
+  availableMethods: []
 --- !u!114 &3973118438339629776
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10924,9 +11900,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Abriendo puerta
   stateDescription: "El estudiante est\xE1 abriendo la puerta desde dentro de la
     clase."
+  availableMethods: []
 --- !u!1101 &3996160999537118912
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -11037,6 +12015,7 @@ AnimatorState:
   - {fileID: -7255559702107727192}
   m_StateMachineBehaviours:
   - {fileID: -2668389681693921754}
+  - {fileID: -630079585622662511}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -11115,7 +12094,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6423033586165090585}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 5987423155669460390}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -11170,8 +12150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: "Levant\xE1ndose"
   stateDescription: "El estudiante se est\xE1 levantando del suelo."
+  availableMethods: []
 --- !u!1101 &4353112799587027024
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -11208,7 +12190,8 @@ AnimatorState:
   - {fileID: 311475509496767463}
   - {fileID: 8473481760353669990}
   - {fileID: -1206134740092404047}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2438604099567842696}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -11260,8 +12243,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Sentado en Suelo
   stateDescription: "El estudiante est\xE1 sentado en el suelo."
+  availableMethods: []
 --- !u!1101 &4386107976733822925
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -11359,6 +12344,23 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &4470920593827695139
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Molestando Izquierda
+  stateDescription: "El estudiante est\xE1 molestando a un estudiante que se encuentra
+    a su izquierda."
+  availableMethods: []
 --- !u!1102 &4475437581735852868
 AnimatorState:
   serializedVersion: 6
@@ -11650,6 +12652,23 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &4713829011542157934
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Molestando Derecha
+  stateDescription: "El estudiante est\xE1 molestando a un estudiante que se encuentra
+    a su derecha."
+  availableMethods: []
 --- !u!1101 &4775753604148767346
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -11736,7 +12755,7 @@ AnimatorStateMachine:
     m_Position: {x: 400, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1661926348729569207}
-    m_Position: {x: 400, y: 110, z: 0}
+    m_Position: {x: 400, y: 100, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: 3603276378472759466}
@@ -11750,9 +12769,25 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 160, y: 80, z: 0}
   m_EntryPosition: {x: 160, y: 110, z: 0}
-  m_ExitPosition: {x: 800, y: 120, z: 0}
-  m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
+  m_ExitPosition: {x: 690, y: 150, z: 0}
+  m_ParentStateMachinePosition: {x: 690, y: 50, z: 0}
   m_DefaultState: {fileID: 1661926348729569207}
+--- !u!114 &4956435499864023783
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Dibujando
+  stateDescription: "El estudiante se encuentra dibujando distra\xEDdo en su cuaderno."
+  availableMethods: []
 --- !u!1101 &4964256988660211288
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -11790,8 +12825,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Saliendo del pupitre
   stateDescription: "El estudiante est\xE1 saliendo del pupitre para levantarse."
+  availableMethods: []
 --- !u!1101 &4997913859589378205
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -11848,8 +12885,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Molesto
   stateDescription: "Alguien est\xE1 molestando al estudiante."
+  availableMethods: []
 --- !u!1107 &5153525396794629943
 AnimatorStateMachine:
   serializedVersion: 6
@@ -11872,7 +12911,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -5852600360812989838}
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 370, y: -170, z: 0}
   m_ExitPosition: {x: 120, y: -70, z: 0}
@@ -12040,6 +13080,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec6264dfd57127a4a9fcf1c5b3495f98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &5357994131226047405
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Girado Izquierda
+  stateDescription: El estudiante se encuentra girado hacia la izquierda.
+  availableMethods: []
 --- !u!1102 &5372657578724307806
 AnimatorState:
   serializedVersion: 6
@@ -12056,7 +13112,8 @@ AnimatorState:
   - {fileID: 2775528381156056708}
   - {fileID: -8766810725802688561}
   - {fileID: -6713441232056074364}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 8449226944805557290}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -12071,6 +13128,23 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &5390579725657231682
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Cogiendo Material Clase
+  stateDescription: "El estudiante est\xE1 recogiendo el material que la clase tiene
+    en caso de que se hayan olvidado."
+  availableMethods: []
 --- !u!1102 &5408933119357567792
 AnimatorState:
   serializedVersion: 6
@@ -12083,7 +13157,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6522834119611364467}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 1983610380021952932}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -12140,9 +13215,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -12162,7 +13237,8 @@ AnimatorState:
   - {fileID: 2357426922576277566}
   - {fileID: 8266399091423676553}
   - {fileID: -3453485941929613690}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -3640624958639459932}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -12191,6 +13267,7 @@ AnimatorState:
   - {fileID: -2266283980504825262}
   m_StateMachineBehaviours:
   - {fileID: -1769005697997604546}
+  - {fileID: 739223048191003444}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -12266,6 +13343,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &5525837734958660955
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Levant\xE1ndose"
+  stateDescription: "El estudiante est\xE1 levant\xE1ndose de su sitio."
+  availableMethods: []
 --- !u!114 &5539439489615226946
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12278,9 +13371,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Dibujando
   stateDescription: "El estudiando est\xE1 dibujando, sin prestar atenci\xF3n a la
     clase."
+  availableMethods: []
 --- !u!1102 &5570194007075432342
 AnimatorState:
   serializedVersion: 6
@@ -12409,9 +13504,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Hablando Ansioso - TEA
   stateDescription: "El estudiante autista est\xE1 hablando ansioso, movi\xE9ndose
     en la silla."
+  availableMethods: []
 --- !u!1109 &5619833286883030475
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -12448,7 +13545,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 8090898061988251699}
   m_AnyStatePosition: {x: 180, y: 60, z: 0}
   m_EntryPosition: {x: 180, y: 30, z: 0}
   m_ExitPosition: {x: 640, y: 120, z: 0}
@@ -12488,6 +13586,23 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 460, y: 100, z: 0}
   m_ParentStateMachinePosition: {x: 0, y: 50, z: 0}
   m_DefaultState: {fileID: -1140205067632405748}
+--- !u!114 &5681390339178542251
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Ri\xE9ndose Apuntando Derecha"
+  stateDescription: "El estudiante est\xE1 apuntando a alguien a su derecha y ri\xE9ndose
+    de \xE9l."
+  availableMethods: []
 --- !u!1101 &5745280528491979136
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -12513,6 +13628,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &5768577289354384985
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Ri\xE9ndose Derecha"
+  stateDescription: "El estudiante est\xE1 ri\xE9ndose de alguien a su derecha."
+  availableMethods: []
 --- !u!1101 &5823548242589411601
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -12596,6 +13727,25 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &5987423155669460390
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Discutiendo
+  stateDescription: El estudiante se encuentra discutiendo con el profesor.
+  availableMethods:
+  - StopJustifying - Dejar de justificarse frente al profesor.
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
 --- !u!1101 &5993608270953415164
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -12780,8 +13930,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Muy Ansioso
   stateDescription: "El estudiante est\xE1 en un ataque de ansiedad."
+  availableMethods: []
 --- !u!1101 &6267106609648419599
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -13048,6 +14200,34 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &6590626980927740487
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Hiperestimulado
+  stateDescription: "El estudiante autista est\xE1 sobreestimulado en su sitio. Le
+    cuesta prestar atenci\xF3n a su alrededor."
+  availableMethods:
+  - SetIsHyperstimulated
+  - SetHighAnxiety
+  - SetIsOff
+  - SetAnxiety
+  - SetIsWrongMaterial
+  - SetIsCrying
+  - SetIsJustifying
+  - LeaveDesk
+  - GoToFloor
+  - StandUp
+  - Expel
 --- !u!114 &6616942460929800738
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13175,7 +14355,8 @@ AnimatorState:
   - {fileID: 5344021453758179363}
   - {fileID: 7293248222363811926}
   - {fileID: 4290393615837448601}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 8648867666462770494}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -13470,6 +14651,38 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &7038171078563009714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: "Ri\xE9ndose Apuntando"
+  stateDescription: "El estudiante apunta al frente mientras se r\xEDe de alguien."
+  availableMethods:
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StartBothering - Ponerse a molestar a alguien
+  - StartWriting - Hace que el estudiante se ponga a escribir
+  - "TriggerGetMaterialOut - Prepara el material de la lecci\xF3n. SOLO HACER SI
+    EL PROFESOR LO PIDE"
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartHighAnxiety - Entrar en un estado de ansiedad muy fuerte. HACER SI LA SITUACI\xD3N
+    HA ESCALADO MUCHO"
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
 --- !u!114 &7055185123126092014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13686,6 +14899,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &7304658546163097480
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Abriendo Puerta
+  stateDescription: "El estudiante est\xE1 abriendo una puerta."
+  availableMethods: []
 --- !u!1102 &7313076463794964824
 AnimatorState:
   serializedVersion: 6
@@ -13725,8 +14954,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Sentado - TEA
   stateDescription: "El estudiante autista est\xE1 sentado, mirando al frente atentamente."
+  availableMethods: []
 --- !u!1109 &7363505577310385850
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -13831,8 +15062,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Apagado
   stateDescription: "El estudiante no responde, est\xE1 apagado en su mesa."
+  availableMethods: []
 --- !u!1101 &7437956808148761842
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -13917,6 +15150,22 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &7495301893168762238
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Hablar Calmado
+  stateDescription: El estudiante autista habla tranquilamente mirando al frente.
+  availableMethods: []
 --- !u!1102 &7581930324471793153
 AnimatorState:
   serializedVersion: 6
@@ -14024,6 +15273,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _isTurnedOnEnter: 0
+--- !u!114 &7654207957565637961
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Molesto Derecha
+  stateDescription: "El estudiante est\xE1 siendo molestado por un estudiante que
+    se encuenrtra a su derecha."
+  availableMethods: []
 --- !u!1101 &7661890965628140579
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -14398,6 +15664,22 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &8090898061988251699
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Hablando Derecha
+  stateDescription: "El estudiante est\xE1 hablando con alguien a su derecha."
+  availableMethods: []
 --- !u!1101 &8132109497545112947
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -14582,9 +15864,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.9429658
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -14604,7 +15886,8 @@ AnimatorState:
   - {fileID: -1958597619804724334}
   - {fileID: -3845526309372575472}
   - {fileID: 2045506778093689680}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 747441408744957331}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -14631,8 +15914,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Ansioso
   stateDescription: El estudiante tiene ansiedad.
+  availableMethods: []
 --- !u!1109 &8360373425199258034
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -14807,6 +16092,33 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &8449226944805557290
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Ansioso
+  stateDescription: El estudiante se encuentra un poco ansioso en su silla.
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - "StopAnxiety - Dejar de tener ansiedad. HACER SI LA SITUACI\xD3N LO REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartHighAnxiety - Entrar en un estado de ansiedad muy fuerte. HACER SI LA SITUACI\xD3N
+    HA ESCALADO MUCHO"
 --- !u!114 &8463694776666059306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14917,6 +16229,22 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &8648867666462770494
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: TEA Sentado
+  stateDescription: "El estudiante autista est\xE1 sentado tranquilamente."
+  availableMethods: []
 --- !u!1101 &8691720804595380037
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -14967,6 +16295,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &8730568567151605593
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: De pie
+  stateDescription: "El estudiante est\xE1 de pie."
+  availableMethods: []
 --- !u!1101 &8750344151820928774
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -15032,8 +16376,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Entrando en Pupitre
   stateDescription: "El estudiante est\xE1 entrando en el pupitre para volver a sentarse."
+  availableMethods: []
 --- !u!1109 &8783412492719739539
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -15178,8 +16524,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
   stateName: Ansioso
   stateDescription: El estudiante se encuentra ansioso en su sitio.
+  availableMethods: []
 --- !u!1102 &9101656478734922549
 AnimatorState:
   serializedVersion: 6

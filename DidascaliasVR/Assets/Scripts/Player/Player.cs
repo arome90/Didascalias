@@ -28,10 +28,11 @@ public class Player : Singleton<Player>
 
     public void ProcessAction(PlayerAction action)
     {
-        List<string> selectedSt = StudentManager.Instance.GetSelectedStudents();
+        List<Student> selectedSt = StudentManager.Instance.GetSelectedStudents();
         if (selectedSt != null && selectedSt.Count > 0)
         {
-            foreach (string student in selectedSt) ResolveConflicts(action);
+            foreach (Student student in selectedSt)
+                student.ActiveConflict.ResolveAction(action);
         }
         else ResolveConflicts(action);
     }

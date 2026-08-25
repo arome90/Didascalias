@@ -32,10 +32,16 @@ public class StudentManager : Singleton<StudentManager>
         Tooltip("Nombres de estudiantes")]
     StudentNames _studentNames;
 
+    bool _studentsGenerated = false;
+    public bool StudentsGenerated => _studentsGenerated;
+
     /// <summary>
     /// Diccionario de estudiantes relacionados por su nombre
     /// </summary>
     Dictionary<string, Student> _students = null;
+
+    [SerializeField]
+    StudentTypeProportion _studentProportion = null;
 
     [SerializeField, Range(0, 1), Tooltip("Proportion of autistic students in class")]
     private float _autisticStudentsProportion = 0.1f;
@@ -61,7 +67,7 @@ public class StudentManager : Singleton<StudentManager>
     /// <summary>
     /// Lista de estudiantes seleccionados, sobre los que se aplicar�n las acciones
     /// </summary>
-    List<string> _selectedStudents = new List<string>();
+    List<Student> _selectedStudents = new List<Student>();
 
     [SerializeField, SerializedDictionary]
     SerializedDictionary<StudentType, BehaviourPatternModifier> _behaviourModifiers = null;
@@ -71,7 +77,6 @@ public class StudentManager : Singleton<StudentManager>
     protected override void Awake()
     {
         base.Awake();
-        _settings = ClassManager.Instance.Settings;
         _activeConflicts = new List<Conflict>();
     }
 
@@ -88,41 +93,29 @@ public class StudentManager : Singleton<StudentManager>
             _behaviourModifiers.Add(StudentType.Autistic, Resources.Load("BehaviourPatterns/" + StudentType.Autistic.ToString()) as BehaviourPatternModifier);
             _behaviourModifiers.Add(StudentType.ADHD, Resources.Load("BehaviourPatterns/" + StudentType.ADHD.ToString()) as BehaviourPatternModifier);
         }
+
+        SetUpListeners();
     }
 
-    private void OnEnable()
+    private void SetUpListeners()
     {
-        if (VoiceActivation.Exists)
-        {
-            VoiceActivation.Instance.OnValidatePartialResponse.AddListener(SelectStudents);
-        }
-        else
-        {
-            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
-        }
+        SpeechManager.Instance.OnNamesDetected.AddListener(SelectStudents);
+    }
+    private void RemoveListeners()
+    {
+        SpeechManager.Instance.OnNamesDetected.RemoveListener(SelectStudents);
     }
 
-    private void OnDisable()
-    {
-        if (VoiceActivation.Exists)
-        {
-            VoiceActivation.Instance.OnValidatePartialResponse.RemoveListener(SelectStudents);
-        }
-        else
-        {
-            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
-        }
-    }
+    private void OnDisable() => RemoveListeners();
+
+    private void OnDestroy() => RemoveListeners();
 
     /// <summary>
     /// Destruye a los estudiantes ya generados y limpia el diccionario de estudiantes
     /// </summary>
     void DestroyStudents()
     {
-        if(_students == null)
-        {
-            _students = new Dictionary<string, Student>();
-        }
+        if(_students == null) _students = new Dictionary<string, Student>();
         else
         {
             foreach (var student in _students)
@@ -131,6 +124,8 @@ public class StudentManager : Singleton<StudentManager>
             }
             _students.Clear();
         }
+
+        _studentsGenerated = false;
     }
 
     /// <summary>
@@ -150,7 +145,7 @@ public class StudentManager : Singleton<StudentManager>
         return st;
     }
 
-    public List<string> GetSelectedStudents()
+    public List<Student> GetSelectedStudents()
     {
         return _selectedStudents;
     }
@@ -303,12 +298,12 @@ public class StudentManager : Singleton<StudentManager>
         foreach (Student student in studentsCopy) { student.StType = SelectStudentType(); LLMManager.Instance.GenerateStudentContext(student); }
     }
 
-    private static StudentType SelectStudentType()
+    private StudentType SelectStudentType()
     {
-        int weightNonParticipative = 90;    // NonParticipative_NonProblematic: 70% (Gran mayoría)
-        int weightParticipative = 10;       // Participative_NonProblematic: 10%
-        int weightTalkative = 10;           // Talkative: 10%
-        int weightProblematic = 10;         // Problematic: 10%
+        int weightNonParticipative = _studentProportion.NonParticipative;    
+        int weightParticipative = _studentProportion.Participative;       
+        int weightTalkative = _studentProportion.Talkative;           
+        int weightProblematic = _studentProportion.Problematic;       
 
         int totalWeights = weightNonParticipative + weightParticipative + weightTalkative + weightProblematic;
         int rand = UnityEngine.Random.Range(0, totalWeights);
@@ -334,6 +329,9 @@ public class StudentManager : Singleton<StudentManager>
     public List<Student> GenerateStudents()
     {
         DestroyStudents();
+
+        if (_settings == null) _settings = ClassManager.Instance.Settings;
+
         List<Student> students = new List<Student>();
 
         List<string> boyNames = _studentNames.BoyNames;
@@ -464,7 +462,18 @@ public class StudentManager : Singleton<StudentManager>
         // We use the stCopy to avoid giving Autistic and ADHD students another type
         AsignStudentType(stCopy);
 
+        foreach (Student st in _nonNormativeStudents)
+        {
+            LLMManager.Instance.GenerateStudentContext(st);
+        }
+
+        // not generating non-normative students context!!!
+        
+
         Didascalia.Utils.Log.Info("Generated students: " + string.Join(", ", students.Select(s => s.Name)), this);
+
+        _studentsGenerated = true;
+
         return students;
     }
 
@@ -475,6 +484,11 @@ public class StudentManager : Singleton<StudentManager>
     public List<Student> GetStudents()
     {
         return _students.Values.ToList();
+    }
+
+    public List<string> GetStudentNames()
+    {
+        return _students.Keys.ToList();
     }
 
     public List<Student> GetAutisticStudents()
@@ -488,40 +502,27 @@ public class StudentManager : Singleton<StudentManager>
     }
 
     /// <summary>
-    /// Selecciona a los estudiantes que la transcripci�n de Wit haya entendido
-    /// Primero, deselecciona a los anteriores que estaban seleccionados antes
-    /// de continuar
+    /// Selects the students given their names in a list
+    /// When calling this method, previous students will be 
+    /// deselected if they're no longer present in the new list
     /// </summary>
-    /// <param name="data"> Transcripci�n de Wit </param>
-    public void SelectStudents(WitMessageData data)
+    /// <param name="names"> Names list </param>
+    public void SelectStudents(List<string> names)
     {
-        // Solo quitamos a los estudiantes anteriormente seleccionados
-        // si el mensaje de Wit ha encontrado nuevos estudiantes
-        if(data.Names.Count > 0)
-        {
-            foreach (string st in _selectedStudents)
-            {
-                _students[st].Deselect();
-            }
-            _selectedStudents.Clear();
-        }
+        // We take out any other names
+        if(names.Count > 0)
+            DeselectStudents();
 
-        foreach(string name in data.Names)
-        {
-            if(_students.TryGetValue(name, out Student st))
-            {
-                st.Select();
-                _selectedStudents.Add(st.Name);
-            }
-        }
+        // Selecting new students
+        foreach(string name in names)
+            SelectStudent(name);
     }
 
     public void DeselectStudents()
     {
-        foreach (string st in _selectedStudents)
-        {
-            _students[st].Deselect();
-        }
+        foreach (Student st in _selectedStudents)
+            st.Deselect();
+
         _selectedStudents.Clear();
     }
 
@@ -530,7 +531,7 @@ public class StudentManager : Singleton<StudentManager>
         if (_students.TryGetValue(name, out Student st))
         {
             st.Select();
-            _selectedStudents.Add(st.Name);
+            _selectedStudents.Add(st);
         }
     }
 
@@ -539,8 +540,8 @@ public class StudentManager : Singleton<StudentManager>
         if(_selectedStudents.Count <= 1) { return; }
         else
         {
-            Student s1 = _students[_selectedStudents[0]];
-            Student s2 = _students[_selectedStudents[1]];
+            Student s1 = _selectedStudents[0];
+            Student s2 = _selectedStudents[1];
 
             StudentBehaviour sb1 = s1.GetComponent<StudentBehaviour>();
             StudentBehaviour sb2 = s2.GetComponent<StudentBehaviour>();
@@ -554,13 +555,11 @@ public class StudentManager : Singleton<StudentManager>
     {
         Student st = null;
         if(studentName != null)
-        {
             st = GetStudentByName(studentName);
-        } 
+
         else if (st == null)
-        {
             st = GetStudents()[UnityEngine.Random.Range(0, _students.Count)];
-        }
+
         return st;
     }
 
@@ -599,9 +598,7 @@ public class StudentManager : Singleton<StudentManager>
         // Hacemos una lista por copia de los valores de los estudiantes y quitamos los que NO queremos coger
         List<Student> students = _students.Values.ToList();
         foreach (Student other in others)
-        {
             students.Remove(other);
-        }
 
         Student st = students[UnityEngine.Random.Range(0, students.Count)];
 

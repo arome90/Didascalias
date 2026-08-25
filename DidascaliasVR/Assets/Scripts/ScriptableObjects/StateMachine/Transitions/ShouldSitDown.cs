@@ -1,25 +1,25 @@
-using Didascalia.StateMachine;
-using UnityEngine;
+//using Didascalia.StateMachine;
+//using UnityEngine;
 
-[CreateAssetMenu(fileName = "ShouldSitDown", menuName = "StateMachine/Transitions/ShouldSitDown")]
-public class ShouldSitDown : Transition
-{
-    StudentBehaviour _behaviour = null;
+//[CreateAssetMenu(fileName = "ShouldSitDown", menuName = "StateMachine/Transitions/ShouldSitDown")]
+//public class ShouldSitDown : Transition
+//{
+//    StudentBehaviour _behaviour = null;
 
-    public override void Initialize(StateMachine machine)
-    {
-        base.Initialize(machine);
+//    public override void Initialize(StateMachine machine)
+//    {
+//        base.Initialize(machine);
 
-        _behaviour = machine.GetComponent<StudentBehaviour>();
-    }
-    public override bool Check()
-    {
-        return _behaviour.State == StudentState.SittingOnChair;
-    }
+//        _behaviour = machine.GetComponent<StudentBehaviour>();
+//    }
+//    public override bool Check()
+//    {
+//        return _behaviour.State == StudentState.SittingOnChair;
+//    }
 
-    public override void OnCheck()
-    {
-        _behaviour.StartSitDownAnimation();
-        _behaviour.StartAcquireTargetRotation(_behaviour.SitSpot.rotation, 1.5f);
-    }
-}
+//    public override void OnCheck()
+//    {
+//        _behaviour.StartSitDownAnimation();
+//        _behaviour.StartAcquireTargetRotation(_behaviour.SitSpot.rotation, 1.5f);
+//    }
+//}

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SessionUIDisplay : MonoBehaviour
+public class WaitForLoadingGame : MonoBehaviour
 {
     [SerializeField]
     [TextArea]
@@ -22,7 +22,13 @@ public class SessionUIDisplay : MonoBehaviour
     IEnumerator LookForSession()
     {
         _button.interactable = false;
-        while (!WebDashboardManager.Instance.IsSessionAvaliable()) yield return null;
+        // waiting for session
+        yield return new WaitUntil(() => WebDashboardManager.Instance.IsSessionAvaliable());
+        Debug.Log("[Loading Menu] Session set up... Waiting for Speech set up.");
+        if (SpeechManager.Instance != null)
+            yield return new WaitUntil(() => SpeechManager.Instance.IsReadyForTranscription);
+        
+        Debug.Log("[Loading Menu] Speech set up. Game is ready.");
 
         AnimateCharacters anim = _text.GetComponent<AnimateCharacters>();
         if (anim != null) anim.StopAnimation();

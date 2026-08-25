@@ -1,16 +1,28 @@
+using Newtonsoft.Json;
 using Renci.SshNet;
 using System;
-using System.IO;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Net;
-using System.Net.Sockets;
-using System.Collections.Concurrent;
-using System.Threading;
+using Newtonsoft.Json.Linq;
+
+
+[Serializable]
+public class LLMResponseData
+{
+    public string Answer;
+    public string Action;
+    // Recibimos los argumentos como una lista de pares clave/valor si usas un Json parser flexible,
+    // o deserializamos Args directamente con Newtonsoft.Json.
+    // public Dictionary<string, object> Args; // Guardará el bloque JSON de los argumentos
+}
 
 public class LLMNetworkManager : Singleton<LLMNetworkManager>
 {
@@ -78,8 +90,10 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
             var connectionInfo = new ConnectionInfo(_sshHost, _sshPort, _sshUser, keyAuthMethod);
 
             _sshClient = new SshClient(connectionInfo);
+
+            _sshClient.KeepAliveInterval = TimeSpan.FromSeconds(10);
+
             _sshClient.Connect();
-            Debug.Log("[SSH] Connection succesful.");
 
             _forwardedPort = new ForwardedPortLocal("127.0.0.1", (uint)_remoteSocketPort, "127.0.0.1", (uint)_remoteSocketPort);
             _sshClient.AddForwardedPort(_forwardedPort);
@@ -93,7 +107,10 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
 
             _tcpClient = new TcpClient("127.0.0.1", _remoteSocketPort);
             _stream = _tcpClient.GetStream();
-            _stream.ReadTimeout = 30000;
+
+            _tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+
+            _stream.ReadTimeout = 3000;
             _stream.WriteTimeout = 3000;
 
             _isListening = true;
@@ -113,17 +130,30 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
     /// <summary>
     /// Listening to LLM socket - Loop
     /// </summary>
-    private void ListenLoop()
+    private async void ListenLoop()
     {
-        while (_isListening && _tcpClient != null && _tcpClient.Connected)
+        try
         {
-            string response = ReadData();
-            if (!string.IsNullOrEmpty(response))
+            while (_isListening && _tcpClient != null)
             {
-                // Encolamos el mensaje para que Unity lo procese en Update()
-                _messagesFromSocket.Enqueue(response);
+                string response = ReadData();
+
+                if (!string.IsNullOrEmpty(response))
+                {
+                    _messagesFromSocket.Enqueue(response);
+                }
+                else
+                {
+                    await Task.Delay(25);
+                }
             }
-            else Thread.Sleep(25);
+
+            Debug.LogWarning("[LLMNetworkManager] Connection was closed.");
+        }
+        catch (Exception ex)
+        {
+            // Esto capturará cualquier excepción invisible que estuviera matando el hilo
+            Debug.LogError($"[LLMNetworkManager] Exception while listening: {ex.Message}\n{ex.StackTrace}");
         }
     }
 
@@ -132,7 +162,29 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
         // Desencolamos las respuestas en el hilo principal de Unity para disparar el evento de forma segura
         while (_messagesFromSocket.TryDequeue(out string message))
         {
+            Debug.Log("Processing data!");
             ProcessData(message);
+        }
+    }
+
+    public LLMResponseData ProcessLLMResponse(string jsonResponse)
+    {
+        if (string.IsNullOrEmpty(jsonResponse))
+        {
+            Debug.LogWarning("[LLMNetworkManager] Received empty answer.");
+            return null;
+        }
+
+        try
+        {
+            // Newtonsoft soporta diccionarios y objetos dinámicos
+            LLMResponseData response = JsonConvert.DeserializeObject<LLMResponseData>(jsonResponse);
+            return response;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[LLMNetworkManager] Error while parsing JSON: {ex.Message}\nReceived JSON: {jsonResponse}");
+            return null;
         }
     }
 
@@ -140,28 +192,72 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
     {
         if (_studentMessageOrder == null || _studentMessageOrder.Count == 0) 
         { 
-            Debug.LogError("LLM was queried without a student assigned");
+            Debug.LogWarning("[LLMNetworkManager] LLM was queried without a student assigned");
             return;
         }
 
-        Student st = _studentMessageOrder.Dequeue();
-        st.Speak(answer);
-        st.AddStudentInteractionContext(answer);
-    }
+        LLMResponseData data = ProcessLLMResponse(answer);
 
-    private void ProcessData(string data)
+        Student st = _studentMessageOrder.Dequeue();
+        st.Speak(data.Answer);
+        st.AddStudentInteractionContext(data.Answer);
+        st.Behaviour.ExecuteActionByNameReflection(data.Action);
+    }
+    //public Dictionary<string, object> ParseArgsJson(string argsJson)
+    //{
+    //    if (string.IsNullOrEmpty(argsJson) || argsJson == "{}")
+    //        return new Dictionary<string, object>();
+
+    //    try
+    //    {
+    //        var jObject = JObject.Parse(argsJson);
+    //        var result = new Dictionary<string, object>();
+
+    //        foreach (var property in jObject.Properties())
+    //        {
+    //            JToken value = property.Value;
+    //            switch (value.Type)
+    //            {
+    //                case JTokenType.Boolean:
+    //                    result[property.Name] = value.Value<bool>();
+    //                    break;
+    //                case JTokenType.Integer:
+    //                    result[property.Name] = value.Value<int>();
+    //                    break;
+    //                case JTokenType.Float:
+    //                    result[property.Name] = value.Value<float>();
+    //                    break;
+    //                case JTokenType.String:
+    //                    result[property.Name] = value.Value<string>();
+    //                    break;
+    //                default:
+    //                    result[property.Name] = value.ToString();
+    //                    break;
+    //            }
+    //        }
+
+    //        return result;
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        Debug.LogError($"[JSON Parser] Error al parsear ArgsJson: {ex.Message}");
+    //        return new Dictionary<string, object>();
+    //    }
+    //}
+
+private void ProcessData(string data)
     {
         string id = data.Substring(0, 2);
         string finalMessage = data.Substring(2);
 
-        if (id == LLM_MESSAGE_ID)
+        if (id == CONNECTION_MESSAGE_ID)
         {
-            OnLLMResponseReceived?.Invoke(finalMessage);
-            Didascalia.Utils.Log.Message($"LLM SAYS: {finalMessage}", this);
+            Didascalia.Utils.Log.Message($"[LLMNetworkManager] LLM CONNECTION SAYS: {finalMessage}", this);
         }
-        else if (id == CONNECTION_MESSAGE_ID)
+        else
         {
-            Didascalia.Utils.Log.Message($"LLM CONNECTION SAYS: {finalMessage}", this);
+            OnLLMResponseReceived?.Invoke(data);
+            Didascalia.Utils.Log.Message($"[LLMNetworkManager] LLM SAYS: {data}", this);
         }
     }
 
@@ -199,7 +295,7 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[Socket] Error enviando datos: {ex.Message}");
+            Debug.LogWarning($"[LLMNetworkManager] Error while sending data: {ex.Message}");
         }
     }
 
@@ -231,7 +327,7 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[Socket] Error leyendo datos: {ex.Message}");
+            Debug.LogWarning($"[LLMNetworkManager] Error while reading data: {ex.Message}");
         }
 
         return null;
@@ -264,7 +360,7 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
         {
             if (_stream != null && _stream.CanWrite)
             {
-                Debug.Log("[Socket] Sending 'DISCONNECT' signal to Python server...");
+                Debug.Log("[LLMNetworkManager] Sending 'DISCONNECT' signal to Python server...");
                 SendData("DISCONNECT");
                 // Leemos la confirmación opcional de Python
                 ReadData();
@@ -272,7 +368,7 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[Socket] 'DISCONNECT' signal was not delivered: {ex.Message}");
+            Debug.LogWarning($"[LLMNetworkManager] 'DISCONNECT' signal was not delivered: {ex.Message}");
         }
 
         // 2. Cerrar Stream y Socket TCP
@@ -280,11 +376,11 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
         {
             _stream?.Close();
             _tcpClient?.Close();
-            Debug.Log("[Socket] TCP socket closed.");
+            Debug.Log("[LLMNetworkManager] TCP socket closed.");
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[Socket] Error closing TCP socket: {ex.Message}");
+            Debug.LogWarning($"[LLMNetworkManager] Error while closing TCP socket: {ex.Message}");
         }
 
         // 3. Detener Túnel SSH y cerrar Cliente SSH
@@ -299,13 +395,19 @@ public class LLMNetworkManager : Singleton<LLMNetworkManager>
             {
                 _sshClient.Disconnect();
                 _sshClient.Dispose();
-                Debug.Log("[SSH] SSH Session succesfully closed.");
+                Debug.Log("[LLMNetworkManager] SSH Session succesfully closed.");
             }
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[SSH] Error closing SSH session: {ex.Message}");
+            Debug.LogWarning($"[LLMNetworkManager] Error closing SSH session: {ex.Message}");
         }
+    }
+
+    public void PingLLM()
+    {
+        Debug.Log("[LLMNetworkManager] Sending ping...");
+        SendData("99Ping!");
     }
 
     // Evento: Se ejecuta cuando se cierra la aplicación de Unity
@@ -328,6 +430,11 @@ public class LLMNetworkManagerEditor : Editor
         if (GUILayout.Button("TestLLMConnection"))
         {
             script.StartLLMConnection();
+        }
+
+        if (GUILayout.Button("Ping LLM"))
+        {
+            script.PingLLM();
         }
 
         // Dibuja el resto de variables públicas por defecto si las hubiera

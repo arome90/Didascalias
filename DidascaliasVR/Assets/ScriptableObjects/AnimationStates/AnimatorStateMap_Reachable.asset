@@ -1,0 +1,1645 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53dc204d9047c094d828565868497607, type: 3}
+  m_Name: AnimatorStateMap_Reachable
+  m_EditorClassIdentifier: Assembly-CSharp::AnimatorStateMap
+  graph:
+  - stateName: SitDownOnChair
+    directTransitions:
+    - targetState: IdleSit
+      conditions: []
+    reachablePaths:
+    - targetState: IdleSit
+      totalSteps: 1
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+    - targetState: IdleTEA
+      totalSteps: 2
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - IdleTEA
+    - targetState: SacarMaterialMal
+      totalSteps: 2
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - SacarMaterialMal
+    - targetState: SacarMaterialMochila
+      totalSteps: 2
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - SacarMaterialMochila
+    - targetState: Anxiety 00
+      totalSteps: 2
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Anxiety 00
+    - targetState: InIncordiar
+      totalSteps: 2
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - InIncordiar
+    - targetState: Molesto
+      totalSteps: 2
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Molesto
+    - targetState: Mo_Left_Idle
+      totalSteps: 2
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Mo_Left_Idle
+    - targetState: Anxiety 01
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Anxiety 00
+      - Anxiety 01
+    - targetState: Cry
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Anxiety 00
+      - Cry
+    - targetState: Off
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Anxiety 00
+      - Off
+    - targetState: Discuss
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Anxiety 00
+      - Discuss
+    - targetState: IncordiarIz
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - InIncordiar
+      - IncordiarIz
+    - targetState: IncordiarDe
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - InIncordiar
+      - IncordiarDe
+    - targetState: MolestoIz
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Molesto
+      - MolestoIz
+    - targetState: MolestoDe
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Molesto
+      - MolestoDe
+    - targetState: Mo_LookBack
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_LookBack
+    - targetState: Mo_Left_Laugh
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_Left_Laugh
+    - targetState: Mo_Left_Laugh_Point
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_Left_Laugh_Point
+    - targetState: Mo_Left_Talk
+      totalSteps: 3
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_Left_Talk
+    - targetState: Anxiety 02
+      totalSteps: 4
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Anxiety 00
+      - Anxiety 01
+      - Anxiety 02
+    - targetState: Mo_Right_Idle
+      totalSteps: 4
+      nextImmediateState: IdleSit
+      immediateConditions: []
+      fullStatePath:
+      - SitDownOnChair
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_LookBack
+      - Mo_Right_Idle
+  - stateName: StandUpFromChair
+    directTransitions:
+    - targetState: Movement Blend Tree
+      conditions: []
+    reachablePaths:
+    - targetState: Movement Blend Tree
+      totalSteps: 1
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromChair
+      - Movement Blend Tree
+    - targetState: EntrarPupitre
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromChair
+      - Movement Blend Tree
+      - EntrarPupitre
+    - targetState: SalirPupitre
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromChair
+      - Movement Blend Tree
+      - SalirPupitre
+    - targetState: AbrirPuertaDentro
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromChair
+      - Movement Blend Tree
+      - AbrirPuertaDentro
+    - targetState: CerrarPuertaDentro
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromChair
+      - Movement Blend Tree
+      - CerrarPuertaDentro
+    - targetState: AbrirPuertaFuera
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromChair
+      - Movement Blend Tree
+      - AbrirPuertaFuera
+    - targetState: CogerMaterialFondo
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromChair
+      - Movement Blend Tree
+      - CogerMaterialFondo
+  - stateName: SitOnFloor
+    directTransitions:
+    - targetState: Idle
+      conditions: []
+    reachablePaths:
+    - targetState: Idle
+      totalSteps: 1
+      nextImmediateState: Idle
+      immediateConditions: []
+      fullStatePath:
+      - SitOnFloor
+      - Idle
+  - stateName: StandUpFromFloor
+    directTransitions:
+    - targetState: Movement Blend Tree
+      conditions: []
+    reachablePaths:
+    - targetState: Movement Blend Tree
+      totalSteps: 1
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromFloor
+      - Movement Blend Tree
+    - targetState: EntrarPupitre
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromFloor
+      - Movement Blend Tree
+      - EntrarPupitre
+    - targetState: SalirPupitre
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromFloor
+      - Movement Blend Tree
+      - SalirPupitre
+    - targetState: AbrirPuertaDentro
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromFloor
+      - Movement Blend Tree
+      - AbrirPuertaDentro
+    - targetState: CerrarPuertaDentro
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromFloor
+      - Movement Blend Tree
+      - CerrarPuertaDentro
+    - targetState: AbrirPuertaFuera
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromFloor
+      - Movement Blend Tree
+      - AbrirPuertaFuera
+    - targetState: CogerMaterialFondo
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - StandUpFromFloor
+      - Movement Blend Tree
+      - CogerMaterialFondo
+  - stateName: IdleSit
+    directTransitions:
+    - targetState: IdleTEA
+      conditions:
+      - parameterName: IsTEA
+        mode: If
+        threshold: 0
+    - targetState: SacarMaterialMal
+      conditions:
+      - parameterName: IsGetMaterialOutWrong
+        mode: If
+        threshold: 0
+    - targetState: SacarMaterialMochila
+      conditions:
+      - parameterName: TriggerGetMaterialOut
+        mode: If
+        threshold: 0
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsAnxious
+        mode: If
+        threshold: 0
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsAnxiousAlternative1
+        mode: If
+        threshold: 0
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: If
+        threshold: 0
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsCrying
+        mode: If
+        threshold: 0
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsOff
+        mode: If
+        threshold: 0
+    - targetState: InIncordiar
+      conditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+    - targetState: Molesto
+      conditions:
+      - parameterName: IsAnnoyed
+        mode: If
+        threshold: 0
+    - targetState: Mo_Left_Idle
+      conditions:
+      - parameterName: IsTurned
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: IdleTEA
+      totalSteps: 1
+      nextImmediateState: IdleTEA
+      immediateConditions:
+      - parameterName: IsTEA
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - IdleTEA
+    - targetState: SacarMaterialMal
+      totalSteps: 1
+      nextImmediateState: SacarMaterialMal
+      immediateConditions:
+      - parameterName: IsGetMaterialOutWrong
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - SacarMaterialMal
+    - targetState: SacarMaterialMochila
+      totalSteps: 1
+      nextImmediateState: SacarMaterialMochila
+      immediateConditions:
+      - parameterName: TriggerGetMaterialOut
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - SacarMaterialMochila
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxious
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative1
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsOff
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+    - targetState: InIncordiar
+      totalSteps: 1
+      nextImmediateState: InIncordiar
+      immediateConditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - InIncordiar
+    - targetState: Molesto
+      totalSteps: 1
+      nextImmediateState: Molesto
+      immediateConditions:
+      - parameterName: IsAnnoyed
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Molesto
+    - targetState: Mo_Left_Idle
+      totalSteps: 1
+      nextImmediateState: Mo_Left_Idle
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Mo_Left_Idle
+    - targetState: Anxiety 01
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxious
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+      - Anxiety 01
+    - targetState: Cry
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxious
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+      - Cry
+    - targetState: Off
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxious
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+      - Off
+    - targetState: Discuss
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxious
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+      - Discuss
+    - targetState: IncordiarIz
+      totalSteps: 2
+      nextImmediateState: InIncordiar
+      immediateConditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - InIncordiar
+      - IncordiarIz
+    - targetState: IncordiarDe
+      totalSteps: 2
+      nextImmediateState: InIncordiar
+      immediateConditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - InIncordiar
+      - IncordiarDe
+    - targetState: MolestoIz
+      totalSteps: 2
+      nextImmediateState: Molesto
+      immediateConditions:
+      - parameterName: IsAnnoyed
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Molesto
+      - MolestoIz
+    - targetState: MolestoDe
+      totalSteps: 2
+      nextImmediateState: Molesto
+      immediateConditions:
+      - parameterName: IsAnnoyed
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Molesto
+      - MolestoDe
+    - targetState: Mo_LookBack
+      totalSteps: 2
+      nextImmediateState: Mo_Left_Idle
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_LookBack
+    - targetState: Mo_Left_Laugh
+      totalSteps: 2
+      nextImmediateState: Mo_Left_Idle
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_Left_Laugh
+    - targetState: Mo_Left_Laugh_Point
+      totalSteps: 2
+      nextImmediateState: Mo_Left_Idle
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_Left_Laugh_Point
+    - targetState: Mo_Left_Talk
+      totalSteps: 2
+      nextImmediateState: Mo_Left_Idle
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_Left_Talk
+    - targetState: Anxiety 02
+      totalSteps: 3
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxious
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Anxiety 00
+      - Anxiety 01
+      - Anxiety 02
+    - targetState: Mo_Right_Idle
+      totalSteps: 3
+      nextImmediateState: Mo_Left_Idle
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IdleSit
+      - Mo_Left_Idle
+      - Mo_LookBack
+      - Mo_Right_Idle
+  - stateName: EstimuladoTEA
+    directTransitions: []
+    reachablePaths: []
+  - stateName: AnxiousTEA
+    directTransitions: []
+    reachablePaths: []
+  - stateName: IdleTEA
+    directTransitions: []
+    reachablePaths: []
+  - stateName: HablarCalmadoTEA
+    directTransitions:
+    - targetState: HablarAnsiosoTEA
+      conditions:
+      - parameterName: IsTEAAnxious
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: HablarAnsiosoTEA
+      totalSteps: 1
+      nextImmediateState: HablarAnsiosoTEA
+      immediateConditions:
+      - parameterName: IsTEAAnxious
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - HablarCalmadoTEA
+      - HablarAnsiosoTEA
+  - stateName: HablarAnsiosoTEA
+    directTransitions:
+    - targetState: HablarCalmadoTEA
+      conditions:
+      - parameterName: IsTEAAnxious
+        mode: IfNot
+        threshold: 0
+    - targetState: HablarCalmadoTEA
+      conditions:
+      - parameterName: IsTalking
+        mode: IfNot
+        threshold: 0
+    reachablePaths:
+    - targetState: HablarCalmadoTEA
+      totalSteps: 1
+      nextImmediateState: HablarCalmadoTEA
+      immediateConditions:
+      - parameterName: IsTEAAnxious
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - HablarAnsiosoTEA
+      - HablarCalmadoTEA
+    - targetState: HablarCalmadoTEA
+      totalSteps: 1
+      nextImmediateState: HablarCalmadoTEA
+      immediateConditions:
+      - parameterName: IsTalking
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - HablarAnsiosoTEA
+      - HablarCalmadoTEA
+  - stateName: Mo_Right_Idle
+    directTransitions:
+    - targetState: Mo_LookBack
+      conditions:
+      - parameterName: IsTurned
+        mode: IfNot
+        threshold: 0
+    - targetState: Mo_LookBack
+      conditions:
+      - parameterName: IsLookingRight
+        mode: IfNot
+        threshold: 0
+    reachablePaths:
+    - targetState: Mo_LookBack
+      totalSteps: 1
+      nextImmediateState: Mo_LookBack
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_Right_Idle
+      - Mo_LookBack
+    - targetState: Mo_LookBack
+      totalSteps: 1
+      nextImmediateState: Mo_LookBack
+      immediateConditions:
+      - parameterName: IsLookingRight
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_Right_Idle
+      - Mo_LookBack
+  - stateName: Mo_Left_Idle
+    directTransitions:
+    - targetState: Mo_LookBack
+      conditions:
+      - parameterName: IsTurned
+        mode: IfNot
+        threshold: 0
+    - targetState: Mo_LookBack
+      conditions:
+      - parameterName: IsLookingLeft
+        mode: IfNot
+        threshold: 0
+    - targetState: Mo_Left_Laugh
+      conditions:
+      - parameterName: IsLaughing
+        mode: If
+        threshold: 0
+      - parameterName: IsPointing
+        mode: IfNot
+        threshold: 0
+    - targetState: Mo_Left_Laugh_Point
+      conditions:
+      - parameterName: IsPointing
+        mode: If
+        threshold: 0
+    - targetState: Mo_Left_Talk
+      conditions:
+      - parameterName: IsTalking
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: Mo_LookBack
+      totalSteps: 1
+      nextImmediateState: Mo_LookBack
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_Left_Idle
+      - Mo_LookBack
+    - targetState: Mo_LookBack
+      totalSteps: 1
+      nextImmediateState: Mo_LookBack
+      immediateConditions:
+      - parameterName: IsLookingLeft
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_Left_Idle
+      - Mo_LookBack
+    - targetState: Mo_Left_Laugh
+      totalSteps: 1
+      nextImmediateState: Mo_Left_Laugh
+      immediateConditions:
+      - parameterName: IsLaughing
+        mode: If
+        threshold: 0
+      - parameterName: IsPointing
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_Left_Idle
+      - Mo_Left_Laugh
+    - targetState: Mo_Left_Laugh_Point
+      totalSteps: 1
+      nextImmediateState: Mo_Left_Laugh_Point
+      immediateConditions:
+      - parameterName: IsPointing
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Mo_Left_Idle
+      - Mo_Left_Laugh_Point
+    - targetState: Mo_Left_Talk
+      totalSteps: 1
+      nextImmediateState: Mo_Left_Talk
+      immediateConditions:
+      - parameterName: IsTalking
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Mo_Left_Idle
+      - Mo_Left_Talk
+    - targetState: Mo_Right_Idle
+      totalSteps: 2
+      nextImmediateState: Mo_LookBack
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_Left_Idle
+      - Mo_LookBack
+      - Mo_Right_Idle
+  - stateName: Mo_Left_Laugh
+    directTransitions: []
+    reachablePaths: []
+  - stateName: Mo_Left_Laugh_Point
+    directTransitions: []
+    reachablePaths: []
+  - stateName: Mo_Left_Talk
+    directTransitions: []
+    reachablePaths: []
+  - stateName: Mo_LookBack
+    directTransitions:
+    - targetState: Mo_Right_Idle
+      conditions:
+      - parameterName: IsTurned
+        mode: IfNot
+        threshold: 0
+    - targetState: Mo_Right_Idle
+      conditions:
+      - parameterName: IsLookingBack
+        mode: IfNot
+        threshold: 0
+    reachablePaths:
+    - targetState: Mo_Right_Idle
+      totalSteps: 1
+      nextImmediateState: Mo_Right_Idle
+      immediateConditions:
+      - parameterName: IsTurned
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_LookBack
+      - Mo_Right_Idle
+    - targetState: Mo_Right_Idle
+      totalSteps: 1
+      nextImmediateState: Mo_Right_Idle
+      immediateConditions:
+      - parameterName: IsLookingBack
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Mo_LookBack
+      - Mo_Right_Idle
+  - stateName: SacarMaterialMochila
+    directTransitions: []
+    reachablePaths: []
+  - stateName: SacarMaterialMal
+    directTransitions: []
+    reachablePaths: []
+  - stateName: Anxiety 00
+    directTransitions:
+    - targetState: Anxiety 01
+      conditions:
+      - parameterName: IsAnxiousAlternative1
+        mode: If
+        threshold: 0
+    - targetState: Cry
+      conditions:
+      - parameterName: IsCrying
+        mode: If
+        threshold: 0
+    - targetState: Off
+      conditions:
+      - parameterName: IsOff
+        mode: If
+        threshold: 0
+    - targetState: Discuss
+      conditions:
+      - parameterName: IsJustifying
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: Anxiety 01
+      totalSteps: 1
+      nextImmediateState: Anxiety 01
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative1
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 00
+      - Anxiety 01
+    - targetState: Cry
+      totalSteps: 1
+      nextImmediateState: Cry
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 00
+      - Cry
+    - targetState: Off
+      totalSteps: 1
+      nextImmediateState: Off
+      immediateConditions:
+      - parameterName: IsOff
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 00
+      - Off
+    - targetState: Discuss
+      totalSteps: 1
+      nextImmediateState: Discuss
+      immediateConditions:
+      - parameterName: IsJustifying
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 00
+      - Discuss
+    - targetState: Anxiety 02
+      totalSteps: 2
+      nextImmediateState: Anxiety 01
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative1
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 00
+      - Anxiety 01
+      - Anxiety 02
+  - stateName: Anxiety 01
+    directTransitions:
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsAnxiousAlternative1
+        mode: IfNot
+        threshold: 0
+    - targetState: Anxiety 02
+      conditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: If
+        threshold: 0
+    - targetState: Cry
+      conditions:
+      - parameterName: IsCrying
+        mode: If
+        threshold: 0
+    - targetState: Off
+      conditions:
+      - parameterName: IsOff
+        mode: If
+        threshold: 0
+    - targetState: Discuss
+      conditions:
+      - parameterName: IsJustifying
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative1
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Anxiety 01
+      - Anxiety 00
+    - targetState: Anxiety 02
+      totalSteps: 1
+      nextImmediateState: Anxiety 02
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 01
+      - Anxiety 02
+    - targetState: Cry
+      totalSteps: 1
+      nextImmediateState: Cry
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 01
+      - Cry
+    - targetState: Off
+      totalSteps: 1
+      nextImmediateState: Off
+      immediateConditions:
+      - parameterName: IsOff
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 01
+      - Off
+    - targetState: Discuss
+      totalSteps: 1
+      nextImmediateState: Discuss
+      immediateConditions:
+      - parameterName: IsJustifying
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Anxiety 01
+      - Discuss
+  - stateName: Cry
+    directTransitions:
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsCrying
+        mode: IfNot
+        threshold: 0
+    reachablePaths:
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Cry
+      - Anxiety 00
+    - targetState: Anxiety 01
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Cry
+      - Anxiety 00
+      - Anxiety 01
+    - targetState: Off
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Cry
+      - Anxiety 00
+      - Off
+    - targetState: Discuss
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Cry
+      - Anxiety 00
+      - Discuss
+    - targetState: Anxiety 02
+      totalSteps: 3
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsCrying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Cry
+      - Anxiety 00
+      - Anxiety 01
+      - Anxiety 02
+  - stateName: Off
+    directTransitions:
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsOff
+        mode: IfNot
+        threshold: 0
+    reachablePaths:
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsOff
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Off
+      - Anxiety 00
+    - targetState: Anxiety 01
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsOff
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Off
+      - Anxiety 00
+      - Anxiety 01
+    - targetState: Cry
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsOff
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Off
+      - Anxiety 00
+      - Cry
+    - targetState: Discuss
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsOff
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Off
+      - Anxiety 00
+      - Discuss
+    - targetState: Anxiety 02
+      totalSteps: 3
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsOff
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Off
+      - Anxiety 00
+      - Anxiety 01
+      - Anxiety 02
+  - stateName: Discuss
+    directTransitions:
+    - targetState: Anxiety 00
+      conditions:
+      - parameterName: IsJustifying
+        mode: IfNot
+        threshold: 0
+    reachablePaths:
+    - targetState: Anxiety 00
+      totalSteps: 1
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsJustifying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Discuss
+      - Anxiety 00
+    - targetState: Anxiety 01
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsJustifying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Discuss
+      - Anxiety 00
+      - Anxiety 01
+    - targetState: Cry
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsJustifying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Discuss
+      - Anxiety 00
+      - Cry
+    - targetState: Off
+      totalSteps: 2
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsJustifying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Discuss
+      - Anxiety 00
+      - Off
+    - targetState: Anxiety 02
+      totalSteps: 3
+      nextImmediateState: Anxiety 00
+      immediateConditions:
+      - parameterName: IsJustifying
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Discuss
+      - Anxiety 00
+      - Anxiety 01
+      - Anxiety 02
+  - stateName: Anxiety 02
+    directTransitions:
+    - targetState: Anxiety 01
+      conditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: IfNot
+        threshold: 0
+    reachablePaths:
+    - targetState: Anxiety 01
+      totalSteps: 1
+      nextImmediateState: Anxiety 01
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Anxiety 02
+      - Anxiety 01
+    - targetState: Anxiety 00
+      totalSteps: 2
+      nextImmediateState: Anxiety 01
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Anxiety 02
+      - Anxiety 01
+      - Anxiety 00
+    - targetState: Cry
+      totalSteps: 2
+      nextImmediateState: Anxiety 01
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Anxiety 02
+      - Anxiety 01
+      - Cry
+    - targetState: Off
+      totalSteps: 2
+      nextImmediateState: Anxiety 01
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Anxiety 02
+      - Anxiety 01
+      - Off
+    - targetState: Discuss
+      totalSteps: 2
+      nextImmediateState: Anxiety 01
+      immediateConditions:
+      - parameterName: IsAnxiousAlternative2
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Anxiety 02
+      - Anxiety 01
+      - Discuss
+  - stateName: Molesto
+    directTransitions:
+    - targetState: MolestoIz
+      conditions:
+      - parameterName: IsLookingLeft
+        mode: If
+        threshold: 0
+    - targetState: MolestoDe
+      conditions:
+      - parameterName: IsLookingRight
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: MolestoIz
+      totalSteps: 1
+      nextImmediateState: MolestoIz
+      immediateConditions:
+      - parameterName: IsLookingLeft
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Molesto
+      - MolestoIz
+    - targetState: MolestoDe
+      totalSteps: 1
+      nextImmediateState: MolestoDe
+      immediateConditions:
+      - parameterName: IsLookingRight
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Molesto
+      - MolestoDe
+  - stateName: MolestoIz
+    directTransitions:
+    - targetState: Molesto
+      conditions: []
+    reachablePaths:
+    - targetState: Molesto
+      totalSteps: 1
+      nextImmediateState: Molesto
+      immediateConditions: []
+      fullStatePath:
+      - MolestoIz
+      - Molesto
+    - targetState: MolestoDe
+      totalSteps: 2
+      nextImmediateState: Molesto
+      immediateConditions: []
+      fullStatePath:
+      - MolestoIz
+      - Molesto
+      - MolestoDe
+  - stateName: MolestoDe
+    directTransitions:
+    - targetState: Molesto
+      conditions: []
+    reachablePaths:
+    - targetState: Molesto
+      totalSteps: 1
+      nextImmediateState: Molesto
+      immediateConditions: []
+      fullStatePath:
+      - MolestoDe
+      - Molesto
+    - targetState: MolestoIz
+      totalSteps: 2
+      nextImmediateState: Molesto
+      immediateConditions: []
+      fullStatePath:
+      - MolestoDe
+      - Molesto
+      - MolestoIz
+  - stateName: IncordiarIz
+    directTransitions:
+    - targetState: InIncordiar
+      conditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: InIncordiar
+      totalSteps: 1
+      nextImmediateState: InIncordiar
+      immediateConditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IncordiarIz
+      - InIncordiar
+    - targetState: IncordiarDe
+      totalSteps: 2
+      nextImmediateState: InIncordiar
+      immediateConditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IncordiarIz
+      - InIncordiar
+      - IncordiarDe
+  - stateName: InIncordiar
+    directTransitions:
+    - targetState: IncordiarIz
+      conditions:
+      - parameterName: IsLookingLeft
+        mode: If
+        threshold: 0
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+    - targetState: IncordiarDe
+      conditions:
+      - parameterName: IsLookingRight
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: IncordiarIz
+      totalSteps: 1
+      nextImmediateState: IncordiarIz
+      immediateConditions:
+      - parameterName: IsLookingLeft
+        mode: If
+        threshold: 0
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - InIncordiar
+      - IncordiarIz
+    - targetState: IncordiarDe
+      totalSteps: 1
+      nextImmediateState: IncordiarDe
+      immediateConditions:
+      - parameterName: IsLookingRight
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - InIncordiar
+      - IncordiarDe
+  - stateName: IncordiarDe
+    directTransitions:
+    - targetState: InIncordiar
+      conditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: InIncordiar
+      totalSteps: 1
+      nextImmediateState: InIncordiar
+      immediateConditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IncordiarDe
+      - InIncordiar
+    - targetState: IncordiarIz
+      totalSteps: 2
+      nextImmediateState: InIncordiar
+      immediateConditions:
+      - parameterName: IsBothering
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - IncordiarDe
+      - InIncordiar
+      - IncordiarIz
+  - stateName: Movement Blend Tree
+    directTransitions:
+    - targetState: EntrarPupitre
+      conditions:
+      - parameterName: TriggerEnterDesk
+        mode: If
+        threshold: 0
+      - parameterName: IsCarryingMaterial
+        mode: IfNot
+        threshold: 0
+    - targetState: SalirPupitre
+      conditions:
+      - parameterName: TriggerExitDesk
+        mode: If
+        threshold: 0
+    - targetState: AbrirPuertaDentro
+      conditions:
+      - parameterName: TriggerOpenDoorInside
+        mode: If
+        threshold: 0
+    - targetState: CerrarPuertaDentro
+      conditions:
+      - parameterName: TriggerCloseDoorInside
+        mode: If
+        threshold: 0
+    - targetState: AbrirPuertaFuera
+      conditions:
+      - parameterName: TriggerOpenDoorOutside
+        mode: If
+        threshold: 0
+    - targetState: CogerMaterialFondo
+      conditions:
+      - parameterName: TriggerGrabClassMaterial
+        mode: If
+        threshold: 0
+    reachablePaths:
+    - targetState: EntrarPupitre
+      totalSteps: 1
+      nextImmediateState: EntrarPupitre
+      immediateConditions:
+      - parameterName: TriggerEnterDesk
+        mode: If
+        threshold: 0
+      - parameterName: IsCarryingMaterial
+        mode: IfNot
+        threshold: 0
+      fullStatePath:
+      - Movement Blend Tree
+      - EntrarPupitre
+    - targetState: SalirPupitre
+      totalSteps: 1
+      nextImmediateState: SalirPupitre
+      immediateConditions:
+      - parameterName: TriggerExitDesk
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Movement Blend Tree
+      - SalirPupitre
+    - targetState: AbrirPuertaDentro
+      totalSteps: 1
+      nextImmediateState: AbrirPuertaDentro
+      immediateConditions:
+      - parameterName: TriggerOpenDoorInside
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Movement Blend Tree
+      - AbrirPuertaDentro
+    - targetState: CerrarPuertaDentro
+      totalSteps: 1
+      nextImmediateState: CerrarPuertaDentro
+      immediateConditions:
+      - parameterName: TriggerCloseDoorInside
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Movement Blend Tree
+      - CerrarPuertaDentro
+    - targetState: AbrirPuertaFuera
+      totalSteps: 1
+      nextImmediateState: AbrirPuertaFuera
+      immediateConditions:
+      - parameterName: TriggerOpenDoorOutside
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Movement Blend Tree
+      - AbrirPuertaFuera
+    - targetState: CogerMaterialFondo
+      totalSteps: 1
+      nextImmediateState: CogerMaterialFondo
+      immediateConditions:
+      - parameterName: TriggerGrabClassMaterial
+        mode: If
+        threshold: 0
+      fullStatePath:
+      - Movement Blend Tree
+      - CogerMaterialFondo
+  - stateName: SalirPupitre
+    directTransitions:
+    - targetState: Movement Blend Tree
+      conditions: []
+    reachablePaths:
+    - targetState: Movement Blend Tree
+      totalSteps: 1
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - SalirPupitre
+      - Movement Blend Tree
+    - targetState: EntrarPupitre
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - SalirPupitre
+      - Movement Blend Tree
+      - EntrarPupitre
+    - targetState: AbrirPuertaDentro
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - SalirPupitre
+      - Movement Blend Tree
+      - AbrirPuertaDentro
+    - targetState: CerrarPuertaDentro
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - SalirPupitre
+      - Movement Blend Tree
+      - CerrarPuertaDentro
+    - targetState: AbrirPuertaFuera
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - SalirPupitre
+      - Movement Blend Tree
+      - AbrirPuertaFuera
+    - targetState: CogerMaterialFondo
+      totalSteps: 2
+      nextImmediateState: Movement Blend Tree
+      immediateConditions: []
+      fullStatePath:
+      - SalirPupitre
+      - Movement Blend Tree
+      - CogerMaterialFondo
+  - stateName: AbrirPuertaDentro
+    directTransitions: []
+    reachablePaths: []
+  - stateName: CerrarPuertaDentro
+    directTransitions: []
+    reachablePaths: []
+  - stateName: AbrirPuertaFuera
+    directTransitions: []
+    reachablePaths: []
+  - stateName: CogerMaterialFondo
+    directTransitions: []
+    reachablePaths: []
+  - stateName: EntrarPupitre
+    directTransitions: []
+    reachablePaths: []
+  - stateName: Idle
+    directTransitions: []
+    reachablePaths: []

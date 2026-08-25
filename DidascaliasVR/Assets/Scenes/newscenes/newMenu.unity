@@ -8800,6 +8800,61 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1047239354}
   m_Mesh: {fileID: -3524915631024688461, guid: beff3c60e6b7bda4aa838802330a89ce, type: 3}
+--- !u!1 &1054660318
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1054660320}
+  - component: {fileID: 1054660319}
+  m_Layer: 0
+  m_Name: SpeechManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1054660319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054660318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcfdaf39596dbe447ac75f7a1a46a398, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpeechManager
+  OnNamesDetected:
+    m_PersistentCalls:
+      m_Calls: []
+  _startConnectionOnAwake: 1
+  _pythonExecutablePath: C:\Universidad\DRM_TFM\whisper-tests\.venv\Scripts\python.exe
+  _scriptPath: C:\Universidad\DRM_TFM\whisper-tests\test.py
+  _serverIP: 127.0.0.1
+  _serverPort: 65433
+  OnTranscriptionReceived:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1054660320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054660318}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 24.16605, y: 1.35741, z: -19.61169}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1057835866
 GameObject:
   m_ObjectHideFlags: 0
@@ -17285,6 +17340,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1346178812}
     - target: {fileID: 3181742776282041157, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetGivenTransformPositionAndRotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 3181742776282041157, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PositionSetter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3181742776282041157, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 8941104705063897804}
@@ -17292,6 +17355,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
       objectReference: {fileID: 664760375}
+    - target: {fileID: 3229284491904932444, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SetGivenTransformPositionAndRotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 3229284491904932444, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PositionSetter, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3229284491904932444, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
       value: 
@@ -17589,6 +17660,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6197440166609515329, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SetGivenTransformPositionAndRotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197440166609515329, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PositionSetter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197440166609515329, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 8941104705063897804}
@@ -17727,6 +17806,10 @@ PrefabInstance:
     - target: {fileID: 8690768848295148146, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8767693515896904343, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: SetGivenTransformPositionAndRotation
       objectReference: {fileID: 0}
     - target: {fileID: 8767693515896904343, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgument
@@ -18012,3 +18095,4 @@ SceneRoots:
   - {fileID: 543856}
   - {fileID: 3918079397096268469}
   - {fileID: 1178935828}
+  - {fileID: 1054660320}

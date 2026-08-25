@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.LightTransport;
 
 /// <summary>
 /// Chico (0) o Chica (1) (de momento)
@@ -17,6 +20,24 @@ public enum StudentType
 
     ADHD,
     Autistic
+}
+
+public struct StudentActionContext
+{
+    public string stateName;
+    public string stateDescription;
+    public float time;
+    public List<string> avaliableActions;
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("Nombre estado: " + stateName);
+        sb.AppendLine("Descripción: " + stateDescription);
+        sb.AppendLine("Realizado hace: " + Mathf.Round(Time.time - time).ToString() + " segundos");
+
+        return sb.ToString();
+    }
 }
 
 /// <summary>
@@ -48,11 +69,17 @@ public class Student : MonoBehaviour
     /// </summary>
     [HideInInspector] public Student NextStudent = null;
 
-    private string _context = null;
-    private string _ctxStateName = null;
-    private string _ctxStateDescription = null;
+    private string _generalContext = null;
+
+    private StudentActionContext _currentActionContext;
 
     private List<string> _interactionHistory = null;
+    private List<StudentActionContext> _previousActionContext = null;
+
+    // in seconds
+    const double _timeToUpdateActionContext = 30;
+
+    private bool _active = true;
 
     NavMeshAgent _agent;
 
@@ -208,35 +235,71 @@ public class Student : MonoBehaviour
 
     public void SetContext(string newContext)
     {
-        _context = newContext;
+        _generalContext = newContext;
     }
 
-    public void SetStateContext(string stateName, string stateDescription)
+    public void SetStateContext(string stateName, string stateDescription, List<string> avaliableMethods)
     {
-        _ctxStateName = stateName;
-        _ctxStateDescription = stateDescription;
+        if (_currentActionContext.stateName != stateName && _currentActionContext.stateName != null)
+        {
+            if (_previousActionContext == null) _previousActionContext = new List<StudentActionContext>();
+            _previousActionContext.Add(_currentActionContext);
+        }
+
+        _currentActionContext.stateName         = stateName;
+        _currentActionContext.stateDescription  = stateDescription;
+        _currentActionContext.time              = Time.time;
+        _currentActionContext.avaliableActions  = avaliableMethods;
     }
 
-    public string GetContext()
+    private async void UpdatePreviousActionContext()
     {
-        return LLMManager.Instance.AddHistoryToContext(_context, _interactionHistory);
+        while (_active)
+        {
+            double currentTime = Time.timeAsDouble;
+
+            // 1. Eliminar todas las acciones que tengan más de 30 segundos
+            _previousActionContext.RemoveAll(action => (currentTime - action.time) > _timeToUpdateActionContext);
+
+            // 2. Determinar el tiempo de espera hasta el próximo ciclo
+            int delayMilliseconds = 1000; // Tiempo por defecto si la lista está vacía
+
+            if (_previousActionContext.Count > 0)
+            {
+                // La acción más antigua está al principio de la lista
+                double oldestActionTime = _previousActionContext[0].time;
+                double timeElapsed = currentTime - oldestActionTime;
+                double timeRemaining = _timeToUpdateActionContext - timeElapsed;
+
+                // Calculamos los milisegundos exactos que le quedan a la primera acción para caducar
+                delayMilliseconds = Mathf.Max(500, (int)(timeRemaining * 1000));
+            }
+
+            // 3. Esperar hasta que la acción más antigua caduque o haya que volver a comprobar
+            await Task.Delay(delayMilliseconds);
+        }
     }
 
-    public void AddStudentInteractionContext(string interactionContext)
+    public string GetContext()                                      => _generalContext;
+
+    public List<string> GetInteractionHistory()                     => _interactionHistory;
+
+    public StudentActionContext GetActionContext()                  => _currentActionContext;
+    public List<StudentActionContext> GetPreviousActionContext()    => _previousActionContext;
+
+    public void AddStudentInteractionContext(string interactionContext) => AddToInteractionContext(Name, interactionContext);
+    public void AddTeacherInteractionContext(string teacherContext) => AddToInteractionContext("Profesor", teacherContext);
+    private void AddToInteractionContext(string name, string interaction)
     {
         if (_interactionHistory == null) _interactionHistory = new List<string>();
-        _interactionHistory.Add(Name + ": " + interactionContext);
-    }
-
-    public void AddTeacherInteractionContext(string interactionContext)
-    {
-        if (_interactionHistory == null) _interactionHistory = new List<string>();
-        _interactionHistory.Add("Profesor: " + interactionContext);
+        _interactionHistory.Add(name + ": " + interaction);
     }
 
     private void Start()
     {
-        if(!_nameTag)
+        _currentActionContext = default;
+
+        if (!_nameTag)
         {
             _nameTag = GetComponentInChildren<TextMeshProUGUI>();
             if (!_nameTag) Debug.LogError("No name tag found in student");
@@ -244,5 +307,12 @@ public class Student : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
 
         _audioSource = GetComponent<AudioSource>();
+
+        Task.Run(UpdatePreviousActionContext);
+    }
+
+    private void OnDestroy()
+    {
+        _active = false;
     }
 }

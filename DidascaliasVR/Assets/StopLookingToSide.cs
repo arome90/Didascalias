@@ -6,6 +6,6 @@ public class StopLookingToSide : StateMachineBehaviour
     {
         StudentBehaviour behaviour = animator.GetComponentInParent<StudentBehaviour>();
         Didascalia.Utils.Log.Info("OnStopLookingToSide: " + behaviour.name, this);
-        behaviour.StopLookingToSide();
+        behaviour.LookToFront();
     }
 }

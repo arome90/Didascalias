@@ -56,6 +56,8 @@ namespace Didascalia.Student
         public static readonly int HashTriggerCloseDoorInside =         Animator.StringToHash("TriggerCloseDoorInside");
         public static readonly int HashTriggerGrabClassMaterial =       Animator.StringToHash("TriggerGrabClassMaterial");
         public static readonly int HashTriggerDeskMaterialOut =         Animator.StringToHash("TriggerDeskMaterialOut");
+
+        public static readonly int HashTriggerTEAWriting =              Animator.StringToHash("TriggerTEAWriting");
         // public static readonly int HashIsGrabClassMaterialIdle =     Animator.StringToHash("IsGrabClassMaterialIdle");
 
         public static readonly int HashTriggerLookBack =                Animator.StringToHash("TriggerLookBack");
@@ -243,6 +245,8 @@ namespace Didascalia.Student
             HashTriggerLookBack,
 
             HashTriggerStopMatFailStandUp,
+
+            HashTriggerTEAWriting
 
         };
         private static readonly HashSet<int> ValidStudentBooleanParameterHashes = new HashSet<int>
@@ -566,10 +570,15 @@ namespace Didascalia.Student
             }
         }
 
-        public void SetWriting(bool writing)
+        public void SetWriting(bool writing, bool isTea)
         {
             SetStudentBooleanParameterValue(HashIsWriting, writing);
             SetDeskBooleanParameterValue(HashIsWriting, writing);
+
+            if(isTea && writing)
+            {
+                SetStudentTriggerParameter(HashTriggerTEAWriting);
+            }
         }
 
         public void TriggerGetMaterialOut()

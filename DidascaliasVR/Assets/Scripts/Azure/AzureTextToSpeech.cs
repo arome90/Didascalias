@@ -8,6 +8,11 @@ using UnityEditor;
 
 public class AzureTextToSpeech : Singleton<AzureTextToSpeech>
 {
+#if UNITY_EDITOR
+    [SerializeField]
+    private bool _worksOnDebug = false;
+#endif
+
     public string SpeakTextEditor = "";
 
     private string mascVoice = "es-ES-TristanMultilingualNeural";
@@ -20,6 +25,9 @@ public class AzureTextToSpeech : Singleton<AzureTextToSpeech>
 
     public async Task Speak(string what, Gender gender, AudioSource source)
     {
+#if UNITY_EDITOR
+        if (!_worksOnDebug) return;
+#endif 
         Uri endpoint = new Uri("https://didascalia-tts-spanish-resource.cognitiveservices.azure.com/");
 
         // var config = SpeechConfig.FromEndpoint(endpoint, subscriptionKey);

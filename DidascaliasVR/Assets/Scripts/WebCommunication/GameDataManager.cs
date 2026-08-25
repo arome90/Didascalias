@@ -95,6 +95,8 @@ namespace Didascalia
 
         private void SendJSON()
         {
+            if (!WebDashboardManager.Exists) return;
+
             lock (_gameData)
             {
                 string text = _gameData.ToJson();

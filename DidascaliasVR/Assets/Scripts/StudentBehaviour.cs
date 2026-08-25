@@ -2,8 +2,8 @@ using Didascalia.Student;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -30,6 +30,9 @@ public enum StudentState
     
     OpeningDoor,
     ClosingDoor,
+
+    IsTryingToSit // Continue por aquí
+
 }
 
 /// <summary>
@@ -214,12 +217,61 @@ public class StudentBehaviour : MonoBehaviour
 
     public StudentState State { get { return _state; } }
 
-    private PlayerResolutionToConflict _currentPlayerResolution = PlayerResolutionToConflict.None;
-
     // this will affect the student's reaction when a conflict is resolved (positively, neutrally or badly)
     BehaviourPattern _behaviourPattern;
 
-    private void Awake()
+    public bool ExecuteActionByNameReflection(string methodName)
+    {
+        if (string.IsNullOrEmpty(methodName) || methodName == "None") return false;
+
+        MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+        if (method == null)
+        {
+            Debug.LogWarning($"[StudentBehaviour] Método '{methodName}' no encontrado.");
+            return false;
+        }
+        #region params commented
+        //ParameterInfo[] parameters = method.GetParameters();
+        //object[] parsedArgs = new object[parameters.Length];
+
+        //for (int i = 0; i < parameters.Length; i++)
+        //{
+        //    string paramName = parameters[i].Name;
+        //    Type paramType = parameters[i].ParameterType;
+
+        //    if (args != null && args.TryGetValue(paramName, out object rawVal))
+        //    {
+        //        // Convertir el valor al tipo nativo de C# requerido (bool, int, float, etc.)
+        //        parsedArgs[i] = Convert.ChangeType(rawVal, paramType);
+        //    }
+        //    else if (parameters[i].HasDefaultValue)
+        //    {
+        //        parsedArgs[i] = parameters[i].DefaultValue;
+        //    }
+        //    else
+        //    {
+        //        Debug.LogError($"[StudentBehaviour] Falta el argumento '{paramName}' para la función '{methodName}'.");
+        //        return false;
+        //    }
+        //}
+        #endregion
+
+        if (method.GetParameters() == null || method.GetParameters().Length == 0)
+        {
+            // Invocar el método en C# pasándole los parámetros
+            method.Invoke(this, null);
+            Debug.Log($"[StudentBehaviour] Función '{methodName}' ejecutada.");
+            return true;
+        }
+        else
+        {
+            Debug.LogError($"[StudentBehaviour] Se intentó ejecutar '{methodName}' sin llamar a sus argumentos.");
+            return false;
+        }
+    }
+
+private void Awake()
     {
         _animator = GetComponentInChildren<Didascalia.Student.StudentAnimatorController>();
     }
@@ -288,6 +340,7 @@ public class StudentBehaviour : MonoBehaviour
         OnExpel.RemoveListener(ChangeStateOnExpel);
     }
 
+    #region State Change
     private void ChangeStateOnStandUpChair()
     {
         ChangeState(StudentState.StandingOnDesk);
@@ -335,41 +388,16 @@ public class StudentBehaviour : MonoBehaviour
         if (_debugStateText != null) _debugStateText.SetText(_state.ToString());
 #endif
     }
-
-    public void SitDownStudent()
-    {
-        OnSitDownRequested.Invoke();
-    }
-
-    public void ExpelStudent()
-    {
-        OnExpellingRequested.Invoke();
-    }
-
-    public void StopLookingToSide()
-    {
-        _animator.StopLookingAtSide();
-
-        _lookDirection = LookDirection.Front;
-    }
-
-    #region SitDown
-    
-    public void StartSitDownAnimation()
-    {
-        UnsetOnFoot();
-    }
     #endregion
 
-    #region Walk
-    IEnumerator StartWalking_(float time)
+    public void LookToFront()
     {
-        if(_carryingClassMaterial)
-            return MovementAnimation_(MovementAction.WalkMaterial, time);
-        else
-            return MovementAnimation_(MovementAction.Walk, time);
+        _lookDirection = LookDirection.Front;
+        _animator.SetLookDirection(_lookDirection);
     }
 
+
+    #region Walk
     IEnumerator StopMoving_(float time)
     {
         return MovementAnimation_(0, time);
@@ -434,6 +462,7 @@ public class StudentBehaviour : MonoBehaviour
         yield return MovingTowardsPoint_(st.Desk.OutOfDeskTransform.position, movementAction);
     }
 
+    [ExposeToLLM("El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACIÓN")]
     public void Expel()
     {
         StopAndClearActionQueue();
@@ -585,8 +614,6 @@ public class StudentBehaviour : MonoBehaviour
         yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.0f);
     }
 
-
-
     IEnumerator EnterClass_()
     {
         if (_state != StudentState.Expelled) yield break;
@@ -620,6 +647,8 @@ public class StudentBehaviour : MonoBehaviour
         // if we're standing on floor, we should be standing
         yield return StandUp_();
 
+        yield return new WaitUntil(() => _agent.enabled);
+
         _agent.SetDestination(point);
         _agent.speed = speed;
         ChangeState(StudentState.Walking);
@@ -634,18 +663,6 @@ public class StudentBehaviour : MonoBehaviour
     }
     #endregion
 
-    #region Conflicts
-    #region StandUp
-    internal void SetOnFoot()
-    {
-        _animator.StandUpFromChair();
-    }
-
-    internal void UnsetOnFoot()
-    {
-        _animator.SitDown();
-    }
-
     public bool IsSitting() { return IsSittingOnChair() || IsSittingOnFloor(); }
     public bool IsSittingOnChair() { return State == StudentState.SittingOnChair; }
     public bool IsSittingOnFloor() { return State == StudentState.SittingOnFloor; }
@@ -659,6 +676,9 @@ public class StudentBehaviour : MonoBehaviour
 
     public bool IsLeavingDesk() { return State == StudentState.LeavingDesk; }
 
+    #region Conflicts
+    #region StandUp
+    [ExposeToLLM("Hace que el estudiante se levante")]
     public void StandUp()
     {
         if (IsSitting())
@@ -696,6 +716,7 @@ public class StudentBehaviour : MonoBehaviour
         return _state == StudentState.SittingOnChair && _st.Desk != _st.OriginalDesk;
     }
 
+    [ExposeToLLM("Hace que el estudiante se siente en el suelo")]
     public void GoToFloor()
     {
         if(IsSittingOnFloor()) return;
@@ -719,6 +740,7 @@ public class StudentBehaviour : MonoBehaviour
         yield return new WaitUntil(() => State == StudentState.SittingOnFloor);
     }
 
+    [ExposeToLLM("Hace que el estudiante se siente en su sitio")]
     public void SitDown()
     {
         if (IsSittingOnTheirDesk()) return;
@@ -754,27 +776,10 @@ public class StudentBehaviour : MonoBehaviour
             ChangeState(StudentState.StandingRightOutOfDesk);
         }
 
-        _agent.enabled = false;
-
         ChangeState(StudentState.EnteringDesk);
         _animator.EnterDesk();
 
-        Vector3 initialPos = _desk.OutOfDeskTransform.position;
-        float animProgress = _animator.GetCurrentStudentAnimationProgress();
-
-        yield return new WaitUntil(() => { animProgress = _animator.GetCurrentStudentAnimationProgress(); 
-            return animProgress < 1.0f; });
-
-        while (_state == StudentState.EnteringDesk)
-        {
-            animProgress = _animator.GetCurrentStudentAnimationProgress();
-            transform.position = Vector3.Lerp(initialPos, SitSpot.position, animProgress);
-            yield return null;
-        }
-        
-        // _animator.GetDeskMaterialOut();
-
-        yield return new WaitUntil(() => !_carryingClassMaterial);
+        yield return new WaitUntil(() => !_carryingClassMaterial && IsStandingOnDesk());
 
         // StandingOnDesk completed
     }
@@ -819,19 +824,13 @@ public class StudentBehaviour : MonoBehaviour
         yield return SitDown_();
     }
 
+    [ExposeToLLM("Hace que el estudiante salga de su escritorio")]
     public void LeaveDesk()
     {
         // return StartCoroutine(LeaveDesk_());
         StopAndClearActionQueue();
         EnqueueAction(LeaveDesk_());
     }
-
-    //IEnumerator LeaveDesk_()
-    //{
-    //    if (_state == StudentState.StandingOutOfDesk || _state == StudentState.EnteringClass || _state == StudentState.Expelled) return null;
-
-    //    return LeaveDeskCoroutine_();
-    //}
 
     public IEnumerator LeaveDesk_()
     {
@@ -842,27 +841,15 @@ public class StudentBehaviour : MonoBehaviour
         ChangeState(StudentState.LeavingDesk);
         _animator.ExitDesk();
 
-
-        Vector3 initialPos = transform.position;
-        float animProgress = 0.0f;
-
-        float speed = _agent.speed;
-        _agent.speed = 0.0f;
-        if(_agent.enabled) _agent.SetDestination(_desk.OutOfDeskTransform.position);
-
-        while (_state == StudentState.LeavingDesk)
-        {
-            animProgress = _animator.GetCurrentStudentAnimationProgress();
-                
-            transform.position = Vector3.Lerp(initialPos, _desk.OutOfDeskTransform.position, animProgress);
-            yield return null;
-        }
-
-        _agent.speed = speed;
-        _agent.enabled = true;
+        yield return new WaitUntil(() => !IsLeavingDesk());
         // leaving desk completed
     }
     #endregion
+    [ExposeToLLM("Justificarse violentamente frente al profesor. HACER SI LA SITUACIÓN LO REQUIERE.")]
+    public void StartJustifying() => SetIsJustifying(true);
+
+    [ExposeToLLM("Dejar de justificarse frente al profesor.")]
+    public void StopJustifying() => SetIsJustifying(false);
     public void SetIsJustifying(bool isJustifying)
     {
         _animator.SetIsJustifying(isJustifying);
@@ -872,34 +859,16 @@ public class StudentBehaviour : MonoBehaviour
         else StopTalking();
     }
 
+    [ExposeToLLM("Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACIÓN LO REQUIERE")]
+    public void StartCrashOut() => SetIsCrying(true);
+
+    [ExposeToLLM("Dejar de llorar ruidosamente.")]
+    public void StopCrashOut() => SetIsCrying(false);
     public void SetIsCrying(bool isCrying)
     {
         _animator.SetIsCrying(isCrying);
         _animator.SetHighAnxiety(isCrying);
     }
-
-    #region Player Actions
-    //public IEnumerator WaitForPlayerAction()
-    //{
-    //    ListenToPlayerResolution();
-
-    //    yield return new WaitUntil(() => _currentPlayerResolution != PlayerResolutionToConflict.None);
-    //}
-
-    //private void ListenToPlayerResolution()
-    //{
-    //    Player.Instance.OnPlayerResolution.RemoveListener(OnPlayerResolution);
-    //    _currentPlayerResolution = PlayerResolutionToConflict.None;
-
-    //    Player.Instance.OnPlayerResolution.AddListener(OnPlayerResolution);
-    //    Player.StartListeningForPlayerResolution();
-    //}
-
-    //private void OnPlayerResolution(PlayerResolutionToConflict res)
-    //{
-    //    _currentPlayerResolution = res;
-    //}
-    #endregion
 
     #region Target
     Transform _target = null;
@@ -926,64 +895,6 @@ public class StudentBehaviour : MonoBehaviour
 
     // CONFLICTS
 
-    #region StandUp
-    //public void StandUpConflict()
-    //{
-    //    if (!IsSittingOnChair()) return;
-
-    //    StopAndClearActionQueue();
-    //    EnqueueAction(StandUpConflict_());
-    //}
-
-    //public IEnumerator StandUpConflict_()
-    //{
-    //    ListenToPlayerResolution();
-    //    yield return StandUp_();
-
-    //    while (_currentPlayerResolution == PlayerResolutionToConflict.None)
-    //        yield return WaitForPlayerAction();
-
-    //    if (_currentPlayerResolution == PlayerResolutionToConflict.Positive) yield return SitDown_();
-    //    else if (_currentPlayerResolution == PlayerResolutionToConflict.Neutral)
-    //    {
-    //        ListenToPlayerResolution();
-    //        yield return BotherSomeone_(null);
-
-    //        while ( _currentPlayerResolution == PlayerResolutionToConflict.None 
-    //            ||  _currentPlayerResolution == PlayerResolutionToConflict.Neutral)
-    //            yield return WaitForPlayerAction();
-
-    //        if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
-    //        {
-    //            StopBotheringTarget();
-    //            yield return Expel_();
-    //        }
-    //        else if (_currentPlayerResolution == PlayerResolutionToConflict.Positive)
-    //        {
-    //            StopBotheringTarget();
-    //            yield return SitDown_();
-    //        }
-    //    }
-    //    else if (_currentPlayerResolution == PlayerResolutionToConflict.Negative)
-    //    {
-    //        SetIsJustifying(true);
-    //        StartTalking();
-
-    //        yield return WaitForPlayerAction();
-
-    //        if (_currentPlayerResolution == PlayerResolutionToConflict.Positive) yield return SitDown_();
-
-    //        // conflict failed 
-    //        else
-    //        {
-    //            SetIsJustifying(false);
-    //            StopTalking();
-    //            yield return Expel_();
-    //        }
-    //    }
-    //}
-    #endregion
-
     #region Yell
     public void Yell()
     {
@@ -996,35 +907,6 @@ public class StudentBehaviour : MonoBehaviour
     }
     #endregion
 
-    #region SitTogether
-    //public void ChangeSitsWithRandomStudentConflict()
-    //{
-    //    Student farStudent = StudentManager.Instance.GetStudentFarFromOtherStudent(_st);
-
-    //    ChangeSitWithGivenStudentConflict(farStudent);
-    //}
-
-    //public void ChangeSitWithGivenStudentConflict(Student farStudent)
-    //{
-    //    StopAndClearActionQueue();
-    //    EnqueueAction(SitNextToRandomStudentConflict_(farStudent));
-    //}
-    #endregion
-
-    #region Draw Conflict
-    //public void DrawDistacted()
-    //{
-    //    // only for adhd sitting kids
-    //    if (!_isADHD
-    //        || !IsSittingOnChair()
-    //        || !_hasAllMaterialOut)
-    //        return;
-
-    //    StopAndClearActionQueue();
-    //    EnqueueAction(DrawDistacted_());
-    //}
-    #endregion
-
     #region BotherOtherStudents
 
     public void SetAnnoyed(bool annoyed, Transform target)
@@ -1033,6 +915,12 @@ public class StudentBehaviour : MonoBehaviour
         _animator.SetAnnoyed(annoyed, _target);
     }
 
+    [ExposeToLLM("Ponerse a molestar a alguien")]
+    // TODO: maybe we can add some randomness to see whom will be the target for such action
+    public void StartBothering() => SetIsBothering(true);
+
+    [ExposeToLLM("Deja de molestar")]
+    public void StopBothering() => SetIsBothering(false);
     public void SetIsBothering(bool isBothering) => _animator.SetIsBothering(isBothering);
 
     public void StopBotheringTarget()
@@ -1072,21 +960,28 @@ public class StudentBehaviour : MonoBehaviour
 
         st.Behaviour.SetAnnoyed(true, transform);
     }
-
-
     #endregion
 
+    [ExposeToLLM("Hace que el estudiante se ponga a escribir")]
+    public void StartWriting() => SetIsWriting(true);
+
+    [ExposeToLLM("Hace que el estudiante deje de escribir")]
+    public void StopWriting() => SetIsWriting(false);
     public void SetIsWriting(bool isWriting)
     {
-        if (HasMaterialPlaced) _animator.SetWriting(isWriting);
+        if (HasMaterialPlaced) _animator.SetWriting(isWriting, _isTEA);
+
     }
     #region Material Gone Wrong
 
+    [ExposeToLLM("Prepara el material de la lección. SOLO HACER SI EL PROFESOR LO PIDE")]
     public void TriggerGetMaterialOut()
     {
         if (IsSittingOnTheirDesk()) _animator.TriggerGetMaterialOut();
     }
     public void TriggerStandUpWhileWrongMaterial() => _animator.SetDeskTriggerParameter(StudentAnimatorController.HashFromTriggerParameter(TriggerStudentParameter.StopMatFailStandUp));
+
+    [ExposeToLLM("Hace que el estudiante TDAH saque el material de su pupitre mal")]
     public void SetIsWrongMaterial(bool isWrong)
     {
         if (_isADHD)
@@ -1113,20 +1008,35 @@ public class StudentBehaviour : MonoBehaviour
     {
         _animator.SortMaterial();
     }
-
     #endregion
+
+    [ExposeToLLM("Entrar en un estado de ansiedad. HACER SI LA SITUACIÓN LO REQUIERE")]
+    public void StartAnxiety() => SetAnxiety(true);
+    [ExposeToLLM("Dejar de tener ansiedad. HACER SI LA SITUACIÓN LO REQUIERE")]
+    public void StopAnxiety() => SetAnxiety(false);
 
     public void SetAnxiety(bool anxious)
     {
         if (_isTEA) _animator.TEA_SetAnxiety(anxious);
         else        _animator.SetAnxiety(anxious);
     }
+
+    [ExposeToLLM("El estudiante se pone muy triste y deja de prestar atención. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACIÓN DESAGRADABLE")]
+    public void StartSad() => SetIsOff(true);
+
+    [ExposeToLLM("El estudiante deja de estar triste.")]
+    public void StopSad() => SetIsOff(false);
     public void SetIsOff(bool isOff)
     {
         if (_isTEA) _animator.TEA_IsOff(isOff);
         else        _animator.SetIsOff(isOff);
     }
 
+    [ExposeToLLM("Entrar en un estado de ansiedad muy fuerte. HACER SI LA SITUACIÓN HA ESCALADO MUCHO")]
+    public void StartHighAnxiety() => SetHighAnxiety(true);
+
+    [ExposeToLLM("Dejar de estar en un estado de fuerte ansiedad.")]
+    public void StopHighAnxiety() => SetHighAnxiety(false);
     public void SetHighAnxiety(bool highAnxiety)
     {
         if (_isTEA) _animator.TEA_SetHighAnxiety(true);
@@ -1134,6 +1044,11 @@ public class StudentBehaviour : MonoBehaviour
     }
 
     #region Hyperstimulate
+    [ExposeToLLM("Sobreestimularse. HACER SI LA SITUACIÓN LO REQUIERE")]
+    public void StartHyperstimulation() => SetIsHyperstimulated(true);
+
+    [ExposeToLLM("Dejar de estar sobreestimulado.")]
+    public void StopHyperstimulation() => SetIsHyperstimulated(false);
     public void SetIsHyperstimulated(bool isHyperstimulated)
     {
         if (isHyperstimulated)  _animator.TEA_StartHyperstimulation();
@@ -1164,23 +1079,6 @@ public class StudentBehaviour : MonoBehaviour
             _animator.SetIsDrawing(isDistracted);
         }
     }
-
-    #region Get Distracted TEA
-
-    //public void GetDistractedTEA()
-    //{
-    //    if (    !_isTEA
-    //        ||  !IsSittingOnChair())
-    //        return;
-
-    //    // OnGetDistractedRequested.Invoke();
-    //    StopAndClearActionQueue();
-    //    EnqueueAction(GetDistracted_());
-    //}
-
-    
-
-    #endregion
 
     // CONFLICT REACTIONS FROM OTHER STUDENTS
     #region Reactions
@@ -1280,7 +1178,6 @@ public class StudentBehaviour : MonoBehaviour
     }
     #endregion
     #endregion
-
     #endregion
 
     #region Action Queue

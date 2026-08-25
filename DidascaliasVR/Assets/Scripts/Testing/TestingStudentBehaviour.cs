@@ -22,8 +22,6 @@ public class TestingStudentBehaviour : MonoBehaviour
         student.GetComponent<StudentBehaviour>().StandUp();
     }
 
-
-
     public void SitDown(Student student)
     {
         student.GetComponent<StudentBehaviour>().SitDown();

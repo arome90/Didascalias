@@ -1,14 +1,16 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using UnityEngine;
 
 public class LLMManager : Singleton<LLMManager>
 {
-    private string _systemPromptStart = "";
-    private string _systemPromptEnd = "";
-    private string _answerTeacherPrompt = "";
+    //private string _systemPromptStart = "";
+    //private string _systemPromptEnd = "";
+    //private string _answerTeacherPrompt = "";
     // private string _generalContext = "";
+
+    private string _systemPromptTemplate = "";
+
     private string _path = Application.streamingAssetsPath + "/Context/";
 
     Dictionary<StudentType, string> _contextByType = null;
@@ -17,102 +19,125 @@ public class LLMManager : Singleton<LLMManager>
     {
         base.Awake();
 
-        // setting system prompt
-        _systemPromptStart = GetTextFromFile(_path + "SystemPromptStart.txt");
-        _systemPromptEnd = GetTextFromFile(_path + "SystemPromptEnd.txt");
-        _answerTeacherPrompt = GetTextFromFile(_path + "AnswerTeacher.txt");
-        // _generalContext = GetTextFromFile(_path + "GeneralContext.txt");
+        _systemPromptTemplate = FileHelper.GetTextFromFile(_path + "SystemPromptTemplate.txt");
 
         // getting all different contexts
         PopulateContextDictionary();
+    }
+
+    private void Start()
+    {
+        SpeechManager.Instance.OnTranscriptionReceived.AddListener(OnTranscriptionReceived);
     }
 
     private void PopulateContextDictionary()
     {
         _contextByType = new Dictionary<StudentType, string>();
 
-        for (int i = 0; i < (int)StudentType.Problematic + 1; ++i)
+        for (int i = 0; i < (int)StudentType.Autistic + 1; ++i)
         {
-            string text = GetTextFromFile((_path + ((StudentType)i).ToString() + ".txt"));
+            string text = FileHelper.GetTextFromFile((_path + ((StudentType)i).ToString() + ".txt"));
             _contextByType.Add((StudentType)i, text);        
         }
-    }
-
-    private string GetTextFromFile(string path)
-    {
-        StreamReader context = new StreamReader(path);
-        return context.ReadToEnd();
     }
 
     public void GenerateStudentContext(Student st, List<string> studentHistory = null)
     {
         StringBuilder sb = new StringBuilder();
 
-        // specifics
-        if (st.Gender == Gender.Girl)
-        {
-            sb.AppendLine($"Eres una estudiante de {st.Age} años llamada {st.Name} en un aula escolar.");
-            sb.AppendLine($"Tu lenguaje, vocabulario, sintaxis y nivel conceptual DEBEN adaptarse estrictamente a una niña/adolescente de {st.Age} años.");
-        }
-        else
-        {
-            sb.AppendLine($"Eres un estudiante de {st.Age} años llamado {st.Name} en un aula escolar.");
-            sb.AppendLine($"Tu lenguaje, vocabulario, sintaxis y nivel conceptual DEBEN adaptarse estrictamente a un niño/adolescente de {st.Age} años.");
-        }
+        // we copy the string
+        string context = new string(_systemPromptTemplate);
 
-        sb.AppendLine($"No utilices explicaciones maduras, lenguaje académico complejo ni un tono formal de adulto a menos que tu perfil o edad lo justifiquen.");
+        context = context
+            .Replace("{NAME}", st.Name)
+            .Replace("{AGE}", st.Age.ToString())
+            .Replace("{GENDER}", st.Gender.ToString())
+            .Replace("{BEHAVIOUR}", st.StType.ToString())
+            .Replace("{BEHAVIOUR_PATTERNS", _contextByType[st.StType]);
 
-        // per-role
-        sb.AppendLine($"Tu Categoría es: {st.StType.ToString()}");
-        sb.AppendLine(_contextByType[st.StType]);
-
-        // rules
-        sb.AppendLine("¡RECUERDA! Estas son tus reglas de formato:");
-        sb.AppendLine($"Responde SIEMPRE en primera persona interpretando a {st.Name}");
-        sb.AppendLine($"JAMÁS rompas el personaje. No agregues saludos fuera de rol, notas aclaratorias ni explicaciones de por qué respondes así");
-
-        st.SetContext(sb.ToString());
+        st.SetContext(context);
     }
 
-    public string AddHistoryToContext(string ctx, List<string> interactionHistory)
+    public string AddHistoryToContext(List<string> interactionHistory)
     {
+        string ctx = "";
         // history - the interactions that the student has seen
         if (interactionHistory != null && interactionHistory.Count > 0)
         {
-            ctx += "\n" + "Estas son las interacciones que has visto o tenido:\n";
             foreach (string context in interactionHistory) ctx += "\t- " + context + "\n";
         }
 
         return ctx;
     }
 
-    private string BuildFinalPrompt(string studentContext, string userQuery = null)
+    private string BuildFinalPrompt(string userQuery, Student st)
     {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine(_systemPromptStart);
+        string context = st.GetContext();
 
-        // TODO: Add general context, such as general class ambience and subject. since general context may change, we should add that here
-        // sb.Append(_generalContext);
+        StudentActionContext currentActionContext = st.GetActionContext();
+        List<StudentActionContext> previousActionHistory = st.GetPreviousActionContext();
 
-        sb.AppendLine(studentContext);
-
-        sb.AppendLine(_systemPromptEnd);
-
-        if (userQuery != null && userQuery.Length > 0)
+        if (previousActionHistory == null) context = context.Replace("{ACTION_HISTORY}", "NO HAN HABIDO ACCIONES PREVIAS");
+        else
         {
-            sb.AppendLine(_answerTeacherPrompt);
+            StringBuilder actionSb = new StringBuilder();
+            foreach (StudentActionContext action in previousActionHistory)
+            {
+                actionSb.AppendLine(action.ToString());
+                actionSb.AppendLine("================");
+            }
+            context = context.Replace("{ACTION_HISTORY}", actionSb.ToString());
+        }
+        context = context.Replace("{CURRENT_ACTION}", currentActionContext.ToString());
 
-            sb.Append($"\"{userQuery}\"");
+        List<string> interactionHistory = st.GetInteractionHistory();
+
+        if (interactionHistory == null) { context = context.Replace("{CONVERSATION_HISTORY}", "NO HAN HABIDO INTERACCIONES"); }
+        else
+        {
+            StringBuilder interactionSb = new StringBuilder();
+            foreach(string interaction in interactionHistory)
+            {
+                interactionSb.AppendLine("  - " + interaction);
+            }
+            context = context.Replace("{CONVERSATION_HISTORY}", interactionSb.ToString());
         }
 
-        return sb.ToString();
+        context = context.Replace("{TEACHER_QUERY}", userQuery);
+        if (currentActionContext.avaliableActions != null && currentActionContext.avaliableActions.Count > 0)
+        {
+            StringBuilder actions = new StringBuilder();
+            foreach (string action in currentActionContext.avaliableActions) 
+            {
+                actions.AppendLine("  - " + action);
+            }
+
+            context = context.Replace("{AVALIABLE_ACTIONS}", actions.ToString());
+        }
+        else
+            context = context.Replace("{AVALIABLE_ACTIONS}", "NINGUNA. PONE 'NONE' COMO ACCIÓN");
+
+        return context;
     }
 
     public void LLMInteraction_TeacherSpeaksToStudent(string userQuery, Student st)
     {
-        string prompt = BuildFinalPrompt(st.GetContext(), userQuery);
+        string prompt = BuildFinalPrompt(userQuery, st);
+
+        LLMNetworkManager.Instance.QueryLLM(prompt, st);
+        
+        Debug.Log($"[LLMManager] Sent prompt: {prompt}");
 
         st.AddTeacherInteractionContext(userQuery);
-        LLMNetworkManager.Instance.QueryLLM(prompt, st);
+    }
+
+    private void OnTranscriptionReceived(string transcription)
+    {
+
+        List<Student> sts = StudentManager.Instance.GetSelectedStudents();
+        Student st = sts != null && sts.Count > 0 ? sts[0] : null;
+        if (st == null) return;
+
+        LLMInteraction_TeacherSpeaksToStudent(transcription, st);
     }
 }

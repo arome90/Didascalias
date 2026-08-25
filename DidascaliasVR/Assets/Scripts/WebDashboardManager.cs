@@ -1,19 +1,12 @@
 ﻿using Didascalia;
 using Meta.WitAi.Json;
-using Renci.SshNet;
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using WebSocketSharp;
-using System.Net;
 
 // -------------------------
 // *************************
