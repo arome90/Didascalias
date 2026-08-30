@@ -1,10 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.LightTransport;
 
 /// <summary>
 /// Chico (0) o Chica (1) (de momento)
@@ -32,9 +32,8 @@ public struct StudentActionContext
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("Nombre estado: " + stateName);
-        sb.AppendLine("Descripción: " + stateDescription);
-        sb.AppendLine("Realizado hace: " + Mathf.Round(Time.time - time).ToString() + " segundos");
+        sb.AppendLine("- Nombre estado: " + stateName);
+        sb.AppendLine("- Descripción: " + stateDescription);
 
         return sb.ToString();
     }
@@ -69,7 +68,12 @@ public class Student : MonoBehaviour
     /// </summary>
     [HideInInspector] public Student NextStudent = null;
 
-    private string _generalContext = null;
+#if UNITY_EDITOR
+    [SerializeField] private TextMeshProUGUI _debugSpeak = null;
+    [SerializeField] private GameObject _debugSpeakCanvas = null;
+#endif
+
+    private string _studentProfile = null;
 
     private StudentActionContext _currentActionContext;
 
@@ -207,7 +211,6 @@ public class Student : MonoBehaviour
     }
 
     [Header("Parameters")]
-    [SerializeField, Tooltip("Student's gender")]
     private Gender _gender;
     /// <summary>
     /// G�nero del estudiante.
@@ -215,6 +218,7 @@ public class Student : MonoBehaviour
     public Gender Gender
     {
         get { return _gender; }
+        set { _gender = value; }
     }
 
     public void Select()
@@ -230,13 +234,35 @@ public class Student : MonoBehaviour
     public async void Speak(string speak)
     {
         Didascalia.Utils.Log.Message(Name + " speaks: "+ speak, this);
-        // if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Gender, _audioSource);
+
+#if UNITY_EDITOR
+        if (_debugSpeak != null)
+        {
+            StartCoroutine(ToggleSpeakDebugCanvas());
+            _debugSpeak.SetText(speak);
+        }
+#endif
+        if (AzureTextToSpeech.Exists)
+        {
+            Behaviour.StartTalking();
+            await AzureTextToSpeech.Instance.Speak(speak, Gender, _audioSource);
+            Behaviour.StopTalking();
+        }
     }
 
-    public void SetContext(string newContext)
+    IEnumerator ToggleSpeakDebugCanvas()
     {
-        _generalContext = newContext;
+        _debugSpeakCanvas.SetActive(true);
+        yield return new WaitForSeconds(6.5f);
+        _debugSpeakCanvas.SetActive(false);
     }
+
+    public void SpeakDidNotUnderstand()
+    {
+        Speak(StudentManager.Instance.MisunderstoodResponses.PossibleResponses.Next());
+    }
+
+    public void SetProfile(string newProfile) => _studentProfile = newProfile;
 
     public void SetStateContext(string stateName, string stateDescription, List<string> avaliableMethods)
     {
@@ -280,7 +306,7 @@ public class Student : MonoBehaviour
         }
     }
 
-    public string GetContext()                                      => _generalContext;
+    public string GetProfile()                                      => _studentProfile;
 
     public List<string> GetInteractionHistory()                     => _interactionHistory;
 
@@ -309,6 +335,8 @@ public class Student : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
 
         Task.Run(UpdatePreviousActionContext);
+
+        _debugSpeakCanvas.SetActive(false);
     }
 
     private void OnDestroy()

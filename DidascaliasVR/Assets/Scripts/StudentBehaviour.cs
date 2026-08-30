@@ -977,7 +977,7 @@ private void Awake()
     [ExposeToLLM("Prepara el material de la lección. SOLO HACER SI EL PROFESOR LO PIDE")]
     public void TriggerGetMaterialOut()
     {
-        if (IsSittingOnTheirDesk()) _animator.TriggerGetMaterialOut();
+        if (IsSittingOnTheirDesk() && !HasMaterialPlaced) _animator.TriggerGetMaterialOut();
     }
     public void TriggerStandUpWhileWrongMaterial() => _animator.SetDeskTriggerParameter(StudentAnimatorController.HashFromTriggerParameter(TriggerStudentParameter.StopMatFailStandUp));
 

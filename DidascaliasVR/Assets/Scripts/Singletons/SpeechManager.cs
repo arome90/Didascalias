@@ -227,7 +227,18 @@ public class SpeechManager : Singleton<SpeechManager>
         List<string> names = DetectNamesInSentence(content);
         if (names.Count > 0) OnNamesDetected?.Invoke(names);
 
-        OnTranscriptionReceived?.Invoke(content);
+        // Separar las palabras de la frase para verificar el total
+        char[] punctuation = new char[] { ' ', '.', ',', ';', '!', '?', '¿', '¡', '"', ':', '-' };
+        string[] words = content.Split(punctuation, StringSplitOptions.RemoveEmptyEntries);
+
+        // Comprobar si hay palabras y si TODAS pertenecen al vocabulario de nombres
+        bool isOnlyNames = words.Length > 0 && words.All(w => _fastVocabularySet.Contains(w));
+
+        // Solo se dispara el evento al LLM si la frase contiene algo más que solo nombres
+        if (!isOnlyNames)
+        {
+            OnTranscriptionReceived?.Invoke(content);
+        }
     }
 
     public void SendData(string data)

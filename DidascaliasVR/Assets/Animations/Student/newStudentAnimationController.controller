@@ -2191,7 +2191,8 @@ MonoBehaviour:
   _isReachable: 1
   stateName: Abriendo Puerta
   stateDescription: "El estudiante est\xE1 abriendo una puerta."
-  availableMethods: []
+  availableMethods:
+  - SitDown - Hace que el estudiante se siente en su sitio
 --- !u!1107 &-6596920839106705037
 AnimatorStateMachine:
   serializedVersion: 6
@@ -4671,7 +4672,21 @@ MonoBehaviour:
   stateName: Molesto
   stateDescription: "El estudiante est\xE1 siendo molestado por un estudiante que
     se encuenrtra frente a \xE9l."
-  availableMethods: []
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - StartWriting - Hace que el estudiante se ponga a escribir
+  - StopBothering - Deja de molestar
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "TriggerGetMaterialOut - Prepara el material de la lecci\xF3n. SOLO HACER SI
+    EL PROFESOR LO PIDE"
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
 --- !u!1109 &-3613754004750994261
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -5471,7 +5486,18 @@ MonoBehaviour:
   stateName: Molesto Izquierda
   stateDescription: "El estudiante est\xE1 siendo molestado por un estudiante que
     se encuenrtra a su derecha."
-  availableMethods: []
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StartWriting - Hace que el estudiante se ponga a escribir
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
 --- !u!114 &-2844815502201591140
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5977,7 +6003,23 @@ MonoBehaviour:
   _isReachable: 1
   stateName: "Sent\xE1ndose"
   stateDescription: "El estudiante est\xE1 sent\xE1ndose en su sitio."
-  availableMethods: []
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - StandUp - Hace que el estudiante se levante
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StartBothering - Ponerse a molestar a alguien
+  - "TriggerGetMaterialOut - Prepara el material de la lecci\xF3n. SOLO HACER SI
+    EL PROFESOR LO PIDE"
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartHighAnxiety - Entrar en un estado de ansiedad muy fuerte. HACER SI LA SITUACI\xD3N
+    HA ESCALADO MUCHO"
 --- !u!1101 &-2085230502010202721
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -7162,7 +7204,8 @@ MonoBehaviour:
   stateName: Saliendo Pupitre
   stateDescription: "El estudiante est\xE1 saliendo de un pupitre para caminar por
     el aula."
-  availableMethods: []
+  availableMethods:
+  - SitDown - Hace que el estudiante se siente en su sitio
 --- !u!1102 &-626063372595203363
 AnimatorState:
   serializedVersion: 6
@@ -9966,7 +10009,8 @@ MonoBehaviour:
   _isReachable: 1
   stateName: Cerrando Puerta
   stateDescription: "El estudiante est\xE1 cerrando una puerta."
-  availableMethods: []
+  availableMethods:
+  - SitDown - Hace que el estudiante se siente en su sitio
 --- !u!114 &1983610380021952932
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10170,6 +10214,7 @@ AnimatorState:
   - {fileID: -7916911367531322205}
   m_StateMachineBehaviours:
   - {fileID: -2454213075314818290}
+  - {fileID: 3722329632393382435}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -10609,7 +10654,18 @@ MonoBehaviour:
   stateName: Molestando
   stateDescription: "El estudiante est\xE1 molestando a un estudiante que se encuentra
     frente a \xE9l."
-  availableMethods: []
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StopBothering - Deja de molestar
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
 --- !u!1101 &2444166222852783199
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -11769,6 +11825,23 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 5408933119357567792}
+--- !u!114 &3722329632393382435
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df094668db174b4289e706b5dc518ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StudentStateContext
+  _isReachable: 1
+  stateName: Cerrando Puerta
+  stateDescription: "El estudiante est\xE1 cerrando una puerta."
+  availableMethods:
+  - SitDown - Hace que el estudiante se siente en su sitio
 --- !u!1102 &3817264828574149788
 AnimatorState:
   serializedVersion: 6
@@ -12360,7 +12433,18 @@ MonoBehaviour:
   stateName: Molestando Izquierda
   stateDescription: "El estudiante est\xE1 molestando a un estudiante que se encuentra
     a su izquierda."
-  availableMethods: []
+  availableMethods:
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StopBothering - Deja de molestar
 --- !u!1102 &4475437581735852868
 AnimatorState:
   serializedVersion: 6
@@ -12668,7 +12752,18 @@ MonoBehaviour:
   stateName: Molestando Derecha
   stateDescription: "El estudiante est\xE1 molestando a un estudiante que se encuentra
     a su derecha."
-  availableMethods: []
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - StopBothering - Deja de molestar
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
 --- !u!1101 &4775753604148767346
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -14914,7 +15009,8 @@ MonoBehaviour:
   _isReachable: 1
   stateName: Abriendo Puerta
   stateDescription: "El estudiante est\xE1 abriendo una puerta."
-  availableMethods: []
+  availableMethods:
+  - SitDown - Hace que el estudiante se siente en su sitio
 --- !u!1102 &7313076463794964824
 AnimatorState:
   serializedVersion: 6
@@ -15289,7 +15385,20 @@ MonoBehaviour:
   stateName: Molesto Derecha
   stateDescription: "El estudiante est\xE1 siendo molestado por un estudiante que
     se encuenrtra a su derecha."
-  availableMethods: []
+  availableMethods:
+  - "StartSad - El estudiante se pone muy triste y deja de prestar atenci\xF3n. LLAMAR
+    COMO CONSECUENCIA DE UNA CONVERSACI\xD3N DESAGRADABLE"
+  - "StartAnxiety - Entrar en un estado de ansiedad. HACER SI LA SITUACI\xD3N LO
+    REQUIERE"
+  - StartWriting - Hace que el estudiante se ponga a escribir
+  - "TriggerGetMaterialOut - Prepara el material de la lecci\xF3n. SOLO HACER SI
+    EL PROFESOR LO PIDE"
+  - "StartCrashOut - Ponerse a llorar contra la mesa, ruidosamente. HACER SI LA SITUACI\xD3N
+    LO REQUIERE"
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
+  - GoToFloor - Hace que el estudiante se siente en el suelo
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
 --- !u!1101 &7661890965628140579
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -16310,7 +16419,12 @@ MonoBehaviour:
   _isReachable: 1
   stateName: De pie
   stateDescription: "El estudiante est\xE1 de pie."
-  availableMethods: []
+  availableMethods:
+  - "Expel - El estudiante se va de clase. LLAMAR COMO CONSECUENCIA DE UNA CONVERSACI\xD3N"
+  - StandUp - Hace que el estudiante se levante
+  - SitDown - Hace que el estudiante se siente en su sitio
+  - "StartJustifying - Justificarse violentamente frente al profesor. HACER SI LA
+    SITUACI\xD3N LO REQUIERE."
 --- !u!1101 &8750344151820928774
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

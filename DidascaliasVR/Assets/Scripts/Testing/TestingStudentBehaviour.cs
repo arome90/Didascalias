@@ -280,6 +280,10 @@ public class TestingStudentBehaviourEditor : Editor
             {
                 LLMManager.Instance.LLMInteraction_TeacherSpeaksToStudent(script._queryLLMWithThis, selectedSt);
             }
+            //if (GUILayout.Button("Interrupt Class"))
+            //{
+            //    LLMManager.Instance.LLMInteraction_StudentSpeaksToTeacher(selectedSt, script._queryLLMWithThis);
+            //}
         }
 
         EditorGUILayout.Space(5);

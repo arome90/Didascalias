@@ -35,6 +35,10 @@ public class StudentManager : Singleton<StudentManager>
     bool _studentsGenerated = false;
     public bool StudentsGenerated => _studentsGenerated;
 
+    [SerializeField]
+    MisunderstoodResponses _misunderstoodResponses = null;
+    public MisunderstoodResponses MisunderstoodResponses => _misunderstoodResponses;
+
     /// <summary>
     /// Diccionario de estudiantes relacionados por su nombre
     /// </summary>
@@ -150,6 +154,8 @@ public class StudentManager : Singleton<StudentManager>
         return _selectedStudents;
     }
 
+    public bool HasSelectedStudents() => _selectedStudents != null && _selectedStudents.Count > 0;
+
     public List<Student> GetStudentsNearOrigin(Student origin)
     {
         Collider[] hitColliders = new Collider[9];
@@ -250,9 +256,7 @@ public class StudentManager : Singleton<StudentManager>
     public void GetMaterialOutAllStudents()
     {
         foreach (Student st in _students.Values)
-        {
             st.Behaviour.TriggerGetMaterialOut();
-        }
     }
 
     // we specifically ask for a copy of the students to avoid any mistakes :)
@@ -274,7 +278,6 @@ public class StudentManager : Singleton<StudentManager>
             int rand = UnityEngine.Random.Range(0, studentsCopy.Count);
             Student st = studentsCopy[rand];
             st.StType = StudentType.Problematic;
-            LLMManager.Instance.GenerateStudentContext(st);
 
             studentsCopy.Remove(st);
 
@@ -282,7 +285,6 @@ public class StudentManager : Singleton<StudentManager>
             rand = UnityEngine.Random.Range(0, studentsCopy.Count);
             st = studentsCopy[rand];
             st.StType = StudentType.Talkative;
-            LLMManager.Instance.GenerateStudentContext(st);
 
             studentsCopy.Remove(st);
 
@@ -290,12 +292,11 @@ public class StudentManager : Singleton<StudentManager>
             rand = UnityEngine.Random.Range(0, studentsCopy.Count);
             st = studentsCopy[rand];
             st.StType = StudentType.Participative_NonProblematic;
-            LLMManager.Instance.GenerateStudentContext(st);
 
             studentsCopy.Remove(st);
         }
 
-        foreach (Student student in studentsCopy) { student.StType = SelectStudentType(); LLMManager.Instance.GenerateStudentContext(student); }
+        foreach (Student student in studentsCopy) { student.StType = SelectStudentType(); }
     }
 
     private StudentType SelectStudentType()
@@ -314,7 +315,7 @@ public class StudentManager : Singleton<StudentManager>
         if (rand < weightParticipative)     return StudentType.Participative_NonProblematic;
 
         rand -= weightParticipative;
-        if (rand < weightTalkative)         return StudentType.Talkative;
+        if (rand <= weightTalkative)         return StudentType.Talkative;
 
         else                                return StudentType.Problematic;
     }
@@ -378,6 +379,7 @@ public class StudentManager : Singleton<StudentManager>
                 int index = UnityEngine.Random.Range(0, boyNames.Count);
                 name = boyNames[index];
                 boyNames.RemoveAt(index);
+                st.Gender = Gender.Boy;
 
                 numBoys++;
             }
@@ -386,13 +388,17 @@ public class StudentManager : Singleton<StudentManager>
                 int index = UnityEngine.Random.Range(0, girlNames.Count);
                 name = girlNames[index];
                 girlNames.RemoveAt(index);
+                st.Gender = Gender.Girl;
 
                 numGirls++;
             }
 
-            LookAtConstraint lookAt = st.GetComponentInChildren<LookAtConstraint>();
-            lookAt.AddSource(constraintSource);
-            lookAt.constraintActive = true;
+            LookAtConstraint[] lookAt = st.GetComponentsInChildren<LookAtConstraint>(true);
+            foreach (LookAtConstraint lookAtConstraint in lookAt)
+            {
+                lookAtConstraint.AddSource(constraintSource);
+                lookAtConstraint.constraintActive = true;
+            }
 
             st.Name = name;
             go.name = name;
@@ -462,14 +468,6 @@ public class StudentManager : Singleton<StudentManager>
         // We use the stCopy to avoid giving Autistic and ADHD students another type
         AsignStudentType(stCopy);
 
-        foreach (Student st in _nonNormativeStudents)
-        {
-            LLMManager.Instance.GenerateStudentContext(st);
-        }
-
-        // not generating non-normative students context!!!
-        
-
         Didascalia.Utils.Log.Info("Generated students: " + string.Join(", ", students.Select(s => s.Name)), this);
 
         _studentsGenerated = true;
@@ -524,6 +522,12 @@ public class StudentManager : Singleton<StudentManager>
             st.Deselect();
 
         _selectedStudents.Clear();
+    }
+
+    public void DeselectStudent(Student st)
+    {
+        _selectedStudents.Remove(st);
+        st.Deselect();
     }
 
     public void SelectStudent(string name)

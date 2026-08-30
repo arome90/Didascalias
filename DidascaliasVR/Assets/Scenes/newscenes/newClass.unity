@@ -5667,7 +5667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25fa21c486fdf1e46bf850a9e00d7816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _worksOnDebug: 0
+  _worksOnDebug: 1
   SpeakTextEditor: Hola como estas
 --- !u!1 &752849491
 GameObject:
@@ -12845,6 +12845,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 582002872}
     m_Modifications:
+    - target: {fileID: 179334837310430799, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 21.32515
@@ -18585,6 +18589,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8624259584575346128, guid: 20bdc1df8e57f01478af61d43bcc409b, type: 3}
     - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _atLeastOneADHD
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
       propertyPath: _conflictPrefab
       value: 
       objectReference: {fileID: 1688649136397734605, guid: 98b13bf9aab134641a0f02c103f58e8a, type: 3}
@@ -18593,12 +18601,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 5ef5ff4a3486a3946af24c9bb520bd19, type: 2}
     - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _atLeastOneAutistic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
       propertyPath: _maxActiveConflicts
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _adhdStudentsProportion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _misunderstoodResponses
+      value: 
+      objectReference: {fileID: 11400000, guid: 51973d2a8ca1da140b2ca63e99d76636, type: 2}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
       propertyPath: _studentPrefab.Array.size
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
+      propertyPath: _autisticStudentsProportion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 946926894553174551, guid: 4d1b3ddebb5a32545b247a90dfc30916, type: 3}
       propertyPath: '_studentPrefab.Array.data[0]'

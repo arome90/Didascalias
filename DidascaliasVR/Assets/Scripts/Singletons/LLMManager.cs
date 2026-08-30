@@ -1,143 +1,96 @@
+using Didascalia.LLM;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 public class LLMManager : Singleton<LLMManager>
 {
-    //private string _systemPromptStart = "";
-    //private string _systemPromptEnd = "";
-    //private string _answerTeacherPrompt = "";
-    // private string _generalContext = "";
+    private void Start() => SpeechManager.Instance.OnTranscriptionReceived.AddListener(OnTranscriptionReceived);
 
-    private string _systemPromptTemplate = "";
-
-    private string _path = Application.streamingAssetsPath + "/Context/";
-
-    Dictionary<StudentType, string> _contextByType = null;
-
-    protected override void Awake()
+    #region Flujo de Ejecución Secuencial
+    public async void LLMInteraction_TeacherSpeaksToStudent(string userQuery, Student st)
     {
-        base.Awake();
-
-        _systemPromptTemplate = FileHelper.GetTextFromFile(_path + "SystemPromptTemplate.txt");
-
-        // getting all different contexts
-        PopulateContextDictionary();
-    }
-
-    private void Start()
-    {
-        SpeechManager.Instance.OnTranscriptionReceived.AddListener(OnTranscriptionReceived);
-    }
-
-    private void PopulateContextDictionary()
-    {
-        _contextByType = new Dictionary<StudentType, string>();
-
-        for (int i = 0; i < (int)StudentType.Autistic + 1; ++i)
+        try
         {
-            string text = FileHelper.GetTextFromFile((_path + ((StudentType)i).ToString() + ".txt"));
-            _contextByType.Add((StudentType)i, text);        
-        }
-    }
+            InputEvaluatorAgent.InputEvaluationResult inputEval = await InputEvaluatorAgent.Instance.EvaluateInputAsync(userQuery, st);
 
-    public void GenerateStudentContext(Student st, List<string> studentHistory = null)
-    {
-        StringBuilder sb = new StringBuilder();
+            inputEval.Transcription = userQuery;
 
-        // we copy the string
-        string context = new string(_systemPromptTemplate);
+            if (inputEval == null)
+                inputEval = new InputEvaluatorAgent.InputEvaluationResult 
+                { Transcription = userQuery, Intent = "Desconocida" };
 
-        context = context
-            .Replace("{NAME}", st.Name)
-            .Replace("{AGE}", st.Age.ToString())
-            .Replace("{GENDER}", st.Gender.ToString())
-            .Replace("{BEHAVIOUR}", st.StType.ToString())
-            .Replace("{BEHAVIOUR_PATTERNS", _contextByType[st.StType]);
-
-        st.SetContext(context);
-    }
-
-    public string AddHistoryToContext(List<string> interactionHistory)
-    {
-        string ctx = "";
-        // history - the interactions that the student has seen
-        if (interactionHistory != null && interactionHistory.Count > 0)
-        {
-            foreach (string context in interactionHistory) ctx += "\t- " + context + "\n";
-        }
-
-        return ctx;
-    }
-
-    private string BuildFinalPrompt(string userQuery, Student st)
-    {
-        string context = st.GetContext();
-
-        StudentActionContext currentActionContext = st.GetActionContext();
-        List<StudentActionContext> previousActionHistory = st.GetPreviousActionContext();
-
-        if (previousActionHistory == null) context = context.Replace("{ACTION_HISTORY}", "NO HAN HABIDO ACCIONES PREVIAS");
-        else
-        {
-            StringBuilder actionSb = new StringBuilder();
-            foreach (StudentActionContext action in previousActionHistory)
+            if (inputEval.Intent.ToLower().Trim() == "general")
             {
-                actionSb.AppendLine(action.ToString());
-                actionSb.AppendLine("================");
-            }
-            context = context.Replace("{ACTION_HISTORY}", actionSb.ToString());
-        }
-        context = context.Replace("{CURRENT_ACTION}", currentActionContext.ToString());
-
-        List<string> interactionHistory = st.GetInteractionHistory();
-
-        if (interactionHistory == null) { context = context.Replace("{CONVERSATION_HISTORY}", "NO HAN HABIDO INTERACCIONES"); }
-        else
-        {
-            StringBuilder interactionSb = new StringBuilder();
-            foreach(string interaction in interactionHistory)
-            {
-                interactionSb.AppendLine("  - " + interaction);
-            }
-            context = context.Replace("{CONVERSATION_HISTORY}", interactionSb.ToString());
-        }
-
-        context = context.Replace("{TEACHER_QUERY}", userQuery);
-        if (currentActionContext.avaliableActions != null && currentActionContext.avaliableActions.Count > 0)
-        {
-            StringBuilder actions = new StringBuilder();
-            foreach (string action in currentActionContext.avaliableActions) 
-            {
-                actions.AppendLine("  - " + action);
+                st = null; // se dirige a todo el mundo
+                return;
             }
 
-            context = context.Replace("{AVALIABLE_ACTIONS}", actions.ToString());
+            else if (st == null && inputEval.Intent.ToLower().Trim().Substring(0, inputEval.Intent.Length - 1) == "pregunt")
+                st = StudentManager.Instance.TryGetStudentByNameOrGetRandom(null);
+
+            else if (st == null && inputEval.Intent.ToLower().Trim() == "sacarmaterial")
+            {
+                StudentManager.Instance.GetMaterialOutAllStudents();
+                return;
+            }
+
+            else if (st == null) return;
+
+            st.AddTeacherInteractionContext(inputEval.Transcription);
+
+            Debug.Log($"Transcription: {inputEval.Transcription}\nIntent: {inputEval.Intent}");
+
+            bool doAction = inputEval.Intent.ToLower().Trim().Substring(0, inputEval.Intent.Length - 1) != "desconocid";
+
+            StudentDialogueResult studentResult = null;
+            if (!doAction) st.SpeakDidNotUnderstand();
+            else
+            {
+                studentResult = await StudentDialogueAgent.Instance.GenerateResponseAsync(st, inputEval);
+                st.Speak(studentResult.Answer);
+
+                if (studentResult.EndOfConversation)
+                    StudentManager.Instance.DeselectStudent(st);
+
+                PeersContextSummarizer.Instance.RegisterOneToOneInteraction(st.Name, inputEval.Transcription, studentResult.Answer);
+
+                if (doAction && ActionSelectorAgent.Exists && ActionSelectorAgent.Instance.CanDoAction(st))
+                {
+                    LLMHelpers.LLMGenericAnswerResult actionResult =
+                        await ActionSelectorAgent.Instance.SelectActionAsync(st, inputEval, studentResult.Answer);
+
+                    if (actionResult != null && !string.IsNullOrEmpty(actionResult.Answer) 
+                        && actionResult.Answer != "null")
+                        st.Behaviour.ExecuteActionByNameReflection(actionResult.Answer);
+                }
+            }
         }
-        else
-            context = context.Replace("{AVALIABLE_ACTIONS}", "NINGUNA. PONE 'NONE' COMO ACCIÓN");
-
-        return context;
-    }
-
-    public void LLMInteraction_TeacherSpeaksToStudent(string userQuery, Student st)
-    {
-        string prompt = BuildFinalPrompt(userQuery, st);
-
-        LLMNetworkManager.Instance.QueryLLM(prompt, st);
-        
-        Debug.Log($"[LLMManager] Sent prompt: {prompt}");
-
-        st.AddTeacherInteractionContext(userQuery);
+        catch (Exception ex)
+        {
+            Debug.LogError($"[LLMManager] Error en la cadena de agentes: {ex.Message}");
+        }
     }
 
     private void OnTranscriptionReceived(string transcription)
     {
-
         List<Student> sts = StudentManager.Instance.GetSelectedStudents();
         Student st = sts != null && sts.Count > 0 ? sts[0] : null;
-        if (st == null) return;
 
         LLMInteraction_TeacherSpeaksToStudent(transcription, st);
     }
+    #endregion
+
+    #region Prompt Student to do Something
+    //public async Task LLMInteraction_StudentSpeaksToTeacher(Student who, string query)
+    //{
+    //    string prompt = BuildStudentContext(_studentInterruptsClass, who);
+
+    //    prompt = prompt.Replace("{USER_QUERY}", query);
+
+    //    string result = await LLMNetworkManager.Instance.QueryLLMAsync(prompt);
+
+    //    who.Speak(result);
+    //}
+    #endregion
 }

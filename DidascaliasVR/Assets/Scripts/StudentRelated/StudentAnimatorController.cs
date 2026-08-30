@@ -12,10 +12,7 @@ namespace Didascalia.Student
         private Animator deskAnimator = null;
         public Animator DeskAnimator => deskAnimator;
         
-        public void SetDeskAnimator(Animator desk)
-        {
-            deskAnimator = desk;
-        }
+        public void SetDeskAnimator(Animator desk) => deskAnimator = desk;
 
         public float GetCurrentStudentAnimationDuration()
         {
