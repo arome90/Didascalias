@@ -134,6 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5236453451172176509}
   - component: {fileID: 6382996505493607107}
+  - component: {fileID: 15406758784413292}
   m_Layer: 0
   m_Name: MOD_PropsSchool
   m_TagString: Untagged
@@ -177,7 +178,7 @@ Animator:
   m_GameObject: {fileID: 591659669543772464}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 63e4a1025143f04468d92fac34cd7538, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1961c6dec5e673b43ab1ecfc30688aa1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -189,6 +190,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &15406758784413292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591659669543772464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4ccb9ff15286d4182cfc9664fbdc60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PropColor
+  bagColors:
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 0.5294118, g: 0.7529412, b: 0.8862745, a: 0}
+  - {r: 0.8862745, g: 0.69411767, b: 0.5294118, a: 0}
+  - {r: 0.8867924, g: 0.6945131, b: 0.6901922, a: 0}
+  - {r: 0.44143826, g: 0.6037736, b: 0.4441897, a: 0}
+  - {r: 1, g: 0.9647059, b: 0.54509807, a: 0}
+  caseColors:
+  - {r: 0.735849, g: 0.735849, b: 0.735849, a: 0}
+  - {r: 1, g: 0.62048197, b: 0, a: 0}
+  - {r: 0.6071809, g: 0.8301887, b: 0.44250622, a: 0}
+  - {r: 0.53838354, g: 0.44313726, b: 0.83137256, a: 0}
+  - {r: 0.83137256, g: 0.44313726, b: 0.6656694, a: 0}
+  bagRenderer: {fileID: 2372081205807613448}
+  caseRenderer: {fileID: 7227364827822414639}
 --- !u!1 &649609251901054429
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,6 +1421,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 984ffe58e7b632447addc3d107d0cb67, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 984ffe58e7b632447addc3d107d0cb67, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 257
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 984ffe58e7b632447addc3d107d0cb67, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
