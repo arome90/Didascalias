@@ -92,11 +92,20 @@ public struct WebStudent
 /// </summary>
 public enum WebEventType
 {
+    // LLMs
+
+    // esto está mal configurado en la web. necesito acceso a la web par acambiar cosas de verdad.
+    ToggleInterruption = 0,
+    Interruption = 1,
+
+    // ...
+    Restart = 2,
+
     // special
     Message = -1,
     
     // original
-    Disrespect = 0,
+    Disrespect = 3,
     SitTogether,
     StandUp,
 
@@ -108,10 +117,6 @@ public enum WebEventType
     Disorganization,
     Impulsivity,
     Inattention,
-
-
-    // ...
-    Restart
 }
 
 [Serializable]
@@ -169,6 +174,7 @@ public struct WebMessage
 /// </summary>
 public class WebDashboardManager : Singleton<WebDashboardManager>
 {
+    const uint WebEventTypeLLMCount = 3;
     const uint WebEventTypeConflictCount = 9;
 
     [SerializeField]
@@ -391,28 +397,54 @@ public class WebDashboardManager : Singleton<WebDashboardManager>
         WebStudent[] webStudents = GenerateWebStudentsInfo();
 
         WebOptions options;
-        var optionsTexts = new string[WebEventTypeConflictCount];
+
+        string[] optionsTexts = null;
+
+        if (LLMNetworkManager.Exists) // Only LLM-Related events
         {
-            optionsTexts[(int)WebEventType.Disrespect] = "Faltar el respeto";
-            optionsTexts[(int)WebEventType.SitTogether] = "Sentarse juntos";
-            optionsTexts[(int)WebEventType.StandUp] = "Levantarse";
+            optionsTexts = new string[WebEventTypeLLMCount];
+            {
+                optionsTexts[(int)WebEventType.Interruption] = "Interruption";
+                optionsTexts[(int)WebEventType.ToggleInterruption] = "Activar/Desactivar Interrupción";
 
-            optionsTexts[(int)WebEventType.Hyperstimulation] = "Hiperestimulación";
-            optionsTexts[(int)WebEventType.Frustration] = "Frustración";
+                optionsTexts[(int)WebEventType.Restart] = "Restart";
+            }
 
-            optionsTexts[(int)WebEventType.Disorganization] = "Desorganización";
-            optionsTexts[(int)WebEventType.Impulsivity] = "Impulsividad";
-            optionsTexts[(int)WebEventType.Inattention] = "Inatención";
-
-            optionsTexts[(int)WebEventType.Restart] = "Restart";
+            foreach (var text in optionsTexts)
+            {
+                Didascalia.Utils.Error.DebugbreakFailIf(
+                    string.IsNullOrEmpty(text),
+                    "WebEventTypeConflictCount is set to " + WebEventTypeConflictCount + " but not all events have a text assigned.",
+                    this
+                );
+            }
         }
-        foreach (var text in optionsTexts)
+        else // Only Conflict Related events
         {
-            Didascalia.Utils.Error.DebugbreakFailIf(
-                string.IsNullOrEmpty(text),
-                "WebEventTypeConflictCount is set to " + WebEventTypeConflictCount + " but not all events have a text assigned.",
-                this
-            );
+            optionsTexts = new string[WebEventTypeConflictCount];
+            {
+                optionsTexts[(int)WebEventType.Disrespect] = "Faltar el respeto";
+                optionsTexts[(int)WebEventType.SitTogether] = "Sentarse juntos";
+                optionsTexts[(int)WebEventType.StandUp] = "Levantarse";
+
+                optionsTexts[(int)WebEventType.Hyperstimulation] = "Hiperestimulación";
+                optionsTexts[(int)WebEventType.Frustration] = "Frustración";
+
+                optionsTexts[(int)WebEventType.Disorganization] = "Desorganización";
+                optionsTexts[(int)WebEventType.Impulsivity] = "Impulsividad";
+                optionsTexts[(int)WebEventType.Inattention] = "Inatención";
+
+                optionsTexts[(int)WebEventType.Restart] = "Restart";
+            }
+
+            foreach (var text in optionsTexts)
+            {
+                Didascalia.Utils.Error.DebugbreakFailIf(
+                    string.IsNullOrEmpty(text),
+                    "WebEventTypeConflictCount is set to " + WebEventTypeConflictCount + " but not all events have a text assigned.",
+                    this
+                );
+            }
         }
 
         options = new WebOptions

@@ -1,4 +1,6 @@
 #if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,7 +33,6 @@ public class ExportAnimatorToCSV
         controller = animator.runtimeAnimatorController as AnimatorController;
         if (controller == null)
         {
-            // Soporte para AnimatorOverrideController si se usara
             AnimatorOverrideController overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
             if (overrideController != null)
             {
@@ -46,15 +47,12 @@ public class ExportAnimatorToCSV
         }
 
         csv = new StringBuilder();
-        // 3. Crear el contenido CSV con encabezado
-        // Usamos ';' como separador por defecto para Excel en español
-        csv.AppendLine("Estado Animator;Nombre;Descripción;Behaviours");
-
+        // 3. Encabezado CSV con la nueva columna para las acciones de ExposeToLLM
+        csv.AppendLine("Estado Animator;Nombre;Descripción;Behaviours;Acciones Disponibles (ExposeToLLM)");
     }
 
     private static void SaveFile(StringBuilder csv)
     {
-        // 4. Ventana para guardar el archivo
         string path = EditorUtility.SaveFilePanel("Guardar Estados para Excel", "", "Estados_Estudiante.csv", "csv");
         if (!string.IsNullOrEmpty(path))
         {
@@ -67,8 +65,8 @@ public class ExportAnimatorToCSV
     public static void ExportStates()
     {
         Initialize(out StringBuilder csv, out AnimatorController controller);
+        if (csv == null || controller == null) return;
 
-        // Recorrer todas las capas del Animator
         foreach (var layer in controller.layers)
         {
             ProcessStateMachine(layer.stateMachine, csv, false);
@@ -81,8 +79,8 @@ public class ExportAnimatorToCSV
     public static void ExportContextualStates()
     {
         Initialize(out StringBuilder csv, out AnimatorController controller);
+        if (csv == null || controller == null) return;
 
-        // Recorrer todas las capas del Animator
         foreach (var layer in controller.layers)
         {
             ProcessStateMachine(layer.stateMachine, csv, true);
@@ -99,15 +97,12 @@ public class ExportAnimatorToCSV
             var state = childState.state;
             string animatorStateName = state.name;
 
-            // 1. Obtener la lista con todos los nombres de los Behaviours adjuntos a este estado
             string allBehaviours = string.Join(", ", state.behaviours.Select(b => b.GetType().Name));
-
-            // Opcional: Limpiar caracteres que puedan romper la estructura del CSV (como comas o punto y coma)
             string cleanBehaviours = allBehaviours.Replace(";", " ");
             string cleanDescription = "";
             string cleanName = "";
+            string cleanMethods = "";
 
-            // Buscar si el estado tiene adjunto nuestro script 'StudentStateContext'
             foreach (var behaviour in state.behaviours)
             {
                 if (behaviour is StudentStateContext context)
@@ -119,20 +114,27 @@ public class ExportAnimatorToCSV
 
                     cleanName = context.stateName.Replace(";", ",");
 
+                    if (context.availableMethods != null && context.availableMethods.Count > 0)
+                    {
+                        cleanMethods = string.Join("|", context.availableMethods)
+                            .Replace("\r", "")
+                            .Replace("\n", " ")
+                            .Replace(";", ",");
+                    }
+
                     if (onlyAppendIfHasContext)
                     {
-                        csv.AppendLine($"{animatorStateName};{cleanName};{cleanDescription};{cleanBehaviours}");
+                        csv.AppendLine($"{animatorStateName};{cleanName};{cleanDescription};{cleanBehaviours};{cleanMethods}");
                         Debug.Log("Estado con contexto exportado");
                     }
                 }
             }
-            // Fila del CSV para el Estado
+
             if (!onlyAppendIfHasContext)
             {
-                csv.AppendLine($"{animatorStateName};{cleanName};{cleanDescription};{cleanBehaviours}");
+                csv.AppendLine($"{animatorStateName};{cleanName};{cleanDescription};{cleanBehaviours};{cleanMethods}");
                 Debug.Log("Estado exportado");
             }
-
         }
 
         // 2. Recorrer las Sub-State Machines
@@ -141,15 +143,12 @@ public class ExportAnimatorToCSV
             var subMachine = childSubMachine.stateMachine;
             string subMachineName = subMachine.name;
 
-            // 1. Obtener la lista con todos los nombres de los Behaviours adjuntos a este estado
             string allBehaviours = string.Join(", ", subMachine.behaviours.Select(b => b.GetType().Name));
-
-            // Opcional: Limpiar caracteres que puedan romper la estructura del CSV (como comas o punto y coma)
             string cleanBehaviours = allBehaviours.Replace(";", " ");
             string cleanDescription = "";
             string cleanName = "";
+            string cleanMethods = "";
 
-            // Buscar si el estado tiene adjunto nuestro script 'StudentStateContext'
             foreach (var behaviour in subMachine.behaviours)
             {
                 if (behaviour is StudentStateContext context)
@@ -161,22 +160,28 @@ public class ExportAnimatorToCSV
 
                     cleanName = context.stateName.Replace(";", ",");
 
+                    if (context.availableMethods != null && context.availableMethods.Count > 0)
+                    {
+                        cleanMethods = string.Join("|", context.availableMethods)
+                            .Replace("\r", "")
+                            .Replace("\n", " ")
+                            .Replace(";", ",");
+                    }
+
                     if (onlyAppendIfHasContext)
                     {
-                        csv.AppendLine($"{subMachineName};{cleanName};{cleanDescription};{cleanBehaviours}");
+                        csv.AppendLine($"{subMachineName};{cleanName};{cleanDescription};{cleanBehaviours};{cleanMethods}");
                         Debug.Log("Estado con contexto exportado");
                     }
                 }
             }
 
-            // Fila del CSV para el Estado
             if (!onlyAppendIfHasContext)
             {
-                csv.AppendLine($"{subMachineName};{cleanName};{cleanDescription};{cleanBehaviours}");
+                csv.AppendLine($"{subMachineName};{cleanName};{cleanDescription};{cleanBehaviours};{cleanMethods}");
                 Debug.Log("Estado exportado");
             }
 
-            // Llamada recursiva para procesar los estados y sub-máquinas que estén DENTRO de esta SubMachine
             ProcessStateMachine(subMachine, csv, onlyAppendIfHasContext);
         }
     }
@@ -187,7 +192,6 @@ public class ImportAnimatorFromExcel
     [MenuItem("Tools/Importar Estados de Animator desde CSV (Excel)")]
     public static void ImportStates()
     {
-        // 1. Validar la selección del GameObject
         GameObject selectedObj = Selection.activeGameObject;
         if (selectedObj == null)
         {
@@ -216,7 +220,6 @@ public class ImportAnimatorFromExcel
             return;
         }
 
-        // 2. Seleccionar el archivo CSV
         string path = EditorUtility.OpenFilePanel("Seleccionar archivo CSV de Estados", "", "csv");
         if (string.IsNullOrEmpty(path)) return;
 
@@ -227,11 +230,9 @@ public class ImportAnimatorFromExcel
             return;
         }
 
-        // 3. Procesar las líneas del CSV (omitimos la cabecera)
         int updatedCount = 0;
         int createdCount = 0;
 
-        // Registrar el AnimatorController en el sistema de deshacer (Undo)
         Undo.RegisterCompleteObjectUndo(controller, "Importar Contexto Animator desde CSV");
 
         for (int i = 1; i < lines.Length; i++)
@@ -239,7 +240,6 @@ public class ImportAnimatorFromExcel
             string line = lines[i].Trim();
             if (string.IsNullOrEmpty(line)) continue;
 
-            // Separar por punto y coma (;)
             string[] parts = line.Split(';');
             if (parts.Length < 3) continue;
 
@@ -247,16 +247,17 @@ public class ImportAnimatorFromExcel
             string newName = parts[1].Trim();
             string newDescription = parts[2].Trim();
 
-            // Quitar la marca de SubMachine si la tuviera del exportador
+            // Leer la quinta columna con las acciones (si existe)
+            string rawMethods = parts.Length >= 5 ? parts[4].Trim() : "";
+
             string targetName = rawAnimatorStateName.Trim();
 
             bool wasCreated = false;
             bool found = false;
 
-            // Recorrer capas para buscar y modificar el estado/submáquina
             foreach (var layer in controller.layers)
             {
-                if (ProcessAndApplyToStateMachine(layer.stateMachine, targetName, newName, newDescription, ref wasCreated))
+                if (ProcessAndApplyToStateMachine(layer.stateMachine, targetName, newName, newDescription, rawMethods, ref wasCreated))
                 {
                     found = true;
                     if (wasCreated) createdCount++;
@@ -271,7 +272,6 @@ public class ImportAnimatorFromExcel
             }
         }
 
-        // Guardar cambios en el asset del AnimatorController
         EditorUtility.SetDirty(controller);
         AssetDatabase.SaveAssets();
 
@@ -283,9 +283,9 @@ public class ImportAnimatorFromExcel
         string targetName,
         string newName,
         string newDescription,
+        string rawMethods,
         ref bool wasCreated)
     {
-        // 1. Buscar entre los estados normales de esta máquina
         foreach (var childState in stateMachine.states)
         {
             var state = childState.state;
@@ -295,6 +295,7 @@ public class ImportAnimatorFromExcel
                     state.behaviours,
                     newName,
                     newDescription,
+                    rawMethods,
                     behaviourToAdd => state.AddStateMachineBehaviour(behaviourToAdd),
                     ref wasCreated
                 );
@@ -302,26 +303,24 @@ public class ImportAnimatorFromExcel
             }
         }
 
-        // 2. Comprobar si el nombre coincide con la propia Sub-State Machine actual
         if (stateMachine.name == targetName)
         {
             ApplyContextToBehaviours(
                 stateMachine.behaviours,
                 newName,
                 newDescription,
+                rawMethods,
                 behaviourToAdd => stateMachine.AddStateMachineBehaviour(behaviourToAdd),
                 ref wasCreated
             );
             return true;
         }
 
-        // 3. Recorrer las submáquinas hijo (recursividad para descendientes)
         foreach (var childSubMachine in stateMachine.stateMachines)
         {
             var subMachine = childSubMachine.stateMachine;
 
-            // Llamada recursiva para buscar tanto dentro de la submáquina como en ella misma
-            if (ProcessAndApplyToStateMachine(subMachine, targetName, newName, newDescription, ref wasCreated))
+            if (ProcessAndApplyToStateMachine(subMachine, targetName, newName, newDescription, rawMethods, ref wasCreated))
             {
                 return true;
             }
@@ -334,12 +333,12 @@ public class ImportAnimatorFromExcel
         StateMachineBehaviour[] existingBehaviours,
         string newName,
         string newDescription,
+        string rawMethods,
         System.Func<System.Type, StateMachineBehaviour> addBehaviourFunc,
         ref bool wasCreated)
     {
         StudentStateContext targetContext = null;
 
-        // 1. Buscar si ya existe el componente
         foreach (var behaviour in existingBehaviours)
         {
             if (behaviour is StudentStateContext context)
@@ -349,7 +348,6 @@ public class ImportAnimatorFromExcel
             }
         }
 
-        // 2. Si no existe, crearlo dinámicamente
         if (targetContext == null)
         {
             targetContext = (StudentStateContext)addBehaviourFunc(typeof(StudentStateContext));
@@ -360,10 +358,29 @@ public class ImportAnimatorFromExcel
             wasCreated = false;
         }
 
-        // 3. Modificar los valores e indicar cambios
         Undo.RecordObject(targetContext, "Modificar StudentStateContext");
         targetContext.stateName = newName;
         targetContext.stateDescription = newDescription;
+
+        // Deserializar la lista de acciones separadas por '|'
+        if (targetContext.availableMethods == null)
+            targetContext.availableMethods = new List<string>();
+        else
+            targetContext.availableMethods.Clear();
+
+        if (!string.IsNullOrEmpty(rawMethods))
+        {
+            string[] parsedMethods = rawMethods.Split('|');
+            foreach (var method in parsedMethods)
+            {
+                string trimmed = method.Trim();
+                if (!string.IsNullOrEmpty(trimmed))
+                {
+                    targetContext.availableMethods.Add(trimmed);
+                }
+            }
+        }
+
         EditorUtility.SetDirty(targetContext);
     }
 }

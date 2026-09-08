@@ -31,8 +31,6 @@ public enum StudentState
     OpeningDoor,
     ClosingDoor,
 
-    IsTryingToSit // Continue por aquí
-
 }
 
 /// <summary>
@@ -471,6 +469,8 @@ private void Awake()
 
     public IEnumerator Expel_()
     {
+        if (_state == StudentState.Expelled) yield break;
+        
         yield return MoveToFrontDoor_();
         yield return OpenDoorInside_();
         yield return MovementAnimationAndRotate_(ClassManager.Instance.FrontDoor.OutsideStandingPoint, 0.95f);

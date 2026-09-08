@@ -57,6 +57,8 @@ public class ClassManager : Singleton<ClassManager>
 
     public float DeskDistance { get { return _deskDistance; } }
 
+    private bool _interruptClass = true;
+
     // Metodos publicos con los que cambiar las settings
     #region Settings Change
 
@@ -453,16 +455,30 @@ public class ClassManager : Singleton<ClassManager>
     {
         Didascalia.Utils.Log.Info("WebMessageType: " + message.id, this);
         
-        string actionInfo = "Web Event Called";
         string typeInfo = message.id.ToString();
         List<string> alumnxsInfo = new List<string>();
 
         Conflict conflict = null;
         switch (message.id)
         {
+            case WebEventType.ToggleInterruption:
+                _interruptClass = !_interruptClass;
+                break;
+            case WebEventType.Interruption:
+                LLMManager.Instance.StudentInterruptsTeacher(
+                        StudentManager.Instance.TryGetStudentByNameOrGetRandom(message.studentName),
+                        message.data);
+                break;
             case WebEventType.Message:
-                Didascalia.Utils.Log.Info("Student Name: " + message.studentName, this);
-                StudentManager.Instance.MakeStudentTalk(message.studentName, message.data);
+                if (_interruptClass) 
+                    LLMManager.Instance.StudentInterruptsTeacher(
+                        StudentManager.Instance.TryGetStudentByNameOrGetRandom(message.studentName), 
+                        message.data);
+                else
+                {
+                    Didascalia.Utils.Log.Info("Student Name: " + message.studentName, this);
+                    StudentManager.Instance.MakeStudentTalk(message.studentName, message.data);
+                }
                 break;
             // TODO: what do we do on restart
             case WebEventType.Restart:
@@ -499,17 +515,13 @@ public class ClassManager : Singleton<ClassManager>
         }
 
         if (conflict == null)
-        {
             Didascalia.Utils.Log.Warning(
                 $"Conflict of type {message.id} was not recognized. "
                 + $"Conflict will not be generated.",
                 this
             );
-        }
         else
-        {
             StudentManager.Instance.HandleConflict(conflict);
-        }
     }
 
     void OnDrawGizmos()

@@ -13,8 +13,8 @@ public class TestingStudentBehaviour : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ClassManager.Instance.StartClass();
-        onClassCreated.Invoke();
+        // ClassManager.Instance.StartClass();
+        // onClassCreated.Invoke();
     }
 
     public void StandUp(Student student)
@@ -278,7 +278,7 @@ public class TestingStudentBehaviourEditor : Editor
 
             if(GUILayout.Button("Query LLM"))
             {
-                LLMManager.Instance.LLMInteraction_TeacherSpeaksToStudent(script._queryLLMWithThis, selectedSt);
+                LLMManager.Instance.TeacherSpeaksToStudent(script._queryLLMWithThis, selectedSt);
             }
             //if (GUILayout.Button("Interrupt Class"))
             //{

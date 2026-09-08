@@ -11,6 +11,17 @@ using UnityEngine.Animations;
 /// </summary>
 public class StudentManager : Singleton<StudentManager>
 {
+    [Serializable]
+    private class AgeSettings
+    {
+        public int minAge;
+        public int maxAge;
+        public int mostCommonAge;
+    }
+
+    [SerializeField]
+    private AgeSettings ageSettings;
+
     [SerializeField,
        Tooltip("Prefabs de estudiante")]
     GameObject[] _boyStudentPrefabs;
@@ -38,6 +49,8 @@ public class StudentManager : Singleton<StudentManager>
     [SerializeField]
     MisunderstoodResponses _misunderstoodResponses = null;
     public MisunderstoodResponses MisunderstoodResponses => _misunderstoodResponses;
+
+    Dictionary<StudentType, List<Student>> _studentsByType = new Dictionary<StudentType, List<Student>>();
 
     /// <summary>
     /// Diccionario de estudiantes relacionados por su nombre
@@ -267,36 +280,16 @@ public class StudentManager : Singleton<StudentManager>
             Debug.LogWarning("La lista de estudiantes está vacía.");
             return;
         }
+        
+        foreach (Student student in studentsCopy) 
+        { 
+            student.StType = SelectStudentType();
 
-        // if there are less than five students, we do not bother in making them problematic.
-        // it's easier to handle fewer students
-        if (studentsCopy.Count > 5)
-        {
-            // at least one problematic
-            // we can't use TryGetStudentOrGetRandom() because this method is called before all students are generated and therefore
-            // assigned to the Students list variable
-            int rand = UnityEngine.Random.Range(0, studentsCopy.Count);
-            Student st = studentsCopy[rand];
-            st.StType = StudentType.Problematic;
+            if (!_studentsByType.ContainsKey(student.StType))
+                _studentsByType.Add(student.StType, new List<Student>());
 
-            studentsCopy.Remove(st);
-
-            // at least one talkative
-            rand = UnityEngine.Random.Range(0, studentsCopy.Count);
-            st = studentsCopy[rand];
-            st.StType = StudentType.Talkative;
-
-            studentsCopy.Remove(st);
-
-            // at least one participative
-            rand = UnityEngine.Random.Range(0, studentsCopy.Count);
-            st = studentsCopy[rand];
-            st.StType = StudentType.Participative_NonProblematic;
-
-            studentsCopy.Remove(st);
+            _studentsByType[student.StType].Add(student);
         }
-
-        foreach (Student student in studentsCopy) { student.StType = SelectStudentType(); }
     }
 
     private StudentType SelectStudentType()
@@ -403,7 +396,23 @@ public class StudentManager : Singleton<StudentManager>
             st.Name = name;
             go.name = name;
 
-            st.Age = UnityEngine.Random.Range(13, 16);
+            // Configuración de probabilidades: 80% para la más común, 20% para el resto del rango
+            float commonAgeProbability = 0.7f;
+
+            if (UnityEngine.Random.value < commonAgeProbability)
+                st.Age = ageSettings.mostCommonAge;
+            else
+            {   
+                // Selecciona una edad excluyendo 'mostCommonAge'
+                int age = UnityEngine.Random.Range(ageSettings.minAge, ageSettings.maxAge);
+
+                if (age >= ageSettings.mostCommonAge)
+                {
+                    age++;
+                }
+
+                st.Age = age;
+            }
 
             students.Add(st);
             _students.Add(st.Name, st);
@@ -553,6 +562,20 @@ public class StudentManager : Singleton<StudentManager>
             sb1.SitOnNewPlace(s2.Desk);
             sb2.SitOnNewPlace(s1.Desk);
         }
+    }
+
+    public Student GetStudentToAnswerQuestion()
+    {
+        Student st = null;
+
+        float rand = UnityEngine.Random.Range(0.0f, 1.0f);
+
+        if (rand <= 0.5f && _studentsByType.ContainsKey(StudentType.Participative_NonProblematic)) 
+            st = _studentsByType[StudentType.Participative_NonProblematic].Next();
+        else
+            st = _studentsByType.Next().Value.Next();
+
+        return st;
     }
 
     public Student TryGetStudentByNameOrGetRandom(string studentName)

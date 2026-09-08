@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public static class ListExtensions
 {
@@ -33,5 +34,19 @@ public static class ListExtensions
         }
 
         return list[_random.Next(list.Count)];
+    }
+
+    /// <summary>
+    /// Devuelve una clave (Key) aleatoria del diccionario.
+    /// </summary>
+    public static KeyValuePair<TKey, TValue> Next<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary)
+    {
+        if (dictionary == null || dictionary.Count == 0)
+        {
+            throw new System.InvalidOperationException("El diccionario está vacío o es nulo.");
+        }
+
+        int index = _random.Next(dictionary.Count);
+        return dictionary.ElementAt(index);
     }
 }
