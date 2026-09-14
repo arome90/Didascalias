@@ -6,11 +6,15 @@ public class PropColor : MonoBehaviour
     Color[] bagColors;
     [SerializeField]
     Color[] caseColors;
+    [SerializeField]
+    Color[] notebookColors;
 
 
 
     [SerializeField] private Renderer bagRenderer;
     [SerializeField] private Renderer caseRenderer;
+    [SerializeField] private Renderer notebookRenderer;
+
 
     private static readonly int ColorBagID =
         Shader.PropertyToID("_Color_Bag");
@@ -33,6 +37,10 @@ public class PropColor : MonoBehaviour
     private Color GetCaseRandomColor()
     {
         return caseColors[Random.Range(0, caseColors.Length)];
+    }
+    private Color GetNotebookRandomColor()
+    {
+        return notebookColors[Random.Range(0, notebookColors.Length)];
     }
 
     // Update is called once per frame
@@ -67,12 +75,25 @@ public class PropColor : MonoBehaviour
         block.SetColor(ColorCaseID, caseColor);
 
         caseRenderer.SetPropertyBlock(block);
+
+        // ───── CUADERNO ─────
+
+        block.Clear();
+
+        notebookRenderer.GetPropertyBlock(block);
+
+        Color notebookColor = GetNotebookRandomColor();
+
+        block.SetColor(ColorBagID, notebookColor);
+
+        notebookRenderer.SetPropertyBlock(block);
     }
 
     void b()
     {
         bagRenderer.material.SetColor("_Color_Bag", GetBagRandomColor());
         caseRenderer.material.SetColor("_Color_Case", GetCaseRandomColor());
+        notebookRenderer.material.SetColor("_Color_Bag", GetNotebookRandomColor());
     }
 
 }
