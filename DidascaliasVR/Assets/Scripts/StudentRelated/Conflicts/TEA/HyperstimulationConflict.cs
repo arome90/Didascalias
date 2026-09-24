@@ -36,6 +36,8 @@ class HyperstimulationConflict : TEAConflict
     {
         _behaviour.SetIsHyperstimulated(true);
 
+        _behaviour.SetIsHappy(true);
+
         yield return WaitForPlayerAction();
 
         bool isResolved = false;
@@ -50,8 +52,8 @@ class HyperstimulationConflict : TEAConflict
                     break;
 
                 case PlayerResolutionToConflict.Neutral:
-                    HyperstimulationNeutralResolution();
-                    isResolved = true;
+                    // do nothing ??? => andres come up with this with their comments
+                    // WIP
                     break;
 
                 case PlayerResolutionToConflict.Negative:
@@ -62,6 +64,8 @@ class HyperstimulationConflict : TEAConflict
         }
 
         ResolveConflict();
+
+        _behaviour.SetIsHappy(false);
     }
 
     private IEnumerator HyperstimulationPositiveResolution()
@@ -101,12 +105,12 @@ class HyperstimulationConflict : TEAConflict
         _behaviour.StopTalking();
     }
 
-    private void HyperstimulationNeutralResolution()
-    {
-        _behaviour.SetIsHyperstimulated(false);
-        _behaviour.SetIsOff(true);
-        StudentManager.Instance.MakeNearbyStudentsReactToNeutrallyResolvedConflict(_conflictiveStudent);
-    }
+    //private void HyperstimulationNeutralResolution()
+    //{
+    //    _behaviour.SetIsHyperstimulated(false);
+    //    _behaviour.SetIsOff(true);
+    //    StudentManager.Instance.MakeNearbyStudentsReactToNeutrallyResolvedConflict(_conflictiveStudent);
+    //}
 
     // Lógica de resolución negativa separada para mantener el corrutina principal limpia
     private IEnumerator NegativeResolution()

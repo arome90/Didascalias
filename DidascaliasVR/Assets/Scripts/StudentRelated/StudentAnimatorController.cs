@@ -99,6 +99,7 @@ namespace Didascalia.Student
 
         public static readonly int HashIsTurned =                       Animator.StringToHash("IsTurned");
 
+        public static readonly int HashIsHappy =                        Animator.StringToHash("IsHappy");
         public static readonly int HashIsAnxious =                      Animator.StringToHash("IsAnxious");
         public static readonly int HashIsAnxiousAlternative1 =          Animator.StringToHash("IsAnxiousAlternative1");
         public static readonly int HashIsAnxiousAlternative2 =          Animator.StringToHash("IsAnxiousAlternative2");
@@ -261,6 +262,7 @@ namespace Didascalia.Student
             HashIsBored,
             HashIsPhoning,
             HashIsGetMaterialOutWrong,
+            HashIsHappy,
             HashIsAnxious,
             HashIsAnxiousAlternative1,
             HashIsAnxiousAlternative2,
@@ -682,6 +684,8 @@ namespace Didascalia.Student
         public void SetIsLaughing(bool isLaughing)          => SetStudentBooleanParameterValue(HashIsLaughing, isLaughing);
 
         public void SetIsPointing(bool isPointing)          => SetStudentBooleanParameterValue(HashIsPointing, isPointing);
+
+        public void SetIsHappy(bool isHappy)                => SetStudentBooleanParameterValue(HashIsHappy, isHappy);
 
         public void SetIsDrawing(bool draw)
         {

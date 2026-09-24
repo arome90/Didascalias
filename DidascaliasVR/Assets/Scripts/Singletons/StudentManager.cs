@@ -90,30 +90,6 @@ public class StudentManager : Singleton<StudentManager>
         }
     }
 
-    private void OnEnable()
-    {
-        if (VoiceActivation.Exists)
-        {
-            VoiceActivation.Instance.OnValidatePartialResponse.AddListener(SelectStudents);
-        }
-        else
-        {
-            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (VoiceActivation.Exists)
-        {
-            VoiceActivation.Instance.OnValidatePartialResponse.RemoveListener(SelectStudents);
-        }
-        else
-        {
-            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
-        }
-    }
-
     /// <summary>
     /// Destruye a los estudiantes ya generados y limpia el diccionario de estudiantes
     /// </summary>
@@ -485,35 +461,6 @@ public class StudentManager : Singleton<StudentManager>
     public List<Student> GetADHDStudents()
     {
         return _adhdStudents;
-    }
-
-    /// <summary>
-    /// Selecciona a los estudiantes que la transcripci�n de Wit haya entendido
-    /// Primero, deselecciona a los anteriores que estaban seleccionados antes
-    /// de continuar
-    /// </summary>
-    /// <param name="data"> Transcripci�n de Wit </param>
-    public void SelectStudents(WitMessageData data)
-    {
-        // Solo quitamos a los estudiantes anteriormente seleccionados
-        // si el mensaje de Wit ha encontrado nuevos estudiantes
-        if(data.Names.Count > 0)
-        {
-            foreach (string st in _selectedStudents)
-            {
-                _students[st].Deselect();
-            }
-            _selectedStudents.Clear();
-        }
-
-        foreach(string name in data.Names)
-        {
-            if(_students.TryGetValue(name, out Student st))
-            {
-                st.Select();
-                _selectedStudents.Add(st.Name);
-            }
-        }
     }
 
     public void DeselectStudents()

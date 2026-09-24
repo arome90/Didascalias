@@ -94,6 +94,8 @@ class GetDistractedTEAConflict : TEAConflict
         if (progress >= 2)
         {
             _behaviour.SetIsDistracted(false);
+            _behaviour.SetAnxiety(false);
+            _behaviour.SetHighAnxiety(false);
             StudentManager.Instance.MakeNearbyStudentsReactToPositivelyResolvedConflict(_conflictiveStudent);
         }
 
