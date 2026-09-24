@@ -19,10 +19,6 @@ public class StudentManager : Singleton<StudentManager>
        Tooltip("Prefabs de estudiante")]
     GameObject[] _girlStudentPrefabs;
 
-    [SerializeField,
-        Tooltip("Prefab que representa un conflicto (con el script Conflict)")]
-    GameObject _conflictPrefab;
-
     [SerializeField, Range(1, 5)]
     private int _maxActiveConflicts = 1;
 
