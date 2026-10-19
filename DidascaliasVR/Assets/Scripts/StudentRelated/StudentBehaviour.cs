@@ -1347,4 +1347,43 @@ public class StudentBehaviour : MonoBehaviour
         _animator.StudentAnimator.SetFloat(Didascalia.Student.StudentAnimatorController.HashFloatSpeed, 0.0f);
     }
     #endregion
+
+    #region JP
+    public void ResetToIdleState()
+    {
+        // 1. Pára qualquer corrotina de movimento ou conflito pendente na fila nativa do aluno
+        StopAndClearActionQueue();
+
+        // 2. Desliga todas as bandeiras emocionais e de conflitos (TEA e TDAH)
+        SetAnxiety(false);
+        SetHighAnxiety(false);
+        SetIsHyperstimulated(false);
+        SetIsOff(false);
+        SetIsDistracted(false);
+        SetIsCrying(false);
+        SetIsJustifying(false);
+        StopBotheringTarget();
+        StopTalking();
+
+        // 3. Reseta os estados visuais (olhar para a frente e parar de rir)
+        SetLookDirection(LookDirection.Front);
+        _animator.SetIsLaughing(false);
+        _animator.SetIsPointing(false);
+
+        // 4. Força o estado físico de volta para a cadeira
+        if (!IsSittingOnChair())
+        {
+            // Recoloca o aluno mecanicamente no local da cadeira e atualiza o estado
+            transform.position = SitSpot.position;
+            transform.rotation = SitSpot.rotation;
+            ChangeState(StudentState.SittingOnChair);
+
+            // Força a animação base de sentar
+            _animator.SitDown();
+        }
+
+        // Garante que o navmesh agent está desligado enquanto o aluno está sentado
+        _agent.enabled = false;
+    }
+    #endregion
 }

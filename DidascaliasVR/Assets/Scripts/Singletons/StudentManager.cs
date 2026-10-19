@@ -694,4 +694,97 @@ public class StudentManager : Singleton<StudentManager>
         Player.Instance.RemoveActiveConflict(conflict);
     }
     #endregion
+
+    #region JP
+
+    public void ResetAllStudents()
+    {
+        Debug.Log("<color=#00FFFF>[StudentManager]</color> Comando de RESET GLOBAL recebido. A limpar conflitos e reiniciar alunos...");
+
+        // Limpa o registo central de conflitos ativos para libertar a sala
+        _activeConflicts.Clear();
+
+        foreach (Student st in GetStudents())
+        {
+            if (st != null && st.Behaviour != null)
+            {
+                // 1. Pára as animações
+                st.Behaviour.ResetToIdleState();
+
+                // 2. Se tiver um conflito, usa a função interna para o parar (repõe o nome a branco e liberta a instância)
+                if (st.ActiveConflict != null)
+                {
+                    st.StopConflict();
+                }
+
+                // 3. Limpa a variável interna do aluno
+                st.SetConflict(null);
+            }
+        }
+    }
+
+
+    public void GenerateConflictForSpecificStudent(string studentName, ConflictType type)
+    {
+        Student targetStudent = GetStudentByName(studentName);
+        if (targetStudent == null)
+        {
+            Debug.LogError($"[StudentManager] Aluno {studentName} não encontrado para o conflito {type}");
+            return;
+        }
+
+        if (!IsConflictCapacityOk(type, out ConflictGenerationResult result)) return;
+
+        result = ConflictFactory.CreateConflict(type);
+        if (result.Error != ConflictGenerationError.None) return;
+
+        // Força o aluno alvo no conflito recém-criado ANTES de testar a viabilidade
+        result.ConflictInstance.SetConflictiveStudent(targetStudent);
+
+        ConflictSetupResult setupResult = result.ConflictInstance.IsConflictFeasible();
+
+        // Como alguns conflitos (como DrawDistracted) exigem que o material esteja na mesa,
+        // se o setup falhar, logamos o erro, mas se passar, iniciamos.
+        if (setupResult.Error != ConflictGenerationError.None)
+        {
+            Debug.LogError($"[StudentManager] Conflito {type} inválido para {studentName}: {setupResult.errorWhy}");
+        }
+        else
+        {
+            HandleConflict(result.ConflictInstance);
+            Debug.Log($"<color=#00FF00>[StudentManager]</color> Conflito {type} forçado no aluno {studentName}");
+        }
+    }
+
+
+    public void ResetSingleStudent(string studentName)
+    {
+        Student targetStudent = GetStudentByName(studentName);
+
+        if (targetStudent != null && targetStudent.Behaviour != null)
+        {
+            Debug.Log($"<color=#00FFFF>[StudentManager]</color> Comando de RESET INDIVIDUAL recebido. A reiniciar o aluno: {targetStudent.Name}");
+
+            // 1. Para as animações e ações visuais do aluno
+            targetStudent.Behaviour.ResetToIdleState();
+
+            // 2. Tratamento do conflito ativo
+            if (targetStudent.ActiveConflict != null)
+            {
+                // CHAVE DO PROBLEMA: Esta função limpa a variável _currentConflictRun e volta o nome a branco!
+                targetStudent.StopConflict();
+
+                // Remove o conflito da lista global da sala
+                RemoveActiveConflict(targetStudent.ActiveConflict);
+            }
+
+            // 3. Limpa a variável interna do aluno para que o sistema saiba que ele está livre
+            targetStudent.SetConflict(null);
+        }
+        else
+        {
+            Debug.LogWarning($"<color=#FFA500>[StudentManager]</color> Tentativa de reset individual falhou. Aluno '{studentName}' não encontrado.");
+        }
+    }
+    #endregion
 }

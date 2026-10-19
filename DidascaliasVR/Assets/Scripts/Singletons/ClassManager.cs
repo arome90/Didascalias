@@ -440,6 +440,11 @@ public class ClassManager : Singleton<ClassManager>
         GenerateClass();
         AddStudentsToDesks();
         if (WebDashboardManager.Exists) WebDashboardManager.Instance.ClassStarted();
+        if (FirebaseClassroomManager.Exists)
+        {
+            List<Student> studentsList = StudentManager.Instance.GetStudents();
+            FirebaseClassroomManager.Instance.StartFirebaseSession(studentsList);
+        }
     }
 
     private void RestartClassOnFadeOut()

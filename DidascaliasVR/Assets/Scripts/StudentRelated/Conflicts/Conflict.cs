@@ -36,6 +36,7 @@ public abstract class Conflict : ScriptableObject
     protected Student         _conflictiveStudent = null;
 
     public Student ConflictiveStudent => _conflictiveStudent;
+    public void SetConflictiveStudent(Student st) => _conflictiveStudent = st;
 
     /// <summary>
     /// The students affected by the conflictive students actions

@@ -29,8 +29,10 @@ public class ClassSettings : ScriptableObject
     /// Número de chicos en el aula
     /// Se ajusta según el número máximo de estudiantes y el número de chicas
     /// </summary>
-    public int NumBoys { get { return _numBoys; } 
-        set 
+    public int NumBoys
+    {
+        get { return _numBoys; }
+        set
         {
             if (value > _maxStudents)
             {
@@ -45,7 +47,8 @@ public class ClassSettings : ScriptableObject
             else _numBoys = value;
 
             if (_numDesks < NumStudents) _numDesks = NumStudents;
-        } }
+        }
+    }
 
     [SerializeField,
         Tooltip("Número de chicas en el aula")]
@@ -55,15 +58,17 @@ public class ClassSettings : ScriptableObject
     /// Número de chicas en el aula
     /// Se ajusta según el número máximo de estudiantes y el número de chicos
     /// </summary>
-    public int NumGirls { get { return _numGirls; } 
-        set 
-        { 
-            if(value > _maxStudents)
+    public int NumGirls
+    {
+        get { return _numGirls; }
+        set
+        {
+            if (value > _maxStudents)
             {
                 _numGirls = _maxStudents;
                 _numBoys = 0;
             }
-            else if(value + _numBoys > _maxStudents)
+            else if (value + _numBoys > _maxStudents)
             {
                 _numGirls = value;
                 _numBoys = _maxStudents - _numGirls;
@@ -71,7 +76,8 @@ public class ClassSettings : ScriptableObject
             else _numGirls = value;
 
             if (_numDesks < NumStudents) _numDesks = NumStudents;
-        } }
+        }
+    }
 
     /// <summary>
     /// Número de estudiantes totales. Devuelve una suma del número de chicas y chicos.
@@ -100,6 +106,17 @@ public class ClassSettings : ScriptableObject
         }
     }
 
+    [Header("Neurodivergent Students")]
+    [SerializeField, Tooltip("Número de estudiantes con TEA")]
+    private int _numTEA = 0;
+
+    public int NumTEA { get { return _numTEA; } set { _numTEA = value; } }
+
+    [SerializeField, Tooltip("Número de estudiantes con TDAH")]
+    private int _numADHD = 0;
+
+    public int NumADHD { get { return _numADHD; } set { _numADHD = value; } }
+
     [Header("Shape Options")]
     [SerializeField,
         Tooltip("Layout de la clase")]
@@ -108,7 +125,7 @@ public class ClassSettings : ScriptableObject
     /// <summary>
     /// Layout de la clase
     /// </summary>
-    public Shape ClassShape { get { return _shape; } set { _shape = value;  } }
+    public Shape ClassShape { get { return _shape; } set { _shape = value; } }
 
     [SerializeField,
         Tooltip("Número de escritorios")]
@@ -121,11 +138,11 @@ public class ClassSettings : ScriptableObject
     /// Si resultan ser menos que el número total de alumnos,
     /// se ajustará para que sean tantos escritorios como alumnos
     /// </summary>
-    public int NumDesks { get {return _numDesks; } set { _numDesks = value; } }
+    public int NumDesks { get { return _numDesks; } set { _numDesks = value; } }
 
     // Square Options
     [SerializeField,
-        Tooltip("Cuántas filas tiene la clase. Solo se usa en Shape.Square"), Range(1,5)]
+        Tooltip("Cuántas filas tiene la clase. Solo se usa en Shape.Square"), Range(1, 5)]
     private int _rows = 2;
     /// <summary>
     /// Cuántas filas tiene la clase. 
@@ -134,7 +151,7 @@ public class ClassSettings : ScriptableObject
     public int Rows { get { return _rows; } set { _rows = value; } }
 
     [SerializeField,
-        Tooltip("Cuántas columnas tiene la clase. Solo se usa en Shape.Square"), Range(1,5)]
+        Tooltip("Cuántas columnas tiene la clase. Solo se usa en Shape.Square"), Range(1, 5)]
     private int _cols = 2;
     /// <summary>
     /// Cuántas columnas tiene la clase. 
@@ -170,14 +187,16 @@ public class ClassSettings : ScriptableObject
     /// entre las diferentes formas de las clases y sus parámetros
     /// </summary>
     [CustomEditor(typeof(ClassSettings))]
-    public class ClassSettingsEditor : Editor {
-        private Dictionary<string, SerializedProperty>_properties;
+    public class ClassSettingsEditor : Editor
+    {
+        private Dictionary<string, SerializedProperty> _properties;
 
         private void OnEnable()
         {
             string[] propertyNames = {
                     "_maxStudents", "_shape", "_rows", "_cols", "_radius",
-                    "_numDesks", "_numBoys", "_numGirls", "_genderSpecified", "_maxDesksInSemicircle"
+                    "_numDesks", "_numBoys", "_numGirls", "_genderSpecified", "_maxDesksInSemicircle",
+                    "_numTEA", "_numADHD"
                 };
             _properties = new Dictionary<string, SerializedProperty>();
             for (int i = 0; i < propertyNames.Length; i++)
@@ -197,6 +216,9 @@ public class ClassSettings : ScriptableObject
 
             DrawProperty(_properties["_shape"], "Shape");
             DrawProperty(_properties["_numDesks"], "Number of Desks");
+
+            DrawProperty(_properties["_numTEA"], "TEA Students");
+            DrawProperty(_properties["_numADHD"], "ADHD Students");
 
             switch ((Shape)_properties["_shape"].enumValueIndex)
             {

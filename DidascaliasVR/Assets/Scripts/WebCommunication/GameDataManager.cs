@@ -70,12 +70,15 @@ namespace Didascalia
 
             lock (_gameData)
             {
-                _gameData.datas[sessionID].Add(data);
-                if (_gameData.datas[sessionID].Count >= maxPlayerDataCount)
+                if (_gameData != null && _gameData.datas != null  && _gameData.datas.Count > 0)
                 {
-                    SendJSON();
-                    // _ = WriterManager.Instance.WriteToStreamWriter(path, text);
-                    // gameData.datas[Session].Clear();
+                    _gameData.datas[sessionID].Add(data);
+                    if (_gameData.datas[sessionID].Count >= maxPlayerDataCount)
+                    {
+                        SendJSON();
+                        // _ = WriterManager.Instance.WriteToStreamWriter(path, text);
+                        // gameData.datas[Session].Clear();
+                    }
                 }
             }
         }
