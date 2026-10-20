@@ -1,16 +1,24 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 {
-    [Header("Configurações do Firebase")]
+    public struct StartRoomResult
+    {
+        public string errorText;
+        public bool wasSuccesful;
+        public ClassSettings settings;
+    }
+
+    [Header("Firebase Configurations")]
     [Tooltip("A ID da sala atual no banco de dados")]
     [HideInInspector]
-    public string classroomId = "";
+    public string ClassroomID = "";
 
     private DatabaseReference _dbReference;
     private bool _firebaseReady = false;
@@ -27,9 +35,9 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         base.Awake();
 
         // Puxa a ID da sala salva pelo Botao_entrar.cs
-        classroomId = PlayerPrefs.GetString("session_configId", "");
+        ClassroomID = PlayerPrefs.GetString("session_configId", "");
 
-        if (string.IsNullOrEmpty(classroomId))
+        if (string.IsNullOrEmpty(ClassroomID))
         {
             Debug.LogError("<color=red>[Firebase]</color> O jogo entrou na cena da sala, mas perdeu a referência do ID. Nenhuma sala foi carregada!");
             return; // Impede que o Firebase tente conectar a uma sala vazia
@@ -75,7 +83,7 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         }
 
         _pendingSessionStart = false;
-        DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(classroomId);
+        DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(ClassroomID);
 
         roomRef.Child("situacao_atual").Child("ativo").SetValueAsync("sim");
 
@@ -104,8 +112,6 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         }
         roomRef.Child("Alunos").SetValueAsync(alunosDict);
 
-        roomRef.Child("comando_facilitador").ChildAdded += OnCommandReceived;
-
         Debug.Log("<color=#00FFFF>[Firebase]</color> Sessão iniciada, Alunos enviados e escutando comandos.");
     }
 
@@ -113,7 +119,7 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
     {
         if (!_firebaseReady || _dbReference == null) return;
 
-        DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(classroomId);
+        DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(ClassroomID);
 
         roomRef.Child("situacao_atual").Child("ativo").SetValueAsync("nao");
 
@@ -129,6 +135,110 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         Debug.Log("<color=#FF0000>[Firebase]</color> Sessão encerrada e dados limpos.");
     }
 
+    public StartRoomResult StartRoom() 
+    {
+        StartRoomResult result;
+        result.wasSuccesful = false;
+        result.settings = null;
+        result.errorText = string.Empty;
+
+        _dbReference.Child("classroom_configs")
+                   .GetValueAsync().ContinueWithOnMainThread(task =>
+                   {
+                       if (task.IsFaulted)
+                       {
+                           Debug.LogError("<color=red>[MENU]</color> Falha ao buscar no Firebase.");
+                           result.errorText = "Erro de conexão com o servidor.";
+                           // ReturnToMainMenu("Erro de conexão com o servidor.");
+                           // MostrarErroFaltaDeSala();
+                       }
+                       else if (task.IsCompleted)
+                       {
+                           DataSnapshot snapshot = task.Result;
+                           if (snapshot.Exists && snapshot.ChildrenCount > 0)
+                           {
+                               DataSnapshot salaMaisRecente = null;
+                               string maiorDataStr = "";
+                               int salasEncontradas = 0;
+
+                               // Percorre todas as salas e faz o filtro localmente (C#)
+                               foreach (DataSnapshot sala in snapshot.Children)
+                               {
+                                   // Verifica se a sala tem o ID do óculos correto
+                                   if (sala.HasChild("activeHeadsetId") && sala.Child("activeHeadsetId").Value.ToString() == SystemInfo.deviceUniqueIdentifier)
+                                   {
+                                       salasEncontradas++;
+
+                                       // Filtra a sala mais recente
+                                       if (sala.HasChild("criadoEm"))
+                                       {
+                                           string dataCriacao = sala.Child("criadoEm").Value.ToString();
+                                           if (string.Compare(dataCriacao, maiorDataStr) >= 0)
+                                           {
+                                               maiorDataStr = dataCriacao;
+                                               salaMaisRecente = sala;
+                                           }
+                                       }
+                                       else
+                                       {
+                                           if (salaMaisRecente == null) salaMaisRecente = sala;
+                                       }
+                                   }
+                               }
+
+                               if (salaMaisRecente != null)
+                               {
+                                   Debug.Log($"<color=#00FF00>[MENU]</color> Sucesso! {salasEncontradas} sala(s) encontrada(s) para este óculos. Injetando dados da sala: {salaMaisRecente.Child("roomName").Value}");
+
+                                   ClassSettings classSettings = new ClassSettings();
+
+                                   // === INJEÇÃO DE DADOS (Mantenha o seu código original aqui) ===
+                                   classSettings.NumBoys = int.Parse(salaMaisRecente.Child("numBoys").Value.ToString());
+                                   classSettings.NumGirls = int.Parse(salaMaisRecente.Child("numGirls").Value.ToString());
+                                   classSettings.NumDesks = int.Parse(salaMaisRecente.Child("numDesks").Value.ToString());
+
+                                   int shapeInt = int.Parse(salaMaisRecente.Child("shape").Value.ToString());
+                                   classSettings.ClassShape = (ClassSettings.Shape)shapeInt;
+
+                                   classSettings.Rows = int.Parse(salaMaisRecente.Child("rows").Value.ToString());
+                                   classSettings.Cols = int.Parse(salaMaisRecente.Child("cols").Value.ToString());
+                                   classSettings.Radius = float.Parse(salaMaisRecente.Child("radius").Value.ToString());
+                                   classSettings.MaxDesksInSemiCircle = int.Parse(salaMaisRecente.Child("maxDesksInSemiCircle").Value.ToString());
+
+                                   if (salaMaisRecente.HasChild("numTEA"))
+                                       classSettings.NumTEA = int.Parse(salaMaisRecente.Child("numTEA").Value.ToString());
+
+                                   if (salaMaisRecente.HasChild("numADHD"))
+                                       classSettings.NumADHD = int.Parse(salaMaisRecente.Child("numADHD").Value.ToString());
+
+                                   PlayerPrefs.SetString("session_configId", salaMaisRecente.Key);
+                                   PlayerPrefs.SetString("session_participantId", salaMaisRecente.Child("activeParticipantId").Value.ToString());
+                                   PlayerPrefs.SetString("session_facilitadorId", salaMaisRecente.Child("facilitadorId").Value.ToString());
+                                   PlayerPrefs.SetString("session_instituicaoId", salaMaisRecente.Child("instituicaoId").Value.ToString());
+                                   PlayerPrefs.SetString("session_roomName", salaMaisRecente.Child("roomName").Value.ToString());
+                                   PlayerPrefs.Save();
+
+                                   SceneManager.LoadScene("newClass");
+                                   
+                                   DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(ClassroomID);
+
+                                   roomRef.Child("comando_facilitador").ChildAdded += OnCommandReceived;
+
+                                   result.settings = classSettings;
+                                   result.wasSuccesful = true;
+                                   result.errorText = string.Empty;
+                               }
+                               else
+                                   result.errorText = "Nenhuma aula agendada para este dispositivo no momento.";
+                           }
+                           else
+                               result.errorText = "Banco de dados vazio.";
+                       }
+                   });
+
+        return result;
+    }
+
     private void OnCommandReceived(object sender, ChildChangedEventArgs args)
     {
         if (args.DatabaseError != null) return;
@@ -142,16 +252,16 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 
             // O aluno alvo passa a ser opcional
             string alunoAlvo = "";
-            if (snapshot.HasChild("aluno_alvo"))
-            {
-                alunoAlvo = snapshot.Child("aluno_alvo").Value.ToString();
-            }
+            if (snapshot.HasChild("aluno_alvo")) alunoAlvo = snapshot.Child("aluno_alvo").Value.ToString();
 
-            _mainThreadActions.Enqueue(() => ProcessFirebaseCommand(alunoAlvo, tipoConflitoWeb));
+            string message = "";
+            if (snapshot.HasChild("mensagem")) message = snapshot.Child("mensagem").Value.ToString();
+
+            _mainThreadActions.Enqueue(() => ProcessFirebaseCommand(alunoAlvo, tipoConflitoWeb, message));
         }
     }
 
-    private void ProcessFirebaseCommand(string alunoAlvo, string tipoConflitoWeb)
+    private void ProcessFirebaseCommand(string alunoAlvo, string tipoConflitoWeb, string message = "")
     {
         Debug.Log($"<color=#FFA500>[Firebase Comando]</color> Alvo: {alunoAlvo} | Ação recebida: {tipoConflitoWeb}");
 
@@ -164,6 +274,17 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         if (tipoConflitoWeb == "ResetAllStudents")
         {
             StudentManager.Instance.ResetAllStudents();
+            return;
+        }
+        if (tipoConflitoWeb == "TextToSpeech")
+        {
+            Student st = StudentManager.Instance.GetStudent(alunoAlvo);
+            AzureTextToSpeech.Instance.Speak(message, st.Gender, st._audioSource);
+            return;
+        }
+        if (tipoConflitoWeb == "StartRoom")
+        {
+            StartRoom();
             return;
         }
 

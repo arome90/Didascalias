@@ -352,6 +352,7 @@ public class StudentManager : Singleton<StudentManager>
                 int index = UnityEngine.Random.Range(0, boyNames.Count);
                 name = boyNames[index];
                 boyNames.RemoveAt(index);
+                st.SetGender(Gender.Boy);
 
                 numBoys++;
             }
@@ -360,6 +361,7 @@ public class StudentManager : Singleton<StudentManager>
                 int index = UnityEngine.Random.Range(0, girlNames.Count);
                 name = girlNames[index];
                 girlNames.RemoveAt(index);
+                st.SetGender(Gender.Girl);
 
                 numGirls++;
             }

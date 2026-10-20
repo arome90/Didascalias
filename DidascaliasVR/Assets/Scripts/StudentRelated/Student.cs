@@ -190,6 +190,8 @@ public class Student : MonoBehaviour
         get { return _gender; }
     }
 
+    public void SetGender(Gender gender) => _gender = gender;
+
     public void Select()
     {
         if(_nameTag.color == Color.white) _nameTag.color = Color.blue;
