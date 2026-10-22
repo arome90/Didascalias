@@ -436,6 +436,12 @@ public class ClassManager : Singleton<ClassManager>
         ScreenFader.Instance.FadeOut(RestartClassOnFadeOut);
     }
     
+    public void StartFirebaseClass(FirebaseClassroomManager.StartRoomResult result)
+    {
+        SceneChanger.ChangeScene("newClass"); // make a Constants.cs file to store these kind of variables
+        if (result.settings != null) _settings = result.settings;
+    }
+
     public void StartClass() {
         GenerateClass();
         AddStudentsToDesks();

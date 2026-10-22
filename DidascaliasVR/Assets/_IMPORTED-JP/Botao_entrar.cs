@@ -62,9 +62,11 @@ public class Botao_entrar : MonoBehaviour
         // idDoOculos = "556b4d4918be07211402fd354c3a672d9d06fc68";
 #endif
 
-        FirebaseClassroomManager.StartRoomResult result = 
-            FirebaseClassroomManager.Instance.StartRoom();
+        FirebaseClassroomManager.Instance.StartRoom(ClassManager.Instance.StartFirebaseClass);
+    }
 
+    private void OnStartRoomResolve(FirebaseClassroomManager.StartRoomResult result)
+    {
         if (result.wasSuccesful)
         {
             configuracaoDaSala = result.settings;

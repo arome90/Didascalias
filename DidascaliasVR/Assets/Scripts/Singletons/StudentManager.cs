@@ -35,13 +35,9 @@ public class StudentManager : Singleton<StudentManager>
 
     [SerializeField, Range(0, 1), Tooltip("Proportion of autistic students in class")]
     private float _autisticStudentsProportion = 0.1f;
-    [SerializeField, Tooltip("Always makes sure that there is at least one autistic student")]
-    private bool _atLeastOneAutistic = true;
 
     [SerializeField, Range(0, 1), Tooltip("Proportion of students with ADHD in class")]
     private float _adhdStudentsProportion = 0.1f;
-    [SerializeField, Tooltip("Always makes sure that there is at least one ADHD student; only failing when there is only 1 and 'At Least One Autitic' is checked, making that student Autistic instead of ADHD")]
-    private bool _atLeastOneADHD = true;
 
     /// <summary>
     /// Non-normative students (ADHD and Autism)
@@ -392,15 +388,13 @@ public class StudentManager : Singleton<StudentManager>
 
         _nonNormativeStudents = new List<Student>();
 
+        // TODO: make generic!!
+
         // Autistic Students
         {
             _autisticStudents = new List<Student>();
-            int numAutism = (int)(_autisticStudentsProportion * students.Count);
 
-            // if there is at least one autistic student, we set it to the actual number or to 1 if numAutism is 0
-            numAutism = _atLeastOneAutistic ? Mathf.Max(numAutism, 1) : numAutism;
-
-            for (int i = 0; i < numAutism; ++i)
+            for (int i = 0; i < _settings.NumTEA; ++i)
             {
                 int index = UnityEngine.Random.Range(0, stCopy.Count);
                 Student st = stCopy[index];
@@ -416,12 +410,8 @@ public class StudentManager : Singleton<StudentManager>
         // ADHD students
         {
             _adhdStudents = new List<Student>();
-            int numAdhd = (int)(_adhdStudentsProportion * students.Count);
 
-            // if there is at least one adhd student, we set it to the actual number or to 1 if numAutism is 0
-            numAdhd = _atLeastOneADHD ? Mathf.Max(numAdhd, 1) : numAdhd;
-
-            for (int i = 0; i < numAdhd; ++i)
+            for (int i = 0; i < _settings.NumADHD; ++i)
             {
                 int index = UnityEngine.Random.Range(0, stCopy.Count);
                 Student st = stCopy[index];

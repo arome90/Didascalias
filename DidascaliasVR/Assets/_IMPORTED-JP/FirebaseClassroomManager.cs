@@ -4,6 +4,7 @@ using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
@@ -13,6 +14,7 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         public string errorText;
         public bool wasSuccesful;
         public ClassSettings settings;
+        public DatabaseReference database;
     }
 
     [Header("Firebase Configurations")]
@@ -35,7 +37,7 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         base.Awake();
 
         // Puxa a ID da sala salva pelo Botao_entrar.cs
-        ClassroomID = PlayerPrefs.GetString("session_configId", "");
+        LoadSessionID();
 
         if (string.IsNullOrEmpty(ClassroomID))
         {
@@ -135,12 +137,13 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         Debug.Log("<color=#FF0000>[Firebase]</color> Sessão encerrada e dados limpos.");
     }
 
-    public StartRoomResult StartRoom() 
+    public void StartRoom(UnityAction<StartRoomResult> action) 
     {
         StartRoomResult result;
         result.wasSuccesful = false;
         result.settings = null;
         result.errorText = string.Empty;
+        result.database = null;
 
         _dbReference.Child("classroom_configs")
                    .GetValueAsync().ContinueWithOnMainThread(task =>
@@ -157,9 +160,9 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                            DataSnapshot snapshot = task.Result;
                            if (snapshot.Exists && snapshot.ChildrenCount > 0)
                            {
-                               DataSnapshot salaMaisRecente = null;
-                               string maiorDataStr = "";
-                               int salasEncontradas = 0;
+                               DataSnapshot mostRecentRoom = null;
+                               string greatestDateCreated = "";
+                               int foundRooms = 0;
 
                                // Percorre todas as salas e faz o filtro localmente (C#)
                                foreach (DataSnapshot sala in snapshot.Children)
@@ -167,59 +170,58 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                                    // Verifica se a sala tem o ID do óculos correto
                                    if (sala.HasChild("activeHeadsetId") && sala.Child("activeHeadsetId").Value.ToString() == SystemInfo.deviceUniqueIdentifier)
                                    {
-                                       salasEncontradas++;
+                                       foundRooms++;
 
                                        // Filtra a sala mais recente
                                        if (sala.HasChild("criadoEm"))
                                        {
-                                           string dataCriacao = sala.Child("criadoEm").Value.ToString();
-                                           if (string.Compare(dataCriacao, maiorDataStr) >= 0)
+                                           string dateCreated = sala.Child("criadoEm").Value.ToString();
+                                           if (string.Compare(dateCreated, greatestDateCreated) >= 0)
                                            {
-                                               maiorDataStr = dataCriacao;
-                                               salaMaisRecente = sala;
+                                               greatestDateCreated = dateCreated;
+                                               mostRecentRoom = sala;
                                            }
                                        }
                                        else
                                        {
-                                           if (salaMaisRecente == null) salaMaisRecente = sala;
+                                           if (mostRecentRoom == null) mostRecentRoom = sala;
                                        }
                                    }
                                }
 
-                               if (salaMaisRecente != null)
+                               if (mostRecentRoom != null)
                                {
-                                   Debug.Log($"<color=#00FF00>[MENU]</color> Sucesso! {salasEncontradas} sala(s) encontrada(s) para este óculos. Injetando dados da sala: {salaMaisRecente.Child("roomName").Value}");
+                                   Debug.Log($"<color=#00FF00>[MENU]</color> Sucesso! {foundRooms} sala(s) encontrada(s) para este óculos. Injetando dados da sala: {mostRecentRoom.Child("roomName").Value}");
 
                                    ClassSettings classSettings = new ClassSettings();
 
                                    // === INJEÇÃO DE DADOS (Mantenha o seu código original aqui) ===
-                                   classSettings.NumBoys = int.Parse(salaMaisRecente.Child("numBoys").Value.ToString());
-                                   classSettings.NumGirls = int.Parse(salaMaisRecente.Child("numGirls").Value.ToString());
-                                   classSettings.NumDesks = int.Parse(salaMaisRecente.Child("numDesks").Value.ToString());
+                                   classSettings.NumBoys = ParseInt("numBoys", mostRecentRoom);
+                                   classSettings.NumGirls = ParseInt("numGirls", mostRecentRoom);
+                                   classSettings.NumDesks = ParseInt("numDesks", mostRecentRoom);
 
-                                   int shapeInt = int.Parse(salaMaisRecente.Child("shape").Value.ToString());
-                                   classSettings.ClassShape = (ClassSettings.Shape)shapeInt;
+                                   classSettings.ClassShape = (ClassSettings.Shape)ParseInt("shape", mostRecentRoom);
 
-                                   classSettings.Rows = int.Parse(salaMaisRecente.Child("rows").Value.ToString());
-                                   classSettings.Cols = int.Parse(salaMaisRecente.Child("cols").Value.ToString());
-                                   classSettings.Radius = float.Parse(salaMaisRecente.Child("radius").Value.ToString());
-                                   classSettings.MaxDesksInSemiCircle = int.Parse(salaMaisRecente.Child("maxDesksInSemiCircle").Value.ToString());
+                                   classSettings.Rows = ParseInt("rows", mostRecentRoom);
+                                   classSettings.Cols = ParseInt("cols", mostRecentRoom);
+                                   classSettings.Radius = ParseInt("radius", mostRecentRoom);
+                                   classSettings.MaxDesksInSemiCircle = ParseInt("maxDesksInSemiCircle", mostRecentRoom);
 
-                                   if (salaMaisRecente.HasChild("numTEA"))
-                                       classSettings.NumTEA = int.Parse(salaMaisRecente.Child("numTEA").Value.ToString());
+                                   if (mostRecentRoom.HasChild("numTEA"))
+                                       classSettings.NumTEA = ParseInt("numTEA", mostRecentRoom);
 
-                                   if (salaMaisRecente.HasChild("numADHD"))
-                                       classSettings.NumADHD = int.Parse(salaMaisRecente.Child("numADHD").Value.ToString());
+                                   if (mostRecentRoom.HasChild("numADHD"))
+                                       classSettings.NumADHD = ParseInt("numADHD", mostRecentRoom);
 
-                                   PlayerPrefs.SetString("session_configId", salaMaisRecente.Key);
-                                   PlayerPrefs.SetString("session_participantId", salaMaisRecente.Child("activeParticipantId").Value.ToString());
-                                   PlayerPrefs.SetString("session_facilitadorId", salaMaisRecente.Child("facilitadorId").Value.ToString());
-                                   PlayerPrefs.SetString("session_instituicaoId", salaMaisRecente.Child("instituicaoId").Value.ToString());
-                                   PlayerPrefs.SetString("session_roomName", salaMaisRecente.Child("roomName").Value.ToString());
-                                   PlayerPrefs.Save();
+                                   SaveSessionID(mostRecentRoom.Key);
 
-                                   SceneManager.LoadScene("newClass");
-                                   
+                                   /*
+                                   //PlayerPrefs.SetString("session_participantId", salaMaisRecente.Child("activeParticipantId").Value.ToString());
+                                   //PlayerPrefs.SetString("session_facilitadorId", salaMaisRecente.Child("facilitadorId").Value.ToString());
+                                   //PlayerPrefs.SetString("session_instituicaoId", salaMaisRecente.Child("instituicaoId").Value.ToString());
+                                   //PlayerPrefs.SetString("session_roomName", salaMaisRecente.Child("roomName").Value.ToString());
+                                   */
+
                                    DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(ClassroomID);
 
                                    roomRef.Child("comando_facilitador").ChildAdded += OnCommandReceived;
@@ -227,16 +229,33 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                                    result.settings = classSettings;
                                    result.wasSuccesful = true;
                                    result.errorText = string.Empty;
+                                   result.database = roomRef;
                                }
                                else
                                    result.errorText = "Nenhuma aula agendada para este dispositivo no momento.";
                            }
                            else
                                result.errorText = "Banco de dados vazio.";
+
+                           action.Invoke(result);
                        }
                    });
+    }
 
-        return result;
+    private int ParseInt(string name, DataSnapshot parent)
+    {
+        return int.Parse(parent.Child(name).Value.ToString());
+    }
+
+    private void SaveSessionID(string key)
+    {
+        PlayerPrefs.SetString("session_configId", key);
+        PlayerPrefs.Save();
+    }
+
+    private void LoadSessionID()
+    {
+        ClassroomID = PlayerPrefs.GetString("session_configId", "");
     }
 
     private void OnCommandReceived(object sender, ChildChangedEventArgs args)
@@ -282,11 +301,11 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
             AzureTextToSpeech.Instance.Speak(message, st.Gender, st._audioSource);
             return;
         }
-        if (tipoConflitoWeb == "StartRoom")
-        {
-            StartRoom();
-            return;
-        }
+        //if (tipoConflitoWeb == "StartRoom")
+        //{
+        //    StartRoom();
+        //    return;
+        //}
 
         //Procura do Aluno 
         Student alvo = StudentManager.Instance.GetStudent(alunoAlvo);
