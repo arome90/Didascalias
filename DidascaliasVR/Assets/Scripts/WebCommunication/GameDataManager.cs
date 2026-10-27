@@ -23,7 +23,8 @@ namespace Didascalia
 
         private int maxPlayerDataCount = 50;
 
-        private string sessionID { get { return _connectionManager.SessionID; } }
+        // TODO: Cambiar para código genérico
+        private string sessionID { get { return "0"; } }
 
         private string _path;
 
@@ -39,7 +40,12 @@ namespace Didascalia
         void Start()
         {
             _connectionManager = WebDashboardManager.Instance;
+
+            // TODO: Crear entrada en Local
             // CreateNewEntry();
+
+
+            // TODO: Esto es solo para la web de Barcelona
             if (_connectionManager != null)
             {
                 if (sessionID != null && !_gameData.datas.ContainsKey(sessionID)) { CreateNewEntry(); }
@@ -101,6 +107,9 @@ namespace Didascalia
             lock (_gameData)
             {
                 string text = _gameData.ToJson();
+                // TODO: un if 'local' que te mande los archivos a una ruta configurada en local :)
+
+                // if !local jeje
                 _connectionManager.SendWebRequest(text);
                 _gameData.datas[sessionID].Clear();
             }

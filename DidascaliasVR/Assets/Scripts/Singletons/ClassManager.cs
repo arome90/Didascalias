@@ -438,8 +438,11 @@ public class ClassManager : Singleton<ClassManager>
     
     public void StartFirebaseClass(FirebaseClassroomManager.StartRoomResult result)
     {
-        SceneChanger.ChangeScene("newClass"); // make a Constants.cs file to store these kind of variables
-        if (result.settings != null) _settings = result.settings;
+        if (result.settings != null)
+        {
+            _settings = result.settings;
+            SceneChanger.ChangeScene("newClass"); // make a Constants.cs file to store these kind of variables
+        }
     }
 
     public void StartClass() {

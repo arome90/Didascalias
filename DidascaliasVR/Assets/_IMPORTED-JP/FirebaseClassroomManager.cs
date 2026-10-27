@@ -139,6 +139,27 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 
     public void StartRoom(UnityAction<StartRoomResult> action) 
     {
+        if (!_firebaseReady)
+        {
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+            {
+                if (task.Result == DependencyStatus.Available)
+                {
+                    _dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+                    _firebaseReady = true;
+                    Debug.Log("<color=#00FF00>[Firebase]</color> Inicializado com sucesso.");
+
+                    if (_pendingSessionStart)
+                    {
+                        StartFirebaseSession(_pendingStudents);
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"[Firebase] Erro de dependência: {task.Result}");
+                }
+            });
+        }
         StartRoomResult result;
         result.wasSuccesful = false;
         result.settings = null;

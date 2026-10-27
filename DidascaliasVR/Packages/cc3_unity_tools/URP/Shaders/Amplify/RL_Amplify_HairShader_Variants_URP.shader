@@ -280,12 +280,6 @@ Shader "Reallusion/Amplify/RL_HairShader_Variants_URP"
 			#pragma multi_compile _ _FORWARD_PLUS
 			#pragma shader_feature_local BOOLEAN_ENABLECOLOR_ON
 			#pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
-			#pragma multi_compile _ _SHADOWS_SOFT
-			#pragma shader_feature_local _CLIPQUALITY_STANDARD _CLIPQUALITY_DITHERED
-			#pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-			#pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
 
 
 			struct VertexInput
