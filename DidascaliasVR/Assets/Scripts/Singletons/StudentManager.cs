@@ -231,6 +231,8 @@ public class StudentManager : Singleton<StudentManager>
     // we specifically ask for a copy of the students to avoid any mistakes :)
     public void AsignStudentType(List<Student> studentsCopy)
     {
+        if (!LLMManager.Exists) return;
+
         if (studentsCopy == null || studentsCopy.Count == 0)
         {
             Debug.LogWarning("La lista de estudiantes está vacía.");
