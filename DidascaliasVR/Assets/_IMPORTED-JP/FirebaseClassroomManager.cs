@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 {
@@ -322,6 +321,11 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
             AzureTextToSpeech.Instance.Speak(message, st.Gender, st._audioSource);
             return;
         }
+        if (tipoConflitoWeb == "PlaySound")
+        {
+
+        }
+
         //if (tipoConflitoWeb == "StartRoom")
         //{
         //    StartRoom();

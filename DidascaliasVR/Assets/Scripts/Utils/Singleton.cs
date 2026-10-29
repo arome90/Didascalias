@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Patrón Singleton. Objetos persistentes entre escenas y de los que solo
@@ -14,6 +15,8 @@ using UnityEngine;
 /// <typeparam name="T"> El tipo que heredará de Singleton </typeparam>
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
+    protected bool _isSceneSingleton = false;
+
     private static T _instance = null;
     public static T Instance { get { return _instance; } }
 
@@ -36,10 +39,24 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 current = current.parent;
             }
             if(!_destroyOnLoad) DontDestroyOnLoad(current.gameObject);
+
+            if (_isSceneSingleton)
+            {
+                SceneChanger.Instance.OnSceneChanged.AddListener(DestroyOnSceneChange);
+            }
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void DestroyOnSceneChange(string _, Scene __)
+    {
+        SceneChanger.Instance.OnSceneChanged.RemoveListener(DestroyOnSceneChange);
+
+        _instance = null;
+        Destroy(this);
+        Destroy(gameObject);
     }
 }
