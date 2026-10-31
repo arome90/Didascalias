@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 894428589596689817}
   - component: {fileID: 179334837310430799}
   - component: {fileID: 6351749268529317214}
+  - component: {fileID: 1043306247768587859}
   m_Layer: 0
   m_Name: AzureManager
   m_TagString: Untagged
@@ -47,8 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AzureManagerCLU
   endpointAzure: https://didascalia-esp.cognitiveservices.azure.com/
   claveAzure: CwtX0XYBqNWFkizxJINt4D5EQKe62tE0o6u97PMlSvI9eKz7RfE1JQQJ99CGAC5RqLJXJ3w3AAAaACOGyZzq
-  nombreProyecto: Didascalias-ESP-CLU
-  nombreDespliegue: didascalia-clu-esp
+  projectName: <NOMBRE_DEL_PROYECTO>
+  displayName: <NOMBRE_DEL_DESPLIEGUE>
   apiVersion: 2023-04-01
 --- !u!114 &6351749268529317214
 MonoBehaviour:
@@ -62,9 +63,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f88ef188c2b6642bef9ed6aa591809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  useAzure: 0
+  micHandler: {fileID: 0}
+  cluController: {fileID: 179334837310430799}
   claveSpeech: 3o37hhqrQ1gZQA4CoNDS5GU40HLcdlFlkCGbst3zDQqbv94hYLU0JQQJ99CGAC5RqLJXJ3w3AAAAACOGRRnD
   regionSpeech: westeurope
-  cluController: {fileID: 179334837310430799}
+  displayText: {fileID: 0}
+--- !u!114 &1043306247768587859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2226324136122152288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93759cf192f59640bbed925729f0a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MicrophoneInputHandler
   volumeLimit: 0.02
   maxSilenceTime: 1.5
-  displayText: {fileID: 0}
+  maxRecordTime: 15

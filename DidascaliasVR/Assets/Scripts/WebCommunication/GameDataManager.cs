@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace Didascalia
@@ -11,22 +12,38 @@ namespace Didascalia
     /// </summary>
     public class GameDataManager : Singleton<GameDataManager>
     {
+        public enum StorageMode
+        {
+            RemoteServer,
+            LocalOnly,
+            Both
+        }
+
+        [Header("Modo de Almacenamiento")]
+        [SerializeField] private StorageMode storageMode = StorageMode.LocalOnly;
+
+        [Header("Configuración de Envío Remoto")]
+        [SerializeField] private float timer = 5.0f;
+        [SerializeField] private int maxPlayerDataCount = 50;
+
         /// <summary>
         /// Referencia al ConnectionManager, para gestionar las conexiones
         /// con el servidor y envío de los JSONs
         /// </summary>
         private WebDashboardManager _connectionManager;
+
         /// <summary>
         /// Objeto que reúne datos sobre la sesión en un diccionario
+        /// Buffer exclusivo para el servidor remoto
         /// </summary>
         private GameData _gameData = new GameData();
 
-        private int maxPlayerDataCount = 50;
-
-        // TODO: Cambiar para código genérico
         private string sessionID { get { return "0"; } }
-
         private string _path;
+
+        // Stream de escritura persistente en disco
+        private StreamWriter _streamWriter;
+        private bool _isFirstRecord = true;
 
         protected override void Awake()
         {
@@ -34,97 +51,198 @@ namespace Didascalia
             base.Awake();
         }
 
-        [SerializeField]
-        private float timer = 5.0f;
-
         void Start()
         {
             _connectionManager = WebDashboardManager.Instance;
 
-            // TODO: Crear entrada en Local
-            // CreateNewEntry();
+            CreateNewEntry();
 
-
-            // TODO: Esto es solo para la web de Barcelona
-            if (_connectionManager != null)
+            if (storageMode == StorageMode.RemoteServer || storageMode == StorageMode.Both)
             {
-                if (sessionID != null && !_gameData.datas.ContainsKey(sessionID)) { CreateNewEntry(); }
-                InvokeRepeating("SendDataByTime", timer, timer);
+                InvokeRepeating("SendRemoteDataByTime", timer, timer);
             }
-            
         }
 
         public void CreateNewEntry()
         {
             _gameData.datas[sessionID] = new List<BaseData>();
             _gameData.Session = sessionID;
-            string folderPath = Path.Combine(Application.persistentDataPath, "SessionData");
 
-            // Crear la carpeta si no existe
-            if (!Directory.Exists(folderPath))
+            if (storageMode == StorageMode.LocalOnly || storageMode == StorageMode.Both)
             {
-                Directory.CreateDirectory(folderPath);
+                InitLocalStream();
             }
+        }
 
-            _path = sessionID + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff") + ".json";
-            _path = Path.Combine(folderPath, _path);
+        private void InitLocalStream()
+        {
+            try
+            {
+                string folderPath = Path.Combine(Application.persistentDataPath, "SessionData");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string fileName = sessionID + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff") + ".json";
+                _path = Path.Combine(folderPath, fileName);
+
+                FileStream fileStream = new FileStream(_path, FileMode.Create, FileAccess.Write, FileShare.Read);
+                _streamWriter = new StreamWriter(fileStream, Encoding.UTF8);
+
+                // Escribir cabecera con salto de línea
+                _streamWriter.WriteLine("{\"" + sessionID + "\": [");
+                _streamWriter.Flush();
+
+                _isFirstRecord = true;
+                Debug.Log($"[GameDataManager] Stream local iniciado en: {_path}");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[GameDataManager] Error al inicializar StreamWriter: {ex.Message}");
+            }
         }
 
         public void SendData(BaseData data)
         {
-            if (_connectionManager == null) return;
-
             lock (_gameData)
             {
-                if (_gameData != null && _gameData.datas != null  && _gameData.datas.Count > 0)
+                // Escritura local instantánea
+                if (storageMode == StorageMode.LocalOnly || storageMode == StorageMode.Both)
                 {
-                    _gameData.datas[sessionID].Add(data);
-                    if (_gameData.datas[sessionID].Count >= maxPlayerDataCount)
+                    AppendRecordToLocalStream(data);
+                }
+
+                // Acumulación en buffer para lote remoto
+                if (storageMode == StorageMode.RemoteServer || storageMode == StorageMode.Both)
+                {
+                    if (_gameData != null && _gameData.datas.ContainsKey(sessionID))
                     {
-                        SendJSON();
-                        // _ = WriterManager.Instance.WriteToStreamWriter(path, text);
-                        // gameData.datas[Session].Clear();
+                        _gameData.datas[sessionID].Add(data);
+
+                        if (_gameData.datas[sessionID].Count >= maxPlayerDataCount)
+                        {
+                            SendBatchToRemote();
+                        }
                     }
                 }
             }
         }
 
-        private void SendDataByTime()
+        private void AppendRecordToLocalStream(BaseData data)
         {
-            if (sessionID == null) return;
+            if (_streamWriter == null) return;
 
+            try
+            {
+                // Convertir el elemento a JSON con formato multilínea
+                string itemJson = JsonUtility.ToJson(data, true);
+
+                // Indentación
+                string indentedJson = "    " + itemJson.Replace("\n", "\n    ");
+
+                if (!_isFirstRecord)
+                {
+
+                    _streamWriter.WriteLine(",");
+                }
+                else
+                {
+                    _streamWriter.WriteLine();
+                    _isFirstRecord = false;
+                }
+
+                _streamWriter.Write(indentedJson);
+
+                // Vaciado rápido de buffer de SO a disco
+                _streamWriter.Flush();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[GameDataManager] Error al escribir en StreamWriter: {ex.Message}");
+            }
+        }
+
+        private void SendRemoteDataByTime()
+        {
             lock (_gameData)
             {
-                if (_gameData.datas[sessionID].Count > 0)
+                if (_gameData.datas.ContainsKey(sessionID) && _gameData.datas[sessionID].Count > 0)
                 {
-                    SendJSON();
+                    SendBatchToRemote();
                 }
             }
         }
 
-        private void SendJSON()
+        private void SendBatchToRemote()
+        {
+            if (_connectionManager != null)
+            {
+                string batchJsonText = _gameData.ToJson();
+                _connectionManager.SendWebRequest(batchJsonText);
+                Debug.Log($"[GameDataManager] Lote remoto enviado ({_gameData.datas[sessionID].Count} elementos).");
+            }
+
+            _gameData.datas[sessionID].Clear();
+        }
+
+        private void CloseLocalStream()
+        {
+            if (_streamWriter != null)
+            {
+                try
+                {
+                    // Cerrar la estructura JSON correctamente
+                    _streamWriter.WriteLine();
+                    _streamWriter.Write("]}");
+                    _streamWriter.Flush();
+                    _streamWriter.Close();
+                    _streamWriter.Dispose();
+                    _streamWriter = null;
+
+                    Debug.Log("[GameDataManager] StreamWriter cerrado limpiamente.");
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[GameDataManager] Error al cerrar StreamWriter: {ex.Message}");
+                }
+            }
+        }
+
+        private void ShutdownManager()
         {
             lock (_gameData)
             {
-                string text = _gameData.ToJson();
-                // TODO: un if 'local' que te mande los archivos a una ruta configurada en local :)
+                if (_gameData.datas.ContainsKey(sessionID) && _gameData.datas[sessionID].Count > 0)
+                {
+                    SendBatchToRemote();
+                }
 
-                // if !local jeje
-                _connectionManager.SendWebRequest(text);
-                _gameData.datas[sessionID].Clear();
+                CloseLocalStream();
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            Debug.Log("[GameDataManager] Cierre de aplicación detectado (OnApplicationQuit)...");
+            ShutdownManager();
         }
 
         void OnDestroy()
         {
-            Debug.Log("Destroying GameDataManager");
+            Debug.Log("[GameDataManager] Finalizando sesión...");
 
-            if (_gameData.datas[sessionID].Count > 0)
+            lock (_gameData)
             {
-                SendJSON();
-                _gameData.datas.Clear();
+                // Enviar cualquier dato remoto restante
+                if (_gameData.datas.ContainsKey(sessionID) && _gameData.datas[sessionID].Count > 0)
+                {
+                    SendBatchToRemote();
+                }
+
+                // Cerrar el archivo local
+                CloseLocalStream();
             }
         }
-
     }
 }
