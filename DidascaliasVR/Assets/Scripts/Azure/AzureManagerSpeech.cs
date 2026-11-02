@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using Didascalia;
 
 public class AzureManagerSpeech : MonoBehaviour
 {
@@ -79,6 +80,9 @@ public class AzureManagerSpeech : MonoBehaviour
                 if (!string.IsNullOrEmpty(respuesta.DisplayText))
                 {
                     Debug.Log($"[Texto Reconocido]: {respuesta.DisplayText}");
+
+                    // Guardar la transcripción en la sesión persistente
+                    SaveSpeechToPersistence(respuesta.DisplayText, "Success");
                     
                     if (cluController != null && cluController.enabled) 
                         cluController.SendAzureCommand(respuesta.DisplayText);
@@ -90,6 +94,9 @@ public class AzureManagerSpeech : MonoBehaviour
             else
             {
                 Debug.LogError($"[Azure Speech] Error en la nube: {request.error}");
+
+                // Guarda también los intentos fallidos si se requiere trazabilidad
+                SaveSpeechToPersistence($"[Error]: {request.error}", "Error");
             }
 
             // Notifica al micrófono que la petición terminó y puede volver a escuchar
@@ -97,6 +104,18 @@ public class AzureManagerSpeech : MonoBehaviour
             {
                 micHandler.ResumeListening();
             }
+        }
+    }
+
+    /// <summary>
+    /// Instancia SpeechData y la envía al GameDataManager
+    /// </summary>
+    private void SaveSpeechToPersistence(string text, string status)
+    {
+        if (GameDataManager.Instance != null)
+        {
+            SpeechData speechSample = new SpeechData(text, status);
+            GameDataManager.Instance.SendData(speechSample);
         }
     }
 }

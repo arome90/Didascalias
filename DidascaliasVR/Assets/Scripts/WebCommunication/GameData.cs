@@ -37,6 +37,19 @@ namespace Didascalia
     }
 
     [Serializable]
+    public class SpeechData : BaseData
+    {
+        public string TranscribedText;
+        public string RecognitionStatus;
+
+        public SpeechData(string text, string status = "Success")
+        {
+            TranscribedText = text;
+            RecognitionStatus = status;
+        }
+    }
+
+    [Serializable]
     public class PlayerData : BaseData
     {
         public float HeadVelocity;
