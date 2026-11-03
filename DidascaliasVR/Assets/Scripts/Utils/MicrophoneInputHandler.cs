@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using Didascalia;
 
 public class MicrophoneInputHandler : MonoBehaviour
 {
@@ -14,6 +15,13 @@ public class MicrophoneInputHandler : MonoBehaviour
     [Tooltip("Duración máxima de la grabación en segundos.")]
     public int maxRecordTime = 15;
 
+    [Header("Telemetría de Voz")]
+    [Tooltip("Activar el envío continuo de métricas de voz a la telemetría.")]
+    public bool enableTelemetry = true;
+
+    [Tooltip("Intervalo en segundos para enviar muestras de VoiceData (ej: 0.2s = 5 muestras por segundo).")]
+    public float telemetryInterval = 0.2f;
+
     // Evento que notifica cuando una frase ha sido capturada y convertida a WAV
     public event Action<byte[]> OnSpeechRecorded;
 
@@ -24,6 +32,10 @@ public class MicrophoneInputHandler : MonoBehaviour
     private bool isTalking = false;
     private float silenceCounter = 0f;
     private bool isProcessing = false;
+
+    // Buffers y temporizador para la telemetría
+    private float telemetryTimer = 0f;
+    private readonly float[] telemetrySamples = new float[1024];
 
     void Start()
     {
@@ -57,7 +69,18 @@ public class MicrophoneInputHandler : MonoBehaviour
         // Debug.Log("[MicrophoneHandler] Micro: " + microphoneID);
         // Debug.Log("[MicrophoneHandler] Volumen: " + volume);
 
-        // 1. El usuario EMPIEZA a hablar
+        // Telemetría periódica de voz (Volumen en dB y Pitch F0 en Hz)
+        if (enableTelemetry)
+        {
+            telemetryTimer += Time.deltaTime;
+            if (telemetryTimer >= telemetryInterval)
+            {
+                telemetryTimer = 0f;
+                ProcessAndSendTelemetry();
+            }
+        }
+
+        // El usuario EMPIEZA a hablar
         if (!isTalking && volume > volumeLimit)
         {
             isTalking = true;
@@ -67,7 +90,7 @@ public class MicrophoneInputHandler : MonoBehaviour
             Microphone.End(microphoneID);
             commandClip = Microphone.Start(microphoneID, false, maxRecordTime, 16000);
         }
-        // 2. El usuario hace SILENCIO tras hablar
+        // El usuario hace SILENCIO tras hablar
         else if (isTalking && volume < volumeLimit)
         {
             silenceCounter += Time.deltaTime;
@@ -84,7 +107,7 @@ public class MicrophoneInputHandler : MonoBehaviour
                 ProcessAndEmitAudio(posicionFinal);
             }
         }
-        // 3. El usuario CONTINÚA hablando
+        // El usuario CONTINÚA hablando
         else if (isTalking && volume >= volumeLimit)
         {
             silenceCounter = 0f;
@@ -113,6 +136,96 @@ public class MicrophoneInputHandler : MonoBehaviour
         for (int i = 0; i < samples.Length; i++) suma += samples[i] * samples[i];
 
         return Mathf.Sqrt(suma / samples.Length);
+    }
+
+    /// <summary>
+    /// Procesa el buffer actual del micrófono y envía VoiceData al GameDataManager.
+    /// </summary>
+    private void ProcessAndSendTelemetry()
+    {
+        AudioClip activeClip = isTalking ? commandClip : monitorClip;
+        if (activeClip == null) return;
+
+        int position = Microphone.GetPosition(microphoneID);
+        if (position < telemetrySamples.Length) return;
+
+        int offset = position - telemetrySamples.Length;
+        if (offset < 0 || offset + telemetrySamples.Length > activeClip.samples) return;
+
+        try
+        {
+            activeClip.GetData(telemetrySamples, offset);
+        }
+        catch
+        {
+            return;
+        }
+
+        // Volumen RMS -> Convertir a Decibelios dBFS
+        float rms = 0f;
+
+        // RMS: Se eleva al cuadrado cada muestra, las suma, calcula la media y saca la raíz cuadrada. 
+        //      Mide la energía real promedio de la onda de sonido.
+        for (int i = 0; i < telemetrySamples.Length; i++)
+        {
+            rms += telemetrySamples[i] * telemetrySamples[i];
+        }
+        rms = Mathf.Sqrt(rms / telemetrySamples.Length);
+
+        // Conversión a Decibelios (dBFS).
+        // 0 dB es la saturación máxima digital.
+        // Silencio o valores extremadamente pequeños (RMS < 0.0001) se fuerzan a -80.0 dB 
+        // para evitar que el algoritmo calcule log{10}(0) = -infinito.
+        float volumeDb = (rms < 0.0001f) ? -80.0f : 20f * Mathf.Log10(rms);
+
+        // Si el volumen está por debajo de -50 dB (ruido de fondo ambiente), se asigna pitchHz = 0 para evitar falsos positivos
+        float pitchHz = 0f;
+        if (volumeDb > -50.0f)
+        {
+            pitchHz = CalculateAutocorrelationPitch(telemetrySamples, activeClip.frequency);
+        }
+
+        // Redondeo a 2 decimales para optimizar JSON
+        float roundVol = (float)Math.Round(volumeDb, 2);
+        float roundPitch = (float)Math.Round(pitchHz, 2);
+
+        // Persistencia
+        if (GameDataManager.Instance != null)
+        {
+            VoiceData voiceSample = new VoiceData(roundVol, roundPitch);
+            GameDataManager.Instance.SendData(voiceSample);
+        }
+    }
+
+    /// <summary>
+    /// Estimación de Frecuencia Fundamental (F0) por autocorrelación en el dominio del tiempo.
+    /// Acotado a voz humana (80 Hz - 500 Hz).
+    /// </summary>
+    private float CalculateAutocorrelationPitch(float[] samples, int sampleRate, float minFreq = 80f, float maxFreq = 500f)
+    {
+        int n = samples.Length;
+        int minLag = Mathf.FloorToInt(sampleRate / maxFreq);
+        int maxLag = Mathf.FloorToInt(sampleRate / minFreq);
+
+        float maxCorrelation = 0f;
+        int bestLag = -1;
+
+        for (int lag = minLag; lag <= maxLag; lag++)
+        {
+            float sum = 0f;
+            for (int i = 0; i < n - lag; i++)
+            {
+                sum += samples[i] * samples[i + lag];
+            }
+
+            if (sum > maxCorrelation)
+            {
+                maxCorrelation = sum;
+                bestLag = lag;
+            }
+        }
+
+        return (bestLag != -1) ? (float)sampleRate / bestLag : 0f;
     }
 
     private void ProcessAndEmitAudio(int posicionFinal)

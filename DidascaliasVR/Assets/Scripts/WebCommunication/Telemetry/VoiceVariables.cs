@@ -11,7 +11,7 @@ public class VoiceVariables : MonoBehaviour
     private int sampleRate = 44100; // Tasa de muestreo del audio.
 
     [SerializeField]
-    private int recordingTime = 1; // Tiempo de grabación en segundos.
+    private int recordingTime = 1; // Tiempo de grabaciï¿½n en segundos.
 
     private int bufferLength;
 
@@ -32,7 +32,7 @@ public class VoiceVariables : MonoBehaviour
         maxVolume = -35.0f;
         audioSource.loop = true;
 
-        audioSource.spatialBlend = 1f;
+        //audioSource.spatialBlend = 1f;
         audioSource.maxDistance = 10000f;
 
         initializeVariables();
@@ -45,7 +45,7 @@ public class VoiceVariables : MonoBehaviour
 
     private IEnumerator WaitForMicrophoneAndPlay()
     {
-        // Espera hasta que el micrófono tenga datos disponibles.
+        // Espera hasta que el micrï¿½fono tenga datos disponibles.
         while (!(Microphone.GetPosition(null) > 0))
         {
             yield return null;
@@ -55,7 +55,7 @@ public class VoiceVariables : MonoBehaviour
     }
 
     /// <summary>
-    /// Inicializa las variables de medición para la voz.
+    /// Inicializa las variables de mediciï¿½n para la voz.
     /// </summary>
     private void initializeVariables()
     {
@@ -65,7 +65,7 @@ public class VoiceVariables : MonoBehaviour
     }
 
     /// <summary>
-    /// Analiza la voz capturada por el micrófono, calcula el volumen en decibelios y el tono (pitch).
+    /// Analiza la voz capturada por el micrï¿½fono, calcula el volumen en decibelios y el tono (pitch).
     /// </summary>
     void AnalyzeVoice()
     {
@@ -73,7 +73,7 @@ public class VoiceVariables : MonoBehaviour
         float volumeLevel = CalculateVolumeLevel();
         lastVolume= volumeLevel;
         maxVolume = math.max(volumeLevel, maxVolume);
-        // análisis de pitch.
+        // anï¿½lisis de pitch.
         float dominantFrequency = AnalyzePitch();
 
         // Muestra el nivel de intensidad en decibelios en consola.
@@ -129,7 +129,7 @@ public class VoiceVariables : MonoBehaviour
             }
         }
         float delta = 0.0f;
-        // Interpolación parabólica para mejorar precisión
+        // Interpolaciï¿½n parabï¿½lica para mejorar precisiï¿½n
         if (maxIndex > 0 && maxIndex < spectrum.Length - 1)
         {
             float left = spectrum[maxIndex - 1];
