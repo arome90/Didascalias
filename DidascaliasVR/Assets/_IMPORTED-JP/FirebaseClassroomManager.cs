@@ -35,14 +35,8 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
     {
         base.Awake();
 
-        // Puxa a ID da sala salva pelo Botao_entrar.cs
+        // Tenta carregar a ID salva localmente (fallback rápido)
         LoadSessionID();
-
-        if (string.IsNullOrEmpty(ClassroomID))
-        {
-            Debug.LogError("<color=red>[Firebase]</color> O jogo entrou na cena da sala, mas perdeu a referência do ID. Nenhuma sala foi carregada!");
-            return; // Impede que o Firebase tente conectar a uma sala vazia
-        }
 
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
@@ -52,7 +46,18 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                 _firebaseReady = true;
                 Debug.Log("<color=#00FF00>[Firebase]</color> Inicializado com sucesso.");
 
-                if (_pendingSessionStart)
+                // Se não temos a ID da sala na memória, faz a busca dinâmica no Firebase
+                if (string.IsNullOrEmpty(ClassroomID))
+                {
+                    FetchClassroomIDFromFirebase(() =>
+                    {
+                        if (_pendingSessionStart)
+                        {
+                            StartFirebaseSession(_pendingStudents);
+                        }
+                    });
+                }
+                else if (_pendingSessionStart)
                 {
                     StartFirebaseSession(_pendingStudents);
                 }
@@ -61,6 +66,59 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
             {
                 Debug.LogError($"[Firebase] Erro de dependência: {task.Result}");
             }
+        });
+    }
+
+    /// <summary>
+    /// Consulta diretamente o Firebase para identificar a sala associada ao ID deste óculos.
+    /// Elimina a dependência estrita do PlayerPrefs.
+    /// </summary>
+    public void FetchClassroomIDFromFirebase(Action onComplete = null)
+    {
+        if (!_firebaseReady || _dbReference == null) return;
+
+        string idDoOculos = SystemInfo.deviceUniqueIdentifier;
+
+        _dbReference.Child("classroom_configs").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted && task.Result.Exists && task.Result.ChildrenCount > 0)
+            {
+                DataSnapshot mostRecentRoom = null;
+                string greatestDateCreated = "";
+
+                foreach (DataSnapshot sala in task.Result.Children)
+                {
+                    if (sala.HasChild("activeHeadsetId") && sala.Child("activeHeadsetId").Value.ToString() == idDoOculos)
+                    {
+                        if (sala.HasChild("criadoEm"))
+                        {
+                            string dateCreated = sala.Child("criadoEm").Value.ToString();
+                            if (string.Compare(dateCreated, greatestDateCreated) >= 0)
+                            {
+                                greatestDateCreated = dateCreated;
+                                mostRecentRoom = sala;
+                            }
+                        }
+                        else if (mostRecentRoom == null)
+                        {
+                            mostRecentRoom = sala;
+                        }
+                    }
+                }
+
+                if (mostRecentRoom != null)
+                {
+                    ClassroomID = mostRecentRoom.Key;
+                    SaveSessionID(ClassroomID);
+                    Debug.Log($"<color=#00FF00>[Firebase]</color> Sala identificada via Query direta: {ClassroomID}");
+                }
+                else
+                {
+                    Debug.LogWarning($"<color=orange>[Firebase]</color> Nenhuma sala ativa encontrada para o dispositivo {idDoOculos}.");
+                }
+            }
+
+            onComplete?.Invoke();
         });
     }
 
@@ -74,12 +132,23 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 
     public void StartFirebaseSession(List<Student> students)
     {
-        // Se o Firebase ainda não conectou, guardamos a lista para enviar na fração de segundo seguinte
-        if (!_firebaseReady || _dbReference == null)
+        // Se a conexão ou a ID da sala ainda não estiverem prontas, realiza a busca assíncrona
+        if (!_firebaseReady || _dbReference == null || string.IsNullOrEmpty(ClassroomID))
         {
             _pendingSessionStart = true;
             _pendingStudents = students;
-            Debug.Log("<color=#FFFF00>[Firebase]</color> Aguardando conexão para enviar os dados da sala...");
+            Debug.Log("<color=#FFFF00>[Firebase]</color> Aguardando conexão/identificação da sala para enviar os dados...");
+
+            if (_firebaseReady && string.IsNullOrEmpty(ClassroomID))
+            {
+                FetchClassroomIDFromFirebase(() =>
+                {
+                    if (_pendingSessionStart && !string.IsNullOrEmpty(ClassroomID))
+                    {
+                        StartFirebaseSession(_pendingStudents);
+                    }
+                });
+            }
             return;
         }
 
@@ -103,12 +172,10 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                 condition = "TEA";
             }
 
-            // Create a nested object for the student's details
             Dictionary<string, string> studentData = new Dictionary<string, string>();
             studentData["nome"] = student.Name;
             studentData["condicao"] = condition;
 
-            // Keeps the "Aluno1", "Aluno2" structure as the main key
             alunosDict["Aluno" + (i + 1)] = studentData;
         }
         roomRef.Child("Alunos").SetValueAsync(alunosDict);
@@ -118,25 +185,18 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 
     public void EndFirebaseSession()
     {
-        if (!_firebaseReady || _dbReference == null) return;
+        if (!_firebaseReady || _dbReference == null || string.IsNullOrEmpty(ClassroomID)) return;
 
         DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(ClassroomID);
 
         roomRef.Child("situacao_atual").Child("ativo").SetValueAsync("nao");
-
-        // Comentado pois a plataforma web já faz a limpeza da lista de alunos
-        // roomRef.Child("Alunos").RemoveValueAsync();
-
-        // Para de escutar novos comandos
         roomRef.Child("comando_facilitador").ChildAdded -= OnCommandReceived;
-
-        // Apaga o nó de comandos do Firebase
         roomRef.Child("comando_facilitador").RemoveValueAsync();
 
         Debug.Log("<color=#FF0000>[Firebase]</color> Sessão encerrada e dados limpos.");
     }
 
-    public void StartRoom(UnityAction<StartRoomResult> action) 
+    public void StartRoom(UnityAction<StartRoomResult> action)
     {
         if (!_firebaseReady)
         {
@@ -159,6 +219,7 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                 }
             });
         }
+
         StartRoomResult result;
         result.wasSuccesful = false;
         result.settings = null;
@@ -172,8 +233,6 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                        {
                            Debug.LogError("<color=red>[MENU]</color> Falha ao buscar no Firebase.");
                            result.errorText = "Erro de conexão com o servidor.";
-                           // ReturnToMainMenu("Erro de conexão com o servidor.");
-                           // MostrarErroFaltaDeSala();
                        }
                        else if (task.IsCompleted)
                        {
@@ -184,15 +243,12 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                                string greatestDateCreated = "";
                                int foundRooms = 0;
 
-                               // Percorre todas as salas e faz o filtro localmente (C#)
                                foreach (DataSnapshot sala in snapshot.Children)
                                {
-                                   // Verifica se a sala tem o ID do óculos correto
                                    if (sala.HasChild("activeHeadsetId") && sala.Child("activeHeadsetId").Value.ToString() == SystemInfo.deviceUniqueIdentifier)
                                    {
                                        foundRooms++;
 
-                                       // Filtra a sala mais recente
                                        if (sala.HasChild("criadoEm"))
                                        {
                                            string dateCreated = sala.Child("criadoEm").Value.ToString();
@@ -213,15 +269,15 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
                                {
                                    Debug.Log($"<color=#00FF00>[MENU]</color> Sucesso! {foundRooms} sala(s) encontrada(s) para este óculos. Injetando dados da sala: {mostRecentRoom.Child("roomName").Value}");
 
+                                   ClassroomID = mostRecentRoom.Key; // Atualiza a variável na memória imediatamente!
+                                   SaveSessionID(ClassroomID);
+
                                    ClassSettings classSettings = new ClassSettings();
 
-                                   // === INJEÇÃO DE DADOS (Mantenha o seu código original aqui) ===
                                    classSettings.NumBoys = ParseInt("numBoys", mostRecentRoom);
                                    classSettings.NumGirls = ParseInt("numGirls", mostRecentRoom);
                                    classSettings.NumDesks = ParseInt("numDesks", mostRecentRoom);
-
                                    classSettings.ClassShape = (ClassSettings.Shape)ParseInt("shape", mostRecentRoom);
-
                                    classSettings.Rows = ParseInt("rows", mostRecentRoom);
                                    classSettings.Cols = ParseInt("cols", mostRecentRoom);
                                    classSettings.Radius = ParseInt("radius", mostRecentRoom);
@@ -232,15 +288,6 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 
                                    if (mostRecentRoom.HasChild("numADHD"))
                                        classSettings.NumADHD = ParseInt("numADHD", mostRecentRoom);
-
-                                   SaveSessionID(mostRecentRoom.Key);
-
-                                   /*
-                                   //PlayerPrefs.SetString("session_participantId", salaMaisRecente.Child("activeParticipantId").Value.ToString());
-                                   //PlayerPrefs.SetString("session_facilitadorId", salaMaisRecente.Child("facilitadorId").Value.ToString());
-                                   //PlayerPrefs.SetString("session_instituicaoId", salaMaisRecente.Child("instituicaoId").Value.ToString());
-                                   //PlayerPrefs.SetString("session_roomName", salaMaisRecente.Child("roomName").Value.ToString());
-                                   */
 
                                    DatabaseReference roomRef = _dbReference.Child("classroom_configs").Child(ClassroomID);
 
@@ -284,12 +331,10 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 
         DataSnapshot snapshot = args.Snapshot;
 
-        // Agora só exigimos obrigatoriamente que exista um tipo_conflito
         if (snapshot.HasChild("tipo_conflito"))
         {
             string tipoConflitoWeb = snapshot.Child("tipo_conflito").Value.ToString();
 
-            // O aluno alvo passa a ser opcional
             string alunoAlvo = "";
             if (snapshot.HasChild("aluno_alvo")) alunoAlvo = snapshot.Child("aluno_alvo").Value.ToString();
 
@@ -304,7 +349,6 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
     {
         Debug.Log($"<color=#FFA500>[Firebase Comando]</color> Alvo: {alunoAlvo} | Ação recebida: {tipoConflitoWeb}");
 
-        // Ação Global
         if (tipoConflitoWeb == "TakeMaterialAll")
         {
             StudentManager.Instance.GetMaterialOutAllStudents();
@@ -326,13 +370,6 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
 
         }
 
-        //if (tipoConflitoWeb == "StartRoom")
-        //{
-        //    StartRoom();
-        //    return;
-        //}
-
-        //Procura do Aluno 
         Student alvo = StudentManager.Instance.GetStudent(alunoAlvo);
 
         if (alvo == null)
@@ -341,16 +378,13 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
             return;
         }
 
-        // Ações de Ambiente
         if (tipoConflitoWeb == "Make Students Laugh") { StudentManager.Instance.MakeNearbyStudentsLaugh(alvo); return; }
         if (tipoConflitoWeb == "Make Students Talk") { StudentManager.Instance.MakeNearbyStudentsTalk(alvo); return; }
 
-        // Mapeamento Estrito de Conflitos Pedagógicos
         ConflictType type = ConflictType.UNKNOWN;
 
         switch (tipoConflitoWeb)
         {
-            // CONFLITOS (Requerem resolução do jogador)
             case "HyperstimulationConflict": type = ConflictType.Hyperstimulation; break;
             case "GetDistractedTEAConflict": type = ConflictType.DistractionTEA; break;
             case "BotherSomeoneConflict": type = ConflictType.BotherStudents; break;
@@ -358,57 +392,42 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
             case "DrawDistractedConflict": type = ConflictType.DrawDistracted; break;
             case "StandUpConflict": type = ConflictType.StandUp; break;
 
-            //(Não são conflitos diretos) 
             case "SitTogether":
                 type = ConflictType.SitTogether;
                 break;
 
-            // MOVIMENTOS E AÇÕES DIRETAS
             case "StandUp":
-                // Chamar função do aluno para levantar
                 break;
             case "LeaveDesk":
-                // Chamar função do aluno para sair da carteira
                 break;
             case "GoToFloor":
-                // Chamar função do aluno para sentar no chão
                 break;
             case "MoveToRandomPoint":
-                // Chamar função de movimento
                 break;
             case "RunToRandomPoint":
-                // Chamar função de corrida
                 break;
             case "AnxiousRunToRandomPoint":
-                // Chamar função de corrida ansiosa
                 break;
             case "MoveToFrontDoor":
-                // Chamar função de ir para a porta
                 break;
             case "ChangeSits":
                 break;
 
-            //COMANDOS GERAIS DA TURMA E MATERIAIS
             case "TakeMaterialAll":
-                // Chamar função global para todos pegarem o material
                 break;
             case "TakeMaterialOut":
-                // Chamar função para um aluno específico pegar material
                 break;
-            case "Make Students Laugh": 
+            case "Make Students Laugh":
                 break;
-            case "Make Students Talk": 
+            case "Make Students Talk":
                 break;
-            // Botão: Reset Global 
             case "ResetAllStudents":
                 StudentManager.Instance.ResetAllStudents();
-                return; 
+                return;
 
-            // Botão: Reset Individual
             case "ResetSingleStudent":
-                // Utiliza a variável do Firebase que guarda o nome do aluno alvo 
                 StudentManager.Instance.ResetSingleStudent(alunoAlvo);
-                return; 
+                return;
 
             default:
                 Debug.LogWarning($"[Firebase] O comando '{tipoConflitoWeb}' foi ignorado por ser uma ação avulsa ou não mapeada.");
