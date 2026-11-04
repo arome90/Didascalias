@@ -8,7 +8,7 @@ namespace Didascalia
 {
     /// <summary>
     /// Gestiona el envío de JSONs con información de la sesión
-    /// al servidor (a través del ConnectionManager)
+    /// al servidor
     /// </summary>
     public class GameDataManager : Singleton<GameDataManager>
     {
@@ -30,7 +30,7 @@ namespace Didascalia
         /// Referencia al ConnectionManager, para gestionar las conexiones
         /// con el servidor y envío de los JSONs
         /// </summary>
-        private WebDashboardManager _connectionManager;
+        private WebDashboardManager _webDashboardManager;
 
         /// <summary>
         /// Objeto que reúne datos sobre la sesión en un diccionario
@@ -38,24 +38,30 @@ namespace Didascalia
         /// </summary>
         private GameData _gameData = new GameData();
 
-        private string sessionID { get { return "0"; } }
+        private string _sessionID = "0";
         private string _path;
 
         // Stream de escritura persistente en disco
+        string _localDataPath;
         private StreamWriter _streamWriter;
         private bool _isFirstRecord = true;
 
         protected override void Awake()
         {
+            _localDataPath = Path.Combine(Application.persistentDataPath, "SessionData");
+
             _destroyOnLoad = true;
             base.Awake();
         }
 
         void Start()
         {
-            _connectionManager = WebDashboardManager.Instance;
+            _webDashboardManager = WebDashboardManager.Instance;
 
-            CreateNewEntry();
+            // creamos sesión SOLO en local con la sessionID por defecto si NO queremos usar el servidor
+            // Si queremos usar el servidor, debemos esperar a que la sesión se inicialice por su cuenta
+            //      y nos avise de cuándo crear la sesión
+            if (storageMode == StorageMode.LocalOnly) CreateNewEntry(_sessionID);
 
             if (storageMode == StorageMode.RemoteServer || storageMode == StorageMode.Both)
             {
@@ -63,10 +69,11 @@ namespace Didascalia
             }
         }
 
-        public void CreateNewEntry()
+        public void CreateNewEntry(string SessionID)
         {
-            _gameData.datas[sessionID] = new List<BaseData>();
-            _gameData.Session = sessionID;
+            _sessionID = SessionID;
+            _gameData.datas[_sessionID] = new List<BaseData>();
+            _gameData.Session = _sessionID;
 
             if (storageMode == StorageMode.LocalOnly || storageMode == StorageMode.Both)
             {
@@ -78,20 +85,19 @@ namespace Didascalia
         {
             try
             {
-                string folderPath = Path.Combine(Application.persistentDataPath, "SessionData");
-                if (!Directory.Exists(folderPath))
+                if (!Directory.Exists(_localDataPath))
                 {
-                    Directory.CreateDirectory(folderPath);
+                    Directory.CreateDirectory(_localDataPath);
                 }
 
-                string fileName = sessionID + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff") + ".json";
-                _path = Path.Combine(folderPath, fileName);
+                string fileName = _sessionID + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff") + ".json";
+                _path = Path.Combine(_localDataPath, fileName);
 
                 FileStream fileStream = new FileStream(_path, FileMode.Create, FileAccess.Write, FileShare.Read);
                 _streamWriter = new StreamWriter(fileStream, Encoding.UTF8);
 
                 // Escribir cabecera con salto de línea
-                _streamWriter.WriteLine("{\"" + sessionID + "\": [");
+                _streamWriter.WriteLine("{\"" + _sessionID + "\": [");
                 _streamWriter.Flush();
 
                 _isFirstRecord = true;
@@ -116,11 +122,11 @@ namespace Didascalia
                 // Acumulación en buffer para lote remoto
                 if (storageMode == StorageMode.RemoteServer || storageMode == StorageMode.Both)
                 {
-                    if (_gameData != null && _gameData.datas.ContainsKey(sessionID))
+                    if (_gameData != null && _gameData.datas.ContainsKey(_sessionID))
                     {
-                        _gameData.datas[sessionID].Add(data);
+                        _gameData.datas[_sessionID].Add(data);
 
-                        if (_gameData.datas[sessionID].Count >= maxPlayerDataCount)
+                        if (_gameData.datas[_sessionID].Count >= maxPlayerDataCount)
                         {
                             SendBatchToRemote();
                         }
@@ -167,7 +173,7 @@ namespace Didascalia
         {
             lock (_gameData)
             {
-                if (_gameData.datas.ContainsKey(sessionID) && _gameData.datas[sessionID].Count > 0)
+                if (_gameData.datas.ContainsKey(_sessionID) && _gameData.datas[_sessionID].Count > 0)
                 {
                     SendBatchToRemote();
                 }
@@ -176,14 +182,14 @@ namespace Didascalia
 
         private void SendBatchToRemote()
         {
-            if (_connectionManager != null)
+            if (_webDashboardManager != null)
             {
                 string batchJsonText = _gameData.ToJson();
-                _connectionManager.SendWebRequest(batchJsonText);
-                Debug.Log($"[GameDataManager] Lote remoto enviado ({_gameData.datas[sessionID].Count} elementos).");
+                _webDashboardManager.SendJsonData(batchJsonText);
+                Debug.Log($"[GameDataManager] Lote remoto enviado ({_gameData.datas[_sessionID].Count} elementos).");
             }
 
-            _gameData.datas[sessionID].Clear();
+            _gameData.datas[_sessionID].Clear();
         }
 
         private void CloseLocalStream()
@@ -213,7 +219,7 @@ namespace Didascalia
         {
             lock (_gameData)
             {
-                if (_gameData.datas.ContainsKey(sessionID) && _gameData.datas[sessionID].Count > 0)
+                if (_gameData.datas.ContainsKey(_sessionID) && _gameData.datas[_sessionID].Count > 0)
                 {
                     SendBatchToRemote();
                 }
@@ -235,7 +241,7 @@ namespace Didascalia
             lock (_gameData)
             {
                 // Enviar cualquier dato remoto restante
-                if (_gameData.datas.ContainsKey(sessionID) && _gameData.datas[sessionID].Count > 0)
+                if (_gameData.datas.ContainsKey(_sessionID) && _gameData.datas[_sessionID].Count > 0)
                 {
                     SendBatchToRemote();
                 }

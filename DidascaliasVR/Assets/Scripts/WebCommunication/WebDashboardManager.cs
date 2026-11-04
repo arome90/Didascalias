@@ -431,7 +431,7 @@ public class WebDashboardManager : Singleton<WebDashboardManager>
     private void OnSessionReceived(ReceivedWebMessage message)
     {
         _sessionID = message.data;
-        GameDataManager.Instance.CreateNewEntry();
+        if (GameDataManager.Exists) GameDataManager.Instance.CreateNewEntry(_sessionID);
     }
 
     /// <summary>
@@ -473,16 +473,16 @@ public class WebDashboardManager : Singleton<WebDashboardManager>
     /// Manda una UnityWebRequest a la URL que tenga asignada el ConnectionManager
     /// </summary>
     /// <param name="jsonData"> Datos a enviar en formato JSON </param>
-    public void SendWebRequest(string jsonData)
+    public void SendJsonData(string jsonData)
     {
-        StartCoroutine(SendWebRequestCoroutine(jsonData));
+        StartCoroutine(SendJsonDataCoroutine(jsonData));
     }
 
     /// <summary>
     /// Corrutina que manda una Web Request a la URL designad
     /// </summary>
     /// <param name="jsonData"> Datos a enviar en formato JSON </param>
-    private IEnumerator SendWebRequestCoroutine(string jsonData)
+    private IEnumerator SendJsonDataCoroutine(string jsonData)
     {
         using (UnityWebRequest www = UnityWebRequest.Post("https://cyclops-dev.uab.cat/data/vr", jsonData, "application/json"))
         {
