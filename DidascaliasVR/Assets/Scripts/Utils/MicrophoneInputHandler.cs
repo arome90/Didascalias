@@ -3,6 +3,7 @@ using System.IO;
 using UnityEngine;
 using Didascalia;
 
+// TODO: AÑADIR VARIABLES DE "SampleRate", "File Format" y "Codec" para que AzureManagerSpeech pueda rellenar esos datos jiji
 public class MicrophoneInputHandler : MonoBehaviour
 {
     [Header("Configuración de Escucha Libre")]

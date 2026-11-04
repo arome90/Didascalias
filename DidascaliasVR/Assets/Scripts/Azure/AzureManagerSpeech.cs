@@ -40,6 +40,7 @@ public class AzureManagerSpeech : MonoBehaviour
 
     private void HandleSpeechRecorded(byte[] wavData)
     {
+#if UNITY_EDITOR
         // Si no queremos gastar llamadas a la API, simulamos el flujo y reanudamos la escucha
         if (!useAzure)
         {
@@ -54,7 +55,7 @@ public class AzureManagerSpeech : MonoBehaviour
 
             return;
         }
-
+#endif
         StartCoroutine(SendAudioAzureREST(wavData));
     }
 
