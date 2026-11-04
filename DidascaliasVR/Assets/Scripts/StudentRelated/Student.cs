@@ -121,6 +121,21 @@ public class Student : MonoBehaviour
         }
     }
 
+    private AzureTTSVoiceConfig.VoiceParameters _voice;
+
+    /// <summary>
+    /// Voz del estudiante para Azure
+    /// </summary>
+    public AzureTTSVoiceConfig.VoiceParameters Voice
+    {
+        get { return _voice; }
+        set
+        {
+            _voice = value;
+        }
+    }
+
+
     private Conflict _activeConflict = null;
     public Conflict ActiveConflict => _activeConflict;
 
@@ -201,11 +216,11 @@ public class Student : MonoBehaviour
     {
         _nameTag.color = Color.white;
     }
-
+    
     public async void Speak(string speak)
     {
         Didascalia.Utils.Log.Message(Name + " speaks: "+ speak, this);
-        // if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Gender, _audioSource);
+        if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Voice, _audioSource);
     }
 
     public void SetContext(string newContext)

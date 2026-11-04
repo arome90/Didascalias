@@ -364,6 +364,8 @@ public class StudentManager : Singleton<StudentManager>
                 numGirls++;
             }
 
+            st.Voice = AzureTextToSpeech.Instance.GetVoice(st.Gender);
+
             LookAtConstraint lookAt = st.GetComponentInChildren<LookAtConstraint>();
             lookAt.AddSource(constraintSource);
             lookAt.constraintActive = true;

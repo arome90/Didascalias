@@ -318,7 +318,7 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         if (tipoConflitoWeb == "TextToSpeech")
         {
             Student st = StudentManager.Instance.GetStudent(alunoAlvo);
-            AzureTextToSpeech.Instance.Speak(message, st.Gender, st._audioSource);
+            st.Speak(message);
             return;
         }
         if (tipoConflitoWeb == "PlaySound")

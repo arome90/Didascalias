@@ -2,6 +2,8 @@ using Microsoft.CognitiveServices.Speech;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using AYellowpaper.SerializedCollections;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -10,30 +12,41 @@ public class AzureTextToSpeech : Singleton<AzureTextToSpeech>
 {
     public string SpeakTextEditor = "";
 
-    private string mascVoice = "es-ES-TristanMultilingualNeural";
-    private string femVoice_1 = "es-ES-ElviraNeural";
-    private string femVoice_2 = "es-ES-XimenaNeural";
+    [SerializeField, SerializedDictionary]
+    SerializedDictionary<Language, AzureTTSVoiceConfig> _voiceConfigs;
+
+    public AzureTTSVoiceConfig.VoiceParameters GetVoice(Gender gender) => _voiceConfigs[LanguageManager.ActiveLanguage].GetVoice(gender);
 
     private const int SampleRate = 8000;
 
     private const string subscriptionKey = "2RCbXjGc1xCelZAa1NXghhY5miqkASeHN7e5TPmdwaUPgUez2iXzJQQJ99CGAC5RqLJXJ3w3AAAAACOGHkJH";
 
-    public async Task Speak(string what, Gender gender, AudioSource source)
+    public async Task Speak(string what, AzureTTSVoiceConfig.VoiceParameters voice, AudioSource source)
     {
         Uri endpoint = new Uri("https://didascalia-tts-spanish-resource.cognitiveservices.azure.com/");
 
-        // var config = SpeechConfig.FromEndpoint(endpoint, subscriptionKey);
-
         var config = SpeechConfig.FromEndpoint(endpoint, subscriptionKey);
-        if (gender == Gender.Girl) config.SpeechSynthesisVoiceName = (UnityEngine.Random.Range(0, 2) == 0) ? femVoice_1 : femVoice_2;
-        else config.SpeechSynthesisVoiceName = mascVoice;
-
+        config.SpeechSynthesisVoiceName = voice.name;
+        
         // 1. Forzamos un formato de audio RIFF PCM de 24kHz y 16 bits mono
         config.SetSpeechSynthesisOutputFormat(SpeechSynthesisOutputFormat.Riff8Khz16BitMonoPcm);
 
+        string pitchStr = voice.finalPitch >= 0 ? $"+{voice.finalPitch:F0}%" : $"{voice.finalPitch:F0}%";
+        string rateStr = voice.finalRate >= 0 ? $"+{voice.finalRate:F0}%" : $"{voice.finalRate:F0}%";
+
+        // 3. Construir SSML con prosody
+        string ssml = $@"
+        <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='es-ES'>
+            <voice name='{voice.name}'>
+                <prosody pitch='{pitchStr}' rate='{rateStr}'>
+                    {what}
+                </prosody>
+            </voice>
+        </speak>";
+
         using (var synthesizer = new SpeechSynthesizer(config, null))
         {
-            using (var result = await synthesizer.SpeakTextAsync(what))
+            using (var result = await synthesizer.SpeakSsmlAsync(ssml))
             {
                 if (result.Reason == ResultReason.SynthesizingAudioCompleted)
                 {
@@ -111,7 +124,7 @@ public class AzureTextToSpeechEditor : Editor
         if (GUILayout.Button("Try"))
         {
             Student st = StudentManager.Instance.TryGetStudentByNameOrGetRandom(null);
-            script.Speak(script.SpeakTextEditor, st.Gender, st._audioSource);
+            script.Speak(script.SpeakTextEditor, script.GetVoice(Gender.Girl), st._audioSource);
         }
 
         // Dibuja el resto de variables públicas por defecto si las hubiera
