@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using Didascalia;
 
 /// <summary>
 /// Chico (0) o Chica (1) (de momento)
@@ -221,8 +222,32 @@ public class Student : MonoBehaviour
     
     public async void Speak(string speak)
     {
-        Didascalia.Utils.Log.Message(Name + " speaks: "+ speak, this);
-        if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Voice, _audioSource);
+        // Didascalia.Utils.Log.Message(Name + " speaks: "+ speak, this);
+        // if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Voice, _audioSource);
+
+        Didascalia.Utils.Log.Message(Name + " speaks: " + speak, this);
+
+        // Notificar inicio de habla del estudiante
+        if (ConversationalFlowAnalyzer.Instance != null)
+        {
+            ConversationalFlowAnalyzer.Instance.OnSpeakerStarted(Name);
+        }
+
+        try
+        {
+            if (AzureTextToSpeech.Instance != null)
+            {
+                await AzureTextToSpeech.Instance.Speak(speak, Voice, _audioSource);
+            }
+        }
+        finally
+        {
+            // Notificar fin de habla garantizando que se ejecute al terminar el audio
+            if (ConversationalFlowAnalyzer.Instance != null)
+            {
+                ConversationalFlowAnalyzer.Instance.OnSpeakerEnded(Name);
+            }
+        }
     }
 
     public void SetContext(string newContext)

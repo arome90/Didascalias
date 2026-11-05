@@ -26,6 +26,9 @@ public class MicrophoneInputHandler : MonoBehaviour
     // Evento que notifica cuando una frase ha sido capturada y convertida a WAV
     public event Action<byte[]> OnSpeechRecorded;
 
+    public event Action<string> OnSpeechStarted;
+    public event Action<string> OnSpeechEnded;
+
     private string microphoneID;
     private AudioClip monitorClip;
     private AudioClip commandClip;
@@ -86,6 +89,7 @@ public class MicrophoneInputHandler : MonoBehaviour
         {
             isTalking = true;
             silenceCounter = 0f;
+            OnSpeechStarted?.Invoke("User");
             Debug.Log("[MicrophoneHandler] Voz detectada. Grabando...");
 
             Microphone.End(microphoneID);
@@ -101,6 +105,7 @@ public class MicrophoneInputHandler : MonoBehaviour
                 Debug.Log("[MicrophoneHandler] Voz finalizada. Procesando audio...");
                 isTalking = false;
                 isProcessing = true;
+                OnSpeechEnded?.Invoke("User");
 
                 int posicionFinal = Microphone.GetPosition(microphoneID);
                 Microphone.End(microphoneID);

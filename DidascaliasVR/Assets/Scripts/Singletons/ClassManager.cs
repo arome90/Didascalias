@@ -13,6 +13,9 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class ClassManager : Singleton<ClassManager>
 {
+    [SerializeField, Tooltip("Si está activo o si se ejecuta la escena aislada sin SceneChanger, inicia la clase en Start() para pruebas.")]
+    private bool _autoStartInStandalone = true;
+
     [Header("Class Settings")]
     [SerializeField,
         Tooltip("Configuraci�n del aula actual")] 
@@ -227,7 +230,15 @@ public class ClassManager : Singleton<ClassManager>
         }
         else
         {
-            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
+            //Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
+
+            Didascalia.Utils.Log.Warning("SceneChanger no encontrado. Ejecutando en escena independiente...", this);
+        
+            // Si no existe SceneChanger, arrancamos la clase automáticamente
+            if (_autoStartInStandalone)
+            {
+                StartClass();
+            }
         }
     }
 
@@ -237,10 +248,10 @@ public class ClassManager : Singleton<ClassManager>
         {   
             SceneChanger.Instance.OnSceneChanged.RemoveListener(ActivateClassOnSceneChanged);
         }
-        else
-        {
-            Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
-        }
+        // else
+        // {
+        //     Didascalia.Utils.Log.Warning("Voice Activation not found on enable", this);
+        // }
     }
 
     /// <summary>

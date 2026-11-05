@@ -63,12 +63,22 @@ public class StudentManager : Singleton<StudentManager>
     protected override void Awake()
     {
         base.Awake();
-        _settings = ClassManager.Instance.Settings;
+        //_settings = ClassManager.Instance.Settings;
         _activeConflicts = new List<Conflict>();
     }
 
     protected void Start()
     {
+        // Obtener los Settings de forma segura comprobando que ClassManager existe
+        if (ClassManager.Exists && ClassManager.Instance.Settings != null)
+        {
+            _settings = ClassManager.Instance.Settings;
+        }
+        else
+        {
+            Debug.LogWarning("[StudentManager] ClassManager no encontrado o Settings no asignados al iniciar Start().");
+        }
+
         if (_behaviourModifiers == null)
         {
             _behaviourModifiers = new SerializedDictionary<StudentType, BehaviourPatternModifier>();
@@ -308,6 +318,20 @@ public class StudentManager : Singleton<StudentManager>
     /// <returns> La lista de estudiantes generados </returns>
     public List<Student> GenerateStudents()
     {
+        // Garantizar que _settings no sea null antes de generar
+        if (_settings == null)
+        {
+            if (ClassManager.Exists && ClassManager.Instance.Settings != null)
+            {
+                _settings = ClassManager.Instance.Settings;
+            }
+            else
+            {
+                Debug.LogError("[StudentManager] No se pueden generar estudiantes porque _settings es null y no se pudo obtener de ClassManager.");
+                return new List<Student>();
+            }
+        }
+
         DestroyStudents();
         List<Student> students = new List<Student>();
 

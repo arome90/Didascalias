@@ -80,6 +80,23 @@ namespace Didascalia
     }
 
     [Serializable]
+    public class TurnData : BaseData
+    {
+        public string Speaker;          // "Teacher" o "Student"
+        public float TurnDuration;      // Duración del turno en segundos
+        public float LatencyFromPrior;  // Wait Time respecto al turno anterior (en segundos)
+        public bool WasInterruption;    // ¿Interrumpió al otro hablante?
+
+        public TurnData(string speaker, float duration, float latency, bool wasInterruption)
+        {
+            Speaker = speaker;
+            TurnDuration = duration;
+            LatencyFromPrior = latency;
+            WasInterruption = wasInterruption;
+        }
+    }
+
+    [Serializable]
     public class GameData
     {
         public Dictionary<string, List<BaseData>> datas;
