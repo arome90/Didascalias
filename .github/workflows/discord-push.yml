@@ -1,0 +1,24 @@
+name: Notificar Commits a Discord
+
+on:
+  push:
+
+jobs:
+  discord-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Enviar mensaje detallado a Discord
+        uses: Ilshat/discord-webhook-action@v1.2.0
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          text: |
+            📦 **Nuevo Push en `${{ github.ref_name }}`**
+            **Autor:** ${{ github.actor }}
+            
+            📝 **Detalle del commit:**
+            ```
+            ${{ github.event.head_commit.message }}
+            ```
