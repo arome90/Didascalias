@@ -85,7 +85,7 @@ public class StudentManager : Singleton<StudentManager>
     /// <summary>
     /// Destruye a los estudiantes ya generados y limpia el diccionario de estudiantes
     /// </summary>
-    void DestroyStudents()
+    public void DestroyStudents()
     {
         if(_students == null)
         {
@@ -98,6 +98,10 @@ public class StudentManager : Singleton<StudentManager>
                 Destroy(student.Value.gameObject);
             }
             _students.Clear();
+            _adhdStudents.Clear();
+            _autisticStudents.Clear();
+            _nonNormativeStudents.Clear();
+            _selectedStudents.Clear();
         }
     }
 
@@ -111,6 +115,7 @@ public class StudentManager : Singleton<StudentManager>
         if (_students.TryGetValue(name, out Student st)) return st;
         else return null;
     }
+
     public Student GetStudentByName(string name)
     {
         Student st = GetStudent(name);

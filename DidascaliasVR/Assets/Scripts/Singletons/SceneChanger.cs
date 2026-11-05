@@ -39,14 +39,16 @@ public class SceneChanger : Singleton<SceneChanger>
     /// tras hacer un fade-out
     /// </summary>
     /// <param name="newSceneName"> Escena a cargar </param>
-    public static void ChangeScene(string newSceneName)
+    public static void ChangeScene(string newSceneName, UnityAction onFadeOut = null)
     {
         Instance.newSceneName = newSceneName;
-        Instance._fader.FadeOut(Instance.LoadScenes);
+        Instance._fader.FadeOut(() => { Instance.LoadScenes(onFadeOut); });
     }
 
-    private async void LoadScenes()
+    private async void LoadScenes(UnityAction action)
     {
+        if (action != null) action(); // just after fade out
+
         string currentSceneName = SceneManager.GetActiveScene().name;
         await SceneManager.LoadSceneAsync(newSceneName, LoadSceneMode.Single);
         newSceneName = string.Empty;

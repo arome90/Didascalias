@@ -546,4 +546,9 @@ public class ClassManager : Singleton<ClassManager>
             Gizmos.color = previousColor;
         }
     }
+    public void DestroyClass()
+    {
+        StudentManager.Instance.DestroyStudents();
+        CleanClass();
+    }
 }

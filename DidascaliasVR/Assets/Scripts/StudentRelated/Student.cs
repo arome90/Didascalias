@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -263,3 +265,29 @@ public class Student : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(Student))]
+public class StudentEditor : Editor
+{
+    private string say = "";
+
+    public override void OnInspectorGUI()
+    {
+        EditorGUILayout.Space(10);
+        EditorGUILayout.LabelField("Speech", EditorStyles.boldLabel);
+
+        say = EditorGUILayout.TextField("Say", say);
+
+        if (GUILayout.Button("Speak"))
+        {
+            Student miTarget = (Student)target;
+
+            miTarget.Speak(say);
+        }
+
+        DrawDefaultInspector();
+
+    }
+}
+#endif
