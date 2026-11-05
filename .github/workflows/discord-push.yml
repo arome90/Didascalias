@@ -7,18 +7,18 @@ jobs:
   discord-notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Enviar mensaje detallado a Discord
-        uses: tsickert/discord-webhook-action@v5.4.0
-        with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-          text: |
-            📦 **Nuevo Push en `${{ github.ref_name }}`**
-            **Autor:** ${{ github.actor }}
-            
-            📝 **Detalle del commit:**
-            ```
-            ${{ github.event.head_commit.message }}
-            ```
+      - name: Enviar notificación a Discord con curl
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          AUTHOR: ${{ github.actor }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          # Escapar caracteres especiales y comillas para evitar errores de sintaxis en JSON
+          PAYLOAD=$(jq -n \
+            --arg branch "$BRANCH" \
+            --arg author "$AUTHOR" \
+            --arg msg "$COMMIT_MSG" \
+            '{content: "📦 **Nuevo Push en `\($branch)`**\n**Autor:** \($author)\n\n📝 **Detalle del commit:**\n```\n\($msg)\n```"}')
+          
+          curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK_URL"
