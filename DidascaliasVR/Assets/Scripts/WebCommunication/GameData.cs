@@ -41,11 +41,17 @@ namespace Didascalia
     {
         public string TranscribedText;
         public string RecognitionStatus;
+        public float DurationSeconds;
+        public float WordsPerMinute;
+        public float SyllablesPerSecond;
 
-        public SpeechData(string text, string status = "Success")
+        public SpeechData(string text, float durationSeconds, float wpm, float sps, string status = "Success")
         {
             TranscribedText = text;
             RecognitionStatus = status;
+            DurationSeconds = durationSeconds;
+            WordsPerMinute = wpm;
+            SyllablesPerSecond = sps;
         }
     }
 
