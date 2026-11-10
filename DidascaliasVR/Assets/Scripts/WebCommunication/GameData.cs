@@ -107,9 +107,11 @@ namespace Didascalia
     {
         public Dictionary<string, List<BaseData>> datas;
         public string Session;
+        public Dictionary<string, int> batchesPerSession;
         public GameData()
         {
             datas = new Dictionary<string, List<BaseData>>();
+            batchesPerSession = new Dictionary<string, int>();
         }
 
 

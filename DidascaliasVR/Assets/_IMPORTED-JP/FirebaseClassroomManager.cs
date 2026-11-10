@@ -476,6 +476,25 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         StudentManager.Instance.GenerateConflictForSpecificStudent(alunoAlvo, type);
     }
 
+    public void SendJsonData(string data, int num)
+    {
+        if (string.IsNullOrEmpty(WebDashboardManager.Instance.SessionID)) return;
+
+        _dbReference.Child("data").
+            Child(WebDashboardManager.Instance.SessionID).
+            Child($"{WebDashboardManager.Instance.SessionID.ToString()}_{num.ToString()}")
+            .SetRawJsonValueAsync(data).ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to write JSON: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                Debug.Log("JSON añadido con éxito al historial!");
+            }
+        });
+    }
+
     private void OnDestroy()
     {
         EndFirebaseSession();

@@ -1,4 +1,4 @@
-# Install script for directory: C:/Trabajo/Didascalias/Didascalias/DidascaliasVR/Library/PramData/AndroidApplicationController/Cache/com.joao.Didascalia/gradle-project/unityLibrary/src/main/cpp/GameActivity
+# Install script for directory: C:/Trabajo/Didascalias/Didascalias/DidascaliasVR/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/src/main/cpp/GameActivity
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
