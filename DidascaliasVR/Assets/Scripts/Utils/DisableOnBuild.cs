@@ -1,3 +1,4 @@
+#if !UNITY_EDITOR
 using UnityEngine;
 
 public class DisableOnBuild : MonoBehaviour
@@ -7,3 +8,4 @@ public class DisableOnBuild : MonoBehaviour
         Destroy(gameObject);
     }
 }
+#endif

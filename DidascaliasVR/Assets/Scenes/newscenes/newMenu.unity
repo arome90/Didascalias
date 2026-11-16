@@ -658,7 +658,7 @@ GameObject:
   - component: {fileID: 86965520}
   - component: {fileID: 86965522}
   - component: {fileID: 86965521}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: '[Debug] Text (TMP)'
   m_TagString: Debug
   m_Icon: {fileID: 0}
@@ -1099,7 +1099,7 @@ GameObject:
   - component: {fileID: 106149066}
   - component: {fileID: 106149065}
   - component: {fileID: 106149068}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Spanish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3975,7 +3975,7 @@ GameObject:
   - component: {fileID: 445370995}
   - component: {fileID: 445370994}
   - component: {fileID: 445370997}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Portuguese
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4527,6 +4527,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 495233721}
   m_Mesh: {fileID: 3916202132347583614, guid: 5491e2b72be63ff45892905a431e9c81, type: 3}
+--- !u!1 &496747460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 496747462}
+  - component: {fileID: 496747461}
+  m_Layer: 0
+  m_Name: EntitlementCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &496747461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496747460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ee5c23bbfa4cc846b25a179cd16deb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  appId: 3068435533548732
+--- !u!4 &496747462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496747460}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 35.83051, y: -2.09274, z: -41.63787}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &501508678
 GameObject:
   m_ObjectHideFlags: 0
@@ -6630,7 +6675,7 @@ GameObject:
   - component: {fileID: 734448848}
   - component: {fileID: 734448847}
   - component: {fileID: 734448846}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: InputField (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9625,7 +9670,7 @@ GameObject:
   - component: {fileID: 1065692198}
   - component: {fileID: 1065692200}
   - component: {fileID: 1065692199}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16218,7 +16263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1657495497}
   - component: {fileID: 1657495498}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18408,7 +18453,7 @@ GameObject:
   - component: {fileID: 1975221226}
   - component: {fileID: 1975221225}
   - component: {fileID: 1975221224}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18872,7 +18917,7 @@ GameObject:
   - component: {fileID: 2071519729}
   - component: {fileID: 2071519731}
   - component: {fileID: 2071519730}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19750,6 +19795,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8941104705063897804}
     - target: {fileID: 3229284491904932444, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3229284491904932444, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3229284491904932444, guid: ba372e8f4a9a46146ac879ae494f4581, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
       objectReference: {fileID: 0}
@@ -19891,6 +19944,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Origin (MENU)
       objectReference: {fileID: 0}
+    - target: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6546018886006458581, guid: 087220a00f96d7348a4e64fa61420d5e, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -19921,3 +19994,4 @@ SceneRoots:
   - {fileID: 543856}
   - {fileID: 1178935828}
   - {fileID: 714087279}
+  - {fileID: 496747462}
