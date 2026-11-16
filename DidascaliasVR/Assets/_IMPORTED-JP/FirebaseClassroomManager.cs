@@ -1,3 +1,4 @@
+using Didascalia;
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
@@ -375,6 +376,10 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
     private void ProcessFirebaseCommand(string alunoAlvo, string tipoConflitoWeb, string message = "")
     {
         Debug.Log($"<color=#FFA500>[Firebase Comando]</color> Alvo: {alunoAlvo} | Ação recebida: {tipoConflitoWeb}");
+
+        EventData eventData = new EventData(message, tipoConflitoWeb, (new List<string>() { alunoAlvo }));
+
+        GameDataManager.Instance.SendData(eventData);
 
         if (tipoConflitoWeb == "TakeMaterialAll")
         {
