@@ -3,9 +3,14 @@ using UnityEngine;
 using TMPro;
 using Firebase.Database;
 using Firebase.Extensions;
+using UnityEngine.UI;
+using UnityEditor;
 
-public class Botao_entrar : MonoBehaviour
+public class EnterButton : MonoBehaviour
 {
+    [SerializeField]
+    private Button _button;
+
     [Header("Conexão com a Equipe")]
     public ClassSettings configuracaoDaSala;
 
@@ -48,21 +53,14 @@ public class Botao_entrar : MonoBehaviour
 
     public void EntrarNaSala()
     {
-        //if (dbReference == null)
-        //{
-        //    dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-        //}
-
         HideAllPanels();
         if (mensagemErro != null) mensagemErro.SetActive(false);
         if (loadingPanel != null) loadingPanel.SetActive(true);
 
-        //string idDoOculos = "1e0d1b3680fb8b3614367dc38705fd90";
-#if UNITY_EDITOR
-        // idDoOculos = "556b4d4918be07211402fd354c3a672d9d06fc68";
-#endif
-
-        FirebaseClassroomManager.Instance.StartRoom(ClassManager.Instance.StartFirebaseClass);
+        _button.interactable = false;
+        FirebaseClassroomManager.Instance.StartRoom((action) => { 
+            _button.interactable = !action.wasSuccesful; 
+            ClassManager.Instance.StartFirebaseClass(action); });
     }
 
     private void OnStartRoomResolve(FirebaseClassroomManager.StartRoomResult result)

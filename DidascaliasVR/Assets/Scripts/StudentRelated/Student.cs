@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -39,6 +38,8 @@ public class Student : MonoBehaviour
 
     [HideInInspector]
     public AudioSource _audioSource = null;
+
+    static Student _talkingStudent = null;
 
     /// <summary>
     /// Estudiante que est� justo antes de nuestro estudiante
@@ -215,15 +216,25 @@ public class Student : MonoBehaviour
         if(_nameTag.color == Color.white) _nameTag.color = Color.blue;
     }
 
-    public void Deselect()
+    public void ResetColor()
     {
         _nameTag.color = Color.white;
     }
-    
+
+    public void ChangeColorOnSpeak()
+    {
+        if (_talkingStudent != null) _talkingStudent.ResetColor();
+
+        _nameTag.color = Color.yellow;
+        
+        _talkingStudent = this;
+    }
+
     public async void Speak(string speak)
     {
         // Didascalia.Utils.Log.Message(Name + " speaks: "+ speak, this);
         // if (AzureTextToSpeech.Instance != null) await AzureTextToSpeech.Instance.Speak(speak, Voice, _audioSource);
+
 
         Didascalia.Utils.Log.Message(Name + " speaks: " + speak, this);
 
@@ -237,6 +248,8 @@ public class Student : MonoBehaviour
         {
             if (AzureTextToSpeech.Instance != null)
             {
+
+                ChangeColorOnSpeak();
                 await AzureTextToSpeech.Instance.Speak(speak, Voice, _audioSource);
             }
         }

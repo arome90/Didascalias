@@ -488,7 +488,7 @@ public class StudentManager : Singleton<StudentManager>
     {
         foreach (string st in _selectedStudents)
         {
-            _students[st].Deselect();
+            _students[st].ResetColor();
         }
         _selectedStudents.Clear();
     }
