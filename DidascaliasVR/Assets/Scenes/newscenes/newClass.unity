@@ -12902,6 +12902,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 582002872}
     m_Modifications:
+    - target: {fileID: 179334837310430799, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 894428589596689817, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 21.32515
@@ -12947,8 +12951,20 @@ PrefabInstance:
       value: AzureManager
       objectReference: {fileID: 0}
     - target: {fileID: 6351749268529317214, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: useAzure
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351749268529317214, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351749268529317214, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: micHandler
+      value: 
+      objectReference: {fileID: 1598976086}
+    - target: {fileID: 6351749268529317214, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+      propertyPath: claveSpeech
+      value: 5DwRSQFzo321Tuh6ZiPvH9iQAL59N72DRCkVmiV7Ku7FJNFmYhomJQQJ99CJAC5RqLJXJ3w3AAAYACOGWTBy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12958,6 +12974,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 751429417}
   m_SourcePrefab: {fileID: 100100000, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+--- !u!114 &1598976086 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1043306247768587859, guid: 977cb98dccd634b48a7dfc0b875d691d, type: 3}
+  m_PrefabInstance: {fileID: 1598976085}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751429415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93759cf192f59640bbed925729f0a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MicrophoneInputHandler
 --- !u!1 &1608757291
 GameObject:
   m_ObjectHideFlags: 0

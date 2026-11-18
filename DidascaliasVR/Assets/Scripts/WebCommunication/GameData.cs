@@ -41,11 +41,17 @@ namespace Didascalia
     {
         public string TranscribedText;
         public string RecognitionStatus;
+        public float DurationSeconds;
+        public float WordsPerMinute;
+        public float SyllablesPerSecond;
 
-        public SpeechData(string text, string status = "Success")
+        public SpeechData(string text, float durationSeconds, float wpm, float sps, string status = "Success")
         {
             TranscribedText = text;
             RecognitionStatus = status;
+            DurationSeconds = durationSeconds;
+            WordsPerMinute = wpm;
+            SyllablesPerSecond = sps;
         }
     }
 
@@ -101,9 +107,11 @@ namespace Didascalia
     {
         public Dictionary<string, List<BaseData>> datas;
         public string Session;
+        public Dictionary<string, int> batchesPerSession;
         public GameData()
         {
             datas = new Dictionary<string, List<BaseData>>();
+            batchesPerSession = new Dictionary<string, int>();
         }
 
 

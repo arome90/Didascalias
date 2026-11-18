@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 
 namespace Didascalia
@@ -73,6 +76,9 @@ namespace Didascalia
         {
             _sessionID = SessionID;
             _gameData.datas[_sessionID] = new List<BaseData>();
+
+            _gameData.batchesPerSession.Add(_sessionID, 0);
+
             _gameData.Session = _sessionID;
 
             if (storageMode == StorageMode.LocalOnly || storageMode == StorageMode.Both)
@@ -186,6 +192,10 @@ namespace Didascalia
             {
                 string batchJsonText = _gameData.ToJson();
                 _webDashboardManager.SendJsonData(batchJsonText);
+
+                string firebaseData = JsonConvert.SerializeObject(_gameData.datas[_sessionID], Formatting.Indented);
+                FirebaseClassroomManager.Instance.SendJsonData(firebaseData, _gameData.batchesPerSession[_sessionID]++);
+
                 Debug.Log($"[GameDataManager] Lote remoto enviado ({_gameData.datas[_sessionID].Count} elementos).");
             }
 

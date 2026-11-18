@@ -1,3 +1,4 @@
+using Didascalia;
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
@@ -376,6 +377,10 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
     {
         Debug.Log($"<color=#FFA500>[Firebase Comando]</color> Alvo: {alunoAlvo} | Ação recebida: {tipoConflitoWeb}");
 
+        EventData eventData = new EventData(message, tipoConflitoWeb, (new List<string>() { alunoAlvo }));
+
+        GameDataManager.Instance.SendData(eventData);
+
         if (tipoConflitoWeb == "TakeMaterialAll")
         {
             StudentManager.Instance.GetMaterialOutAllStudents();
@@ -474,6 +479,25 @@ public class FirebaseClassroomManager : Singleton<FirebaseClassroomManager>
         }
 
         StudentManager.Instance.GenerateConflictForSpecificStudent(alunoAlvo, type);
+    }
+
+    public void SendJsonData(string data, int num)
+    {
+        if (string.IsNullOrEmpty(WebDashboardManager.Instance.SessionID)) return;
+
+        _dbReference.Child("data").
+            Child(WebDashboardManager.Instance.SessionID).
+            Child($"{WebDashboardManager.Instance.SessionID.ToString()}_{num.ToString()}")
+            .SetRawJsonValueAsync(data).ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to write JSON: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                Debug.Log("JSON añadido con éxito al historial!");
+            }
+        });
     }
 
     private void OnDestroy()

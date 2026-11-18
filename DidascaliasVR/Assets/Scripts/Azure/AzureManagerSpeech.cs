@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -40,6 +41,10 @@ public class AzureManagerSpeech : MonoBehaviour
 
     private void HandleSpeechRecorded(byte[] wavData)
     {
+        // Calcular la duración en segundos directamente a partir del tamaño del WAV
+        // Encabezado WAV = 44 bytes. 16000 muestras/seg * 2 bytes/muestra (16 bits por muestra / 8 = 2) = 32000 bytes/segundo
+        float durationSeconds = (wavData.Length > 44) ? (wavData.Length - 44) / 32000f : 0f;
+
 #if UNITY_EDITOR
         // Si no queremos gastar llamadas a la API, simulamos el flujo y reanudamos la escucha
         if (!useAzure)
@@ -56,10 +61,10 @@ public class AzureManagerSpeech : MonoBehaviour
             return;
         }
 #endif
-        StartCoroutine(SendAudioAzureREST(wavData));
+        StartCoroutine(SendAudioAzureREST(wavData, durationSeconds));
     }
 
-    private IEnumerator SendAudioAzureREST(byte[] wavData)
+    private IEnumerator SendAudioAzureREST(byte[] wavData, float durationSeconds)
     {
         string url = $"https://{regionSpeech}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=es-ES";
 
@@ -82,8 +87,14 @@ public class AzureManagerSpeech : MonoBehaviour
                 {
                     Debug.Log($"[Texto Reconocido]: {respuesta.DisplayText}");
 
+                    // Cálculo de métricas prosódicas de tasa de habla (Speech Rate)
+                    float wpm = CalculateWordsPerMinute(respuesta.DisplayText, durationSeconds);
+                    float sps = CalculateSyllablesPerSecond(respuesta.DisplayText, durationSeconds);
+
+                    Debug.Log($"[Prosodia] Duración: {durationSeconds:F2}s | WPM: {wpm:F1} | SPS: {sps:F2}");
+
                     // Guardar la transcripción en la sesión persistente
-                    SaveSpeechToPersistence(respuesta.DisplayText, "Success");
+                    SaveSpeechToPersistence(respuesta.DisplayText, "Success", durationSeconds, wpm, sps);
                     
                     if (cluController != null && cluController.enabled) 
                         cluController.SendAzureCommand(respuesta.DisplayText);
@@ -97,7 +108,7 @@ public class AzureManagerSpeech : MonoBehaviour
                 Debug.LogError($"[Azure Speech] Error en la nube: {request.error}");
 
                 // Guarda también los intentos fallidos si se requiere trazabilidad
-                SaveSpeechToPersistence($"[Error]: {request.error}", "Error");
+                SaveSpeechToPersistence($"[Error]: {request.error}", "Error", durationSeconds, 0f, 0f);
             }
 
             // Notifica al micrófono que la petición terminó y puede volver a escuchar
@@ -109,13 +120,43 @@ public class AzureManagerSpeech : MonoBehaviour
     }
 
     /// <summary>
+    /// Calcula Palabras por Minuto (WPM).
+    /// Rango docente normal: 130 - 160 WPM.
+    /// </summary>
+    private float CalculateWordsPerMinute(string text, float durationSeconds)
+    {
+        if (durationSeconds <= 0f || string.IsNullOrWhiteSpace(text)) return 0f;
+
+        string[] words = text.Split(new char[] { ' ', '.', ',', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+        float minutes = durationSeconds / 60f;
+
+        return (float)Math.Round(words.Length / minutes, 2);
+    }
+
+    /// <summary>
+    /// Estimación aproximada de Sílabas por Segundo (SPS)
+    /// contando los grupos vocálicos del texto transcrito.
+    /// Rango docente óptimo en español: 4.5 - 6.5 SPS.
+    /// </summary>
+    private float CalculateSyllablesPerSecond(string text, float durationSeconds)
+    {
+        if (durationSeconds <= 0f || string.IsNullOrWhiteSpace(text)) return 0f;
+
+        // Expresión regular para contar núcleos vocálicos en español
+        MatchCollection matches = Regex.Matches(text.ToLower(), @"[aáeéiíoóuúü]+");
+        int estimatedSyllables = matches.Count;
+
+        return (float)Math.Round(estimatedSyllables / durationSeconds, 2);
+    }
+
+    /// <summary>
     /// Instancia SpeechData y la envía al GameDataManager
     /// </summary>
-    private void SaveSpeechToPersistence(string text, string status)
+    private void SaveSpeechToPersistence(string text, string status, float duration, float wpm, float sps)
     {
         if (GameDataManager.Instance != null)
         {
-            SpeechData speechSample = new SpeechData(text, status);
+            SpeechData speechSample = new SpeechData(text, duration, wpm, sps, status);
             GameDataManager.Instance.SendData(speechSample);
         }
     }
